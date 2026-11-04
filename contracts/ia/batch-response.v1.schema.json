@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/batch-response.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_contrato", "id_solicitud", "version_modelo", "items"],
+  "properties": {
+    "version_contrato": {"const": "1.0"},
+    "id_solicitud": {"type": "string", "format": "uuid"},
+    "version_modelo": {"type": "string", "minLength": 1, "maxLength": 100},
+    "items": {"type": "array", "minItems": 1, "maxItems": 100, "items": {"type": "object", "additionalProperties": false, "required": ["id_item", "resultado"], "properties": {"id_item": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$"}, "resultado": {"$ref": "predict-response.v1.schema.json"}}}}
+  }
+}

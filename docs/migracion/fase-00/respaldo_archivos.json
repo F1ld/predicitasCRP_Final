@@ -1,0 +1,28 @@
+{
+  "git_snapshot": "69c686f21fd1938dc76d679f4c6b33270f10a6d7",
+  "private_backup_directory": "C:\\Users\\arami\\AppData\\Local\\Temp\\opencode\\predicitas-fase0-20261103-2200",
+  "private_archive": {
+    "filename": "proyecto_completo_privado.zip",
+    "bytes": 2796529,
+    "sha256": "55e9bacb0d9ace67d7bd252e0ff77d5ee9c60b0db30a88626cf1053f91de9ee0",
+    "all_entries_sha256_verified": true
+  },
+  "secondary_archive": {
+    "path": "backups/predicitas-fase0-20261103-2200/proyecto_sin_secretos.zip",
+    "bytes": 1415777,
+    "sha256": "b464638efb0cf2ef4cb480bb3bd36b3cd601fa5e765be01da74d4d8494918a83",
+    "contains_env_or_git": false
+  },
+  "source_files": 660,
+  "excluded_regenerable_directories": [
+    ".pytest_cache",
+    ".venv",
+    "__pycache__",
+    "backups",
+    "coverage",
+    "htmlcov",
+    "node_modules",
+    "runtime"
+  ],
+  "warning": "La copia privada incluye .env e historial Git. El directorio Temp es transitorio: trasladar a almacenamiento privado duradero antes de dar por cerrada la fase 0."
+}

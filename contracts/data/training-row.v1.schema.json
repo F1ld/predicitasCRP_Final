@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/data/training-row.v1.schema.json",
+  "title": "Fila historica sintética de entrenamiento: metadata/target fuera de X",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id_cita_externa", "paciente_anon_id", "fecha_hora_cita", "fecha_registro_cita", "estado_actual", "target_no_show", "features"],
+  "properties": {
+    "id_cita_externa": {"type": "string", "pattern": "^CIT-SIM-[A-Za-z0-9_-]+$", "maxLength": 50},
+    "paciente_anon_id": {"type": "string", "pattern": "^PAC-SIM-[A-Za-z0-9_-]+$", "maxLength": 50},
+    "fecha_hora_cita": {"type": "string", "format": "date-time"},
+    "fecha_registro_cita": {"type": "string", "format": "date-time"},
+    "estado_actual": {"enum": ["ATENDIDA", "NO_SHOW"]},
+    "target_no_show": {"type": "integer", "enum": [0, 1]},
+    "features": {"$ref": "features.v1.schema.json"}
+  },
+  "allOf": [
+    {"if": {"properties": {"estado_actual": {"const": "ATENDIDA"}}}, "then": {"properties": {"target_no_show": {"const": 0}}}},
+    {"if": {"properties": {"estado_actual": {"const": "NO_SHOW"}}}, "then": {"properties": {"target_no_show": {"const": 1}}}}
+  ]
+}

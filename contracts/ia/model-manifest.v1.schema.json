@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/model-manifest.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_contrato", "version_modelo", "version_features", "version_dataset", "proposito", "linaje_completo", "estado", "algoritmo", "entrenado_en", "artifact", "dataset_manifest_sha256", "metrics_sha256", "dependencias", "umbrales", "metricas_test", "es_simulacion"],
+  "properties": {
+    "version_contrato": {"const": "1.0"},
+    "version_modelo": {"type": "string", "minLength": 1, "maxLength": 100},
+    "version_features": {"const": "pre-cita-v1"},
+    "version_dataset": {"type": "string", "minLength": 1, "maxLength": 100},
+    "proposito": {"enum": ["CONTRACT_FIXTURE", "TRAINING_RUN", "LEGACY_IMPORT"]},
+    "linaje_completo": {"type": "boolean"},
+    "estado": {"enum": ["CANDIDATO", "APROBADO"]},
+    "algoritmo": {"const": "LightGBM"},
+    "entrenado_en": {"type": "string", "format": "date-time"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["relative_path", "sha256"], "properties": {"relative_path": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\\.joblib$", "not": {"pattern": "(^|/)\\.\\.(/|$)"}}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
+    "dataset_manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "metrics_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "dependencias": {"type": "object", "required": ["python", "lightgbm", "scikit-learn", "numpy", "joblib"], "additionalProperties": {"type": "string", "minLength": 1}, "properties": {"python": {"type": "string"}, "lightgbm": {"type": "string"}, "scikit-learn": {"type": "string"}, "numpy": {"type": "string"}, "joblib": {"type": "string"}}},
+    "umbrales": {"type": "object", "additionalProperties": false, "required": ["medio", "alto"], "properties": {"medio": {"const": 0.3}, "alto": {"const": 0.45}}},
+    "metricas_test": {"type": "object", "additionalProperties": false, "required": ["f1_score", "precision", "recall", "roc_auc", "pr_auc"], "properties": {"f1_score": {"$ref": "#/$defs/metric"}, "precision": {"$ref": "#/$defs/metric"}, "recall": {"$ref": "#/$defs/metric"}, "roc_auc": {"$ref": "#/$defs/metric"}, "pr_auc": {"$ref": "#/$defs/metric"}}},
+    "es_simulacion": {"const": true}
+  },
+  "allOf": [
+    {"if": {"properties": {"proposito": {"const": "CONTRACT_FIXTURE"}}}, "then": {"properties": {"estado": {"const": "CANDIDATO"}}}},
+    {"if": {"properties": {"proposito": {"const": "LEGACY_IMPORT"}}}, "then": {"properties": {"linaje_completo": {"const": false}}}},
+    {"if": {"properties": {"proposito": {"const": "TRAINING_RUN"}}}, "then": {"properties": {"linaje_completo": {"const": true}}}}
+  ],
+  "$defs": {"metric": {"type": "number", "minimum": 0, "maximum": 1}}
+}

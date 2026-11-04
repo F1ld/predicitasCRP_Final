@@ -1,0 +1,75 @@
+﻿{
+    "Directory":  "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase0-20261103-2200",
+    "OutsideOneDrive":  true,
+    "OutsideTemp":  true,
+    "InheritanceDisabled":  true,
+    "Copies":  [
+                   {
+                       "File":  "backend.dump",
+                       "Bytes":  67358,
+                       "Sha256":  "7D3BA8930EAC8425F93AA829CFFE107E0FBE1D97FDC5616991CCE797A9C4ECD2",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "backend_globals_privado.sql",
+                       "Bytes":  970,
+                       "Sha256":  "4B6FB73CD619EB9967B37A09B81E6898920ACACE53381F5EF1D4717E3C3737A5",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "crp.dump",
+                       "Bytes":  92145,
+                       "Sha256":  "08AADB485908602A2F4D1539A3106E50AD4CB84E268B1A3532C4B6ADE7070B67",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "crp_globals_privado.sql",
+                       "Bytes":  970,
+                       "Sha256":  "DD10A54B39C626614DCF5A4AB8D8FBF14F4DB16BA6AA8EC6C3E1A8DF89AC616A",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "inventario_privado.json",
+                       "Bytes":  118451,
+                       "Sha256":  "90416013B84679DA1FEB1DA9935A2FD9C59D656DE8CF29B46740085486B35177",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "predicitas-backend_pgdata.tar",
+                       "Bytes":  68198400,
+                       "Sha256":  "A369450177829F11F617910326F47A1FAF526D2659E01BF8B6855F83767F799D",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "predicitas-crp_pgdata.tar",
+                       "Bytes":  50503680,
+                       "Sha256":  "4C8661A547A992C8503272E392E8E5AC2D4C8A502CACA531380AFD33FA783CC3",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "predicitas-guia-qa_qa_pgdata.tar",
+                       "Bytes":  50401280,
+                       "Sha256":  "CE00AF19996309B202671411648CDE9EC1182809EF7024CB2FAC7B0245D18F25",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "proyecto_completo_privado.zip",
+                       "Bytes":  2796529,
+                       "Sha256":  "55E9BACB0D9ACE67D7BD252E0FF77D5EE9C60B0DB30A88626CF1053F91DE9EE0",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "qa.dump",
+                       "Bytes":  87658,
+                       "Sha256":  "26B6AA7FE4C62A7AD8B827B15F8A24AEEC37A706285A01E80E9C00CF181EEAF1",
+                       "Verified":  true
+                   },
+                   {
+                       "File":  "qa_globals_privado.sql",
+                       "Bytes":  970,
+                       "Sha256":  "01727918004005BEC65FB9208EB662D3F10EA0FEBDAC851CAB2061D13CBBC1FA",
+                       "Verified":  true
+                   }
+               ],
+    "Note":  "Respaldo local duradero; sigue en el mismo equipo/disco, no reemplaza copia externa independiente."
+}

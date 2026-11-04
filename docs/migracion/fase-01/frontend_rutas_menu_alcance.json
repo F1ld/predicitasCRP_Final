@@ -1,0 +1,465 @@
+{
+  "typescript_tool_version": "5.9.3",
+  "production_module_routes": 15,
+  "test_only_routes": 1,
+  "routes": [
+    {
+      "module": "citas",
+      "route": "/citas",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+      "line": 13,
+      "test_only": false
+    },
+    {
+      "module": "citas",
+      "route": "/citas/nueva",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+      "line": 14,
+      "test_only": false
+    },
+    {
+      "module": "citas",
+      "route": "/citas/importar",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+      "line": 15,
+      "test_only": false
+    },
+    {
+      "module": "citas",
+      "route": "/citas/:id",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+      "line": 16,
+      "test_only": false
+    },
+    {
+      "module": "citas",
+      "route": "/citas/:id/trazabilidad",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+      "line": 17,
+      "test_only": false
+    },
+    {
+      "module": "intervenciones",
+      "route": "/intervenciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+      "line": 11,
+      "test_only": false
+    },
+    {
+      "module": "intervenciones",
+      "route": "/intervenciones/:id",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+      "line": 12,
+      "test_only": false
+    },
+    {
+      "module": "intervenciones",
+      "route": "/reportes/intervenciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+      "line": 13,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/lista-espera",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+      "line": 10,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/cupos",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+      "line": 11,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/cupos/:id",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+      "line": 12,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/reportes/reasignaciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+      "line": 13,
+      "test_only": false
+    },
+    {
+      "module": "prueba-ranura",
+      "route": "/prueba-ranura",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/prueba-ranura/rutas.tsx",
+      "line": 4,
+      "test_only": true
+    },
+    {
+      "module": "sesion",
+      "route": "/login",
+      "roles": [
+        "publico"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/sesion/rutas.tsx",
+      "line": 7,
+      "test_only": false
+    },
+    {
+      "module": "sesion",
+      "route": "/mi-cuenta",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/sesion/rutas.tsx",
+      "line": 8,
+      "test_only": false
+    },
+    {
+      "module": "usuarios",
+      "route": "/usuarios",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "label": null,
+      "order": null,
+      "source": "frontend-predicitas/src/modulos/usuarios/rutas.tsx",
+      "line": 6,
+      "test_only": false
+    }
+  ],
+  "menu": [
+    {
+      "module": "citas",
+      "route": "/citas",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": "Citas",
+      "order": 10,
+      "source": "frontend-predicitas/src/modulos/citas/menu.ts",
+      "line": 8,
+      "test_only": false
+    },
+    {
+      "module": "citas",
+      "route": "/citas/importar",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": "Importar CSV",
+      "order": 20,
+      "source": "frontend-predicitas/src/modulos/citas/menu.ts",
+      "line": 9,
+      "test_only": false
+    },
+    {
+      "module": "intervenciones",
+      "route": "/intervenciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": "Intervenciones",
+      "order": 25,
+      "source": "frontend-predicitas/src/modulos/intervenciones/menu.ts",
+      "line": 9,
+      "test_only": false
+    },
+    {
+      "module": "intervenciones",
+      "route": "/reportes/intervenciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": "Reporte de intervenciones",
+      "order": 26,
+      "source": "frontend-predicitas/src/modulos/intervenciones/menu.ts",
+      "line": 10,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/lista-espera",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": "Lista de espera",
+      "order": 40,
+      "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+      "line": 6,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/cupos",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": "Cupos liberados",
+      "order": 41,
+      "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+      "line": 7,
+      "test_only": false
+    },
+    {
+      "module": "lista-espera",
+      "route": "/reportes/reasignaciones",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "label": "Reporte de reasignaciones",
+      "order": 42,
+      "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+      "line": 8,
+      "test_only": false
+    },
+    {
+      "module": "prueba-ranura",
+      "route": "/prueba-ranura",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "label": "Prueba de ranura",
+      "order": 999,
+      "source": "frontend-predicitas/src/modulos/prueba-ranura/menu.ts",
+      "line": 4,
+      "test_only": true
+    },
+    {
+      "module": "sesion",
+      "route": "/mi-cuenta",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "label": "Mi cuenta",
+      "order": 40,
+      "source": "frontend-predicitas/src/modulos/sesion/menu.ts",
+      "line": 3,
+      "test_only": false
+    },
+    {
+      "module": "usuarios",
+      "route": "/usuarios",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "label": "Usuarios",
+      "order": 30,
+      "source": "frontend-predicitas/src/modulos/usuarios/menu.ts",
+      "line": 5,
+      "test_only": false
+    }
+  ],
+  "shell_routes": [
+    {
+      "route": "/",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "behavior": "inicioPorRol; actualmente /citas"
+    },
+    {
+      "route": "/importar",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "behavior": "redirect /citas/importar; destino aplica su propio permiso"
+    },
+    {
+      "route": "*",
+      "roles": [
+        "publico"
+      ],
+      "behavior": "pagina no encontrada"
+    }
+  ],
+  "legacy": [
+    {
+      "file": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/Citas.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/Importar.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/Intervenciones.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/Login.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/ModeloIA.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/pages/Reasignacion.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/auth/AuthContext.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/auth/contexto.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/auth/RutaProtegida.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/auth/useAuth.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/Cargando.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/EstadoBadge.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/Icono.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/Layout.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/Marca.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/components/Mensaje.jsx",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/lib/api.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/lib/formato.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/lib/transiciones.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    },
+    {
+      "file": "frontend-predicitas/src/lib/useConsulta.js",
+      "reachable_from_current_entry_and_discovered_modules": false
+    }
+  ],
+  "limitations": "Grafo estatico de imports relativos y ranuras conocidas; no prueba navegacion HTTP ni consumidores externos. Imports de solo tipo no cuentan; ramas de prueba se identifican aparte. No autoriza borrar legacy."
+}

@@ -79,6 +79,7 @@ export interface CatalogosOut {
 export interface CheckInOut {
   fecha_hora_check_in: string;
   id_usuario: number;
+  observacion?: string | null;
 }
 
 // RF-052 a RF-056, RN16, RN17: M09 conserva el snapshot del momento de inferencia.

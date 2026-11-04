@@ -1,0 +1,13 @@
+﻿{
+    "CheckedAt":  "2026-11-03T22:44:06.3445101-05:00",
+    "StoppedAuditContainers":  [
+                                   "predicitas-fase0-20261103-2200-api",
+                                   "predicitas-fase0-20261103-2200-restore"
+                               ],
+    "TemporaryFrontendStopped":  true,
+    "OriginalVolumesUntouched":  true,
+    "UnrelatedResourcesUntouched":  true,
+    "DeletedVolumes":  [
+
+                       ]
+}

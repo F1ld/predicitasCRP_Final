@@ -135,6 +135,7 @@ class HistorialOut(BaseModel):
 class CheckInOut(BaseModel):
     fecha_hora_check_in: datetime
     id_usuario: int
+    observacion: str | None = None
 
 
 class PrediccionOut(BaseModel):

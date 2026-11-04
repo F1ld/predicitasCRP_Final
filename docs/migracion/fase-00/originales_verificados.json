@@ -1,0 +1,22 @@
+{
+  "existing_files_checked": 302,
+  "changed_existing_files_excluding_plan_and_git_metadata": [],
+  "original_volumes": [
+    {
+      "volume": "predicitas-crp_pgdata",
+      "same_tar_sha256_as_initial_snapshot": true,
+      "sha256": "4c8661a547a992c8503272e392e8e5ac2d4c8a502caca531380afd33fa783cc3"
+    },
+    {
+      "volume": "predicitas-backend_pgdata",
+      "same_tar_sha256_as_initial_snapshot": true,
+      "sha256": "a369450177829f11f617910326f47a1faf526d2659e01bf8b6855f83767f799d"
+    },
+    {
+      "volume": "predicitas-guia-qa_qa_pgdata",
+      "same_tar_sha256_as_initial_snapshot": true,
+      "sha256": "ce00af19996309b202671411648cde9ec1182809ef7024cb2fac7b0245d18f25"
+    }
+  ],
+  "note": "Se comparan todos los bytes serializados por tar, no solo conteos. Solo montajes RO y sin escritores originales."
+}

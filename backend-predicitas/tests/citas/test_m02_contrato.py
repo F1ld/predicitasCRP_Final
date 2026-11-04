@@ -431,6 +431,9 @@ def test_check_in_registra_evento_una_sola_vez(client, usuarios, db, fijar_reloj
     r = client.post(f"/citas/{cita.id_cita}/check-in", headers=h, json={"observacion": "Llegó temprano"})
     assert r.status_code == 201, r.text
     assert r.json()["id_usuario"] == usuarios["RECEPCION"].id_usuario and r.json()["fecha_hora_check_in"]
+    assert r.json()["observacion"] == "Llegó temprano"
+    detalle = client.get(f"/citas/{cita.id_cita}", headers=h).json()
+    assert detalle["check_in"]["observacion"] == "Llegó temprano"
     eventos = _eventos(db, "CHECK_IN", cita.id_cita)
     assert len(eventos) == 1 and eventos[0].modulo == "CITAS" and eventos[0].entidad_afectada == "citas"
     db.refresh(cita)

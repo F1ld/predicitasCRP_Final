@@ -1,0 +1,14 @@
+{
+  "decision_date": "2026-11-03",
+  "approved_by": "usuario del proyecto",
+  "question": "Como resolver el pendiente de capturas de pantalla de fase 0, bloqueadas por ventana no visible",
+  "user_choice": "Aceptar evidencia funcional",
+  "accepted_evidence": [
+    "login y bandeja comprobados en navegador contra entorno aislado",
+    "snapshot de accesibilidad de la pagina",
+    "smoke API documentado por tres roles"
+  ],
+  "screenshots_obtained": false,
+  "full_visual_validation_claimed": false,
+  "scope": "Sustitucion expresa del entregable visual en fase 0; no cambia el alcance de pruebas visuales de fases posteriores."
+}

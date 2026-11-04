@@ -1,6 +1,5 @@
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { Pagina } from "../../nucleo/api/tipos";
 import { useConsulta } from "../../nucleo/api/useConsulta";
 import { useAuth } from "../../nucleo/auth/useAuth";
 import Cargando from "../../nucleo/componentes/Cargando";

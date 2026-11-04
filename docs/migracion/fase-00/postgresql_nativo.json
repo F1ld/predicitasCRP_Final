@@ -1,0 +1,7 @@
+﻿{
+    "Services":  [
+
+                 ],
+    "NativePostgresProgramDirectoryExists":  false,
+    "Note":  "El .env nativo apunta a predicitas_crp con rol postgres; no se arranca ni altera un servidor nativo sin identificarlo."
+}

@@ -1,0 +1,21 @@
+{
+  "decision_date": "2026-11-03",
+  "approved_by": "usuario del proyecto",
+  "confirmation": "Confirmo, procede con la fase",
+  "principal_volume": "predicitas-crp_pgdata",
+  "database": "predicitas",
+  "compose_project": "predicitas-crp",
+  "alembic_baseline": "m01_001_indices_auditoria",
+  "baseline_counts": {
+    "citas": 1122,
+    "usuarios": 4,
+    "predicciones_ia": 4
+  },
+  "other_volumes_preserved_without_merge": [
+    "predicitas-backend_pgdata",
+    "predicitas-guia-qa_qa_pgdata"
+  ],
+  "applies_to_future_migration": true,
+  "original_volume_started_or_modified_by_this_decision": false,
+  "note": "La confirmacion fija el origen; no autoriza borrado, fusion, seed ni sustitucion por clones de auditoria."
+}

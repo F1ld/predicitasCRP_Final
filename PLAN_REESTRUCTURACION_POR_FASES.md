@@ -434,8 +434,8 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 | Fase | Resultado | Dependencia | Estado |
 |---|---|---|---|
-| 0 | Inventario, baseline y recuperación comprobada | Ninguna | PENDIENTE |
-| 1 | Contratos y decisiones congelados | 0 | PENDIENTE |
+| 0 | Inventario, baseline y recuperación comprobada | Ninguna | COMPLETADA |
+| 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | PENDIENTE |
 | 3 | Datos, CSV y archivos centralizados | 2 | PENDIENTE |
 | 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
@@ -453,17 +453,26 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Qué se hace**
 
-- [ ] Inventariar archivos, repositorios internos, `.git`/worktrees si existen, rutas absolutas, servicios y versiones instaladas.
-- [ ] Acordar monorepositorio: preservar historial de repositorios internos mediante estrategia aprobada o conservar backups y origen si se inicia historial raíz. No borrar `.git` anidados por comodidad.
-- [ ] Registrar Docker/Compose, Python, Node, PostgreSQL y hashes de dependencias/lockfiles. Verificar que las versiones fijadas son instalables antes de actualizarlas.
-- [ ] Inventariar Compose activos, nombre de proyecto, contenedores, puertos y volúmenes con herramientas de inspección de solo lectura.
-- [ ] Registrar versión Alembic, nueve tablas, conteos, secuencias, índices, constraints, triggers, permisos y políticas RLS.
-- [ ] Respaldar código completo, `.env` por canal privado, CSV, modelo y BD; conservar copia adicional fuera del árbol/OneDrive.
-- [ ] Crear dump consistente PostgreSQL en formato custom y respaldo de roles/globals protegido. Comprobar restauración en un entorno aislado con permisos/triggers, no solo que existe un archivo.
-- [ ] En PowerShell evitar redirigir un dump binario con `>` sin garantizar flujo binario: preferir `pg_dump -Fc -f` dentro del contenedor y `docker cp`, o cliente nativo `-f`. No publicar dumps o globals con hashes de passwords.
-- [ ] Ejecutar pruebas actuales en BD de pruebas aislada; registrar fallos previos, screenshots y flujos que sí funcionan.
-- [ ] Guardar OpenAPI, ejemplos de respuesta, conteos, hashes y predicciones sobre un fixture fijo. Documentar qué credenciales demo permiten validar cada rol sin publicar secretos.
-- [ ] Confirmar la existencia y vaciedad de ambas carpetas `Skills`.
+- [x] Inventariar archivos, repositorios internos, `.git`/worktrees si existen, rutas absolutas, servicios y versiones instaladas.
+- [x] Definir estrategia conservadora del monorepositorio: conservar repositorio raíz y snapshot `69c686f` ya existentes; no hay repositorios internos que integrar. Sin commits automáticos ni borrado de historial.
+- [x] Registrar Docker/Compose, Python, Node, PostgreSQL y hashes de dependencias/lockfiles.
+- [x] Completar instalación limpia backend en venv aislado: 54 versiones fijadas coinciden y `pip check` correcto. Superado timeout inicial de red; `npm ci` frontend también completó.
+- [x] Inventariar Compose activos, nombre de proyecto, contenedores, puertos y volúmenes con herramientas de inspección de solo lectura.
+- [x] Registrar versión Alembic, nueve tablas, conteos, secuencias, índices, constraints, triggers, permisos y políticas RLS de los tres volúmenes candidatos.
+- [x] Respaldar código completo, `.env` por canal privado, CSV, modelo y BD; conservar copia adicional fuera del árbol/OneDrive y de Temp.
+- [x] Crear dumps custom y globals privados de las tres bases; restaurar y verificar CRP en entorno aislado. Si se elige otra base como principal, comprobar también su dump lógico antes del cierre.
+- [x] Usar `pg_dump -Fc -f` dentro del contenedor y `docker cp`, sin redirección binaria PowerShell ni publicación de globals/passwords.
+- [x] Ejecutar pruebas actuales en BD de pruebas aislada y registrar fallos previos y flujos que sí funcionan; no equivale a suite aprobada.
+- [x] Usuario aceptó expresamente evidencia funcional alternativa a screenshots bloqueados por ventana no visible. No se certifica validación visual completa.
+- [x] Guardar OpenAPI, ejemplos de respuesta sin secretos, conteos, hashes y predicciones sobre fixtures fijos.
+- [x] Verificar credenciales históricas demo en una copia, sin publicar/cambiar passwords: tres cuentas activas coinciden con clave de seed del Compose original. Smoke/navegación con cuentas desechables.
+- [x] Confirmar la existencia y vaciedad de ambas carpetas `Skills`.
+- [x] Confirmar con el usuario volumen principal: `predicitas-crp_pgdata` (1.122 citas), aprobado el 03/11/2026; preservar los otros dos sin fusionar. Ver `docs/migracion/fase-00/decision_bd_principal.json`.
+- [x] Congelar línea base con fallos previos y remitir estabilización separada a fase 1; no se declara sistema aprobado funcionalmente ni se mezclan arreglos con movimientos.
+
+**Avance y evidencias (03/11/2026):** [Fase 0 — inventario, respaldos y línea base](docs/migracion/fase-00/README.md). Snapshot previo `69c686f`; tres originales verificados sin cambios por hash. Backend completo bloqueado en colección; diagnóstico adicional 218 aprobadas/1 fallida, cobertura 87,12%. Frontend 451 aprobadas/56 fallidas, build/typecheck bloqueados. No se modificó código funcional ni se avanzó a fase 1.
+
+**Cierre técnico (03/11/2026):** [CIERRE_FASE_0.md](docs/migracion/fase-00/CIERRE_FASE_0.md). Usuario confirmó CRP como principal y aceptó evidencia funcional alternativa. Instalación limpia y credenciales demo verificadas; respaldos/originales revalidados. COMPLETADA significa inventario, recuperación y baseline establecidos, no corrección de fallos existentes.
 
 **Se toca:** exclusivamente evidencias, backups, configuración aislada de pruebas y estrategia de control de versiones.
 
@@ -479,14 +488,18 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Objetivo:** fijar el destino antes de mover implementaciones.
 
-- [ ] Documentar decisiones en `docs/arquitectura/`: componentes, dueños de datos, módulos, transacciones, fuente de datos IA, artifact registry y errores.
-- [ ] Crear inventario completo de endpoints/rutas UI, alias, descargas, formularios y permisos; snapshot OpenAPI backend.
-- [ ] Definir contratos IA v1, CSV operacional, dataset entrenamiento, features y manifiestos en `contracts/`.
-- [ ] Documentar fuente de umbrales, versión de contrato, rangos, nulos y correlación individual/lote.
-- [ ] Decidir volumen existente versus restauración, puerto host BD y nombre estable de proyecto Compose.
-- [ ] Elaborar mapa de importaciones y escrituras cruzadas, incluyendo import local en `/citas/{id}/prediccion`.
-- [ ] Definir recorrido E2E actual y qué funcionalidades están incompletas; no prometer reportes o pantallas no implementados.
-- [ ] Definir compatibilidad: conservar contratos públicos; cualquier corrección funcional fuera de alcance requiere decisión y prueba independiente.
+- [x] Documentar decisiones en `docs/arquitectura/`: ocho ADRs con componentes, propietarios, transacciones, datos IA, registry y errores; implementación posterior, no aplicada ahora.
+- [x] Inventariar 55 operaciones API y 15 rutas UI de módulos, alias, descargas/formularios y roles; snapshot OpenAPI copiado byte a byte y contrastado con app actual.
+- [x] Definir contratos IA v1, CSV operacional, dataset, features y manifiestos en `contracts/`: 12 schemas y 60 ejemplos positivos/negativos comprobados.
+- [x] Documentar umbrales del manifiesto/perfil v1, redondeo a tres decimales antes de clasificar, tipos/nulos y correlación individual/lote.
+- [x] Elegir uso del volumen existente aprobado `predicitas-crp_pgdata`, proyecto `predicitas-crp`, puerto host BD 5432 configurable explícitamente; sin restore/seed por defecto.
+- [x] Mapear 74 imports cruzados, 90 sitios db.* y 27 commits; incluir import local `/citas/{id}/prediccion` y separar lecturas de escrituras.
+- [x] Definir E2E futuro y alcance realmente comprobado, funcionalidades incompletas y entrega separada S-01..S-13 de estabilización.
+- [x] Definir compatibilidad actual/objetivo y correcciones por separado; distinguir alias no equivalentes y no presentar defectos como garantías deseadas.
+
+**Cierre documental (03/11/2026):** [Fase 1 — contratos y decisiones](docs/migracion/fase-01/README.md), [arquitectura](docs/arquitectura/README.md) y [contratos](contracts/README.md). Validaciones de schemas/fixtures y contraste offline con backend, sin tocar aplicaciones/BD. COMPLETADA no equivale a implementar IA externa ni corregir fallos de fase 0.
+
+**Gate antes de cerrar fase 2:** resolver S-01 (TypeScript/build) en entrega independiente, preferiblemente antes de mover. Los demás fallos se conservan caracterizados con gates propios. No mezclar estabilización, movimiento mecánico y extracción IA ni declarar build aprobado con la línea base roja.
 
 **Se toca:** documentación, esquemas de contrato y fixtures de referencia; pruebas de contrato pueden prepararse sin modificar producción.
 
@@ -934,3 +947,36 @@ Aceptación de fase y fecha:
 - **Sin modificar:** código, modelos, datos, CSV, `.env`, Dockerfiles, Compose, migraciones y pruebas existentes.
 - **Validación de esta entrega:** comprobar existencia del Markdown, presencia/vaciedad de `Skills` y correspondencia del plan con archivos inspeccionados. No se ejecutó la matriz funcional de la migración.
 - **Siguiente acción:** fase 0 — inventario operativo, respaldo/restauración y baseline en entorno aislado.
+
+### Ejecución de fase 0 — 3 de noviembre de 2026
+
+- **Estado:** EN CURSO, con pendientes explícitos; no declarar la fase completada ni iniciar movimientos.
+- **Trabajo retomado:** snapshot Git `69c686f21fd1938dc76d679f4c6b33270f10a6d7` creado por el agente anterior; se conservó sin cambios de historial.
+- **Realizado:** inventario de archivos/configuración, copias RO de tres volúmenes, dumps y globals privados, restauración lógica CRP verificada, migraciones en BD de pruebas vacía, pruebas backend/frontend, smoke API por tres roles, navegador de Recepción y fixtures/predicciones IA.
+- **Respaldo privado duradero:** `C:\Users\arami\AppData\Local\PrediCitasBackups\fase0-20261103-2200`, fuera de OneDrive y Temp, con acceso restringido. Sigue en el mismo equipo; copia externa cifrada recomendada.
+- **Sin tocar:** 302 archivos originales verificados (salvo este plan y metadata Git), tres volúmenes originales con hashes TAR idénticos, CSV, modelo, secretos y lógica existentes. `Skills` siguen vacías.
+- **Límites:** errores previos documentados, resolución limpia Python bloqueada por red, capturas pendientes por ventana no visible y volumen principal sin aceptación definitiva.
+- **Recursos:** laboratorios aislados detenidos, volúmenes preservados; ningún servicio original fue arrancado. No se borraron recursos ajenos.
+- **Evidencia y próximos pasos:** leer [docs/migracion/fase-00/README.md](docs/migracion/fase-00/README.md) y confirmar qué volumen conservar como principal; no corregir fallos mezclándolos con la mudanza.
+
+### Continuación y cierre de fase 0 — 3 de noviembre de 2026
+
+- **Estado actual:** COMPLETADA en su alcance de inventario, respaldo, recuperación y línea base; el registro EN CURSO anterior es histórico.
+- **Decisiones del usuario:** `predicitas-crp_pgdata` principal; evidencia funcional aceptada en lugar de capturas sin ventana visible. Los otros volúmenes siguen preservados.
+- **Verificaciones nuevas:** instalación real en venv Python 3.12.16 sin paquetes de sistema, 54 requirements fijados coincidentes, `pip check` código 0; tres cuentas demo históricas verificadas por hash sin exponer claves; login y bandeja revalidados.
+- **Integridad:** 302 archivos originales y los tres TAR de volúmenes con hashes iniciales; 11 respaldos duraderos revalidados. Sin cambios de lógica/configuración/datos originales ni commits automáticos.
+- **Pendientes transferidos, no ocultados:** fallos anteriores de pruebas/TypeScript, auditoría moderada npm, configuración nativa divergente y dependencias transitivas a estabilizar. No se declara aprobación funcional.
+- **Recursos:** continuación de laboratorio cerrada; servicios temporales detenidos, volúmenes y recursos ajenos preservados.
+- **Siguiente paso:** fase 1 — contratos y decisiones. Permanece PENDIENTE en esta entrega; no se ejecutó ninguna mudanza.
+- **Detalle y punto de retorno:** [cierre técnico](docs/migracion/fase-00/CIERRE_FASE_0.md), snapshot `69c686f`, dumps/TAR/ZIP privados verificados y ZIP adicional de cierre.
+
+### Ejecución y cierre de fase 1 — 3 de noviembre de 2026
+
+- **Estado:** COMPLETADA en alcance documental/de contratos. Fase 2 sigue PENDIENTE; ninguna mudanza ni arreglo de lógica aplicado.
+- **Entregables:** ocho ADRs, mapa de dependencias/escrituras, rutas/consumidores/permisos, contratos actuales frente a objetivo, doce JSON Schemas, OpenAPI IA, sesenta fixtures, especificación E2E y estabilización separada.
+- **Verificado:** 55 operaciones AST/OpenAPI, 15 rutas UI productivas y una test-only, 12 schemas/60 casos con resultados esperados, refs locales, ocho casos de fila normalizada y dos CSV contra validadores reales en contenedor sin red/BD. Alias REP-02 incompatible confirmado por firma, no por ejecución HTTP.
+- **Decisiones:** conservar volumen existente principal; Compose `predicitas-crp`, BD host 5432 configurable; precisión y lotes preservados; modelo legacy declara linaje incompleto cuando no hay archivos originales, sin hashes/fechas inventados.
+- **Sin tocar:** aplicaciones, secretos, CSV/modelo existentes, dependencias runtime, migraciones o volumen principal. Herramientas de validación solo en Temp. Sin commits automáticos.
+- **Limitaciones:** validaciones documentales, no suite funcional nueva ni OpenAPI formal completo. Los fallos previos permanecen abiertos y no se atribuyen a la migración.
+- **Siguiente acción recomendada:** entrega mínima S-01 de estabilización de build/typecheck y luego fase 2 mecánica; diffs y pruebas separados. No saltar a extracción IA.
+- **Evidencias y retorno:** [README de fase 1](docs/migracion/fase-01/README.md), snapshot/respaldos de fase 0 y ZIP privado adicional de esta entrega. No sobrescribir evidencia histórica al repetir validaciones.

@@ -1,0 +1,80 @@
+{
+  "openapi_matches_current_app": true,
+  "public_operations": 55,
+  "normalized_import_cases": [
+    {
+      "case": "import-normalizado-valido",
+      "accepted_by_current_pure_validator": true,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-extra-ignorado",
+      "accepted_by_current_pure_validator": true,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-sede-invalida",
+      "accepted_by_current_pure_validator": false,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-liberada-prohibida",
+      "accepted_by_current_pure_validator": false,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-domingo-semantico",
+      "accepted_by_current_pure_validator": false,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-desenlace-futuro",
+      "accepted_by_current_pure_validator": false,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-fechas-invertidas",
+      "accepted_by_current_pure_validator": false,
+      "matches_contract_expectation": true
+    },
+    {
+      "case": "import-inversion-misma-fecha-legacy",
+      "accepted_by_current_pure_validator": true,
+      "matches_contract_expectation": true
+    }
+  ],
+  "csv_fixtures": [
+    {
+      "file": "importacion_valida.csv",
+      "accepted": 2,
+      "rejected": 0,
+      "scope": "validacion pura y duplicados locales; sin BD ni persistencia"
+    },
+    {
+      "file": "importacion_mixta.csv",
+      "accepted": 1,
+      "rejected": 3,
+      "scope": "validacion pura y duplicados locales; sin BD ni persistencia"
+    }
+  ],
+  "report_alias_signature_checks": [
+    {
+      "alias": "alias_reporte_intervenciones",
+      "target": "obtener_rep02",
+      "signature_compatible": false,
+      "reason": "missing a required argument: 'request'",
+      "endpoint_executed": false
+    },
+    {
+      "alias": "alias_reporte_reasignaciones",
+      "target": "obtener_rep03",
+      "signature_compatible": true,
+      "reason": null,
+      "endpoint_executed": false
+    }
+  ],
+  "network_disabled": true,
+  "database_queries_performed": false,
+  "runtime_modified": false,
+  "scope": "No acredita RBAC HTTP, estado/persistencia, reportes ejecutados ni una suite funcional nueva."
+}

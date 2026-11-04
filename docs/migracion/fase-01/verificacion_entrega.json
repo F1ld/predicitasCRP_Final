@@ -1,0 +1,14 @@
+{
+  "existing_files_sha256_checked": 302,
+  "changed_original_files_excluding_plan_git_metadata": [],
+  "public_snapshot_unchanged": true,
+  "schema_count": 12,
+  "contract_cases": 60,
+  "public_operations": 55,
+  "ui_module_routes": 15,
+  "skills_both_empty": true,
+  "relative_links_checked": 17,
+  "no_original_long_secret_values_found": true,
+  "no_database_or_joblib_access_in_this_check": true,
+  "new_functional_app_tests_claimed": false
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/error.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["error"],
+  "properties": {
+    "error": {"type": "object", "additionalProperties": false, "required": ["codigo", "mensaje", "campos"], "properties": {"codigo": {"enum": ["NO_AUTENTICADO", "VALIDACION", "MODELO_NO_DISPONIBLE", "VERSION_MODELO_INCOMPATIBLE", "ERROR_INTERNO", "SOLICITUD_DEMASIADO_GRANDE"]}, "mensaje": {"type": "string", "minLength": 1, "maxLength": 255}, "campos": {"type": "object", "additionalProperties": {"type": "string"}}}}
+  }
+}

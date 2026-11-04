@@ -1,0 +1,32 @@
+﻿[
+    {
+        "Source":  "predicitas-crp_pgdata",
+        "ReadOnlySource":  true,
+        "NoActiveWriters":  true,
+        "Archive":  "predicitas-crp_pgdata.tar",
+        "Bytes":  50503680,
+        "Sha256":  "4C8661A547A992C8503272E392E8E5AC2D4C8A502CACA531380AFD33FA783CC3",
+        "Clone":  "predicitas-fase0-20261103-2200-crp",
+        "Alias":  "crp"
+    },
+    {
+        "Source":  "predicitas-backend_pgdata",
+        "ReadOnlySource":  true,
+        "NoActiveWriters":  true,
+        "Archive":  "predicitas-backend_pgdata.tar",
+        "Bytes":  68198400,
+        "Sha256":  "A369450177829F11F617910326F47A1FAF526D2659E01BF8B6855F83767F799D",
+        "Clone":  "predicitas-fase0-20261103-2200-backend",
+        "Alias":  "backend"
+    },
+    {
+        "Source":  "predicitas-guia-qa_qa_pgdata",
+        "ReadOnlySource":  true,
+        "NoActiveWriters":  true,
+        "Archive":  "predicitas-guia-qa_qa_pgdata.tar",
+        "Bytes":  50401280,
+        "Sha256":  "CE00AF19996309B202671411648CDE9EC1182809EF7024CB2FAC7B0245D18F25",
+        "Clone":  "predicitas-fase0-20261103-2200-qa",
+        "Alias":  "qa"
+    }
+]

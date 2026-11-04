@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/data/features.v1.schema.json",
+  "title": "Features crudas pre-cita v1, perfil de extraccion del modelo actual",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["especialidad", "tipo_paciente", "canal_origen", "franja_horaria", "dia_semana", "antelacion_dias", "inasistencias_previas", "asistencias_previas", "reprogramaciones_prev"],
+  "properties": {
+    "especialidad": {"enum": ["CARDIOLOGIA", "TRAUMATOLOGIA", "PEDIATRIA"]},
+    "tipo_paciente": {"enum": ["NUEVO", "CONTINUADOR"]},
+    "canal_origen": {"enum": ["WEB", "CALL_CENTER", "PRESENCIAL"]},
+    "franja_horaria": {"enum": ["MANANA", "TARDE"]},
+    "dia_semana": {"enum": ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"]},
+    "antelacion_dias": {"type": "integer", "minimum": 0},
+    "inasistencias_previas": {"type": "integer", "minimum": 0},
+    "asistencias_previas": {"type": "integer", "minimum": 0},
+    "reprogramaciones_prev": {"type": "integer", "minimum": 0}
+  }
+}

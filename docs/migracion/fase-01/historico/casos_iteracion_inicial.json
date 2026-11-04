@@ -1,0 +1,3408 @@
+{
+  "reference_now": "2026-11-03T08:00:00-05:00",
+  "all_data_synthetic": true,
+  "not_training_evidence": true,
+  "cases": [
+    {
+      "id": "features-validas",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "features-target-prohibido",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2,
+        "target_no_show": 1
+      }
+    },
+    {
+      "id": "features-sin-nulos",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "features-contador-negativo",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": 32,
+        "inasistencias_previas": -1,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "features-domingo",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "DOMINGO",
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "features-no-coaccion-string",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": "32",
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "features-no-bool-como-int",
+      "schema": "data/features.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": true,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      }
+    },
+    {
+      "id": "prediccion-request-valido",
+      "schema": "ia/predict-request.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-request-uuid-invalido",
+      "schema": "ia/predict-request.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "paciente-123",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-request-version-invalida",
+      "schema": "ia/predict-request.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "2.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-response-valida",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.999,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-score-fuera-rango",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 1.2,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      }
+    },
+    {
+      "id": "prediccion-score-string-interno",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": "0.999",
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      }
+    },
+    {
+      "id": "prediccion-exceso-decimales",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.9991,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      }
+    },
+    {
+      "id": "prediccion-nivel-inconsistente",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.3,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      }
+    },
+    {
+      "id": "prediccion-explicacion-larga",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.999,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      }
+    },
+    {
+      "id": "prediccion-id-no-corresponde",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000002",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.999,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-modelo-no-corresponde",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "otro_modelo",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.999,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "prediccion-formula-derivada-invalida",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.999,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.1,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-0-BAJO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0,
+        "nivel_riesgo": "BAJO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-0.299-BAJO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.299,
+        "nivel_riesgo": "BAJO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-0.3-MEDIO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.3,
+        "nivel_riesgo": "MEDIO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-0.45-MEDIO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.45,
+        "nivel_riesgo": "MEDIO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-0.451-ALTO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 0.451,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "borde-1-ALTO",
+      "schema": "ia/predict-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "probabilidad_no_show": 1,
+        "nivel_riesgo": "ALTO",
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "batch-valido",
+      "schema": "ia/batch-request.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-2",
+            "features": {
+              "especialidad": "PEDIATRIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "WEB",
+              "franja_horaria": "MANANA",
+              "dia_semana": "LUNES",
+              "antelacion_dias": 2,
+              "inasistencias_previas": 0,
+              "asistencias_previas": 12,
+              "reprogramaciones_prev": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-vacio",
+      "schema": "ia/batch-request.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": []
+      }
+    },
+    {
+      "id": "batch-mas-100",
+      "schema": "ia/batch-request.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-0",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-2",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-3",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-4",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-5",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-6",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-7",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-8",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-9",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-10",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-11",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-12",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-13",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-14",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-15",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-16",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-17",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-18",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-19",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-20",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-21",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-22",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-23",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-24",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-25",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-26",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-27",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-28",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-29",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-30",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-31",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-32",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-33",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-34",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-35",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-36",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-37",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-38",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-39",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-40",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-41",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-42",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-43",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-44",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-45",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-46",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-47",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-48",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-49",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-50",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-51",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-52",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-53",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-54",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-55",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-56",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-57",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-58",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-59",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-60",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-61",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-62",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-63",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-64",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-65",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-66",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-67",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-68",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-69",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-70",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-71",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-72",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-73",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-74",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-75",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-76",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-77",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-78",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-79",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-80",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-81",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-82",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-83",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-84",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-85",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-86",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-87",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-88",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-89",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-90",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-91",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-92",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-93",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-94",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-95",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-96",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-97",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-98",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-99",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-100",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-ids-duplicados",
+      "schema": "ia/batch-request.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-response-valida",
+      "schema": "ia/batch-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "items": [
+          {
+            "id_item": "item-1",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.999,
+              "nivel_riesgo": "ALTO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 32,
+                "inasistencias_previas": 3,
+                "asistencias_previas": 1,
+                "reprogramaciones_prev": 2,
+                "tasa_no_show_previa": 0.6,
+                "es_reserva_lejana": 1,
+                "especialidad": "TRAUMATOLOGIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "CALL_CENTER",
+                "franja_horaria": "TARDE",
+                "dia_semana": "VIERNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          },
+          {
+            "id_item": "item-2",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.0,
+              "nivel_riesgo": "BAJO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 2,
+                "inasistencias_previas": 0,
+                "asistencias_previas": 12,
+                "reprogramaciones_prev": 0,
+                "tasa_no_show_previa": 0.0,
+                "es_reserva_lejana": 0,
+                "especialidad": "PEDIATRIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "WEB",
+                "franja_horaria": "MANANA",
+                "dia_semana": "LUNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 0 (-2.08) | 2) Antelación: 2 días (-1.34) | 3) Asistencias previas: 12 (-0.70) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          }
+        ]
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-2",
+            "features": {
+              "especialidad": "PEDIATRIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "WEB",
+              "franja_horaria": "MANANA",
+              "dia_semana": "LUNES",
+              "antelacion_dias": 2,
+              "inasistencias_previas": 0,
+              "asistencias_previas": 12,
+              "reprogramaciones_prev": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-response-incompleta",
+      "schema": "ia/batch-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "items": [
+          {
+            "id_item": "item-1",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.999,
+              "nivel_riesgo": "ALTO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 32,
+                "inasistencias_previas": 3,
+                "asistencias_previas": 1,
+                "reprogramaciones_prev": 2,
+                "tasa_no_show_previa": 0.6,
+                "es_reserva_lejana": 1,
+                "especialidad": "TRAUMATOLOGIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "CALL_CENTER",
+                "franja_horaria": "TARDE",
+                "dia_semana": "VIERNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          }
+        ]
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-2",
+            "features": {
+              "especialidad": "PEDIATRIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "WEB",
+              "franja_horaria": "MANANA",
+              "dia_semana": "LUNES",
+              "antelacion_dias": 2,
+              "inasistencias_previas": 0,
+              "asistencias_previas": 12,
+              "reprogramaciones_prev": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "batch-response-extra",
+      "schema": "ia/batch-response.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "items": [
+          {
+            "id_item": "item-1",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.999,
+              "nivel_riesgo": "ALTO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 32,
+                "inasistencias_previas": 3,
+                "asistencias_previas": 1,
+                "reprogramaciones_prev": 2,
+                "tasa_no_show_previa": 0.6,
+                "es_reserva_lejana": 1,
+                "especialidad": "TRAUMATOLOGIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "CALL_CENTER",
+                "franja_horaria": "TARDE",
+                "dia_semana": "VIERNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          },
+          {
+            "id_item": "item-2",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.0,
+              "nivel_riesgo": "BAJO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 2,
+                "inasistencias_previas": 0,
+                "asistencias_previas": 12,
+                "reprogramaciones_prev": 0,
+                "tasa_no_show_previa": 0.0,
+                "es_reserva_lejana": 0,
+                "especialidad": "PEDIATRIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "WEB",
+                "franja_horaria": "MANANA",
+                "dia_semana": "LUNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 0 (-2.08) | 2) Antelación: 2 días (-1.34) | 3) Asistencias previas: 12 (-0.70) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          },
+          {
+            "id_item": "item-3",
+            "resultado": {
+              "version_contrato": "1.0",
+              "id_solicitud": "10000000-0000-4000-8000-000000000001",
+              "version_modelo": "LightGBM_v1.0.0",
+              "version_features": "pre-cita-v1",
+              "probabilidad_no_show": 0.999,
+              "nivel_riesgo": "ALTO",
+              "umbrales": {
+                "medio": 0.3,
+                "alto": 0.45
+              },
+              "features_snapshot": {
+                "antelacion_dias": 32,
+                "inasistencias_previas": 3,
+                "asistencias_previas": 1,
+                "reprogramaciones_prev": 2,
+                "tasa_no_show_previa": 0.6,
+                "es_reserva_lejana": 1,
+                "especialidad": "TRAUMATOLOGIA",
+                "tipo_paciente": "CONTINUADOR",
+                "canal_origen": "CALL_CENTER",
+                "franja_horaria": "TARDE",
+                "dia_semana": "VIERNES"
+              },
+              "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]",
+              "es_simulacion": true,
+              "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          }
+        ]
+      },
+      "context": {
+        "version_contrato": "1.0",
+        "id_solicitud": "10000000-0000-4000-8000-000000000001",
+        "version_modelo": "LightGBM_v1.0.0",
+        "version_features": "pre-cita-v1",
+        "items": [
+          {
+            "id_item": "item-1",
+            "features": {
+              "especialidad": "TRAUMATOLOGIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "CALL_CENTER",
+              "franja_horaria": "TARDE",
+              "dia_semana": "VIERNES",
+              "antelacion_dias": 32,
+              "inasistencias_previas": 3,
+              "asistencias_previas": 1,
+              "reprogramaciones_prev": 2
+            }
+          },
+          {
+            "id_item": "item-2",
+            "features": {
+              "especialidad": "PEDIATRIA",
+              "tipo_paciente": "CONTINUADOR",
+              "canal_origen": "WEB",
+              "franja_horaria": "MANANA",
+              "dia_semana": "LUNES",
+              "antelacion_dias": 2,
+              "inasistencias_previas": 0,
+              "asistencias_previas": 12,
+              "reprogramaciones_prev": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "import-normalizado-valido",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA"
+      }
+    },
+    {
+      "id": "import-extra-ignorado",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA",
+        "columna_extra": "ignorada"
+      }
+    },
+    {
+      "id": "import-sede-invalida",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "MIRAFLORES",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA"
+      }
+    },
+    {
+      "id": "import-liberada-prohibida",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "LIBERADA"
+      }
+    },
+    {
+      "id": "import-domingo-semantico",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-08T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA"
+      }
+    },
+    {
+      "id": "import-desenlace-futuro",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-01T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "NO_SHOW"
+      }
+    },
+    {
+      "id": "import-fechas-invertidas",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-10T09:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA"
+      }
+    },
+    {
+      "id": "import-inversion-misma-fecha-legacy",
+      "schema": "data/cita-import-normalizada.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-CON-001",
+        "paciente_anon_id": "PAC-CON-001",
+        "sede": "SAN_ISIDRO",
+        "especialidad": "PEDIATRIA",
+        "medico": "Medico sintetico",
+        "fecha_hora_cita": "2026-11-09T09:00:00-05:00",
+        "fecha_registro_cita": "2026-11-09T10:00:00-05:00",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "WEB",
+        "inasistencias_previas": null,
+        "asistencias_previas": null,
+        "reprogramaciones_prev": 0,
+        "estado_actual": "RECIBIDA"
+      }
+    },
+    {
+      "id": "training-valido",
+      "schema": "data/training-row.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-SIM-CON001",
+        "paciente_anon_id": "PAC-SIM-CON001",
+        "fecha_hora_cita": "2026-10-30T15:00:00-05:00",
+        "fecha_registro_cita": "2026-09-28T09:00:00-05:00",
+        "estado_actual": "NO_SHOW",
+        "target_no_show": 1,
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "training-target-incoherente",
+      "schema": "data/training-row.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-SIM-CON001",
+        "paciente_anon_id": "PAC-SIM-CON001",
+        "fecha_hora_cita": "2026-10-30T15:00:00-05:00",
+        "fecha_registro_cita": "2026-09-28T09:00:00-05:00",
+        "estado_actual": "NO_SHOW",
+        "target_no_show": 0,
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "training-sin-desenlace",
+      "schema": "data/training-row.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "id_cita_externa": "CIT-SIM-CON001",
+        "paciente_anon_id": "PAC-SIM-CON001",
+        "fecha_hora_cita": "2026-10-30T15:00:00-05:00",
+        "fecha_registro_cita": "2026-09-28T09:00:00-05:00",
+        "estado_actual": "RECIBIDA",
+        "target_no_show": 1,
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "training-features-incoherentes",
+      "schema": "data/training-row.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "id_cita_externa": "CIT-SIM-CON001",
+        "paciente_anon_id": "PAC-SIM-CON001",
+        "fecha_hora_cita": "2026-10-30T15:00:00-05:00",
+        "fecha_registro_cita": "2026-09-28T09:00:00-05:00",
+        "estado_actual": "NO_SHOW",
+        "target_no_show": 1,
+        "features": {
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES",
+          "antelacion_dias": 1,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2
+        }
+      }
+    },
+    {
+      "id": "dataset-manifest-ejemplo",
+      "schema": "data/dataset-manifest.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "version_features": "pre-cita-v1",
+        "proposito": "CONTRACT_FIXTURE",
+        "fuente": "SINTETICO_GENERADO",
+        "semilla": 42,
+        "fecha_corte": "2026-11-03",
+        "generado_en": "2026-11-03T13:00:00Z",
+        "sha256_raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "total_historicas": 1000,
+        "distribucion": {
+          "atendidas": 795,
+          "no_show": 205
+        },
+        "particiones": {
+          "train": {
+            "filas": 700,
+            "no_show": 144,
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sha256_ids": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "val": {
+            "filas": 150,
+            "no_show": 31,
+            "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "sha256_ids": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "test": {
+            "filas": 150,
+            "no_show": 30,
+            "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "sha256_ids": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        },
+        "sin_interseccion_ids": true,
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "dataset-pocos-historicos",
+      "schema": "data/dataset-manifest.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "version_features": "pre-cita-v1",
+        "proposito": "CONTRACT_FIXTURE",
+        "fuente": "SINTETICO_GENERADO",
+        "semilla": 42,
+        "fecha_corte": "2026-11-03",
+        "generado_en": "2026-11-03T13:00:00Z",
+        "sha256_raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "total_historicas": 999,
+        "distribucion": {
+          "atendidas": 795,
+          "no_show": 205
+        },
+        "particiones": {
+          "train": {
+            "filas": 700,
+            "no_show": 144,
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sha256_ids": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "val": {
+            "filas": 150,
+            "no_show": 31,
+            "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "sha256_ids": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "test": {
+            "filas": 150,
+            "no_show": 30,
+            "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "sha256_ids": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        },
+        "sin_interseccion_ids": true,
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "dataset-conteos-incoherentes",
+      "schema": "data/dataset-manifest.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "version_features": "pre-cita-v1",
+        "proposito": "CONTRACT_FIXTURE",
+        "fuente": "SINTETICO_GENERADO",
+        "semilla": 42,
+        "fecha_corte": "2026-11-03",
+        "generado_en": "2026-11-03T13:00:00Z",
+        "sha256_raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "total_historicas": 1000,
+        "distribucion": {
+          "atendidas": 800,
+          "no_show": 205
+        },
+        "particiones": {
+          "train": {
+            "filas": 700,
+            "no_show": 144,
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sha256_ids": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "val": {
+            "filas": 150,
+            "no_show": 31,
+            "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "sha256_ids": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "test": {
+            "filas": 150,
+            "no_show": 30,
+            "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "sha256_ids": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        },
+        "sin_interseccion_ids": true,
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "dataset-splits-incoherentes",
+      "schema": "data/dataset-manifest.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "data": {
+        "version_contrato": "1.0",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "version_features": "pre-cita-v1",
+        "proposito": "CONTRACT_FIXTURE",
+        "fuente": "SINTETICO_GENERADO",
+        "semilla": 42,
+        "fecha_corte": "2026-11-03",
+        "generado_en": "2026-11-03T13:00:00Z",
+        "sha256_raw": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "total_historicas": 1000,
+        "distribucion": {
+          "atendidas": 795,
+          "no_show": 205
+        },
+        "particiones": {
+          "train": {
+            "filas": 699,
+            "no_show": 144,
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sha256_ids": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "val": {
+            "filas": 150,
+            "no_show": 31,
+            "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "sha256_ids": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          "test": {
+            "filas": 150,
+            "no_show": 30,
+            "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "sha256_ids": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        },
+        "sin_interseccion_ids": true,
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "model-manifest-ejemplo",
+      "schema": "ia/model-manifest.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "version_modelo": "CONTRACT_FIXTURE_MODEL",
+        "version_features": "pre-cita-v1",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "proposito": "CONTRACT_FIXTURE",
+        "estado": "CANDIDATO",
+        "algoritmo": "LightGBM",
+        "entrenado_en": "2026-11-03T13:00:00Z",
+        "artifact": {
+          "relative_path": "CONTRACT_FIXTURE_MODEL/modelo.joblib",
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        "dataset_manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "metrics_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "dependencias": {
+          "python": "3.12.16",
+          "lightgbm": "4.7.0",
+          "scikit-learn": "1.9.1",
+          "numpy": "2.5.4",
+          "joblib": "1.6.0"
+        },
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "metricas_test": {
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "model-fixture-no-promocionable",
+      "schema": "ia/model-manifest.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "version_modelo": "CONTRACT_FIXTURE_MODEL",
+        "version_features": "pre-cita-v1",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "proposito": "CONTRACT_FIXTURE",
+        "estado": "APROBADO",
+        "algoritmo": "LightGBM",
+        "entrenado_en": "2026-11-03T13:00:00Z",
+        "artifact": {
+          "relative_path": "CONTRACT_FIXTURE_MODEL/modelo.joblib",
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        "dataset_manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "metrics_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "dependencias": {
+          "python": "3.12.16",
+          "lightgbm": "4.7.0",
+          "scikit-learn": "1.9.1",
+          "numpy": "2.5.4",
+          "joblib": "1.6.0"
+        },
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "metricas_test": {
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "model-path-traversal",
+      "schema": "ia/model-manifest.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_contrato": "1.0",
+        "version_modelo": "CONTRACT_FIXTURE_MODEL",
+        "version_features": "pre-cita-v1",
+        "version_dataset": "CONTRACT_FIXTURE_DATASET",
+        "proposito": "CONTRACT_FIXTURE",
+        "estado": "CANDIDATO",
+        "algoritmo": "LightGBM",
+        "entrenado_en": "2026-11-03T13:00:00Z",
+        "artifact": {
+          "relative_path": "../modelo.joblib",
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        "dataset_manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "metrics_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "dependencias": {
+          "python": "3.12.16",
+          "lightgbm": "4.7.0",
+          "scikit-learn": "1.9.1",
+          "numpy": "2.5.4",
+          "joblib": "1.6.0"
+        },
+        "umbrales": {
+          "medio": 0.3,
+          "alto": 0.45
+        },
+        "metricas_test": {
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555
+        },
+        "es_simulacion": true
+      }
+    },
+    {
+      "id": "active-pointer-valido",
+      "schema": "ia/active-model.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "manifest_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    },
+    {
+      "id": "active-pointer-invalido",
+      "schema": "ia/active-model.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "version_modelo": "../modelo",
+        "manifest_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    },
+    {
+      "id": "error-valido",
+      "schema": "ia/error.v1.schema.json",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "data": {
+        "error": {
+          "codigo": "MODELO_NO_DISPONIBLE",
+          "mensaje": "Modelo no disponible",
+          "campos": {}
+        }
+      }
+    },
+    {
+      "id": "error-sin-envelope",
+      "schema": "ia/error.v1.schema.json",
+      "schema_valid": false,
+      "semantic_valid": true,
+      "data": {
+        "detail": "error"
+      }
+    }
+  ]
+}

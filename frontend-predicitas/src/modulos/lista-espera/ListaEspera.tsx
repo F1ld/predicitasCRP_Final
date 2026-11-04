@@ -8,11 +8,11 @@ import Cargando from "../../nucleo/componentes/Cargando";
 import Mensaje from "../../nucleo/componentes/Mensaje";
 import { etiqueta, formatearFechaHora } from "../../nucleo/formato/formato";
 import { mensajeErrorM06 } from "./errores";
-import { ESPECIALIDADES, ESTADOS_CANDIDATO, FRANJAS, ROLES_ESCRITURA, type CandidatoCambioIn, type CandidatoOut, type CandidatoRegistroIn } from "./tipos";
+import { ESPECIALIDADES, ESTADOS_CANDIDATO, FRANJAS, ROLES_ESCRITURA, type CandidatoCambioIn, type CandidatoOut, type CandidatoRegistroIn, type EstadoCandidato } from "./tipos";
 import "./lista-espera.css";
 
 const FILTROS = ["q", "especialidad_req", "franja_preferida", "estado_candidato"] as const;
-const ESTADOS = { ACTIVO: "Activo", CONTACTADO: "Contactado", ASIGNADO: "Asignado", DESISTIDO: "Desistido" };
+const ESTADOS: Record<EstadoCandidato, string> = { ACTIVO: "Activo", CONTACTADO: "Contactado", ASIGNADO: "Asignado", DESISTIDO: "Desistido" };
 const nombreFranja = (franja: string) => franja === "INDIFERENTE" ? "Indiferente" : etiqueta(franja);
 function pertenece<T extends string>(valor: string, opciones: readonly T[]): valor is T {
   return opciones.some((opcion) => opcion === valor);
@@ -176,7 +176,7 @@ function ListaEsperaContenido() {
       </fieldset>
     </form>
     {cargando ? <Cargando texto="Cargando lista de espera…" /> : error ? <div className="space-y-3"><Mensaje>{error}</Mensaje><button className="boton-secundario" onClick={reintentar}>Reintentar lista</button></div> : (() => {
-      const listaCandidatos = Array.isArray(datos) ? datos : (datos?.items ?? []);
+      const listaCandidatos = datos?.items ?? [];
       const totalCandidatos = typeof datos?.total === "number" ? datos.total : listaCandidatos.length;
       return <>
       <div className="resultados-cabecera"><h2>Candidatos <span className="contador-citas">{totalCandidatos}</span></h2><p>Se conserva el orden enviado por el sistema.</p></div>

@@ -1,0 +1,44 @@
+[
+  {
+    "alias": "crp",
+    "filename": "crp.dump",
+    "bytes": 92145,
+    "sha256": "08aadb485908602a2f4d1539a3106e50ad4cb84e268b1a3532c4b6ade7070b67",
+    "location": "private_backup_directory"
+  },
+  {
+    "alias": "crp",
+    "filename": "crp_globals_privado.sql",
+    "bytes": 970,
+    "sha256": "dd10a54b39c626614dcf5a4ab8d8fbf14f4db16ba6aa8ec6c3e1a8df89ac616a",
+    "location": "private_backup_directory"
+  },
+  {
+    "alias": "backend",
+    "filename": "backend.dump",
+    "bytes": 67358,
+    "sha256": "7d3ba8930eac8425f93aa829cffe107e0fbe1d97fdc5616991cce797a9c4ecd2",
+    "location": "private_backup_directory"
+  },
+  {
+    "alias": "backend",
+    "filename": "backend_globals_privado.sql",
+    "bytes": 970,
+    "sha256": "4b6fb73cd619eb9967b37a09b81e6898920acace53381f5ef1d4717e3c3737a5",
+    "location": "private_backup_directory"
+  },
+  {
+    "alias": "qa",
+    "filename": "qa.dump",
+    "bytes": 87658,
+    "sha256": "26b6aa7fe4c62a7ad8b827b15f8a24aeec37a706285a01e80e9c00cf181eeaf1",
+    "location": "private_backup_directory"
+  },
+  {
+    "alias": "qa",
+    "filename": "qa_globals_privado.sql",
+    "bytes": 970,
+    "sha256": "01727918004005bec65fb9208eb662d3f10ea0febdac851cab2061d13cbbc1fa",
+    "location": "private_backup_directory"
+  }
+]

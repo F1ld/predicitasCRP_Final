@@ -1,0 +1,1157 @@
+[
+  {
+    "source": "frontend-predicitas/src/App.tsx",
+    "line": 15,
+    "literal": "/login",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/App.tsx",
+    "line": 23,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/App.tsx",
+    "line": 27,
+    "literal": "/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/App.tsx",
+    "line": 27,
+    "literal": "/citas/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/App.tsx",
+    "line": 30,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/AuthContext.jsx",
+    "line": 22,
+    "literal": "/auth/me",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/AuthContext.jsx",
+    "line": 47,
+    "literal": "/auth/login",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/AuthContext.jsx",
+    "line": 52,
+    "literal": "/auth/me",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/AuthContext.jsx",
+    "line": 62,
+    "literal": "/auth/logout",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/RutaProtegida.jsx",
+    "line": 8,
+    "literal": "/login",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/auth/RutaProtegida.jsx",
+    "line": 12,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 23,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 32,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 33,
+    "literal": "/intervenciones",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 34,
+    "literal": "/reasignacion",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 35,
+    "literal": "/ia",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/components/Layout.jsx",
+    "line": 36,
+    "literal": "/importar",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/lib/api.js",
+    "line": 46,
+    "literal": "/auth/login",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 39,
+    "literal": "/citas?${consulta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 40,
+    "literal": "/citas/catalogos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 41,
+    "literal": "/citas?${busqueda}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 64,
+    "literal": "/citas/nueva",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 64,
+    "literal": "/citas/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 106,
+    "literal": "/citas/${cita.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Bandeja.tsx",
+    "line": 115,
+    "literal": "/citas/${cita.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 34,
+    "literal": "/citas?",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 34,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 39,
+    "literal": "/citas/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 82,
+    "literal": "/citas/${id}/estado",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 88,
+    "literal": "/citas/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 105,
+    "literal": "/citas/${id}/check-in",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 124,
+    "literal": "/ia/predecir/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 126,
+    "literal": "/citas/${id}/prediccion",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 190,
+    "literal": "/citas/${id}/trazabilidad",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 339,
+    "literal": "/citas/${id}/trazabilidad",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 343,
+    "literal": "/intervenciones?id_cita=${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Detalle.tsx",
+    "line": 447,
+    "literal": "/citas/${id}/trazabilidad",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Importar.tsx",
+    "line": 106,
+    "literal": "/citas/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Importar.tsx",
+    "line": 310,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/menu.ts",
+    "line": 8,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/menu.ts",
+    "line": 9,
+    "literal": "/citas/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 110,
+    "literal": "/citas/catalogos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 184,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 187,
+    "literal": "/citas/${resultado.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 187,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 198,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/Registrar.tsx",
+    "line": 254,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+    "line": 13,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+    "line": 14,
+    "literal": "/citas/nueva",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+    "line": 15,
+    "literal": "/citas/importar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+    "line": 16,
+    "literal": "/citas/:id",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/rutas.tsx",
+    "line": 17,
+    "literal": "/citas/:id/trazabilidad",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/TrazabilidadCita.tsx",
+    "line": 17,
+    "literal": "/citas/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/TrazabilidadCita.tsx",
+    "line": 23,
+    "literal": "/citas/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/TrazabilidadCita.tsx",
+    "line": 32,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/citas/TrazabilidadCita.tsx",
+    "line": 45,
+    "literal": "/citas/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 49,
+    "literal": "/reportes/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 53,
+    "literal": "/intervenciones/${creada.id_intervencion}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 74,
+    "literal": "/intervenciones/elegibles",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 74,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 118,
+    "literal": "/citas/${cita.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 124,
+    "literal": "/intervenciones/${item.id_intervencion}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Intervenciones.tsx",
+    "line": 124,
+    "literal": "/citas/${item.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/menu.ts",
+    "line": 9,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/menu.ts",
+    "line": 10,
+    "literal": "/reportes/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/NuevaIntervencion.tsx",
+    "line": 20,
+    "literal": "/intervenciones/plantillas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/NuevaIntervencion.tsx",
+    "line": 57,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Reporte.tsx",
+    "line": 58,
+    "literal": "/reportes/rep-02?${filtros}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Reporte.tsx",
+    "line": 88,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Reporte.tsx",
+    "line": 116,
+    "literal": "/intervenciones/${fila.id_intervencion}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+    "line": 11,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+    "line": 12,
+    "literal": "/intervenciones/:id",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/rutas.tsx",
+    "line": 13,
+    "literal": "/reportes/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 24,
+    "literal": "/intervenciones/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 39,
+    "literal": "/intervenciones/${id}/${ruta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 65,
+    "literal": "/intervenciones/${id}/liberar-cupo",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 76,
+    "literal": "/intervenciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 90,
+    "literal": "/citas/${intervencion.id_cita}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/intervenciones/Seguimiento.tsx",
+    "line": 117,
+    "literal": "/citas/${intervencion.id_cita}?id_intervencion=${intervencion.id_intervencion}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Cupos.tsx",
+    "line": 34,
+    "literal": "/cupos?${consulta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Cupos.tsx",
+    "line": 35,
+    "literal": "/cupos?${busqueda}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Cupos.tsx",
+    "line": 75,
+    "literal": "/cupos/${cupo.id_cupo_liberado}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 27,
+    "literal": "/cupos/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 30,
+    "literal": "/cupos/${id}/candidatos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 36,
+    "literal": "/cupos/${id}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 102,
+    "literal": "/cupos/${id}/${ruta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 160,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 161,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 163,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/DetalleCupo.tsx",
+    "line": 168,
+    "literal": "/citas/${cupo.id_cita_origen}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/ListaEspera.tsx",
+    "line": 36,
+    "literal": "/lista-espera?${consulta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/ListaEspera.tsx",
+    "line": 89,
+    "literal": "/lista-espera",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/ListaEspera.tsx",
+    "line": 114,
+    "literal": "/lista-espera/${candidato.id_candidato}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+    "line": 6,
+    "literal": "/lista-espera",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+    "line": 7,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/menu.ts",
+    "line": 8,
+    "literal": "/reportes/reasignaciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Reporte.tsx",
+    "line": 59,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Reporte.tsx",
+    "line": 76,
+    "literal": "/reportes/rep-03?${consulta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/Reporte.tsx",
+    "line": 114,
+    "literal": "/cupos/${fila.id_cupo_liberado}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+    "line": 10,
+    "literal": "/lista-espera",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+    "line": 11,
+    "literal": "/cupos",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+    "line": 12,
+    "literal": "/cupos/:id",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/lista-espera/rutas.tsx",
+    "line": 13,
+    "literal": "/reportes/reasignaciones",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/prueba-ranura/menu.ts",
+    "line": 4,
+    "literal": "/prueba-ranura",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/prueba-ranura/rutas.tsx",
+    "line": 4,
+    "literal": "/prueba-ranura",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/Login.tsx",
+    "line": 19,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/menu.ts",
+    "line": 3,
+    "literal": "/mi-cuenta",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/MiCuenta.tsx",
+    "line": 17,
+    "literal": "/auth/me",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/MiCuenta.tsx",
+    "line": 52,
+    "literal": "/auth/cambiar-clave",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/rutas.tsx",
+    "line": 7,
+    "literal": "/login",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/sesion/rutas.tsx",
+    "line": 8,
+    "literal": "/mi-cuenta",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/AccionesUsuario.tsx",
+    "line": 26,
+    "literal": "/usuarios/${usuario.id_usuario}/estado",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/AccionesUsuario.tsx",
+    "line": 66,
+    "literal": "/usuarios/${usuario.id_usuario}/restablecer-acceso",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/FormularioUsuario.tsx",
+    "line": 19,
+    "literal": "/usuarios/${usuario.id_usuario}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/FormularioUsuario.tsx",
+    "line": 77,
+    "literal": "/usuarios/${usuario.id_usuario}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/FormularioUsuario.tsx",
+    "line": 77,
+    "literal": "/usuarios",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/menu.ts",
+    "line": 5,
+    "literal": "/usuarios",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/rutas.tsx",
+    "line": 6,
+    "literal": "/usuarios",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/Usuarios.tsx",
+    "line": 21,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/modulos/usuarios/Usuarios.tsx",
+    "line": 40,
+    "literal": "/usuarios?${consulta}",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/api/cliente.ts",
+    "line": 83,
+    "literal": "/auth/login",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/AuthProvider.tsx",
+    "line": 25,
+    "literal": "/auth/me",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/AuthProvider.tsx",
+    "line": 53,
+    "literal": "/auth/login",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/AuthProvider.tsx",
+    "line": 59,
+    "literal": "/auth/me",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/AuthProvider.tsx",
+    "line": 72,
+    "literal": "/auth/logout",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/RutaProtegida.tsx",
+    "line": 16,
+    "literal": "/login",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/auth/RutaProtegida.tsx",
+    "line": 20,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/layout/Layout.tsx",
+    "line": 31,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/layout/ranuras.ts",
+    "line": 28,
+    "literal": "/panel",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/layout/ranuras.ts",
+    "line": 28,
+    "literal": "/panel",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/layout/ranuras.ts",
+    "line": 28,
+    "literal": "/citas",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/controlador.ts",
+    "line": 26,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/controlador.ts",
+    "line": 89,
+    "literal": "/auth/logout",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/controlador.ts",
+    "line": 160,
+    "literal": "/auth/renovar",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/GestorSesion.tsx",
+    "line": 14,
+    "literal": "/login",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/GestorSesion.tsx",
+    "line": 17,
+    "literal": "/usuarios",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/GestorSesion.tsx",
+    "line": 17,
+    "literal": "/usuarios/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/nucleo/sesion/GestorSesion.tsx",
+    "line": 18,
+    "literal": "/",
+    "category": "modular_o_nucleo",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 25,
+    "literal": "/citas?",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 25,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 27,
+    "literal": "/citas/${id}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 38,
+    "literal": "/ia/predicciones/${id}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 47,
+    "literal": "/ia/predecir/${id}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 69,
+    "literal": "/citas/${id}/estado",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/CitaDetalle.jsx",
+    "line": 74,
+    "literal": "/citas/${id}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Citas.jsx",
+    "line": 22,
+    "literal": "/citas?${consulta}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Citas.jsx",
+    "line": 23,
+    "literal": "/citas?${busqueda}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Citas.jsx",
+    "line": 73,
+    "literal": "/citas/${cita.id_cita}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Citas.jsx",
+    "line": 77,
+    "literal": "/citas/${cita.id_cita}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Importar.jsx",
+    "line": 33,
+    "literal": "/citas/importar",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Importar.jsx",
+    "line": 58,
+    "literal": "/citas?desde=",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 33,
+    "literal": "/intervenciones?${params}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 43,
+    "literal": "/ia/predecir-lote",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 61,
+    "literal": "/citas/${idCita}/intervenciones",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 83,
+    "literal": "/intervenciones/${idIntervencion}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 189,
+    "literal": "/citas/${c.id_cita}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Intervenciones.jsx",
+    "line": 274,
+    "literal": "/citas/${item.id_cita}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Login.jsx",
+    "line": 14,
+    "literal": "/citas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/ModeloIA.jsx",
+    "line": 19,
+    "literal": "/ia/metricas",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/ModeloIA.jsx",
+    "line": 20,
+    "literal": "/ia/dataset-resumen",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Reasignacion.jsx",
+    "line": 21,
+    "literal": "/cupos-liberados?estado_cupo=${estadoCupo}",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Reasignacion.jsx",
+    "line": 28,
+    "literal": "/lista-espera",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Reasignacion.jsx",
+    "line": 46,
+    "literal": "/lista-espera",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Reasignacion.jsx",
+    "line": 70,
+    "literal": "/cupos-liberados/${idCupo}/candidatos",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  },
+  {
+    "source": "frontend-predicitas/src/pages/Reasignacion.jsx",
+    "line": 85,
+    "literal": "/cupos-liberados/${idCupo}/reasignar",
+    "category": "legacy_no_retirar_sin_revisar",
+    "not_automatically_classified_as_api_call": true
+  }
+]

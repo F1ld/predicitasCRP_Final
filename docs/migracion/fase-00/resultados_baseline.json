@@ -1,0 +1,53 @@
+{
+  "frontend": {
+    "npm_ci_exit_code": 0,
+    "tests_summary": [
+      "Test Files  2 failed | 25 passed (27)",
+      "Tests  56 failed | 451 passed (507)",
+      "Duration  67.24s (transform 13.87s, setup 26.96s, import 27.46s, tests 289.78s, environment 100.02s)"
+    ],
+    "failing_test_files": [
+      "src/modulos/citas/Detalle.test.tsx",
+      "src/modulos/citas/citas.test.tsx"
+    ],
+    "typecheck_diagnostics": [
+      "src/main.tsx(5,17): error TS5097: An import path can only end with a '.tsx' extension when 'allowImportingTsExtensions' is enabled.",
+      "src/modulos/citas/Detalle.tsx(371,28): error TS2339: Property 'observacion' does not exist on type 'CheckInOut'.",
+      "src/modulos/citas/Detalle.tsx(374,36): error TS2339: Property 'observacion' does not exist on type 'CheckInOut'.",
+      "src/modulos/intervenciones/Intervenciones.tsx(3,1): error TS6133: 'Pagina' is declared but its value is never read.",
+      "src/modulos/lista-espera/Cupos.tsx(75,227): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ DISPONIBLE: string; EN_OFERTA: string; REASIGNADO: string; EXPIRADO: string; }'.",
+      "src/modulos/lista-espera/ListaEspera.tsx(186,194): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ ACTIVO: string; CONTACTADO: string; ASIGNADO: string; DESISTIDO: string; }'.",
+      "vite.config.ts(8,3): error TS2769: No overload matches this call."
+    ],
+    "coverage": "No se genero reporte de cobertura al fallar la ejecucion de Vitest; no se declara aprobado el umbral.",
+    "npm_audit": "9 vulnerabilidades moderadas; 0 altas/criticas. Sin aplicar npm audit fix."
+  },
+  "backend": {
+    "full_suite_exit_code": 2,
+    "full_suite_blocker": "tests/ia/conftest.py:15 importa app.modules.ia.cliente, inexistente; tambien referencia reloj_ia y un simulador ausentes del codigo actual.",
+    "diagnostic_only_excluded_directory": "tests/ia",
+    "diagnostic_tests": 219,
+    "diagnostic_passed": 218,
+    "diagnostic_failed": 1,
+    "failed_cases": [
+      {
+        "file": "tests.test_reasignacion",
+        "name": "test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_humana",
+        "message": "TypeError: string indices must be integers, not 'str'"
+      }
+    ],
+    "diagnostic_coverage_percent": 87.12273641851107,
+    "threshold_changed": false,
+    "fresh_requirement_resolution": "BLOCKED_NETWORK_TIMEOUT",
+    "installed_image_requirements": "Todas las versiones fijadas coinciden; ver ia_baseline.json. No sustituye validacion de instalacion limpia."
+  },
+  "browser": {
+    "isolated_frontend": "http://127.0.0.1:5174",
+    "isolated_api": "http://127.0.0.1:8001",
+    "login_recepcion": "OK con usuario desechable creado solo en servidor restaurado",
+    "appointments_page": "OK: /citas, Citas encontradas 1122 y tabla cargada",
+    "screenshot": "PENDIENTE: herramienta requiere pestana/ventana visible; no se obtuvo captura ni se declara validacion visual completa.",
+    "temporary_infrastructure_issue": "Red Docker internal impedia publicar API; se agrego bridge solo a API aislada. Sin cambios en CORS/config original."
+  },
+  "scope": "Linea base del codigo original. No se corrigieron fallos ni se cambiaron dependencias."
+}

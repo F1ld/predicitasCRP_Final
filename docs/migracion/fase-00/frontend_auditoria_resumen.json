@@ -1,0 +1,67 @@
+﻿{
+    "Vulnerabilities":  {
+                            "info":  0,
+                            "low":  0,
+                            "moderate":  9,
+                            "high":  0,
+                            "critical":  0,
+                            "total":  9
+                        },
+    "Packages":  [
+                     {
+                         "Name":  "@eslint-community/eslint-utils",
+                         "Severity":  "moderate",
+                         "Direct":  false,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "@eslint/config-array",
+                         "Severity":  "moderate",
+                         "Direct":  false,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "@eslint/js",
+                         "Severity":  "moderate",
+                         "Direct":  true,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "@vitest/coverage-v8",
+                         "Severity":  "moderate",
+                         "Direct":  true,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "@vitest/mocker",
+                         "Severity":  "moderate",
+                         "Direct":  false,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "eslint",
+                         "Severity":  "moderate",
+                         "Direct":  true,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "eslint-plugin-react-refresh",
+                         "Severity":  "moderate",
+                         "Direct":  true,
+                         "FixAvailable":  false
+                     },
+                     {
+                         "Name":  "minimatch",
+                         "Severity":  "moderate",
+                         "Direct":  false,
+                         "FixAvailable":  true
+                     },
+                     {
+                         "Name":  "vitest",
+                         "Severity":  "moderate",
+                         "Direct":  true,
+                         "FixAvailable":  true
+                     }
+                 ],
+    "NoAutomaticFixApplied":  true
+}

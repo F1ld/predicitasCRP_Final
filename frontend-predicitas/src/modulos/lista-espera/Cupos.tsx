@@ -7,10 +7,10 @@ import Cargando from "../../nucleo/componentes/Cargando";
 import Icono from "../../nucleo/componentes/Icono";
 import Mensaje from "../../nucleo/componentes/Mensaje";
 import { etiqueta, formatearFechaHora } from "../../nucleo/formato/formato";
-import { ESPECIALIDADES, ESTADOS_CUPO, ROLES_ESCRITURA, type CupoOut } from "./tipos";
+import { ESPECIALIDADES, ESTADOS_CUPO, ROLES_ESCRITURA, type CupoOut, type EstadoCupo } from "./tipos";
 import "./lista-espera.css";
 
-const ETIQUETAS_ESTADO = { DISPONIBLE: "Disponible", EN_OFERTA: "En oferta", REASIGNADO: "Reasignado", EXPIRADO: "Expirado" };
+const ETIQUETAS_ESTADO: Record<EstadoCupo, string> = { DISPONIBLE: "Disponible", EN_OFERTA: "En oferta", REASIGNADO: "Reasignado", EXPIRADO: "Expirado" };
 const FILTROS = ["estado_cupo", "especialidad", "desde", "hasta"] as const;
 const LIMITE = 20;
 
@@ -67,7 +67,7 @@ function ListadoCupos() {
     </form>
     {errorFiltros && <Mensaje>{errorFiltros}</Mensaje>}
     {cargando ? <Cargando texto="Cargando cupos…" /> : error ? <div className="space-y-3"><Mensaje>{error}</Mensaje><button type="button" className="boton-secundario" onClick={reintentar}>Reintentar</button></div> : (() => {
-      const listaCupos = Array.isArray(datos) ? datos : (datos?.items ?? []);
+      const listaCupos = datos?.items ?? [];
       const totalCupos = typeof datos?.total === "number" ? datos.total : listaCupos.length;
       return <>
       <div className="resultados-cabecera"><h2>Cupos encontrados <span className="contador-citas">{totalCupos}</span></h2><p>Abre un cupo para consultar sus candidatos y ofertas.</p></div>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/predict-request.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_contrato", "id_solicitud", "version_modelo", "version_features", "features"],
+  "properties": {
+    "version_contrato": {"const": "1.0"},
+    "id_solicitud": {"type": "string", "format": "uuid"},
+    "version_modelo": {"type": "string", "minLength": 1, "maxLength": 100},
+    "version_features": {"const": "pre-cita-v1"},
+    "features": {"$ref": "../data/features.v1.schema.json"}
+  }
+}

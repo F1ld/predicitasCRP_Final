@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/data/dataset-manifest.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_contrato", "version_dataset", "version_features", "proposito", "fuente", "linaje_completo", "semilla", "fecha_corte", "generado_en", "sha256_raw", "total_historicas", "distribucion", "particiones", "sin_interseccion_ids", "control_leakage", "es_simulacion"],
+  "properties": {
+    "version_contrato": {"const": "1.0"},
+    "version_dataset": {"type": "string", "minLength": 1, "maxLength": 100},
+    "version_features": {"const": "pre-cita-v1"},
+    "proposito": {"enum": ["CONTRACT_FIXTURE", "TRAINING_RUN", "LEGACY_IMPORT"]},
+    "fuente": {"enum": ["SINTETICO_GENERADO", "SNAPSHOT_SINTETICO_BACKEND", "LEGACY_METADATA_ONLY"]},
+    "linaje_completo": {"type": "boolean"},
+    "semilla": {"const": 42},
+    "fecha_corte": {"type": ["string", "null"], "format": "date"},
+    "generado_en": {"type": "string", "format": "date-time"},
+    "sha256_raw": {"$ref": "#/$defs/hash"},
+    "total_historicas": {"type": "integer", "minimum": 1000},
+    "distribucion": {"type": "object", "additionalProperties": false, "required": ["atendidas", "no_show"], "properties": {"atendidas": {"type": "integer", "minimum": 1}, "no_show": {"type": "integer", "minimum": 1}}},
+    "particiones": {"type": "object", "additionalProperties": false, "required": ["train", "val", "test"], "properties": {"train": {"$ref": "#/$defs/split"}, "val": {"$ref": "#/$defs/split"}, "test": {"$ref": "#/$defs/split"}}},
+    "sin_interseccion_ids": {"const": true},
+    "control_leakage": {"type": "object", "additionalProperties": false, "required": ["aprobado", "columnas_prohibidas_excluidas", "interseccion_particiones", "violaciones_temporales", "invariante_paciente_nuevo_ok"], "properties": {"aprobado": {"const": true}, "columnas_prohibidas_excluidas": {"type": "array", "uniqueItems": true, "minItems": 8, "items": {"type": "string"}}, "interseccion_particiones": {"const": 0}, "violaciones_temporales": {"const": 0}, "invariante_paciente_nuevo_ok": {"const": true}}},
+    "es_simulacion": {"const": true}
+  },
+  "allOf": [
+    {"if": {"properties": {"proposito": {"const": "TRAINING_RUN"}}}, "then": {"properties": {"linaje_completo": {"const": true}, "fecha_corte": {"type": "string"}, "fuente": {"enum": ["SINTETICO_GENERADO", "SNAPSHOT_SINTETICO_BACKEND"]}, "sha256_raw": {"type": "string"}, "particiones": {"properties": {"train": {"$ref": "#/$defs/knownSplit"}, "val": {"$ref": "#/$defs/knownSplit"}, "test": {"$ref": "#/$defs/knownSplit"}}}}}},
+    {"if": {"properties": {"proposito": {"const": "LEGACY_IMPORT"}}}, "then": {"properties": {"linaje_completo": {"const": false}, "fuente": {"const": "LEGACY_METADATA_ONLY"}, "sha256_raw": {"type": "null"}, "particiones": {"properties": {"train": {"$ref": "#/$defs/unknownSplit"}, "val": {"$ref": "#/$defs/unknownSplit"}, "test": {"$ref": "#/$defs/unknownSplit"}}}}}}
+  ],
+  "$defs": {
+    "hash": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "knownSplit": {"type": "object", "properties": {"sha256": {"type": "string"}, "sha256_ids": {"type": "string"}}},
+    "unknownSplit": {"type": "object", "properties": {"sha256": {"type": "null"}, "sha256_ids": {"type": "null"}}},
+    "split": {"type": "object", "additionalProperties": false, "required": ["filas", "no_show", "sha256", "sha256_ids"], "properties": {"filas": {"type": "integer", "minimum": 1}, "no_show": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/hash"}, "sha256_ids": {"$ref": "#/$defs/hash"}}}
+  }
+}

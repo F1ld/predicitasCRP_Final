@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/predict-response.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_contrato", "id_solicitud", "version_modelo", "version_features", "probabilidad_no_show", "nivel_riesgo", "umbrales", "features_snapshot", "explicabilidad_resumen", "es_simulacion", "rotulo_etico"],
+  "properties": {
+    "version_contrato": {"const": "1.0"},
+    "id_solicitud": {"type": "string", "format": "uuid"},
+    "version_modelo": {"type": "string", "minLength": 1, "maxLength": 100},
+    "version_features": {"const": "pre-cita-v1"},
+    "probabilidad_no_show": {"type": "number", "minimum": 0, "maximum": 1, "multipleOf": 0.001},
+    "nivel_riesgo": {"enum": ["BAJO", "MEDIO", "ALTO"]},
+    "umbrales": {"type": "object", "additionalProperties": false, "required": ["medio", "alto"], "properties": {"medio": {"const": 0.3}, "alto": {"const": 0.45}}},
+    "features_snapshot": {"$ref": "../data/snapshot-features.v1.schema.json"},
+    "explicabilidad_resumen": {"type": "string", "minLength": 1, "maxLength": 255},
+    "es_simulacion": {"const": true},
+    "rotulo_etico": {"const": "Resultado simulado — Dataset sintético acreditado (RF-056)"}
+  },
+  "allOf": [
+    {"if": {"properties": {"nivel_riesgo": {"const": "BAJO"}}}, "then": {"properties": {"probabilidad_no_show": {"exclusiveMaximum": 0.3}}}},
+    {"if": {"properties": {"nivel_riesgo": {"const": "MEDIO"}}}, "then": {"properties": {"probabilidad_no_show": {"minimum": 0.3, "maximum": 0.45}}}},
+    {"if": {"properties": {"nivel_riesgo": {"const": "ALTO"}}}, "then": {"properties": {"probabilidad_no_show": {"exclusiveMinimum": 0.45}}}}
+  ]
+}

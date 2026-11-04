@@ -1,0 +1,18 @@
+{
+  "status": "snapshot_actual_no_redisenado",
+  "copied_from": "docs/migracion/fase-00/openapi_baseline.json",
+  "sha256": "f39db2a15f5b10cc461f3e28cb386fb9b96ad6caa7b98bfdc25d6d6289b59ead",
+  "source_git_baseline": "69c686f21fd1938dc76d679f4c6b33270f10a6d7",
+  "endpoints": 55,
+  "modules": {
+    "auth": 5,
+    "citas": 8,
+    "ia": 5,
+    "intervenciones": 12,
+    "lista_espera": 14,
+    "reportes": 4,
+    "sistema": 1,
+    "usuarios": 6
+  },
+  "note": "OpenAPI declara JSON para algunas descargas que retornan Response; limitaciones y diferencias se documentan aparte."
+}

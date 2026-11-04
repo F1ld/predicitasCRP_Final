@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-11-03T23:39:43.628107-05:00",
+  "phase": 1,
+  "scope": "documentacion_y_contratos_no_aplicaciones_migradas",
+  "private_archive": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase1-20261103-2306\\evidencias_y_contratos_fase1.zip",
+  "secondary_archive": "backups\\fase1-20261103-2306\\evidencias_y_contratos_fase1.zip",
+  "sha256": "ff468abadf4263b2f128b2e005d82ce6da6fd72c7a604569c3f379944452ab61",
+  "bytes": 256931,
+  "files": 95,
+  "all_archive_entries_sha256_verified": true,
+  "secondary_verified": true,
+  "source_apps_and_databases_in_phase0_backups": true,
+  "manifest_not_in_archive_to_avoid_self_reference": true,
+  "same_machine_not_offsite": true
+}

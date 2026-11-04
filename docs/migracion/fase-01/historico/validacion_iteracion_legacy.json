@@ -1,0 +1,438 @@
+{
+  "validator": "jsonschema 4.25.1",
+  "schema_count": 12,
+  "local_references_checked": 212,
+  "fixture_count": 59,
+  "all_expected_results_met": true,
+  "openapi_public_snapshot_sha256": "f39db2a15f5b10cc461f3e28cb386fb9b96ad6caa7b98bfdc25d6d6289b59ead",
+  "openapi_documents": [
+    {
+      "path": "backend/openapi.actual.v0.5.0.json",
+      "operations": 55,
+      "references_resolved_locally": true,
+      "scope": "integridad de estructura/refs/operationId, no validacion formal completa de OpenAPI ni prueba HTTP"
+    },
+    {
+      "path": "ia/openapi.objetivo.v1.json",
+      "operations": 7,
+      "references_resolved_locally": true,
+      "scope": "integridad de estructura/refs/operationId, no validacion formal completa de OpenAPI ni prueba HTTP"
+    }
+  ],
+  "results": [
+    {
+      "id": "features-validas",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-target-prohibido",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-sin-nulos",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-contador-negativo",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-domingo",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-no-coaccion-string",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "features-no-bool-como-int",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-request-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-request-uuid-invalido",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-request-version-invalida",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-response-valida",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-score-fuera-rango",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-score-string-interno",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-exceso-decimales",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-nivel-inconsistente",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-explicacion-larga",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "prediccion-id-no-corresponde",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "respuesta no corresponde: id_solicitud"
+    },
+    {
+      "id": "prediccion-modelo-no-corresponde",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "respuesta no corresponde: version_modelo"
+    },
+    {
+      "id": "prediccion-formula-derivada-invalida",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "formula de tasa previa no coincide"
+    },
+    {
+      "id": "borde-0-BAJO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "borde-0.299-BAJO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "borde-0.3-MEDIO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "borde-0.45-MEDIO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "borde-0.451-ALTO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "borde-1-ALTO",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "batch-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "batch-vacio",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "batch-mas-100",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "batch-ids-duplicados",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "IDs repetidos en lote"
+    },
+    {
+      "id": "batch-response-valida",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "batch-response-incompleta",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "lote incompleto o con IDs extra"
+    },
+    {
+      "id": "batch-response-extra",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "lote incompleto o con IDs extra"
+    },
+    {
+      "id": "import-normalizado-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "import-extra-ignorado",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "import-sede-invalida",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "import-liberada-prohibida",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "import-domingo-semantico",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "domingo fuera del piloto"
+    },
+    {
+      "id": "import-desenlace-futuro",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "desenlace futuro"
+    },
+    {
+      "id": "import-fechas-invertidas",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "registro posterior a fecha de cita"
+    },
+    {
+      "id": "import-inversion-misma-fecha-legacy",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "training-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "training-target-incoherente",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "training-sin-desenlace",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "training-features-incoherentes",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "antelacion no corresponde a fechas"
+    },
+    {
+      "id": "dataset-manifest-ejemplo",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "dataset-pocos-historicos",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "dataset-conteos-incoherentes",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "clases no suman total"
+    },
+    {
+      "id": "dataset-splits-incoherentes",
+      "schema_valid": true,
+      "semantic_valid": false,
+      "expected_result_met": true,
+      "semantic_reason": "particiones no suman total"
+    },
+    {
+      "id": "model-manifest-ejemplo",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "model-fixture-no-promocionable",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "model-path-traversal",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "active-pointer-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "active-pointer-invalido",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "error-valido",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "error-sin-envelope",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "dataset-legacy-honesto",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "dataset-legacy-no-inventar-hash",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "dataset-training-exige-linaje",
+      "schema_valid": false,
+      "semantic_valid": null,
+      "expected_result_met": true,
+      "semantic_reason": null
+    },
+    {
+      "id": "model-legacy-explicito",
+      "schema_valid": true,
+      "semantic_valid": true,
+      "expected_result_met": true,
+      "semantic_reason": null
+    }
+  ],
+  "limits": "Fixtures de contrato; no prueba servicios no implementados, hashes de archivos ficticios, dataset real, rendimiento, RBAC ni toda la suite funcional."
+}

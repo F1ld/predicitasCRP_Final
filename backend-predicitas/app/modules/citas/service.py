@@ -106,7 +106,15 @@ def detalle_cita(db: Session, id_cita: int) -> CitaDetalleOut:
     return CitaDetalleOut(
         **CitaOut.model_validate(cita).model_dump(),
         historial=[HistorialOut.model_validate(h) for h in repository.historial_de(db, id_cita)],
-        check_in=CheckInOut(fecha_hora_check_in=evento.creado_en, id_usuario=evento.id_usuario) if evento else None,
+        check_in=(
+            CheckInOut(
+                fecha_hora_check_in=evento.creado_en,
+                id_usuario=evento.id_usuario,
+                observacion=(evento.datos_after or {}).get("observacion") if evento else None,
+            )
+            if evento
+            else None
+        ),
         predicciones=[
             PrediccionOut(
                 id_prediccion=p.id_prediccion, id_cita=p.id_cita, version_modelo=p.version_modelo,
@@ -339,4 +347,8 @@ def registrar_check_in(
     db.flush()
     db.refresh(evento)  # creado_en lo pone la base
     db.commit()
-    return CheckInOut(fecha_hora_check_in=evento.creado_en, id_usuario=usuario.id_usuario)
+    return CheckInOut(
+        fecha_hora_check_in=evento.creado_en,
+        id_usuario=usuario.id_usuario,
+        observacion=observacion,
+    )

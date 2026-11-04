@@ -1,0 +1,872 @@
+{
+  "isolated_server": true,
+  "temporary_users_rolled_back": true,
+  "tokens_and_passwords_omitted": true,
+  "results": [
+    {
+      "role": "ANONIMO",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "body": {
+        "estado": "ok"
+      }
+    },
+    {
+      "role": "ANONIMO",
+      "method": "GET",
+      "path": "/citas",
+      "status": 401,
+      "body": {
+        "error": {
+          "codigo": "NO_AUTENTICADO",
+          "mensaje": "Debe iniciar sesión",
+          "campos": {}
+        }
+      }
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "token_returned": true
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "body": {
+        "rol": "ADMINISTRADOR",
+        "activo": true
+      }
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "GET",
+      "path": "/citas?limite=1",
+      "status": 200,
+      "body": {
+        "total": 1122,
+        "limite": 1,
+        "desplazamiento": 0,
+        "row_collections_omitted": true
+      }
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "GET",
+      "path": "/citas/catalogos",
+      "status": 200,
+      "body": {
+        "especialidades": [
+          "CARDIOLOGIA",
+          "TRAUMATOLOGIA",
+          "PEDIATRIA"
+        ],
+        "estados": [
+          "RECIBIDA",
+          "CONFIRMADA",
+          "REPROGRAMADA",
+          "CANCELADA",
+          "LIBERADA",
+          "ATENDIDA",
+          "NO_SHOW"
+        ],
+        "niveles_riesgo": [
+          "BAJO",
+          "MEDIO",
+          "ALTO"
+        ],
+        "medicos": [
+          "Dr. Mendoza",
+          "Dr. Paredes",
+          "Dr. Ramírez",
+          "Dr. Salcedo",
+          "Dr. Valdivia",
+          "Dra. Cárdenas",
+          "Dra. Morales",
+          "Dra. Quispe",
+          "Dra. Vargas"
+        ],
+        "canales_origen": [
+          "WEB",
+          "CALL_CENTER",
+          "PRESENCIAL"
+        ],
+        "tipos_paciente": [
+          "NUEVO",
+          "CONTINUADOR"
+        ]
+      }
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "GET",
+      "path": "/ia/metricas",
+      "status": 200,
+      "body": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "algoritmo": "LGBMClassifier",
+        "semilla": 42,
+        "fecha_entrenamiento": "2026-10-29T06:40:17.845484+00:00",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)",
+        "umbral_alto": 0.45,
+        "umbral_medio": 0.3,
+        "cumple_meta_f1_82": true,
+        "metricas_test": {
+          "umbral": 0.45,
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555,
+          "matriz_confusion": {
+            "tn": 117,
+            "fp": 3,
+            "fn": 5,
+            "tp": 25
+          }
+        },
+        "metricas_val": {
+          "umbral": 0.45,
+          "f1_score": 0.8615,
+          "precision": 0.8235,
+          "recall": 0.9032,
+          "roc_auc": 0.9799,
+          "pr_auc": 0.924,
+          "matriz_confusion": {
+            "tn": 113,
+            "fp": 6,
+            "fn": 3,
+            "tp": 28
+          }
+        },
+        "metricas_baseline_test": {
+          "umbral": 0.45,
+          "f1_score": 0.7451,
+          "precision": 0.9048,
+          "recall": 0.6333,
+          "roc_auc": 0.9797,
+          "pr_auc": 0.9055,
+          "matriz_confusion": {
+            "tn": 118,
+            "fp": 2,
+            "fn": 11,
+            "tp": 19
+          }
+        },
+        "auditoria_equidad": {
+          "especialidad": {
+            "CARDIOLOGIA": {
+              "n": 46,
+              "tasa_positiva_real": 0.2609,
+              "f1_score": 0.9091,
+              "recall": 0.8333,
+              "precision": 1.0
+            },
+            "PEDIATRIA": {
+              "n": 49,
+              "tasa_positiva_real": 0.2041,
+              "f1_score": 0.8421,
+              "recall": 0.8,
+              "precision": 0.8889
+            },
+            "TRAUMATOLOGIA": {
+              "n": 55,
+              "tasa_positiva_real": 0.1455,
+              "f1_score": 0.8235,
+              "recall": 0.875,
+              "precision": 0.7778
+            }
+          },
+          "tipo_paciente": {
+            "CONTINUADOR": {
+              "n": 101,
+              "tasa_positiva_real": 0.2178,
+              "f1_score": 0.913,
+              "recall": 0.9545,
+              "precision": 0.875
+            },
+            "NUEVO": {
+              "n": 49,
+              "tasa_positiva_real": 0.1633,
+              "f1_score": 0.6667,
+              "recall": 0.5,
+              "precision": 1.0
+            }
+          },
+          "franja_horaria": {
+            "MANANA": {
+              "n": 96,
+              "tasa_positiva_real": 0.1771,
+              "f1_score": 0.7879,
+              "recall": 0.7647,
+              "precision": 0.8125
+            },
+            "TARDE": {
+              "n": 54,
+              "tasa_positiva_real": 0.2407,
+              "f1_score": 0.96,
+              "recall": 0.9231,
+              "precision": 1.0
+            }
+          }
+        },
+        "importancia_global_variables": [
+          {
+            "variable": "antelacion_dias",
+            "importancia": 932
+          },
+          {
+            "variable": "inasistencias_previas / tasa_previa",
+            "importancia": 892
+          },
+          {
+            "variable": "reprogramaciones_prev",
+            "importancia": 395
+          },
+          {
+            "variable": "dia_semana",
+            "importancia": 352
+          },
+          {
+            "variable": "especialidad",
+            "importancia": 293
+          },
+          {
+            "variable": "asistencias_previas",
+            "importancia": 285
+          },
+          {
+            "variable": "canal_origen",
+            "importancia": 214
+          },
+          {
+            "variable": "franja_horaria",
+            "importancia": 174
+          },
+          {
+            "variable": "tipo_paciente",
+            "importancia": 70
+          }
+        ]
+      }
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "method": "GET",
+      "path": "/ia/dataset-resumen",
+      "status": 200,
+      "body": {
+        "version_dataset": "DS_SINTETICO_CRP_v1.0",
+        "semilla": 42,
+        "total_historicas": 1000,
+        "atendidas_historicas": 796,
+        "no_show_historicas": 205,
+        "proximas_operativas_bd": 121,
+        "train_size": 700,
+        "val_size": 150,
+        "test_size": 150,
+        "tasa_no_show_global": 0.205,
+        "tasa_no_show_train": 0.2057,
+        "tasa_no_show_val": 0.2067,
+        "tasa_no_show_test": 0.2,
+        "features_autorizadas": [
+          "antelacion_dias",
+          "inasistencias_previas",
+          "asistencias_previas",
+          "reprogramaciones_prev",
+          "tasa_no_show_previa",
+          "es_reserva_lejana",
+          "especialidad",
+          "tipo_paciente",
+          "canal_origen",
+          "franja_horaria",
+          "dia_semana"
+        ],
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)"
+      }
+    },
+    {
+      "role": "RECEPCION",
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "token_returned": true
+    },
+    {
+      "role": "RECEPCION",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "body": {
+        "rol": "RECEPCION",
+        "activo": true
+      }
+    },
+    {
+      "role": "RECEPCION",
+      "method": "GET",
+      "path": "/citas?limite=1",
+      "status": 200,
+      "body": {
+        "total": 1122,
+        "limite": 1,
+        "desplazamiento": 0,
+        "row_collections_omitted": true
+      }
+    },
+    {
+      "role": "RECEPCION",
+      "method": "GET",
+      "path": "/citas/catalogos",
+      "status": 200,
+      "body": {
+        "especialidades": [
+          "CARDIOLOGIA",
+          "TRAUMATOLOGIA",
+          "PEDIATRIA"
+        ],
+        "estados": [
+          "RECIBIDA",
+          "CONFIRMADA",
+          "REPROGRAMADA",
+          "CANCELADA",
+          "LIBERADA",
+          "ATENDIDA",
+          "NO_SHOW"
+        ],
+        "niveles_riesgo": [
+          "BAJO",
+          "MEDIO",
+          "ALTO"
+        ],
+        "medicos": [
+          "Dr. Mendoza",
+          "Dr. Paredes",
+          "Dr. Ramírez",
+          "Dr. Salcedo",
+          "Dr. Valdivia",
+          "Dra. Cárdenas",
+          "Dra. Morales",
+          "Dra. Quispe",
+          "Dra. Vargas"
+        ],
+        "canales_origen": [
+          "WEB",
+          "CALL_CENTER",
+          "PRESENCIAL"
+        ],
+        "tipos_paciente": [
+          "NUEVO",
+          "CONTINUADOR"
+        ]
+      }
+    },
+    {
+      "role": "RECEPCION",
+      "method": "GET",
+      "path": "/ia/metricas",
+      "status": 200,
+      "body": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "algoritmo": "LGBMClassifier",
+        "semilla": 42,
+        "fecha_entrenamiento": "2026-10-29T06:40:17.845484+00:00",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)",
+        "umbral_alto": 0.45,
+        "umbral_medio": 0.3,
+        "cumple_meta_f1_82": true,
+        "metricas_test": {
+          "umbral": 0.45,
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555,
+          "matriz_confusion": {
+            "tn": 117,
+            "fp": 3,
+            "fn": 5,
+            "tp": 25
+          }
+        },
+        "metricas_val": {
+          "umbral": 0.45,
+          "f1_score": 0.8615,
+          "precision": 0.8235,
+          "recall": 0.9032,
+          "roc_auc": 0.9799,
+          "pr_auc": 0.924,
+          "matriz_confusion": {
+            "tn": 113,
+            "fp": 6,
+            "fn": 3,
+            "tp": 28
+          }
+        },
+        "metricas_baseline_test": {
+          "umbral": 0.45,
+          "f1_score": 0.7451,
+          "precision": 0.9048,
+          "recall": 0.6333,
+          "roc_auc": 0.9797,
+          "pr_auc": 0.9055,
+          "matriz_confusion": {
+            "tn": 118,
+            "fp": 2,
+            "fn": 11,
+            "tp": 19
+          }
+        },
+        "auditoria_equidad": {
+          "especialidad": {
+            "CARDIOLOGIA": {
+              "n": 46,
+              "tasa_positiva_real": 0.2609,
+              "f1_score": 0.9091,
+              "recall": 0.8333,
+              "precision": 1.0
+            },
+            "PEDIATRIA": {
+              "n": 49,
+              "tasa_positiva_real": 0.2041,
+              "f1_score": 0.8421,
+              "recall": 0.8,
+              "precision": 0.8889
+            },
+            "TRAUMATOLOGIA": {
+              "n": 55,
+              "tasa_positiva_real": 0.1455,
+              "f1_score": 0.8235,
+              "recall": 0.875,
+              "precision": 0.7778
+            }
+          },
+          "tipo_paciente": {
+            "CONTINUADOR": {
+              "n": 101,
+              "tasa_positiva_real": 0.2178,
+              "f1_score": 0.913,
+              "recall": 0.9545,
+              "precision": 0.875
+            },
+            "NUEVO": {
+              "n": 49,
+              "tasa_positiva_real": 0.1633,
+              "f1_score": 0.6667,
+              "recall": 0.5,
+              "precision": 1.0
+            }
+          },
+          "franja_horaria": {
+            "MANANA": {
+              "n": 96,
+              "tasa_positiva_real": 0.1771,
+              "f1_score": 0.7879,
+              "recall": 0.7647,
+              "precision": 0.8125
+            },
+            "TARDE": {
+              "n": 54,
+              "tasa_positiva_real": 0.2407,
+              "f1_score": 0.96,
+              "recall": 0.9231,
+              "precision": 1.0
+            }
+          }
+        },
+        "importancia_global_variables": [
+          {
+            "variable": "antelacion_dias",
+            "importancia": 932
+          },
+          {
+            "variable": "inasistencias_previas / tasa_previa",
+            "importancia": 892
+          },
+          {
+            "variable": "reprogramaciones_prev",
+            "importancia": 395
+          },
+          {
+            "variable": "dia_semana",
+            "importancia": 352
+          },
+          {
+            "variable": "especialidad",
+            "importancia": 293
+          },
+          {
+            "variable": "asistencias_previas",
+            "importancia": 285
+          },
+          {
+            "variable": "canal_origen",
+            "importancia": 214
+          },
+          {
+            "variable": "franja_horaria",
+            "importancia": 174
+          },
+          {
+            "variable": "tipo_paciente",
+            "importancia": 70
+          }
+        ]
+      }
+    },
+    {
+      "role": "RECEPCION",
+      "method": "GET",
+      "path": "/ia/dataset-resumen",
+      "status": 200,
+      "body": {
+        "version_dataset": "DS_SINTETICO_CRP_v1.0",
+        "semilla": 42,
+        "total_historicas": 1000,
+        "atendidas_historicas": 796,
+        "no_show_historicas": 205,
+        "proximas_operativas_bd": 121,
+        "train_size": 700,
+        "val_size": 150,
+        "test_size": 150,
+        "tasa_no_show_global": 0.205,
+        "tasa_no_show_train": 0.2057,
+        "tasa_no_show_val": 0.2067,
+        "tasa_no_show_test": 0.2,
+        "features_autorizadas": [
+          "antelacion_dias",
+          "inasistencias_previas",
+          "asistencias_previas",
+          "reprogramaciones_prev",
+          "tasa_no_show_previa",
+          "es_reserva_lejana",
+          "especialidad",
+          "tipo_paciente",
+          "canal_origen",
+          "franja_horaria",
+          "dia_semana"
+        ],
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)"
+      }
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "token_returned": true
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "body": {
+        "rol": "TECNICO_IA",
+        "activo": true
+      }
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "GET",
+      "path": "/citas?limite=1",
+      "status": 200,
+      "body": {
+        "total": 1122,
+        "limite": 1,
+        "desplazamiento": 0,
+        "row_collections_omitted": true
+      }
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "GET",
+      "path": "/citas/catalogos",
+      "status": 200,
+      "body": {
+        "especialidades": [
+          "CARDIOLOGIA",
+          "TRAUMATOLOGIA",
+          "PEDIATRIA"
+        ],
+        "estados": [
+          "RECIBIDA",
+          "CONFIRMADA",
+          "REPROGRAMADA",
+          "CANCELADA",
+          "LIBERADA",
+          "ATENDIDA",
+          "NO_SHOW"
+        ],
+        "niveles_riesgo": [
+          "BAJO",
+          "MEDIO",
+          "ALTO"
+        ],
+        "medicos": [
+          "Dr. Mendoza",
+          "Dr. Paredes",
+          "Dr. Ramírez",
+          "Dr. Salcedo",
+          "Dr. Valdivia",
+          "Dra. Cárdenas",
+          "Dra. Morales",
+          "Dra. Quispe",
+          "Dra. Vargas"
+        ],
+        "canales_origen": [
+          "WEB",
+          "CALL_CENTER",
+          "PRESENCIAL"
+        ],
+        "tipos_paciente": [
+          "NUEVO",
+          "CONTINUADOR"
+        ]
+      }
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "GET",
+      "path": "/ia/metricas",
+      "status": 200,
+      "body": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "algoritmo": "LGBMClassifier",
+        "semilla": 42,
+        "fecha_entrenamiento": "2026-10-29T06:40:17.845484+00:00",
+        "es_simulacion": true,
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)",
+        "umbral_alto": 0.45,
+        "umbral_medio": 0.3,
+        "cumple_meta_f1_82": true,
+        "metricas_test": {
+          "umbral": 0.45,
+          "f1_score": 0.8621,
+          "precision": 0.8929,
+          "recall": 0.8333,
+          "roc_auc": 0.9819,
+          "pr_auc": 0.8555,
+          "matriz_confusion": {
+            "tn": 117,
+            "fp": 3,
+            "fn": 5,
+            "tp": 25
+          }
+        },
+        "metricas_val": {
+          "umbral": 0.45,
+          "f1_score": 0.8615,
+          "precision": 0.8235,
+          "recall": 0.9032,
+          "roc_auc": 0.9799,
+          "pr_auc": 0.924,
+          "matriz_confusion": {
+            "tn": 113,
+            "fp": 6,
+            "fn": 3,
+            "tp": 28
+          }
+        },
+        "metricas_baseline_test": {
+          "umbral": 0.45,
+          "f1_score": 0.7451,
+          "precision": 0.9048,
+          "recall": 0.6333,
+          "roc_auc": 0.9797,
+          "pr_auc": 0.9055,
+          "matriz_confusion": {
+            "tn": 118,
+            "fp": 2,
+            "fn": 11,
+            "tp": 19
+          }
+        },
+        "auditoria_equidad": {
+          "especialidad": {
+            "CARDIOLOGIA": {
+              "n": 46,
+              "tasa_positiva_real": 0.2609,
+              "f1_score": 0.9091,
+              "recall": 0.8333,
+              "precision": 1.0
+            },
+            "PEDIATRIA": {
+              "n": 49,
+              "tasa_positiva_real": 0.2041,
+              "f1_score": 0.8421,
+              "recall": 0.8,
+              "precision": 0.8889
+            },
+            "TRAUMATOLOGIA": {
+              "n": 55,
+              "tasa_positiva_real": 0.1455,
+              "f1_score": 0.8235,
+              "recall": 0.875,
+              "precision": 0.7778
+            }
+          },
+          "tipo_paciente": {
+            "CONTINUADOR": {
+              "n": 101,
+              "tasa_positiva_real": 0.2178,
+              "f1_score": 0.913,
+              "recall": 0.9545,
+              "precision": 0.875
+            },
+            "NUEVO": {
+              "n": 49,
+              "tasa_positiva_real": 0.1633,
+              "f1_score": 0.6667,
+              "recall": 0.5,
+              "precision": 1.0
+            }
+          },
+          "franja_horaria": {
+            "MANANA": {
+              "n": 96,
+              "tasa_positiva_real": 0.1771,
+              "f1_score": 0.7879,
+              "recall": 0.7647,
+              "precision": 0.8125
+            },
+            "TARDE": {
+              "n": 54,
+              "tasa_positiva_real": 0.2407,
+              "f1_score": 0.96,
+              "recall": 0.9231,
+              "precision": 1.0
+            }
+          }
+        },
+        "importancia_global_variables": [
+          {
+            "variable": "antelacion_dias",
+            "importancia": 932
+          },
+          {
+            "variable": "inasistencias_previas / tasa_previa",
+            "importancia": 892
+          },
+          {
+            "variable": "reprogramaciones_prev",
+            "importancia": 395
+          },
+          {
+            "variable": "dia_semana",
+            "importancia": 352
+          },
+          {
+            "variable": "especialidad",
+            "importancia": 293
+          },
+          {
+            "variable": "asistencias_previas",
+            "importancia": 285
+          },
+          {
+            "variable": "canal_origen",
+            "importancia": 214
+          },
+          {
+            "variable": "franja_horaria",
+            "importancia": 174
+          },
+          {
+            "variable": "tipo_paciente",
+            "importancia": 70
+          }
+        ]
+      }
+    },
+    {
+      "role": "TECNICO_IA",
+      "method": "GET",
+      "path": "/ia/dataset-resumen",
+      "status": 200,
+      "body": {
+        "version_dataset": "DS_SINTETICO_CRP_v1.0",
+        "semilla": 42,
+        "total_historicas": 1000,
+        "atendidas_historicas": 796,
+        "no_show_historicas": 205,
+        "proximas_operativas_bd": 121,
+        "train_size": 700,
+        "val_size": 150,
+        "test_size": 150,
+        "tasa_no_show_global": 0.205,
+        "tasa_no_show_train": 0.2057,
+        "tasa_no_show_val": 0.2067,
+        "tasa_no_show_test": 0.2,
+        "features_autorizadas": [
+          "antelacion_dias",
+          "inasistencias_previas",
+          "asistencias_previas",
+          "reprogramaciones_prev",
+          "tasa_no_show_previa",
+          "es_reserva_lejana",
+          "especialidad",
+          "tipo_paciente",
+          "canal_origen",
+          "franja_horaria",
+          "dia_semana"
+        ],
+        "control_leakage": {
+          "aprobado": true,
+          "columnas_prohibidas_excluidas": [
+            "estado_actual",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "id_cita",
+            "id_cita_externa",
+            "medico",
+            "paciente_anon_id",
+            "target_no_show"
+          ],
+          "interseccion_particiones": 0,
+          "violaciones_temporales": 0,
+          "invariante_paciente_nuevo_ok": true
+        },
+        "rotulo_etico": "Resultado simulado — Dataset sintético acreditado (RF-056 / RN16)"
+      }
+    }
+  ]
+}

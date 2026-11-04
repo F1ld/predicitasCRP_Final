@@ -1,0 +1,478 @@
+{
+  "python": "3.12.16",
+  "model_sha256_before": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "model_sha256_after": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "model_unchanged": true,
+  "version_modelo": "LightGBM_v1.0.0",
+  "dataset_info": {
+    "version_dataset": "DS_SINTETICO_CRP_v1.0",
+    "semilla": 42,
+    "total_historicas": 1000,
+    "train_size": 700,
+    "val_size": 150,
+    "test_size": 150,
+    "tasa_no_show_global": 0.205,
+    "tasa_no_show_train": 0.2057,
+    "tasa_no_show_val": 0.2067,
+    "tasa_no_show_test": 0.2,
+    "control_leakage": {
+      "aprobado": true,
+      "columnas_prohibidas_excluidas": [
+        "estado_actual",
+        "fecha_hora_cita",
+        "fecha_registro_cita",
+        "id_cita",
+        "id_cita_externa",
+        "medico",
+        "paciente_anon_id",
+        "target_no_show"
+      ],
+      "interseccion_particiones": 0,
+      "violaciones_temporales": 0,
+      "invariante_paciente_nuevo_ok": true
+    }
+  },
+  "metricas_test": {
+    "umbral": 0.45,
+    "f1_score": 0.8621,
+    "precision": 0.8929,
+    "recall": 0.8333,
+    "roc_auc": 0.9819,
+    "pr_auc": 0.8555,
+    "matriz_confusion": {
+      "tn": 117,
+      "fp": 3,
+      "fn": 5,
+      "tp": 25
+    }
+  },
+  "predictions": [
+    {
+      "features": {
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES",
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2
+      },
+      "prediction": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "probabilidad_no_show": "0.999",
+        "nivel_riesgo": "ALTO",
+        "umbral_aplicado": "0.450",
+        "features_snapshot": {
+          "antelacion_dias": 32,
+          "inasistencias_previas": 3,
+          "asistencias_previas": 1,
+          "reprogramaciones_prev": 2,
+          "tasa_no_show_previa": 0.6,
+          "es_reserva_lejana": 1,
+          "especialidad": "TRAUMATOLOGIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "CALL_CENTER",
+          "franja_horaria": "TARDE",
+          "dia_semana": "VIERNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]"
+      }
+    },
+    {
+      "features": {
+        "especialidad": "PEDIATRIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "WEB",
+        "franja_horaria": "MANANA",
+        "dia_semana": "LUNES",
+        "antelacion_dias": 2,
+        "inasistencias_previas": 0,
+        "asistencias_previas": 12,
+        "reprogramaciones_prev": 0
+      },
+      "prediction": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "probabilidad_no_show": "0.000",
+        "nivel_riesgo": "BAJO",
+        "umbral_aplicado": "0.450",
+        "features_snapshot": {
+          "antelacion_dias": 2,
+          "inasistencias_previas": 0,
+          "asistencias_previas": 12,
+          "reprogramaciones_prev": 0,
+          "tasa_no_show_previa": 0.0,
+          "es_reserva_lejana": 0,
+          "especialidad": "PEDIATRIA",
+          "tipo_paciente": "CONTINUADOR",
+          "canal_origen": "WEB",
+          "franja_horaria": "MANANA",
+          "dia_semana": "LUNES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 0 (-2.08) | 2) Antelación: 2 días (-1.34) | 3) Asistencias previas: 12 (-0.70) [Simulado]"
+      }
+    },
+    {
+      "features": {
+        "especialidad": "CARDIOLOGIA",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "PRESENCIAL",
+        "franja_horaria": "MANANA",
+        "dia_semana": "MIERCOLES",
+        "antelacion_dias": 8,
+        "inasistencias_previas": 0,
+        "asistencias_previas": 0,
+        "reprogramaciones_prev": 0
+      },
+      "prediction": {
+        "version_modelo": "LightGBM_v1.0.0",
+        "probabilidad_no_show": "0.000",
+        "nivel_riesgo": "BAJO",
+        "umbral_aplicado": "0.450",
+        "features_snapshot": {
+          "antelacion_dias": 8,
+          "inasistencias_previas": 0,
+          "asistencias_previas": 0,
+          "reprogramaciones_prev": 0,
+          "tasa_no_show_previa": 0.0,
+          "es_reserva_lejana": 0,
+          "especialidad": "CARDIOLOGIA",
+          "tipo_paciente": "NUEVO",
+          "canal_origen": "PRESENCIAL",
+          "franja_horaria": "MANANA",
+          "dia_semana": "MIERCOLES"
+        },
+        "explicabilidad_resumen": "Factores clave: 1) Antelación: 8 días (-1.81) | 2) Inasistencias previas: 0 (-1.79) | 3) Reprogramaciones: 0 (-0.52) [Simulado]"
+      }
+    }
+  ],
+  "requirements_installed": [
+    {
+      "package": "alembic",
+      "required": "1.20.0",
+      "installed": "1.20.0",
+      "matches": true
+    },
+    {
+      "package": "annotated-doc",
+      "required": "0.0.5",
+      "installed": "0.0.5",
+      "matches": true
+    },
+    {
+      "package": "annotated-types",
+      "required": "0.8.0",
+      "installed": "0.8.0",
+      "matches": true
+    },
+    {
+      "package": "anyio",
+      "required": "4.15.1",
+      "installed": "4.15.1",
+      "matches": true
+    },
+    {
+      "package": "argon2-cffi",
+      "required": "25.1.0",
+      "installed": "25.1.0",
+      "matches": true
+    },
+    {
+      "package": "argon2-cffi-bindings",
+      "required": "26.1.0",
+      "installed": "26.1.0",
+      "matches": true
+    },
+    {
+      "package": "certifi",
+      "required": "2026.7.22",
+      "installed": "2026.7.22",
+      "matches": true
+    },
+    {
+      "package": "cffi",
+      "required": "2.1.1",
+      "installed": "2.1.1",
+      "matches": true
+    },
+    {
+      "package": "click",
+      "required": "8.5.0",
+      "installed": "8.5.0",
+      "matches": true
+    },
+    {
+      "package": "cloudpickle",
+      "required": "3.1.2",
+      "installed": "3.1.2",
+      "matches": true
+    },
+    {
+      "package": "colorama",
+      "required": "0.4.6",
+      "installed": "0.4.6",
+      "matches": true
+    },
+    {
+      "package": "dnspython",
+      "required": "2.9.0",
+      "installed": "2.9.0",
+      "matches": true
+    },
+    {
+      "package": "email-validator",
+      "required": "2.3.0",
+      "installed": "2.3.0",
+      "matches": true
+    },
+    {
+      "package": "fastapi",
+      "required": "0.143.2",
+      "installed": "0.143.2",
+      "matches": true
+    },
+    {
+      "package": "h11",
+      "required": "0.16.0",
+      "installed": "0.16.0",
+      "matches": true
+    },
+    {
+      "package": "httpcore",
+      "required": "1.0.9",
+      "installed": "1.0.9",
+      "matches": true
+    },
+    {
+      "package": "httptools",
+      "required": "0.9.0",
+      "installed": "0.9.0",
+      "matches": true
+    },
+    {
+      "package": "httpx",
+      "required": "0.28.1",
+      "installed": "0.28.1",
+      "matches": true
+    },
+    {
+      "package": "idna",
+      "required": "3.20",
+      "installed": "3.20",
+      "matches": true
+    },
+    {
+      "package": "iniconfig",
+      "required": "2.3.1",
+      "installed": "2.3.1",
+      "matches": true
+    },
+    {
+      "package": "joblib",
+      "required": "1.6.0",
+      "installed": "1.6.0",
+      "matches": true
+    },
+    {
+      "package": "lightgbm",
+      "required": "4.7.0",
+      "installed": "4.7.0",
+      "matches": true
+    },
+    {
+      "package": "Mako",
+      "required": "1.4.3",
+      "installed": "1.4.3",
+      "matches": true
+    },
+    {
+      "package": "MarkupSafe",
+      "required": "3.0.4",
+      "installed": "3.0.4",
+      "matches": true
+    },
+    {
+      "package": "narwhals",
+      "required": "2.27.1",
+      "installed": "2.27.1",
+      "matches": true
+    },
+    {
+      "package": "numpy",
+      "required": "2.5.4",
+      "installed": "2.5.4",
+      "matches": true
+    },
+    {
+      "package": "openpyxl",
+      "required": "3.1.5",
+      "installed": "3.1.5",
+      "matches": true
+    },
+    {
+      "package": "opentelemetry-api",
+      "required": "1.45.1",
+      "installed": "1.45.1",
+      "matches": true
+    },
+    {
+      "package": "packaging",
+      "required": "26.3",
+      "installed": "26.3",
+      "matches": true
+    },
+    {
+      "package": "pluggy",
+      "required": "1.7.0",
+      "installed": "1.7.0",
+      "matches": true
+    },
+    {
+      "package": "psycopg",
+      "required": "3.3.6",
+      "installed": "3.3.6",
+      "matches": true
+    },
+    {
+      "package": "psycopg-binary",
+      "required": "3.3.6",
+      "installed": "3.3.6",
+      "matches": true
+    },
+    {
+      "package": "pycparser",
+      "required": "3.11",
+      "installed": "3.11",
+      "matches": true
+    },
+    {
+      "package": "pydantic_core",
+      "required": "2.50.1",
+      "installed": "2.50.1",
+      "matches": true
+    },
+    {
+      "package": "pydantic",
+      "required": "2.14.1",
+      "installed": "2.14.1",
+      "matches": true
+    },
+    {
+      "package": "pydantic-settings",
+      "required": "2.16.0",
+      "installed": "2.16.0",
+      "matches": true
+    },
+    {
+      "package": "Pygments",
+      "required": "2.21.0",
+      "installed": "2.21.0",
+      "matches": true
+    },
+    {
+      "package": "PyJWT",
+      "required": "2.15.1",
+      "installed": "2.15.1",
+      "matches": true
+    },
+    {
+      "package": "pytest",
+      "required": "9.1.1",
+      "installed": "9.1.1",
+      "matches": true
+    },
+    {
+      "package": "pytest-cov",
+      "required": "7.1.0",
+      "installed": "7.1.0",
+      "matches": true
+    },
+    {
+      "package": "python-dotenv",
+      "required": "1.2.4",
+      "installed": "1.2.4",
+      "matches": true
+    },
+    {
+      "package": "python-multipart",
+      "required": "0.0.32",
+      "installed": "0.0.32",
+      "matches": true
+    },
+    {
+      "package": "PyYAML",
+      "required": "6.0.3",
+      "installed": "6.0.3",
+      "matches": true
+    },
+    {
+      "package": "scikit-learn",
+      "required": "1.9.1",
+      "installed": "1.9.1",
+      "matches": true
+    },
+    {
+      "package": "scipy",
+      "required": "1.18.1",
+      "installed": "1.18.1",
+      "matches": true
+    },
+    {
+      "package": "SQLAlchemy",
+      "required": "2.1.4",
+      "installed": "2.1.4",
+      "matches": true
+    },
+    {
+      "package": "starlette",
+      "required": "1.8.0",
+      "installed": "1.8.0",
+      "matches": true
+    },
+    {
+      "package": "threadpoolctl",
+      "required": "3.7.0",
+      "installed": "3.7.0",
+      "matches": true
+    },
+    {
+      "package": "typing_extensions",
+      "required": "4.16.0",
+      "installed": "4.16.0",
+      "matches": true
+    },
+    {
+      "package": "typing-inspection",
+      "required": "0.4.4",
+      "installed": "0.4.4",
+      "matches": true
+    },
+    {
+      "package": "tzdata",
+      "required": "2026.5",
+      "installed": "2026.5",
+      "matches": true
+    },
+    {
+      "package": "uvicorn",
+      "required": "0.54.0",
+      "installed": "0.54.0",
+      "matches": true
+    },
+    {
+      "package": "watchfiles",
+      "required": "1.3.0",
+      "installed": "1.3.0",
+      "matches": true
+    },
+    {
+      "package": "websockets",
+      "required": "17.2",
+      "installed": "17.2",
+      "matches": true
+    }
+  ],
+  "all_pinned_requirements_match": true,
+  "note": "Verifica entorno instalado en imagen existente; no acredita descarga limpia del indice de paquetes."
+}

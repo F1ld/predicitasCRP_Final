@@ -1,0 +1,1720 @@
+{
+  "cross_module_imports": [
+    {
+      "source_module": "core/composicion",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.models",
+      "symbols": [
+        "AuditoriaEvento"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 1,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 2,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita",
+        "HistorialEstadoCita"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 3,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.models",
+      "symbols": [
+        "PrediccionIA"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 4,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "intervenciones",
+      "import_from": "app.modules.intervenciones.models",
+      "symbols": [
+        "Intervencion"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 5,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado",
+        "ListaEspera",
+        "Reasignacion"
+      ],
+      "source": "backend-predicitas/app/core/models.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 13,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 14,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 15,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "intervenciones",
+      "import_from": "app.modules.intervenciones.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 16,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 17,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "reportes",
+      "import_from": "app.modules.reportes.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 18,
+      "function": "<module>"
+    },
+    {
+      "source_module": "core/composicion",
+      "target_module": "usuarios",
+      "import_from": "app.modules.usuarios.router",
+      "symbols": [
+        "router"
+      ],
+      "source": "backend-predicitas/app/main.py",
+      "line": 19,
+      "function": "<module>"
+    },
+    {
+      "source_module": "auth",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.models",
+      "symbols": [
+        "AuditoriaEvento"
+      ],
+      "source": "backend-predicitas/app/modules/auth/repository.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "auth",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 14,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/citas/importer.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.models",
+      "symbols": [
+        "AuditoriaEvento"
+      ],
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.models",
+      "symbols": [
+        "PrediccionIA"
+      ],
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "intervenciones",
+      "import_from": "app.modules.intervenciones.models",
+      "symbols": [
+        "Intervencion"
+      ],
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 10,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado",
+        "ListaEspera",
+        "Reasignacion"
+      ],
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 11,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 13,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 14,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.service",
+      "symbols": [
+        "predecir_cita"
+      ],
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 149,
+      "function": "calcular_prediccion_cita"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 15,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 16,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "intervenciones",
+      "import_from": "app.modules.intervenciones.models",
+      "symbols": [
+        "Intervencion"
+      ],
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 27,
+      "function": "<module>"
+    },
+    {
+      "source_module": "citas",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado"
+      ],
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 28,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.synthetic",
+      "symbols": [
+        "generar_citas"
+      ],
+      "source": "backend-predicitas/app/modules/ia/predictor.py",
+      "line": 42,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/ia/predictor.py",
+      "line": 323,
+      "function": "cargar_citas_historicas"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/ia/repository.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 4,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 5,
+      "function": "<module>"
+    },
+    {
+      "source_module": "ia",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.reglas",
+      "symbols": [
+        "ESTADOS_ACTIVOS"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/reglas.py",
+      "line": 5,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/repository.py",
+      "line": 4,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.models",
+      "symbols": [
+        "PrediccionIA"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/repository.py",
+      "line": 5,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/repository.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 10,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 11,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.reglas",
+      "symbols": [
+        "LIMA"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 12,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.router",
+      "symbols": [
+        "reloj"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 13,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.schemas",
+      "symbols": [
+        "CupoLiberadoOut"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 27,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.reglas",
+      "symbols": [
+        "LIMA"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/schemas.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita",
+        "HistorialEstadoCita"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 8,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.reglas",
+      "symbols": [
+        "LIMA",
+        "TRANSICIONES",
+        "puede_transicionar_a_liberada"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 27,
+      "function": "<module>"
+    },
+    {
+      "source_module": "intervenciones",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.schemas",
+      "symbols": [
+        "CupoLiberadoOut"
+      ],
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 28,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 8,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 4,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 5,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "lista_espera",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.reglas",
+      "symbols": [
+        "LIMA"
+      ],
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "auditoria",
+      "import_from": "app.modules.auditoria.service",
+      "symbols": [
+        "registrar_evento"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 8,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 10,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "citas",
+      "import_from": "app.modules.citas.models",
+      "symbols": [
+        "Cita"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "ia",
+      "import_from": "app.modules.ia.models",
+      "symbols": [
+        "PrediccionIA"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 8,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "intervenciones",
+      "import_from": "app.modules.intervenciones.models",
+      "symbols": [
+        "Intervencion"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "reportes",
+      "target_module": "lista_espera",
+      "import_from": "app.modules.lista_espera.models",
+      "symbols": [
+        "CupoLiberado",
+        "Reasignacion",
+        "ListaEspera"
+      ],
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 10,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/repository.py",
+      "line": 4,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.dependencies",
+      "symbols": [
+        "requiere_roles"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 7,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 8,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.schemas",
+      "symbols": [
+        "UsuarioOut"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 9,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.schemas",
+      "symbols": [
+        "Clave",
+        "UsuarioOut"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/schemas.py",
+      "line": 6,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth",
+      "symbols": [
+        "reloj"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 15,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth",
+      "symbols": [
+        "repository"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 16,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.models",
+      "symbols": [
+        "Usuario"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 17,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.schemas",
+      "symbols": [
+        "validar_clave"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 18,
+      "function": "<module>"
+    },
+    {
+      "source_module": "usuarios",
+      "target_module": "auth",
+      "import_from": "app.modules.auth.service",
+      "symbols": [
+        "auditar"
+      ],
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 19,
+      "function": "<module>"
+    }
+  ],
+  "persistence_sites": [
+    {
+      "source": "backend-predicitas/app/modules/auditoria/service.py",
+      "line": 24,
+      "function": "registrar_evento",
+      "call": "db.add(evento)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/repository.py",
+      "line": 15,
+      "function": "por_id",
+      "call": "db.get(Usuario, id_usuario)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 82,
+      "function": "autenticar",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 110,
+      "function": "cerrar_sesion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 132,
+      "function": "cambiar_clave",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 77,
+      "function": "autenticar",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/auth/service.py",
+      "line": 63,
+      "function": "autenticar",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/importer.py",
+      "line": 100,
+      "function": "importar_citas",
+      "call": "db.add_all(citas)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/importer.py",
+      "line": 101,
+      "function": "importar_citas",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/importer.py",
+      "line": 114,
+      "function": "importar_citas",
+      "call": "db.add_all(historial)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/importer.py",
+      "line": 122,
+      "function": "importar_citas",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 25,
+      "function": "desenlaces_de",
+      "call": "db.execute(select(Cita.paciente_anon_id, Cita.fecha_hora_cita, Cita.estado_actual).where(Cita.paciente_anon_id.in_(pacientes), Cita.estado_actual.in_(ESTADOS_DESENLACE)))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 94,
+      "function": "listar",
+      "call": "db.execute(consulta.order_by(Cita.fecha_hora_cita, Cita.id_cita).limit(limite).offset(desplazamiento))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 146,
+      "function": "ultima_oferta",
+      "call": "db.get(ListaEspera, id_candidato)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/repository.py",
+      "line": 150,
+      "function": "reasignacion_de",
+      "call": "db.execute(select(Reasignacion, ListaEspera).join(ListaEspera, ListaEspera.id_candidato == Reasignacion.id_candidato).where(Reasignacion.id_cupo_liberado == id_cupo))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 100,
+      "function": "detalle_cita",
+      "call": "db.get(Cita, id_cita)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 174,
+      "function": "registrar_cita",
+      "call": "db.add(cita)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 175,
+      "function": "registrar_cita",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 176,
+      "function": "registrar_cita",
+      "call": "db.add(HistorialEstadoCita(id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario, estado_anterior=None, estado_nuevo='RECIBIDA', motivo_cambio='Registro manual de una cita existente'))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 185,
+      "function": "registrar_cita",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 213,
+      "function": "_aplicar_transicion",
+      "call": "db.add(HistorialEstadoCita(id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario, estado_anterior=estado_anterior, estado_nuevo=estado_nuevo, motivo_cambio=motivo))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 254,
+      "function": "cambiar_estado",
+      "call": "db.get(Cita, id_cita, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 314,
+      "function": "cambiar_estado",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 324,
+      "function": "registrar_check_in",
+      "call": "db.get(Cita, id_cita, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 339,
+      "function": "registrar_check_in",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 341,
+      "function": "registrar_check_in",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 269,
+      "function": "cambiar_estado",
+      "call": "db.get(Intervencion, cambio.id_intervencion)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 305,
+      "function": "cambiar_estado",
+      "call": "db.add(cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/citas/service.py",
+      "line": 306,
+      "function": "cambiar_estado",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/repository.py",
+      "line": 63,
+      "function": "guardar_o_actualizar_prediccion",
+      "call": "db.add(nueva)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/repository.py",
+      "line": 64,
+      "function": "guardar_o_actualizar_prediccion",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/repository.py",
+      "line": 51,
+      "function": "guardar_o_actualizar_prediccion",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 44,
+      "function": "predecir_cita",
+      "call": "db.get(Cita, id_cita)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 82,
+      "function": "predecir_cita",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/ia/service.py",
+      "line": 132,
+      "function": "predecir_lote",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/repository.py",
+      "line": 90,
+      "function": "listar_citas_riesgo_medio_alto",
+      "call": "db.execute(stmt)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 246,
+      "function": "obtener_intervencion",
+      "call": "db.get(Intervencion, id_intervencion)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 292,
+      "function": "crear_intervencion",
+      "call": "db.get(Cita, id_cita, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 337,
+      "function": "crear_intervencion",
+      "call": "db.add(intervencion)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 338,
+      "function": "crear_intervencion",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 357,
+      "function": "crear_intervencion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 371,
+      "function": "cambiar_estado_intervencion",
+      "call": "db.get(Intervencion, id_intervencion, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 399,
+      "function": "cambiar_estado_intervencion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 415,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.get(Intervencion, id_intervencion, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 425,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.get(Cita, intervencion.id_cita, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 526,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 543,
+      "function": "registrar_optout_intervencion",
+      "call": "db.get(Intervencion, id_intervencion, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 574,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.get(Intervencion, id_intervencion, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 581,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.get(Cita, intervencion.id_cita, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 600,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.add(HistorialEstadoCita(id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario, estado_anterior=estado_anterior, estado_nuevo='LIBERADA', motivo_cambio=motivo_final))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 618,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.add(nuevo_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 619,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 638,
+      "function": "liberar_cupo_desde_intervencion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 559,
+      "function": "registrar_optout_intervencion",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 50,
+      "function": "_enriquecer_out",
+      "call": "db.get(Cita, intervencion.id_cita)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 457,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.add(HistorialEstadoCita(id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario, estado_anterior=estado_cita_anterior, estado_nuevo='CONFIRMADA', motivo_cambio=datos.observacion or 'Confirmación del paciente mediante intervención preventiva'))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 469,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.add(HistorialEstadoCita(id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario, estado_anterior=estado_cita_anterior, estado_nuevo='LIBERADA', motivo_cambio=datos.observacion or 'Liberación voluntaria del paciente en intervención (RN04)'))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 488,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.add(nuevo_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/intervenciones/service.py",
+      "line": 489,
+      "function": "registrar_respuesta_intervencion",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 218,
+      "function": "registrar_oferta",
+      "call": "db.get(CupoLiberado, id_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 221,
+      "function": "registrar_oferta",
+      "call": "db.get(ListaEspera, datos.id_candidato)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 227,
+      "function": "registrar_oferta",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 239,
+      "function": "rechazo_oferta",
+      "call": "db.get(CupoLiberado, id_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 243,
+      "function": "rechazo_oferta",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 255,
+      "function": "desistimiento_oferta",
+      "call": "db.get(CupoLiberado, id_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 259,
+      "function": "desistimiento_oferta",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 24,
+      "function": "_franja_de_cupo",
+      "call": "db.get(Cita, cupo.id_cita_origen)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 33,
+      "function": "_cupo_a_out",
+      "call": "db.get(Cita, cupo.id_cita_origen)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 45,
+      "function": "obtener_detalle_cupo",
+      "call": "db.get(CupoLiberado, id_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 90,
+      "function": "crear_candidato",
+      "call": "db.add(candidato)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 91,
+      "function": "crear_candidato",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 109,
+      "function": "crear_candidato",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 122,
+      "function": "actualizar_candidato",
+      "call": "db.get(ListaEspera, id_candidato, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 153,
+      "function": "actualizar_candidato",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 169,
+      "function": "proponer_candidatos_para_cupo",
+      "call": "db.get(CupoLiberado, id_cupo)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 215,
+      "function": "reasignar_cupo",
+      "call": "db.get(CupoLiberado, id_cupo, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 224,
+      "function": "reasignar_cupo",
+      "call": "db.get(ListaEspera, datos.id_candidato, with_for_update=True)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 259,
+      "function": "reasignar_cupo",
+      "call": "db.add(reasignacion)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 260,
+      "function": "reasignar_cupo",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 286,
+      "function": "reasignar_cupo",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/lista_espera/service.py",
+      "line": 50,
+      "function": "obtener_detalle_cupo",
+      "call": "db.execute(select(Reasignacion).where(Reasignacion.id_cupo_liberado == id_cupo))",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 68,
+      "function": "obtener_rep02",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 59,
+      "function": "generar_rep02",
+      "call": "db.execute(stmt)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/reportes/service.py",
+      "line": 191,
+      "function": "generar_rep03",
+      "call": "db.execute(stmt)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 76,
+      "function": "crear",
+      "call": "db.add(usuario)",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 83,
+      "function": "crear",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 106,
+      "function": "editar",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 126,
+      "function": "cambiar_estado",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 149,
+      "function": "restablecer_acceso",
+      "call": "db.commit()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    },
+    {
+      "source": "backend-predicitas/app/modules/usuarios/service.py",
+      "line": 78,
+      "function": "crear",
+      "call": "db.flush()",
+      "note": "execute/get pueden ser lectura; no interpretar todo como escritura"
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "backend-predicitas/app/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/core/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/core/config.py",
+      "sha256": "9a26e14960d166de5dd093806cc38baa12bd911e4f99cfe82c797fce0a5bf632"
+    },
+    {
+      "path": "backend-predicitas/app/core/database.py",
+      "sha256": "052789419bf0b053c50591acc3dd82c7e0ef4db3772e4da99f54d500f2c6d6c1"
+    },
+    {
+      "path": "backend-predicitas/app/core/dominio.py",
+      "sha256": "dfd984bba6f694a76c1deb1f012f1e406fc20974673b7d6440980cb348b0d5bf"
+    },
+    {
+      "path": "backend-predicitas/app/core/errores.py",
+      "sha256": "defa7a91083f5d70bc036b29eec00df3b1d5d0f66ad02f7eb9f6014f8f13786c"
+    },
+    {
+      "path": "backend-predicitas/app/core/exportacion.py",
+      "sha256": "81696cc55e50eca964cbcd9a0010bdf265e3ddae4baf67a8f10d891d2d25e884"
+    },
+    {
+      "path": "backend-predicitas/app/core/http.py",
+      "sha256": "680449972a402f22c4393ac56fda78b80eac21cd68408002a0dc71b8c78e3690"
+    },
+    {
+      "path": "backend-predicitas/app/core/manejadores.py",
+      "sha256": "7bdcfe2907a7e2fadc0a987683a6f6c427b960ab38153f90ad3a241407b6394d"
+    },
+    {
+      "path": "backend-predicitas/app/core/models.py",
+      "sha256": "66f7bc2201275f79c778e38c306b601bd14f9f7bb753929396d569697193e084"
+    },
+    {
+      "path": "backend-predicitas/app/core/ranuras.py",
+      "sha256": "92efd6261c9d15100a3f25664c40f572d4359c56425ca28055163616ae07b041"
+    },
+    {
+      "path": "backend-predicitas/app/core/security.py",
+      "sha256": "fb3952b2626d508f6b3f398c895ddd69783add0692ebb09091e06cdd2cf305d0"
+    },
+    {
+      "path": "backend-predicitas/app/main.py",
+      "sha256": "a9305d3bef7a54670c91270cfe567e8c6b2fab9713c5fd5561a6b1e91826cea6"
+    },
+    {
+      "path": "backend-predicitas/app/modules/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auditoria/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auditoria/models.py",
+      "sha256": "d79a823a32fedb1225f612562d3debc0c07b6f89fd148e8de025ac44ae588b58"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auditoria/service.py",
+      "sha256": "11dc495071c9153d6c9ba117011fbac842e075be6b70a87514ed7ad9aa8cf017"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/dependencies.py",
+      "sha256": "9c74e2083e2033f454482d8b59aebb4864575a0d7934c5b26b1c7126e57d0258"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/models.py",
+      "sha256": "5950167cb98a46df4acfc6b05a536369ac0ab5e4da03a135a6d2461e3fd90204"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/reloj.py",
+      "sha256": "880addd3910420a114074067910e16388d0994eb0196e3d05a66b145dcc477b3"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/repository.py",
+      "sha256": "8ce2133fd8f93248a79944063083ae3a3819e3bd2899a09b4a3830dc46bed2f4"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/router.py",
+      "sha256": "56ebd2153f5dc23c5f3c7ca52f959edf2f8d68799f8b2b54349f8ce2b8dedb81"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/schemas.py",
+      "sha256": "9aeb410d968a3d4d4297c1048c02eeafeb68a8efe84e3a2332d7b952ae2eaffc"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/service.py",
+      "sha256": "33d674b4740a2ab6171925b39ea49e142759baf211fd2e26f8f4861e319d0ae3"
+    },
+    {
+      "path": "backend-predicitas/app/modules/auth/tokens.py",
+      "sha256": "dba999ebf000183e1b8edf127229f507cac2f8f332832f7438c8e615f971c071"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/importer.py",
+      "sha256": "695a21e4a3b4d996d0ff8b15815d24a29c6963862a951282bca06d7e1ec638d5"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/models.py",
+      "sha256": "296e119353ee02eda55227341d0f3f6cdad1a581d621ca1ee6506ee839970b94"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/reglas.py",
+      "sha256": "77419cae823c9cfba284f746b771699af734b83659d779ea298b781f1a1a7361"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/repository.py",
+      "sha256": "ebaba370c3e4a512421f59a8abb39ca446d3d4161c761a71f2b4fd74f871b7b3"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/router.py",
+      "sha256": "2f16aab5758923066b281c8f224c98d38285c883cccf696c9cd48f774e005742"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/schemas.py",
+      "sha256": "ebb924221f07ee0ce1dae6e16af74eecdd9435e1408fb9b037d28fed4e9ce188"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/service.py",
+      "sha256": "bfbeeaf0643d385c20d3aac0749c71a4c6028ef7e7e93ae2f4bcf4fdf125cb56"
+    },
+    {
+      "path": "backend-predicitas/app/modules/citas/synthetic.py",
+      "sha256": "5d3d828f456940c668658bfafc4575b791d22cbe244c8cade1993b943da40fbd"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/models.py",
+      "sha256": "e29de76ddc257bea46848d53efff02491bd9460f36a935232b66127313739f66"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/predictor.py",
+      "sha256": "bd7996749d426f532dd09400399fc7d690699da47c76d0e2e3529df59afb34a6"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/repository.py",
+      "sha256": "b10c47c6873faa5fbf3ce9e9c86bebd9a79a4383f66b4a1d7bb18197482d12a3"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/router.py",
+      "sha256": "79fd5e4bdf48abd674def8fe2eec3de3cd5ea9447b15d6c3c885bcc49064583b"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/schemas.py",
+      "sha256": "a7c98294fd90941081c659716ae2c1a3cc20de4dabf750feea160c1c127192dd"
+    },
+    {
+      "path": "backend-predicitas/app/modules/ia/service.py",
+      "sha256": "e1660345a7d7076b35f8aec0be1048dbd3333b08ed321506066bedf2e6c61da1"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/models.py",
+      "sha256": "330a6aae92166df11a6ff6250b79ab24a01a044405e2809f8ed1b3f207d078a2"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/reglas.py",
+      "sha256": "d039dda4e926a3ad041b10a3d5554b32c335fdac30bec25eade917bd6fae4041"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/repository.py",
+      "sha256": "3c5d7f1cfaf46b6d280e9582edfb596a0494129d36a3db23c561534cfab1d6a1"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/router.py",
+      "sha256": "e94909c80cc4c9140c3f7321ce11b4509b7b1169799e183dfeea781950478ff7"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/schemas.py",
+      "sha256": "7b672f0680f107747d8783119b5ae45b21a7285e0686a218e446ecabf4df7599"
+    },
+    {
+      "path": "backend-predicitas/app/modules/intervenciones/service.py",
+      "sha256": "d08d7d2d86669e2469c66e48e3837788265a44d4fb8e473212f5e022cfdf4b5d"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/models.py",
+      "sha256": "da1035b923e4274263b298c15fa14b7645150070fe6ae29f9da6d61b740aed54"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/repository.py",
+      "sha256": "b6ff7c513701eba570490c4bbe0458e908712882cceda1635562b82a053439f3"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/router.py",
+      "sha256": "e6f70d12b6d1d7673ff2ad7274bc70b0a0f63c72abd4cad6bfe3c8c7591b5096"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/schemas.py",
+      "sha256": "c03d400bb09381a9e2c7112e02b665ee73ea17c07fc28c0b38943a2ce279c120"
+    },
+    {
+      "path": "backend-predicitas/app/modules/lista_espera/service.py",
+      "sha256": "abcd62166a2082441dd82b1af02e8d17b86e9d538a235ea63899d27a80ddbe40"
+    },
+    {
+      "path": "backend-predicitas/app/modules/reportes/__init__.py",
+      "sha256": "1c3b24a46a47fa12eab29068e1c0ef5689b635fff7ccbbc89d5d28fe4c319f21"
+    },
+    {
+      "path": "backend-predicitas/app/modules/reportes/router.py",
+      "sha256": "340cf38193b09438bbccb49ce94014f334fcef5f8abaf11368ac6356a7657fd0"
+    },
+    {
+      "path": "backend-predicitas/app/modules/reportes/schemas.py",
+      "sha256": "983f874810ce55ccbf396979b44538e99f5940f6ca649e6b8c88ace402212761"
+    },
+    {
+      "path": "backend-predicitas/app/modules/reportes/service.py",
+      "sha256": "26c335a667a295457d7899a8bab26eeef92368bf082c14959753b326280ef707"
+    },
+    {
+      "path": "backend-predicitas/app/modules/usuarios/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend-predicitas/app/modules/usuarios/repository.py",
+      "sha256": "2fe06595ace59b3c898f8911b48c510202d8e6cd1b3aa4f206ab9a00ca7d1105"
+    },
+    {
+      "path": "backend-predicitas/app/modules/usuarios/router.py",
+      "sha256": "75227351b9cd9f15d3808d0fd869264ec814275ad41c1c13425d867e73a303a5"
+    },
+    {
+      "path": "backend-predicitas/app/modules/usuarios/schemas.py",
+      "sha256": "6e7b99542a0149866ed56da91d7068e28ee2f2d6958c615cf1115cb90950cbb5"
+    },
+    {
+      "path": "backend-predicitas/app/modules/usuarios/service.py",
+      "sha256": "b9895244dd57ce5a5b30ad9f7c1c54b5ba0c612c50b68222ad5a0e46f7ea750a"
+    }
+  ],
+  "scope": "Imports AST completos app.modules.*; sitios db.* son candidatos tecnicos, no analisis exhaustivo de flujo de datos/SQL dinamico."
+}

@@ -1,0 +1,3709 @@
+{
+  "source_openapi_sha256": "f39db2a15f5b10cc461f3e28cb386fb9b96ad6caa7b98bfdc25d6d6289b59ead",
+  "endpoint_count": 55,
+  "security_is_static_analysis_not_runtime_rbac_test": true,
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/auth/cambiar-clave",
+      "module": "auth",
+      "function": "cambiar_clave",
+      "source": "backend-predicitas/app/modules/auth/router.py",
+      "line": 48,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CambioClaveIn"
+            }
+          }
+        },
+        "required": true
+      },
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "cambiar_clave_auth_cambiar_clave_post"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "module": "auth",
+      "function": "login",
+      "source": "backend-predicitas/app/modules/auth/router.py",
+      "line": 17,
+      "authorization": "publico",
+      "roles": [],
+      "request_media_types": [
+        "application/x-www-form-urlencoded"
+      ],
+      "request_body": {
+        "content": {
+          "application/x-www-form-urlencoded": {
+            "schema": {
+              "$ref": "#/components/schemas/Body_login_auth_login_post"
+            }
+          }
+        },
+        "required": true
+      },
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "login_auth_login_post"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout",
+      "module": "auth",
+      "function": "logout",
+      "source": "backend-predicitas/app/modules/auth/router.py",
+      "line": 34,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "204": {
+          "description": "Successful Response"
+        }
+      },
+      "operation_id": "logout_auth_logout_post"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "module": "auth",
+      "function": "me",
+      "source": "backend-predicitas/app/modules/auth/router.py",
+      "line": 28,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "me_auth_me_get"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/renovar",
+      "module": "auth",
+      "function": "renovar",
+      "source": "backend-predicitas/app/modules/auth/router.py",
+      "line": 41,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenOut"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "renovar_auth_renovar_post"
+    },
+    {
+      "method": "GET",
+      "path": "/citas",
+      "module": "citas",
+      "function": "listar",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 36,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "enum": [
+                  "CARDIOLOGIA",
+                  "TRAUMATOLOGIA",
+                  "PEDIATRIA"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "medico",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico"
+          }
+        },
+        {
+          "name": "estado",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "enum": [
+                  "RECIBIDA",
+                  "CONFIRMADA",
+                  "REPROGRAMADA",
+                  "CANCELADA",
+                  "LIBERADA",
+                  "ATENDIDA",
+                  "NO_SHOW"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado"
+          }
+        },
+        {
+          "name": "nivel_riesgo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "enum": [
+                  "BAJO",
+                  "MEDIO",
+                  "ALTO",
+                  "SIN_PREDICCION"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Riesgo"
+          }
+        },
+        {
+          "name": "con_intervencion",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Con Intervencion"
+          }
+        },
+        {
+          "name": "q",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Busca en id_cita_externa, paciente_anon_id y medico",
+            "title": "Q"
+          },
+          "description": "Busca en id_cita_externa, paciente_anon_id y medico"
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaCitasOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_citas_get"
+    },
+    {
+      "method": "POST",
+      "path": "/citas",
+      "module": "citas",
+      "function": "registrar",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 59,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CitaRegistroIn"
+            }
+          }
+        }
+      },
+      "parameters": [],
+      "responses": {
+        "201": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitaDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_citas_post"
+    },
+    {
+      "method": "GET",
+      "path": "/citas/catalogos",
+      "module": "citas",
+      "function": "catalogos",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 71,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogosOut"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "catalogos_citas_catalogos_get"
+    },
+    {
+      "method": "POST",
+      "path": "/citas/importar",
+      "module": "citas",
+      "function": "importar",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 77,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "multipart/form-data"
+      ],
+      "request_body": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/Body_importar_citas_importar_post"
+            }
+          }
+        },
+        "required": true
+      },
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultadoImportacionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "importar_citas_importar_post"
+    },
+    {
+      "method": "GET",
+      "path": "/citas/{id_cita}",
+      "module": "citas",
+      "function": "detalle",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 109,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitaDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "detalle_citas__id_cita__get"
+    },
+    {
+      "method": "POST",
+      "path": "/citas/{id_cita}/check-in",
+      "module": "citas",
+      "function": "check_in",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 128,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CheckInIn"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Datos"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckInOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "check_in_citas__id_cita__check_in_post"
+    },
+    {
+      "method": "POST",
+      "path": "/citas/{id_cita}/estado",
+      "module": "citas",
+      "function": "cambiar_estado",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 115,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CambioEstadoIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitaDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "cambiar_estado_citas__id_cita__estado_post"
+    },
+    {
+      "method": "POST",
+      "path": "/citas/{id_cita}/prediccion",
+      "module": "citas",
+      "function": "calcular_prediccion_cita",
+      "source": "backend-predicitas/app/modules/citas/router.py",
+      "line": 142,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "calcular_prediccion_cita_citas__id_cita__prediccion_post"
+    },
+    {
+      "method": "GET",
+      "path": "/ia/dataset-resumen",
+      "module": "ia",
+      "function": "obtener_dataset_resumen",
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 59,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetResumenOut"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_dataset_resumen_ia_dataset_resumen_get"
+    },
+    {
+      "method": "GET",
+      "path": "/ia/metricas",
+      "module": "ia",
+      "function": "obtener_metricas",
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 52,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricasModeloOut"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_metricas_ia_metricas_get"
+    },
+    {
+      "method": "POST",
+      "path": "/ia/predecir-lote",
+      "module": "ia",
+      "function": "predecir_lote",
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 33,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "forzar",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "boolean",
+            "description": "Si es True, recalcula también las citas que ya tienen predicción",
+            "default": false,
+            "title": "Forzar"
+          },
+          "description": "Si es True, recalcula también las citas que ya tienen predicción"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultadoPrediccionLoteOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "predecir_lote_ia_predecir_lote_post"
+    },
+    {
+      "method": "POST",
+      "path": "/ia/predecir/{id_cita}",
+      "module": "ia",
+      "function": "predecir_cita",
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 23,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrediccionIAOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "predecir_cita_ia_predecir__id_cita__post"
+    },
+    {
+      "method": "GET",
+      "path": "/ia/predicciones/{id_cita}",
+      "module": "ia",
+      "function": "listar_predicciones_cita",
+      "source": "backend-predicitas/app/modules/ia/router.py",
+      "line": 43,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PrediccionIAOut"
+                },
+                "title": "Response Listar Predicciones Cita Ia Predicciones  Id Cita  Get"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_predicciones_cita_ia_predicciones__id_cita__get"
+    },
+    {
+      "method": "GET",
+      "path": "/citas/{id_cita}/intervenciones",
+      "module": "intervenciones",
+      "function": "listar_intervenciones_de_cita",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 273,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                },
+                "title": "Response Listar Intervenciones De Cita Citas  Id Cita  Intervenciones Get"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_intervenciones_de_cita_citas__id_cita__intervenciones_get"
+    },
+    {
+      "method": "POST",
+      "path": "/citas/{id_cita}/intervenciones",
+      "module": "intervenciones",
+      "function": "crear_intervencion_para_cita",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 282,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IntervencionCreateIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cita",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cita"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "crear_intervencion_para_cita_citas__id_cita__intervenciones_post"
+    },
+    {
+      "method": "GET",
+      "path": "/intervenciones",
+      "module": "intervenciones",
+      "function": "listar_intervenciones",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 78,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "nivel_riesgo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Riesgo"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "estado_intervencion",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado Intervencion"
+          }
+        },
+        {
+          "name": "canal_contacto",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canal Contacto"
+          }
+        },
+        {
+          "name": "respuesta_paciente",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Respuesta Paciente"
+          }
+        },
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "id_cita",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id Cita"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaIntervencionesOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_intervenciones_intervenciones_get"
+    },
+    {
+      "method": "POST",
+      "path": "/intervenciones",
+      "module": "intervenciones",
+      "function": "crear_intervencion_directa",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 137,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IntervencionCreateIn"
+            }
+          }
+        }
+      },
+      "parameters": [],
+      "responses": {
+        "201": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "crear_intervencion_directa_intervenciones_post"
+    },
+    {
+      "method": "GET",
+      "path": "/intervenciones/elegibles",
+      "module": "intervenciones",
+      "function": "listar_intervenciones_elegibles",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 49,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "nivel_riesgo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Riesgo"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaElegiblesOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_intervenciones_elegibles_intervenciones_elegibles_get"
+    },
+    {
+      "method": "GET",
+      "path": "/intervenciones/plantillas",
+      "module": "intervenciones",
+      "function": "listar_plantillas",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 41,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/PlantillaOut"
+                },
+                "type": "array",
+                "title": "Response Listar Plantillas Intervenciones Plantillas Get"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_plantillas_intervenciones_plantillas_get"
+    },
+    {
+      "method": "GET",
+      "path": "/intervenciones/{id_intervencion}",
+      "module": "intervenciones",
+      "function": "obtener_intervencion",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 241,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_intervencion_intervenciones__id_intervencion__get"
+    },
+    {
+      "method": "PATCH",
+      "path": "/intervenciones/{id_intervencion}",
+      "module": "intervenciones",
+      "function": "registrar_respuesta_patch",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 253,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IntervencionRespuestaIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_respuesta_patch_intervenciones__id_intervencion__patch"
+    },
+    {
+      "method": "POST",
+      "path": "/intervenciones/{id_intervencion}/estado",
+      "module": "intervenciones",
+      "function": "cambiar_estado",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 164,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IntervencionEstadoIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "cambiar_estado_intervenciones__id_intervencion__estado_post"
+    },
+    {
+      "method": "POST",
+      "path": "/intervenciones/{id_intervencion}/liberar-cupo",
+      "module": "intervenciones",
+      "function": "liberar_cupo_endpoint",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 221,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/LiberarCupoIn"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Datos"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoLiberadoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "liberar_cupo_endpoint_intervenciones__id_intervencion__liberar_cupo_post"
+    },
+    {
+      "method": "POST",
+      "path": "/intervenciones/{id_intervencion}/optout",
+      "module": "intervenciones",
+      "function": "registrar_optout_endpoint",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 205,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_optout_endpoint_intervenciones__id_intervencion__optout_post"
+    },
+    {
+      "method": "POST",
+      "path": "/intervenciones/{id_intervencion}/respuesta",
+      "module": "intervenciones",
+      "function": "registrar_respuesta_post",
+      "source": "backend-predicitas/app/modules/intervenciones/router.py",
+      "line": 184,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IntervencionRespuestaIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_intervencion",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Intervencion"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_respuesta_post_intervenciones__id_intervencion__respuesta_post"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos",
+      "module": "lista_espera",
+      "function": "listar_cupos_alias",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 124,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "estado_cupo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado Cupo"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 20,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaCupoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_cupos_alias_cupos_get"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos-liberados",
+      "module": "lista_espera",
+      "function": "listar_cupos_liberados",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 138,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "estado_cupo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estado del cupo (DISPONIBLE por defecto, o TODOS)",
+            "title": "Estado Cupo"
+          },
+          "description": "Estado del cupo (DISPONIBLE por defecto, o TODOS)"
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaCupoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_cupos_liberados_cupos_liberados_get"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos-liberados/{id_cupo}",
+      "module": "lista_espera",
+      "function": "obtener_detalle_cupo_liberado",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 161,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_detalle_cupo_liberado_cupos_liberados__id_cupo__get"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos-liberados/{id_cupo}/candidatos",
+      "module": "lista_espera",
+      "function": "obtener_candidatos_compatibles",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 180,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropuestaCandidatosOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_candidatos_compatibles_cupos_liberados__id_cupo__candidatos_get"
+    },
+    {
+      "method": "POST",
+      "path": "/cupos-liberados/{id_cupo}/reasignar",
+      "module": "lista_espera",
+      "function": "reasignar_cupo",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 200,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReasignacionIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__lista_espera__schemas__ReasignacionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "reasignar_cupo_cupos_liberados__id_cupo__reasignar_post"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos/{id_cupo}",
+      "module": "lista_espera",
+      "function": "obtener_detalle_cupo",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 152,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_detalle_cupo_cupos__id_cupo__get"
+    },
+    {
+      "method": "GET",
+      "path": "/cupos/{id_cupo}/candidatos",
+      "module": "lista_espera",
+      "function": "obtener_candidatos_para_cupo",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 170,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CandidatoOut"
+                },
+                "title": "Response Obtener Candidatos Para Cupo Cupos  Id Cupo  Candidatos Get"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_candidatos_para_cupo_cupos__id_cupo__candidatos_get"
+    },
+    {
+      "method": "POST",
+      "path": "/cupos/{id_cupo}/ofertas",
+      "module": "lista_espera",
+      "function": "registrar_oferta",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 211,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OfertaIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_oferta_cupos__id_cupo__ofertas_post"
+    },
+    {
+      "method": "POST",
+      "path": "/cupos/{id_cupo}/ofertas/desistimiento",
+      "module": "lista_espera",
+      "function": "desistimiento_oferta",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 249,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "desistimiento_oferta_cupos__id_cupo__ofertas_desistimiento_post"
+    },
+    {
+      "method": "POST",
+      "path": "/cupos/{id_cupo}/ofertas/rechazo",
+      "module": "lista_espera",
+      "function": "rechazo_oferta",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 233,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CupoDetalleOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "rechazo_oferta_cupos__id_cupo__ofertas_rechazo_post"
+    },
+    {
+      "method": "POST",
+      "path": "/cupos/{id_cupo}/reasignar",
+      "module": "lista_espera",
+      "function": "reasignar_cupo_alias",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 189,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ReasignacionIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_cupo",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Cupo"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__lista_espera__schemas__ReasignacionOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "reasignar_cupo_alias_cupos__id_cupo__reasignar_post"
+    },
+    {
+      "method": "GET",
+      "path": "/lista-espera",
+      "module": "lista_espera",
+      "function": "listar_espera",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 34,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION",
+        "TECNICO_IA"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Q"
+          }
+        },
+        {
+          "name": "especialidad_req",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad Req"
+          }
+        },
+        {
+          "name": "franja_preferida",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Franja Preferida"
+          }
+        },
+        {
+          "name": "estado_candidato",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado Candidato"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaCandidatoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_espera_lista_espera_get"
+    },
+    {
+      "method": "POST",
+      "path": "/lista-espera",
+      "module": "lista_espera",
+      "function": "registrar_candidato",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 66,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CandidatoCreateIn"
+            }
+          }
+        }
+      },
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidatoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "registrar_candidato_lista_espera_post"
+    },
+    {
+      "method": "PATCH",
+      "path": "/lista-espera/{id_candidato}",
+      "module": "lista_espera",
+      "function": "actualizar_candidato",
+      "source": "backend-predicitas/app/modules/lista_espera/router.py",
+      "line": 76,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CandidatoUpdateIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_candidato",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Candidato"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidatoOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "actualizar_candidato_lista_espera__id_candidato__patch"
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/intervenciones",
+      "module": "reportes",
+      "function": "alias_reporte_intervenciones",
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 115,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "canal_contacto",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canal Contacto"
+          }
+        },
+        {
+          "name": "nivel_riesgo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Riesgo"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "formato",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^(json|csv|xlsx)$",
+            "default": "json",
+            "title": "Formato"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rep02Out"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "alias_reporte_intervenciones_reportes_intervenciones_get"
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/reasignaciones",
+      "module": "reportes",
+      "function": "alias_reporte_reasignaciones",
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 138,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "id_operador",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id Operador"
+          }
+        },
+        {
+          "name": "formato",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^(json|csv|xlsx)$",
+            "default": "json",
+            "title": "Formato"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rep03Out"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "alias_reporte_reasignaciones_reportes_reasignaciones_get"
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/rep-02",
+      "module": "reportes",
+      "function": "obtener_rep02",
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 20,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "canal_contacto",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canal Contacto"
+          }
+        },
+        {
+          "name": "nivel_riesgo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Riesgo"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "formato",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "default": "json",
+            "title": "Formato"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rep02Out"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_rep02_reportes_rep_02_get"
+    },
+    {
+      "method": "GET",
+      "path": "/reportes/rep-03",
+      "module": "reportes",
+      "function": "obtener_rep03",
+      "source": "backend-predicitas/app/modules/reportes/router.py",
+      "line": 87,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR",
+        "RECEPCION"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          }
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          }
+        },
+        {
+          "name": "especialidad",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Especialidad"
+          }
+        },
+        {
+          "name": "id_operador",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id Operador"
+          }
+        },
+        {
+          "name": "formato",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "pattern": "^(json|csv|xlsx)$",
+            "default": "json",
+            "title": "Formato"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rep03Out"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_rep03_reportes_rep_03_get"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "module": "sistema",
+      "function": "health",
+      "source": "backend-predicitas/app/main.py",
+      "line": 43,
+      "authorization": "publico",
+      "roles": [],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          }
+        }
+      },
+      "operation_id": "health_health_get"
+    },
+    {
+      "method": "GET",
+      "path": "/usuarios",
+      "module": "usuarios",
+      "function": "listar",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 20,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Q"
+          }
+        },
+        {
+          "name": "rol",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ADMINISTRADOR",
+                  "RECEPCION",
+                  "TECNICO_IA"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rol"
+          }
+        },
+        {
+          "name": "activo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activo"
+          }
+        },
+        {
+          "name": "limite",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "maximum": 200,
+            "minimum": 1,
+            "default": 50,
+            "title": "Limite"
+          }
+        },
+        {
+          "name": "desplazamiento",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Desplazamiento"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaginaUsuariosOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "listar_usuarios_get"
+    },
+    {
+      "method": "POST",
+      "path": "/usuarios",
+      "module": "usuarios",
+      "function": "crear",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 35,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UsuarioCrearIn"
+            }
+          }
+        }
+      },
+      "parameters": [],
+      "responses": {
+        "201": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "crear_usuarios_post"
+    },
+    {
+      "method": "GET",
+      "path": "/usuarios/{id_usuario}",
+      "module": "usuarios",
+      "function": "obtener",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 42,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Usuario"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "obtener_usuarios__id_usuario__get"
+    },
+    {
+      "method": "PATCH",
+      "path": "/usuarios/{id_usuario}",
+      "module": "usuarios",
+      "function": "editar",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 48,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UsuarioEditarIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Usuario"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "editar_usuarios__id_usuario__patch"
+    },
+    {
+      "method": "POST",
+      "path": "/usuarios/{id_usuario}/estado",
+      "module": "usuarios",
+      "function": "cambiar_estado",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 55,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [
+        "application/json"
+      ],
+      "request_body": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EstadoIn"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Usuario"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "cambiar_estado_usuarios__id_usuario__estado_post"
+    },
+    {
+      "method": "POST",
+      "path": "/usuarios/{id_usuario}/restablecer-acceso",
+      "module": "usuarios",
+      "function": "restablecer_acceso",
+      "source": "backend-predicitas/app/modules/usuarios/router.py",
+      "line": 62,
+      "authorization": "bearer + rol",
+      "roles": [
+        "ADMINISTRADOR"
+      ],
+      "request_media_types": [],
+      "request_body": null,
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "title": "Id Usuario"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful Response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaveTemporalOut"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HTTPValidationError"
+              }
+            }
+          }
+        }
+      },
+      "operation_id": "restablecer_acceso_usuarios__id_usuario__restablecer_acceso_post"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+﻿{
+    "StoppedAuditContainers":  [
+                                   "predicitas-fase0-20261103-2200-api",
+                                   "predicitas-fase0-20261103-2200-db-crp",
+                                   "predicitas-fase0-20261103-2200-db-backend",
+                                   "predicitas-fase0-20261103-2200-db-qa",
+                                   "predicitas-fase0-20261103-2200-restore"
+                               ],
+    "DeletedVolumes":  [
+
+                       ],
+    "OriginalServicesStarted":  false,
+    "FrontendTemporaryServerStopped":  true,
+    "DockerDesktopLeftRunning":  true
+}

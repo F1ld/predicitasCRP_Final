@@ -1,0 +1,27 @@
+﻿[
+    {
+        "Task":  "typecheck",
+        "ExitCode":  2,
+        "Log":  "frontend_typecheck.log"
+    },
+    {
+        "Task":  "lint",
+        "ExitCode":  2,
+        "Log":  "frontend_lint.log"
+    },
+    {
+        "Task":  "test",
+        "ExitCode":  1,
+        "Log":  "frontend_test.log"
+    },
+    {
+        "Task":  "build",
+        "ExitCode":  1,
+        "Log":  "frontend_build.log"
+    },
+    {
+        "Task":  "audit",
+        "ExitCode":  1,
+        "Log":  "frontend_audit.json"
+    }
+]

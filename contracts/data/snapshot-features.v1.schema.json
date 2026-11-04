@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/data/snapshot-features.v1.schema.json",
+  "title": "Features efectivas conocidas y derivadas, no columnas transformadas one-hot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["especialidad", "tipo_paciente", "canal_origen", "franja_horaria", "dia_semana", "antelacion_dias", "inasistencias_previas", "asistencias_previas", "reprogramaciones_prev", "tasa_no_show_previa", "es_reserva_lejana"],
+  "properties": {
+    "especialidad": {"enum": ["CARDIOLOGIA", "TRAUMATOLOGIA", "PEDIATRIA"]},
+    "tipo_paciente": {"enum": ["NUEVO", "CONTINUADOR"]},
+    "canal_origen": {"enum": ["WEB", "CALL_CENTER", "PRESENCIAL"]},
+    "franja_horaria": {"enum": ["MANANA", "TARDE"]},
+    "dia_semana": {"enum": ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"]},
+    "antelacion_dias": {"type": "integer", "minimum": 0},
+    "inasistencias_previas": {"type": "integer", "minimum": 0},
+    "asistencias_previas": {"type": "integer", "minimum": 0},
+    "reprogramaciones_prev": {"type": "integer", "minimum": 0},
+    "tasa_no_show_previa": {"type": "number", "minimum": 0, "maximum": 1, "multipleOf": 0.0001},
+    "es_reserva_lejana": {"type": "integer", "enum": [0, 1]}
+  }
+}

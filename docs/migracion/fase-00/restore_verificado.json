@@ -1,0 +1,253 @@
+{
+  "source_volume": "predicitas-crp_pgdata",
+  "destination_container": "predicitas-fase0-20261103-2200-restore",
+  "custom_dump_restored": true,
+  "globals_restored": true,
+  "matching_catalog_sections": [
+    "tables",
+    "alembic",
+    "columns",
+    "indexes",
+    "database",
+    "policies",
+    "timezone",
+    "triggers",
+    "sequences",
+    "constraints",
+    "table_grants",
+    "server_version",
+    "sequence_grants",
+    "roles_without_passwords",
+    "counts_and_fingerprints"
+  ],
+  "differences": [],
+  "constraint_text_differences_reviewed": [
+    {
+      "before": {
+        "name": "ck_citas_canal_origen",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((canal_origen)::text = ANY ((ARRAY['WEB'::character varying, 'CALL_CENTER'::character varying, 'PRESENCIAL'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_citas_canal_origen",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((canal_origen)::text = ANY (ARRAY[('WEB'::character varying)::text, ('CALL_CENTER'::character varying)::text, ('PRESENCIAL'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_citas_especialidad",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((especialidad)::text = ANY ((ARRAY['CARDIOLOGIA'::character varying, 'TRAUMATOLOGIA'::character varying, 'PEDIATRIA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_citas_especialidad",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((especialidad)::text = ANY (ARRAY[('CARDIOLOGIA'::character varying)::text, ('TRAUMATOLOGIA'::character varying)::text, ('PEDIATRIA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_citas_estado_actual",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((estado_actual)::text = ANY ((ARRAY['RECIBIDA'::character varying, 'CONFIRMADA'::character varying, 'REPROGRAMADA'::character varying, 'CANCELADA'::character varying, 'LIBERADA'::character varying, 'ATENDIDA'::character varying, 'NO_SHOW'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_citas_estado_actual",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((estado_actual)::text = ANY (ARRAY[('RECIBIDA'::character varying)::text, ('CONFIRMADA'::character varying)::text, ('REPROGRAMADA'::character varying)::text, ('CANCELADA'::character varying)::text, ('LIBERADA'::character varying)::text, ('ATENDIDA'::character varying)::text, ('NO_SHOW'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_citas_franja_horaria",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((franja_horaria)::text = ANY ((ARRAY['MANANA'::character varying, 'TARDE'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_citas_franja_horaria",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((franja_horaria)::text = ANY (ARRAY[('MANANA'::character varying)::text, ('TARDE'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_citas_target_solo_con_desenlace",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((target_no_show IS NULL) OR ((estado_actual)::text = ANY ((ARRAY['ATENDIDA'::character varying, 'NO_SHOW'::character varying])::text[]))))"
+      },
+      "after": {
+        "name": "ck_citas_target_solo_con_desenlace",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((target_no_show IS NULL) OR ((estado_actual)::text = ANY (ARRAY[('ATENDIDA'::character varying)::text, ('NO_SHOW'::character varying)::text]))))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_citas_tipo_paciente",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((tipo_paciente)::text = ANY ((ARRAY['NUEVO'::character varying, 'CONTINUADOR'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_citas_tipo_paciente",
+        "type": "c",
+        "table": "citas",
+        "definition": "CHECK (((tipo_paciente)::text = ANY (ARRAY[('NUEVO'::character varying)::text, ('CONTINUADOR'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_cupos_liberados_estado_cupo",
+        "type": "c",
+        "table": "cupos_liberados",
+        "definition": "CHECK (((estado_cupo)::text = ANY ((ARRAY['DISPONIBLE'::character varying, 'EN_OFERTA'::character varying, 'REASIGNADO'::character varying, 'EXPIRADO'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_cupos_liberados_estado_cupo",
+        "type": "c",
+        "table": "cupos_liberados",
+        "definition": "CHECK (((estado_cupo)::text = ANY (ARRAY[('DISPONIBLE'::character varying)::text, ('EN_OFERTA'::character varying)::text, ('REASIGNADO'::character varying)::text, ('EXPIRADO'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_intervenciones_canal_contacto",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((canal_contacto)::text = ANY ((ARRAY['WHATSAPP'::character varying, 'SMS'::character varying, 'LLAMADA_TELEFONICA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_intervenciones_canal_contacto",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((canal_contacto)::text = ANY (ARRAY[('WHATSAPP'::character varying)::text, ('SMS'::character varying)::text, ('LLAMADA_TELEFONICA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_intervenciones_estado_intervencion",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((estado_intervencion)::text = ANY ((ARRAY['PENDIENTE'::character varying, 'ENVIADA'::character varying, 'ENTREGADA'::character varying, 'RESPONDIDA'::character varying, 'FALLIDA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_intervenciones_estado_intervencion",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((estado_intervencion)::text = ANY (ARRAY[('PENDIENTE'::character varying)::text, ('ENVIADA'::character varying)::text, ('ENTREGADA'::character varying)::text, ('RESPONDIDA'::character varying)::text, ('FALLIDA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_intervenciones_respuesta_paciente",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((respuesta_paciente)::text = ANY ((ARRAY['CONFIRMA'::character varying, 'SOLICITA_LIBERACION'::character varying, 'SOLICITA_REPROG'::character varying, 'SIN_RESPUESTA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_intervenciones_respuesta_paciente",
+        "type": "c",
+        "table": "intervenciones",
+        "definition": "CHECK (((respuesta_paciente)::text = ANY (ARRAY[('CONFIRMA'::character varying)::text, ('SOLICITA_LIBERACION'::character varying)::text, ('SOLICITA_REPROG'::character varying)::text, ('SIN_RESPUESTA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_lista_espera_especialidad_req",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((especialidad_req)::text = ANY ((ARRAY['CARDIOLOGIA'::character varying, 'TRAUMATOLOGIA'::character varying, 'PEDIATRIA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_lista_espera_especialidad_req",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((especialidad_req)::text = ANY (ARRAY[('CARDIOLOGIA'::character varying)::text, ('TRAUMATOLOGIA'::character varying)::text, ('PEDIATRIA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_lista_espera_estado_candidato",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((estado_candidato)::text = ANY ((ARRAY['ACTIVO'::character varying, 'CONTACTADO'::character varying, 'ASIGNADO'::character varying, 'DESISTIDO'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_lista_espera_estado_candidato",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((estado_candidato)::text = ANY (ARRAY[('ACTIVO'::character varying)::text, ('CONTACTADO'::character varying)::text, ('ASIGNADO'::character varying)::text, ('DESISTIDO'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_lista_espera_franja_preferida",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((franja_preferida)::text = ANY ((ARRAY['MANANA'::character varying, 'TARDE'::character varying, 'INDIFERENTE'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_lista_espera_franja_preferida",
+        "type": "c",
+        "table": "lista_espera",
+        "definition": "CHECK (((franja_preferida)::text = ANY (ARRAY[('MANANA'::character varying)::text, ('TARDE'::character varying)::text, ('INDIFERENTE'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_predicciones_ia_nivel_riesgo",
+        "type": "c",
+        "table": "predicciones_ia",
+        "definition": "CHECK (((nivel_riesgo)::text = ANY ((ARRAY['BAJO'::character varying, 'MEDIO'::character varying, 'ALTO'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_predicciones_ia_nivel_riesgo",
+        "type": "c",
+        "table": "predicciones_ia",
+        "definition": "CHECK (((nivel_riesgo)::text = ANY (ARRAY[('BAJO'::character varying)::text, ('MEDIO'::character varying)::text, ('ALTO'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    },
+    {
+      "before": {
+        "name": "ck_usuarios_rol",
+        "type": "c",
+        "table": "usuarios",
+        "definition": "CHECK (((rol)::text = ANY ((ARRAY['ADMINISTRADOR'::character varying, 'RECEPCION'::character varying, 'TECNICO_IA'::character varying])::text[])))"
+      },
+      "after": {
+        "name": "ck_usuarios_rol",
+        "type": "c",
+        "table": "usuarios",
+        "definition": "CHECK (((rol)::text = ANY (ARRAY[('ADMINISTRADOR'::character varying)::text, ('RECEPCION'::character varying)::text, ('TECNICO_IA'::character varying)::text])))"
+      },
+      "same_after_literal_array_cast_normalization": true
+    }
+  ],
+  "all_nine_table_counts_and_fingerprints_match": true,
+  "note": "El rol bootstrap fase0_restore_admin se excluye de la comparacion. Solo se normaliza expansion equivalente de casts de arrays de literales varchar a text; diferencias originales se conservan."
+}

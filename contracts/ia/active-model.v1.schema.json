@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://predicitas.invalid/contracts/ia/active-model.v1.schema.json",
+  "title": "Puntero activo atomico, no escribir hasta fase 6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_modelo", "manifest_sha256"],
+  "properties": {
+    "version_modelo": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$"},
+    "manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

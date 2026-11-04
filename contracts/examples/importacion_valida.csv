@@ -1,0 +1,3 @@
+id_cita_externa,paciente_anon_id,sede,especialidad,medico,fecha_hora_cita,fecha_registro_cita,tipo_paciente,canal_origen,inasistencias_previas,reprogramaciones_prev,asistencias_previas,estado_actual
+CIT-CON-001,PAC-CON-001,SAN_ISIDRO,PEDIATRIA,Medico sintetico,2026-11-09T09:00:00-05:00,2026-11-01T09:00:00-05:00,NUEVO,WEB,,0,,RECIBIDA
+CIT-CON-002,PAC-CON-002,san_isidro,cardiologia,Medico sintetico,2026-11-10T14:00:00-05:00,2026-11-01T09:00:00-05:00,continuador,web,0,1,3,CONFIRMADA

@@ -1,0 +1,12 @@
+{
+  "phase": 0,
+  "state": "COMPLETADA_EN_ALCANCE_DE_INVENTARIO_Y_BASELINE",
+  "archive": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase0-20261103-2200\\evidencias_fase0_cierre.zip",
+  "bytes": 144632,
+  "sha256": "32c5be3c5383add295cbc640792cd4364bb9e132cbcc8984a2dc5c0e5ba58d84",
+  "files": 47,
+  "secondary_verified": true,
+  "previous_evidence_archives_preserved": true,
+  "application_tests_all_passing": false,
+  "manifest_not_in_archive_to_avoid_self_reference": true
+}

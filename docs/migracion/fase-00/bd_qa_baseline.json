@@ -1,0 +1,2595 @@
+{
+  "tables": [
+    {
+      "rls": false,
+      "name": "alembic_version",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "auditoria_eventos",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "citas",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "cupos_liberados",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "historial_estados_cita",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "intervenciones",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "lista_espera",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "predicciones_ia",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "reasignaciones",
+      "owner": "predicitas_owner"
+    },
+    {
+      "rls": true,
+      "name": "usuarios",
+      "owner": "predicitas_owner"
+    }
+  ],
+  "alembic": [
+    "m01_001_indices_auditoria"
+  ],
+  "columns": [
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "alembic_version",
+      "column": "version_num",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "auditoria_eventos",
+      "column": "id_log",
+      "default": "nextval('auditoria_eventos_id_log_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "auditoria_eventos",
+      "column": "id_usuario",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "auditoria_eventos",
+      "column": "modulo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "auditoria_eventos",
+      "column": "accion",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "auditoria_eventos",
+      "column": "entidad_afectada",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "auditoria_eventos",
+      "column": "id_entidad",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "auditoria_eventos",
+      "column": "datos_before",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "auditoria_eventos",
+      "column": "datos_after",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "auditoria_eventos",
+      "column": "direccion_ip",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "auditoria_eventos",
+      "column": "creado_en",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "citas",
+      "column": "id_cita",
+      "default": "nextval('citas_id_cita_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "id_cita_externa",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "paciente_anon_id",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "sede",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "especialidad",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "medico",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "citas",
+      "column": "fecha_hora_cita",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "citas",
+      "column": "fecha_registro_cita",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "citas",
+      "column": "antelacion_dias",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "tipo_paciente",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "canal_origen",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "franja_horaria",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "dia_semana",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "citas",
+      "column": "inasistencias_previas",
+      "default": "0",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "citas",
+      "column": "reprogramaciones_prev",
+      "default": "0",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "citas",
+      "column": "asistencias_previas",
+      "default": "0",
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "citas",
+      "column": "estado_actual",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int2",
+      "type": "smallint",
+      "table": "citas",
+      "column": "target_no_show",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "cupos_liberados",
+      "column": "id_cupo_liberado",
+      "default": "nextval('cupos_liberados_id_cupo_liberado_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "cupos_liberados",
+      "column": "id_cita_origen",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cupos_liberados",
+      "column": "especialidad",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cupos_liberados",
+      "column": "medico",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "cupos_liberados",
+      "column": "fecha_hora_cupo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cupos_liberados",
+      "column": "estado_cupo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cupos_liberados",
+      "column": "origen_liberacion",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "cupos_liberados",
+      "column": "liberado_en",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "historial_estados_cita",
+      "column": "id_historial",
+      "default": "nextval('historial_estados_cita_id_historial_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "historial_estados_cita",
+      "column": "id_cita",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "historial_estados_cita",
+      "column": "id_usuario_actor",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "historial_estados_cita",
+      "column": "estado_anterior",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "historial_estados_cita",
+      "column": "estado_nuevo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "historial_estados_cita",
+      "column": "motivo_cambio",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "historial_estados_cita",
+      "column": "fecha_hora_evento",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "intervenciones",
+      "column": "id_intervencion",
+      "default": "nextval('intervenciones_id_intervencion_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "intervenciones",
+      "column": "id_cita",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "intervenciones",
+      "column": "id_operador",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "intervenciones",
+      "column": "canal_contacto",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "intervenciones",
+      "column": "plantilla_mensaje",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "intervenciones",
+      "column": "consentimiento_optout",
+      "default": "false",
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "intervenciones",
+      "column": "estado_intervencion",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "intervenciones",
+      "column": "respuesta_paciente",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "intervenciones",
+      "column": "fecha_hora_envio",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "intervenciones",
+      "column": "fecha_hora_respuesta",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "lista_espera",
+      "column": "id_candidato",
+      "default": "nextval('lista_espera_id_candidato_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "lista_espera",
+      "column": "paciente_anon_id",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "lista_espera",
+      "column": "especialidad_req",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "lista_espera",
+      "column": "franja_preferida",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "lista_espera",
+      "column": "estado_candidato",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "lista_espera",
+      "column": "prioridad_registro",
+      "default": "1",
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "lista_espera",
+      "column": "fecha_registro",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "predicciones_ia",
+      "column": "id_prediccion",
+      "default": "nextval('predicciones_ia_id_prediccion_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "predicciones_ia",
+      "column": "id_cita",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "predicciones_ia",
+      "column": "version_modelo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "predicciones_ia",
+      "column": "probabilidad_no_show",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "predicciones_ia",
+      "column": "nivel_riesgo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "predicciones_ia",
+      "column": "umbral_aplicado",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "predicciones_ia",
+      "column": "features_snapshot",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "predicciones_ia",
+      "column": "explicabilidad_resumen",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "predicciones_ia",
+      "column": "fecha_hora_inferencia",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "reasignaciones",
+      "column": "id_reasignacion",
+      "default": "nextval('reasignaciones_id_reasignacion_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "reasignaciones",
+      "column": "id_cupo_liberado",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "reasignaciones",
+      "column": "id_candidato",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "reasignaciones",
+      "column": "id_operador_confirma",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "reasignaciones",
+      "column": "confirmacion_humana",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "reasignaciones",
+      "column": "medio_confirmacion",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "reasignaciones",
+      "column": "observaciones",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "reasignaciones",
+      "column": "fecha_hora_reasigna",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "int8",
+      "type": "bigint",
+      "table": "usuarios",
+      "column": "id_usuario",
+      "default": "nextval('usuarios_id_usuario_seq'::regclass)",
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "usuarios",
+      "column": "nombre_completo",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "usuarios",
+      "column": "correo_institucional",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "usuarios",
+      "column": "password_hash",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "usuarios",
+      "column": "rol",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "usuarios",
+      "column": "activo",
+      "default": "true",
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "usuarios",
+      "column": "creado_en",
+      "default": "now()",
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamptz",
+      "type": "timestamp with time zone",
+      "table": "usuarios",
+      "column": "actualizado_en",
+      "default": null,
+      "nullable": "YES"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "alembic_version_pkc",
+      "table": "alembic_version",
+      "definition": "CREATE UNIQUE INDEX alembic_version_pkc ON public.alembic_version USING btree (version_num)"
+    },
+    {
+      "name": "ix_auditoria_eventos_entidad",
+      "table": "auditoria_eventos",
+      "definition": "CREATE INDEX ix_auditoria_eventos_entidad ON public.auditoria_eventos USING btree (entidad_afectada, id_entidad)"
+    },
+    {
+      "name": "ix_auditoria_eventos_usuario_accion_fecha",
+      "table": "auditoria_eventos",
+      "definition": "CREATE INDEX ix_auditoria_eventos_usuario_accion_fecha ON public.auditoria_eventos USING btree (id_usuario, accion, creado_en)"
+    },
+    {
+      "name": "pk_auditoria_eventos",
+      "table": "auditoria_eventos",
+      "definition": "CREATE UNIQUE INDEX pk_auditoria_eventos ON public.auditoria_eventos USING btree (id_log)"
+    },
+    {
+      "name": "ix_citas_fecha_hora_cita",
+      "table": "citas",
+      "definition": "CREATE INDEX ix_citas_fecha_hora_cita ON public.citas USING btree (fecha_hora_cita)"
+    },
+    {
+      "name": "ix_citas_paciente_anon_id",
+      "table": "citas",
+      "definition": "CREATE INDEX ix_citas_paciente_anon_id ON public.citas USING btree (paciente_anon_id)"
+    },
+    {
+      "name": "pk_citas",
+      "table": "citas",
+      "definition": "CREATE UNIQUE INDEX pk_citas ON public.citas USING btree (id_cita)"
+    },
+    {
+      "name": "uq_citas_id_cita_externa",
+      "table": "citas",
+      "definition": "CREATE UNIQUE INDEX uq_citas_id_cita_externa ON public.citas USING btree (id_cita_externa)"
+    },
+    {
+      "name": "ix_cupos_liberados_fecha_hora_cupo",
+      "table": "cupos_liberados",
+      "definition": "CREATE INDEX ix_cupos_liberados_fecha_hora_cupo ON public.cupos_liberados USING btree (fecha_hora_cupo)"
+    },
+    {
+      "name": "pk_cupos_liberados",
+      "table": "cupos_liberados",
+      "definition": "CREATE UNIQUE INDEX pk_cupos_liberados ON public.cupos_liberados USING btree (id_cupo_liberado)"
+    },
+    {
+      "name": "uq_cupos_liberados_id_cita_origen",
+      "table": "cupos_liberados",
+      "definition": "CREATE UNIQUE INDEX uq_cupos_liberados_id_cita_origen ON public.cupos_liberados USING btree (id_cita_origen)"
+    },
+    {
+      "name": "ix_historial_estados_cita_id_cita",
+      "table": "historial_estados_cita",
+      "definition": "CREATE INDEX ix_historial_estados_cita_id_cita ON public.historial_estados_cita USING btree (id_cita)"
+    },
+    {
+      "name": "pk_historial_estados_cita",
+      "table": "historial_estados_cita",
+      "definition": "CREATE UNIQUE INDEX pk_historial_estados_cita ON public.historial_estados_cita USING btree (id_historial)"
+    },
+    {
+      "name": "ix_intervenciones_id_cita",
+      "table": "intervenciones",
+      "definition": "CREATE INDEX ix_intervenciones_id_cita ON public.intervenciones USING btree (id_cita)"
+    },
+    {
+      "name": "pk_intervenciones",
+      "table": "intervenciones",
+      "definition": "CREATE UNIQUE INDEX pk_intervenciones ON public.intervenciones USING btree (id_intervencion)"
+    },
+    {
+      "name": "ix_lista_espera_paciente_anon_id",
+      "table": "lista_espera",
+      "definition": "CREATE INDEX ix_lista_espera_paciente_anon_id ON public.lista_espera USING btree (paciente_anon_id)"
+    },
+    {
+      "name": "pk_lista_espera",
+      "table": "lista_espera",
+      "definition": "CREATE UNIQUE INDEX pk_lista_espera ON public.lista_espera USING btree (id_candidato)"
+    },
+    {
+      "name": "pk_predicciones_ia",
+      "table": "predicciones_ia",
+      "definition": "CREATE UNIQUE INDEX pk_predicciones_ia ON public.predicciones_ia USING btree (id_prediccion)"
+    },
+    {
+      "name": "uq_predicciones_ia_cita_version",
+      "table": "predicciones_ia",
+      "definition": "CREATE UNIQUE INDEX uq_predicciones_ia_cita_version ON public.predicciones_ia USING btree (id_cita, version_modelo)"
+    },
+    {
+      "name": "pk_reasignaciones",
+      "table": "reasignaciones",
+      "definition": "CREATE UNIQUE INDEX pk_reasignaciones ON public.reasignaciones USING btree (id_reasignacion)"
+    },
+    {
+      "name": "uq_reasignaciones_id_cupo_liberado",
+      "table": "reasignaciones",
+      "definition": "CREATE UNIQUE INDEX uq_reasignaciones_id_cupo_liberado ON public.reasignaciones USING btree (id_cupo_liberado)"
+    },
+    {
+      "name": "pk_usuarios",
+      "table": "usuarios",
+      "definition": "CREATE UNIQUE INDEX pk_usuarios ON public.usuarios USING btree (id_usuario)"
+    },
+    {
+      "name": "uq_usuarios_correo_institucional",
+      "table": "usuarios",
+      "definition": "CREATE UNIQUE INDEX uq_usuarios_correo_institucional ON public.usuarios USING btree (correo_institucional)"
+    }
+  ],
+  "database": "predicitas",
+  "policies": [
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "auditoria_eventos",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_auditoria_eventos_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "citas",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_citas_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "cupos_liberados",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_cupos_liberados_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "historial_estados_cita",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_historial_estados_cita_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "intervenciones",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_intervenciones_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "lista_espera",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_lista_espera_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "predicciones_ia",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_predicciones_ia_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "reasignaciones",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_reasignaciones_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "true",
+      "roles": [
+        "predicitas_app"
+      ],
+      "tablename": "usuarios",
+      "permissive": "PERMISSIVE",
+      "policyname": "pol_usuarios_predicitas_app",
+      "schemaname": "public",
+      "with_check": "true"
+    }
+  ],
+  "timezone": "Etc/UTC",
+  "triggers": [
+    {
+      "name": "trg_auditoria_eventos_fila_inmutable",
+      "table": "auditoria_eventos",
+      "enabled": "O",
+      "definition": "CREATE TRIGGER trg_auditoria_eventos_fila_inmutable BEFORE DELETE OR UPDATE ON public.auditoria_eventos FOR EACH ROW EXECUTE FUNCTION fn_bloquear_modificacion()"
+    },
+    {
+      "name": "trg_auditoria_eventos_sin_truncate",
+      "table": "auditoria_eventos",
+      "enabled": "O",
+      "definition": "CREATE TRIGGER trg_auditoria_eventos_sin_truncate BEFORE TRUNCATE ON public.auditoria_eventos FOR EACH STATEMENT EXECUTE FUNCTION fn_bloquear_modificacion()"
+    },
+    {
+      "name": "trg_historial_estados_cita_fila_inmutable",
+      "table": "historial_estados_cita",
+      "enabled": "O",
+      "definition": "CREATE TRIGGER trg_historial_estados_cita_fila_inmutable BEFORE DELETE OR UPDATE ON public.historial_estados_cita FOR EACH ROW EXECUTE FUNCTION fn_bloquear_modificacion()"
+    },
+    {
+      "name": "trg_historial_estados_cita_sin_truncate",
+      "table": "historial_estados_cita",
+      "enabled": "O",
+      "definition": "CREATE TRIGGER trg_historial_estados_cita_sin_truncate BEFORE TRUNCATE ON public.historial_estados_cita FOR EACH STATEMENT EXECUTE FUNCTION fn_bloquear_modificacion()"
+    }
+  ],
+  "sequences": [
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": 3,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "auditoria_eventos_id_log_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": 1080,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "citas_id_cita_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": null,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "cupos_liberados_id_cupo_liberado_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": 2080,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "historial_estados_cita_id_historial_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": null,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "intervenciones_id_intervencion_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": null,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "lista_espera_id_candidato_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": null,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "predicciones_ia_id_prediccion_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": null,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "reasignaciones_id_reasignacion_seq",
+      "sequenceowner": "predicitas_owner"
+    },
+    {
+      "cycle": false,
+      "data_type": "bigint",
+      "max_value": 9223372036854775807,
+      "min_value": 1,
+      "cache_size": 1,
+      "last_value": 3,
+      "schemaname": "public",
+      "start_value": 1,
+      "increment_by": 1,
+      "sequencename": "usuarios_id_usuario_seq",
+      "sequenceowner": "predicitas_owner"
+    }
+  ],
+  "constraints": [
+    {
+      "name": "alembic_version_pkc",
+      "type": "p",
+      "table": "alembic_version",
+      "definition": "PRIMARY KEY (version_num)"
+    },
+    {
+      "name": "fk_auditoria_eventos_id_usuario_usuarios",
+      "type": "f",
+      "table": "auditoria_eventos",
+      "definition": "FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_auditoria_eventos",
+      "type": "p",
+      "table": "auditoria_eventos",
+      "definition": "PRIMARY KEY (id_log)"
+    },
+    {
+      "name": "ck_citas_antelacion_dias",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK ((antelacion_dias >= 0))"
+    },
+    {
+      "name": "ck_citas_canal_origen",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((canal_origen)::text = ANY ((ARRAY['WEB'::character varying, 'CALL_CENTER'::character varying, 'PRESENCIAL'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_citas_especialidad",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((especialidad)::text = ANY ((ARRAY['CARDIOLOGIA'::character varying, 'TRAUMATOLOGIA'::character varying, 'PEDIATRIA'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_citas_estado_actual",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((estado_actual)::text = ANY ((ARRAY['RECIBIDA'::character varying, 'CONFIRMADA'::character varying, 'REPROGRAMADA'::character varying, 'CANCELADA'::character varying, 'LIBERADA'::character varying, 'ATENDIDA'::character varying, 'NO_SHOW'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_citas_franja_horaria",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((franja_horaria)::text = ANY ((ARRAY['MANANA'::character varying, 'TARDE'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_citas_sede",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((sede)::text = 'SAN_ISIDRO'::text))"
+    },
+    {
+      "name": "ck_citas_target_no_show",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK ((target_no_show = ANY (ARRAY[0, 1])))"
+    },
+    {
+      "name": "ck_citas_target_solo_con_desenlace",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((target_no_show IS NULL) OR ((estado_actual)::text = ANY ((ARRAY['ATENDIDA'::character varying, 'NO_SHOW'::character varying])::text[]))))"
+    },
+    {
+      "name": "ck_citas_tipo_paciente",
+      "type": "c",
+      "table": "citas",
+      "definition": "CHECK (((tipo_paciente)::text = ANY ((ARRAY['NUEVO'::character varying, 'CONTINUADOR'::character varying])::text[])))"
+    },
+    {
+      "name": "pk_citas",
+      "type": "p",
+      "table": "citas",
+      "definition": "PRIMARY KEY (id_cita)"
+    },
+    {
+      "name": "uq_citas_id_cita_externa",
+      "type": "u",
+      "table": "citas",
+      "definition": "UNIQUE (id_cita_externa)"
+    },
+    {
+      "name": "ck_cupos_liberados_estado_cupo",
+      "type": "c",
+      "table": "cupos_liberados",
+      "definition": "CHECK (((estado_cupo)::text = ANY ((ARRAY['DISPONIBLE'::character varying, 'EN_OFERTA'::character varying, 'REASIGNADO'::character varying, 'EXPIRADO'::character varying])::text[])))"
+    },
+    {
+      "name": "fk_cupos_liberados_id_cita_origen_citas",
+      "type": "f",
+      "table": "cupos_liberados",
+      "definition": "FOREIGN KEY (id_cita_origen) REFERENCES citas(id_cita) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_cupos_liberados",
+      "type": "p",
+      "table": "cupos_liberados",
+      "definition": "PRIMARY KEY (id_cupo_liberado)"
+    },
+    {
+      "name": "uq_cupos_liberados_id_cita_origen",
+      "type": "u",
+      "table": "cupos_liberados",
+      "definition": "UNIQUE (id_cita_origen)"
+    },
+    {
+      "name": "fk_historial_estados_cita_id_cita_citas",
+      "type": "f",
+      "table": "historial_estados_cita",
+      "definition": "FOREIGN KEY (id_cita) REFERENCES citas(id_cita) ON DELETE RESTRICT"
+    },
+    {
+      "name": "fk_historial_estados_cita_id_usuario_actor_usuarios",
+      "type": "f",
+      "table": "historial_estados_cita",
+      "definition": "FOREIGN KEY (id_usuario_actor) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_historial_estados_cita",
+      "type": "p",
+      "table": "historial_estados_cita",
+      "definition": "PRIMARY KEY (id_historial)"
+    },
+    {
+      "name": "ck_intervenciones_canal_contacto",
+      "type": "c",
+      "table": "intervenciones",
+      "definition": "CHECK (((canal_contacto)::text = ANY ((ARRAY['WHATSAPP'::character varying, 'SMS'::character varying, 'LLAMADA_TELEFONICA'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_intervenciones_estado_intervencion",
+      "type": "c",
+      "table": "intervenciones",
+      "definition": "CHECK (((estado_intervencion)::text = ANY ((ARRAY['PENDIENTE'::character varying, 'ENVIADA'::character varying, 'ENTREGADA'::character varying, 'RESPONDIDA'::character varying, 'FALLIDA'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_intervenciones_respuesta_paciente",
+      "type": "c",
+      "table": "intervenciones",
+      "definition": "CHECK (((respuesta_paciente)::text = ANY ((ARRAY['CONFIRMA'::character varying, 'SOLICITA_LIBERACION'::character varying, 'SOLICITA_REPROG'::character varying, 'SIN_RESPUESTA'::character varying])::text[])))"
+    },
+    {
+      "name": "fk_intervenciones_id_cita_citas",
+      "type": "f",
+      "table": "intervenciones",
+      "definition": "FOREIGN KEY (id_cita) REFERENCES citas(id_cita) ON DELETE RESTRICT"
+    },
+    {
+      "name": "fk_intervenciones_id_operador_usuarios",
+      "type": "f",
+      "table": "intervenciones",
+      "definition": "FOREIGN KEY (id_operador) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_intervenciones",
+      "type": "p",
+      "table": "intervenciones",
+      "definition": "PRIMARY KEY (id_intervencion)"
+    },
+    {
+      "name": "ck_lista_espera_especialidad_req",
+      "type": "c",
+      "table": "lista_espera",
+      "definition": "CHECK (((especialidad_req)::text = ANY ((ARRAY['CARDIOLOGIA'::character varying, 'TRAUMATOLOGIA'::character varying, 'PEDIATRIA'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_lista_espera_estado_candidato",
+      "type": "c",
+      "table": "lista_espera",
+      "definition": "CHECK (((estado_candidato)::text = ANY ((ARRAY['ACTIVO'::character varying, 'CONTACTADO'::character varying, 'ASIGNADO'::character varying, 'DESISTIDO'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_lista_espera_franja_preferida",
+      "type": "c",
+      "table": "lista_espera",
+      "definition": "CHECK (((franja_preferida)::text = ANY ((ARRAY['MANANA'::character varying, 'TARDE'::character varying, 'INDIFERENTE'::character varying])::text[])))"
+    },
+    {
+      "name": "pk_lista_espera",
+      "type": "p",
+      "table": "lista_espera",
+      "definition": "PRIMARY KEY (id_candidato)"
+    },
+    {
+      "name": "ck_predicciones_ia_nivel_riesgo",
+      "type": "c",
+      "table": "predicciones_ia",
+      "definition": "CHECK (((nivel_riesgo)::text = ANY ((ARRAY['BAJO'::character varying, 'MEDIO'::character varying, 'ALTO'::character varying])::text[])))"
+    },
+    {
+      "name": "ck_predicciones_ia_probabilidad_no_show",
+      "type": "c",
+      "table": "predicciones_ia",
+      "definition": "CHECK (((probabilidad_no_show >= 0.000) AND (probabilidad_no_show <= 1.000)))"
+    },
+    {
+      "name": "fk_predicciones_ia_id_cita_citas",
+      "type": "f",
+      "table": "predicciones_ia",
+      "definition": "FOREIGN KEY (id_cita) REFERENCES citas(id_cita) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_predicciones_ia",
+      "type": "p",
+      "table": "predicciones_ia",
+      "definition": "PRIMARY KEY (id_prediccion)"
+    },
+    {
+      "name": "uq_predicciones_ia_cita_version",
+      "type": "u",
+      "table": "predicciones_ia",
+      "definition": "UNIQUE (id_cita, version_modelo)"
+    },
+    {
+      "name": "ck_reasignaciones_confirmacion_humana",
+      "type": "c",
+      "table": "reasignaciones",
+      "definition": "CHECK ((confirmacion_humana IS TRUE))"
+    },
+    {
+      "name": "fk_reasignaciones_id_candidato_lista_espera",
+      "type": "f",
+      "table": "reasignaciones",
+      "definition": "FOREIGN KEY (id_candidato) REFERENCES lista_espera(id_candidato) ON DELETE RESTRICT"
+    },
+    {
+      "name": "fk_reasignaciones_id_cupo_liberado_cupos_liberados",
+      "type": "f",
+      "table": "reasignaciones",
+      "definition": "FOREIGN KEY (id_cupo_liberado) REFERENCES cupos_liberados(id_cupo_liberado) ON DELETE RESTRICT"
+    },
+    {
+      "name": "fk_reasignaciones_id_operador_confirma_usuarios",
+      "type": "f",
+      "table": "reasignaciones",
+      "definition": "FOREIGN KEY (id_operador_confirma) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT"
+    },
+    {
+      "name": "pk_reasignaciones",
+      "type": "p",
+      "table": "reasignaciones",
+      "definition": "PRIMARY KEY (id_reasignacion)"
+    },
+    {
+      "name": "uq_reasignaciones_id_cupo_liberado",
+      "type": "u",
+      "table": "reasignaciones",
+      "definition": "UNIQUE (id_cupo_liberado)"
+    },
+    {
+      "name": "ck_usuarios_rol",
+      "type": "c",
+      "table": "usuarios",
+      "definition": "CHECK (((rol)::text = ANY ((ARRAY['ADMINISTRADOR'::character varying, 'RECEPCION'::character varying, 'TECNICO_IA'::character varying])::text[])))"
+    },
+    {
+      "name": "pk_usuarios",
+      "type": "p",
+      "table": "usuarios",
+      "definition": "PRIMARY KEY (id_usuario)"
+    },
+    {
+      "name": "uq_usuarios_correo_institucional",
+      "type": "u",
+      "table": "usuarios",
+      "definition": "UNIQUE (correo_institucional)"
+    }
+  ],
+  "table_grants": [
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "alembic_version",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "auditoria_eventos",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "citas",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "cupos_liberados",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "historial_estados_cita",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "intervenciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "lista_espera",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "predicciones_ia",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "reasignaciones",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "table_name": "usuarios",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "predicitas",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    }
+  ],
+  "server_version": "16.15 (Debian 16.15-1.pgdg13+2)",
+  "sequence_grants": [
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "auditoria_eventos_id_log_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "auditoria_eventos_id_log_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "citas_id_cita_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "citas_id_cita_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "cupos_liberados_id_cupo_liberado_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "cupos_liberados_id_cupo_liberado_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "historial_estados_cita_id_historial_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "historial_estados_cita_id_historial_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "intervenciones_id_intervencion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "intervenciones_id_intervencion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "lista_espera_id_candidato_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "lista_espera_id_candidato_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "predicciones_ia_id_prediccion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "predicciones_ia_id_prediccion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "reasignaciones_id_reasignacion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "reasignaciones_id_reasignacion_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_app",
+      "grantor": "predicitas_owner",
+      "object_name": "usuarios_id_usuario_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "NO",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    },
+    {
+      "grantee": "predicitas_owner",
+      "grantor": "predicitas_owner",
+      "object_name": "usuarios_id_usuario_seq",
+      "object_type": "SEQUENCE",
+      "is_grantable": "YES",
+      "object_schema": "public",
+      "object_catalog": "predicitas",
+      "privilege_type": "USAGE"
+    }
+  ],
+  "roles_without_passwords": [
+    {
+      "name": "predicitas_app",
+      "login": true,
+      "inherit": false,
+      "create_db": false,
+      "superuser": false,
+      "bypass_rls": false,
+      "create_role": false
+    },
+    {
+      "name": "predicitas_owner",
+      "login": true,
+      "inherit": true,
+      "create_db": true,
+      "superuser": true,
+      "bypass_rls": true,
+      "create_role": true
+    }
+  ],
+  "counts_and_fingerprints": [
+    {
+      "table": "usuarios",
+      "count": 3,
+      "data_fingerprint_md5": "3638af38bc7561f7057f3fdf601b8c8a"
+    },
+    {
+      "table": "citas",
+      "count": 1080,
+      "data_fingerprint_md5": "2c9a3554cb250dcf04451290d0f0e6ca"
+    },
+    {
+      "table": "historial_estados_cita",
+      "count": 2080,
+      "data_fingerprint_md5": "e22c11a3aa540ce2bd786742890c450a"
+    },
+    {
+      "table": "predicciones_ia",
+      "count": 0,
+      "data_fingerprint_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "intervenciones",
+      "count": 0,
+      "data_fingerprint_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "lista_espera",
+      "count": 0,
+      "data_fingerprint_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "cupos_liberados",
+      "count": 0,
+      "data_fingerprint_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "reasignaciones",
+      "count": 0,
+      "data_fingerprint_md5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "table": "auditoria_eventos",
+      "count": 3,
+      "data_fingerprint_md5": "e5ee091a4a93843c75f30309b8935899"
+    }
+  ]
+}

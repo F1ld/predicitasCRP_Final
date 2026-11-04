@@ -1,0 +1,30 @@
+{
+  "source": "copia restaurada del dump principal, no volumen original",
+  "method": "verificacion local del hash sin autenticacion HTTP ni cambios de password",
+  "password_or_hash_published": false,
+  "writes_performed": false,
+  "accounts": [
+    {
+      "demo_account": "admin@predicitas.crp",
+      "exists": true,
+      "role": "ADMINISTRADOR",
+      "active": true,
+      "matches_seed_password_configured_in_original_compose": true
+    },
+    {
+      "demo_account": "recepcion@predicitas.crp",
+      "exists": true,
+      "role": "RECEPCION",
+      "active": true,
+      "matches_seed_password_configured_in_original_compose": true
+    },
+    {
+      "demo_account": "tecnico.ia@predicitas.crp",
+      "exists": true,
+      "role": "TECNICO_IA",
+      "active": true,
+      "matches_seed_password_configured_in_original_compose": true
+    }
+  ],
+  "credential_source_for_private_local_use": "services.seed.command en docker-compose.yml original; no se duplica la clave en este informe"
+}
