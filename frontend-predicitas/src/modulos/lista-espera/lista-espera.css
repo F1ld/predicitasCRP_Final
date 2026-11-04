@@ -1,0 +1,54 @@
+/* RF-069 a RF-082, RNF-016: extensión local del diseño institucional T-012. */
+.m06-formulario { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; min-width: 0; }
+.m06-formulario > div { min-width: 0; }
+.m06-acciones { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.m06-error-campo { color: #9f1239; font-size: .8125rem; line-height: 1.6; margin-top: 6px; }
+.m06-aviso { border: 1px solid var(--borde); border-left: 3px solid var(--crp-accion); padding: 16px 20px; border-radius: 7px; background: #edf6f2; color: #305e59; line-height: 1.6; font-size: .875rem; }
+.m06-estado { display: inline-flex; align-items: center; padding: 5px 8px; border-radius: 5px; font-size: .75rem; font-weight: 600; background: #edf4f4; color: var(--crp-oscuro); white-space: nowrap; }
+.m06-vista { min-width: 0; }
+.m06-vista :is(dd, p, li) { overflow-wrap: anywhere; }
+.m06-vista button { position: relative; }
+.m06-vista .sr-only { left: 0; top: 0; }
+.m06-vista .tabla-contenedor { min-width: 0; }
+.m06-vista table { width: 100%; }
+.m06-vista table th { white-space: nowrap; }
+.m06-vista table td { min-width: 105px; }
+.m06-vista .tabla-contenedor:focus-visible, .m06-vista summary:focus-visible { outline: 2px solid var(--crp-accion); outline-offset: 2px; }
+.m06-ayuda { color: var(--texto-suave); font-size: .8125rem; line-height: 1.65; margin-top: 8px; }
+.m06-lista-propuestas, .m06-historial { list-style: none; padding: 0; display: grid; gap: 16px; }
+.m06-lista-propuestas > li, .m06-historial > li { padding: 18px; min-width: 0; border: 1px solid var(--borde); border-radius: 8px; }
+.m06-dialogo { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid var(--borde); border-radius: 14px; padding: 28px; margin: auto; color: var(--texto); box-shadow: 0 24px 80px #11383c30; }
+.m06-dialogo::backdrop { background: #173c43a8; }
+.m06-casilla { display: flex; gap: 12px; align-items: flex-start; }
+.m06-casilla input[type="checkbox"] { width: 20px; height: 20px; min-height: 20px; flex-shrink: 0; margin-top: 2px; }
+.m06-indicadores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.m06-indicadores > div { border: 1px solid var(--borde); border-radius: 8px; background: white; padding: 18px; min-width: 0; }
+.m06-indicadores dt { color: var(--texto-suave); font-size: .8125rem; }
+.m06-indicadores dd { margin-top: 8px; color: var(--crp-oscuro); font-size: 1.65rem; font-weight: 650; overflow-wrap: anywhere; }
+.m06-avance { display: grid; gap: 16px; }
+.m06-avance progress { width: 100%; height: 14px; accent-color: var(--crp-accion); }
+.m06-reporte-resumen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.m06-reporte-resumen > div { padding: 20px; border: 1px solid var(--borde); border-radius: 8px; background: white; min-width: 0; }
+.m06-reporte-resumen dt { color: var(--texto-suave); font-size: .8125rem; }
+.m06-reporte-resumen dd { color: var(--crp-oscuro); font-size: 1.65rem; font-weight: 650; margin-top: 8px; overflow-wrap: anywhere; }
+.m06-reporte-especialidades { display: grid; gap: 20px; }
+.m06-reporte-progreso { accent-color: var(--crp-accion); width: 100%; height: 14px; }
+.m06-solo-imprimir { display: none; }
+@media (min-width: 1024px) { .m06-reporte-resumen { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .m06-reporte-resumen { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 640px) { .m06-formulario { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .m06-formulario { grid-template-columns: repeat(3, minmax(0, 1fr)); } .m06-indicadores { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .m06-indicadores { grid-template-columns: minmax(0, 1fr); } .m06-dialogo { padding: 22px; } }
+@media (max-width: 860px) {
+  .navegacion-fila nav { gap: 14px; flex-wrap: wrap; }
+  .nota-navegacion { display: none; }
+}
+@media print {
+  body:has(.m06-reporte) :is(header, nav, footer, .franja-institucional, .skip-link), .m06-solo-pantalla, .m06-no-imprimir { display: none !important; }
+  .m06-solo-imprimir { display: block; }
+  .m06-reporte { color: black; background: white; }
+  .m06-reporte .tabla-contenedor { overflow: visible; }
+  .m06-reporte table { font-size: 9pt; }
+  .m06-reporte table td { min-width: 0; overflow-wrap: anywhere; }
+  .m06-reporte :is(tr, .tarjeta) { break-inside: avoid; box-shadow: none; }
+}

@@ -1,0 +1,13 @@
+# Git attributes for PrediCitas CRP monorepo
+# Enforce LF for shell scripts (used inside Linux containers)
+*.sh text eol=lf
+
+# Mark binary files
+*.joblib binary
+*.pkl binary
+*.jpg binary
+*.png binary
+*.csv text eol=crlf
+
+# Lock files are generated
+package-lock.json -diff

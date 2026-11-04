@@ -1,0 +1,51 @@
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# === Node ===
+node_modules/
+.cache/
+
+# === IDEs ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Environment & secrets ===
+.env
+!.env.example
+
+# === PostgreSQL local ===
+.pgdata/
+
+# === Testing ===
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+
+# === OS ===
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# === Logs ===
+*.log
+
+# === Docker ===
+docker-compose.override.yml
+
+# === IA artifacts (large binaries) ===
+*.joblib
+*.pkl
+*.pickle
+
+# === Runtime / generated ===
+runtime/
+backups/

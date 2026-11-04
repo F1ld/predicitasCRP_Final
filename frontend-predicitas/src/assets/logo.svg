@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 200">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="850" height="200" rx="20" fill="#0f172a"/>
+  <circle cx="100" cy="100" r="55" fill="none" stroke="url(#g)" stroke-width="6"/>
+  <path d="M80 100 L95 115 L120 85" fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="180" y="118" font-family="Inter, system-ui, sans-serif" font-size="56" font-weight="700" fill="white">Predi<tspan fill="url(#g)">Citas</tspan></text>
+  <text x="632" y="118" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="300" fill="#94a3b8">CRP</text>
+</svg>

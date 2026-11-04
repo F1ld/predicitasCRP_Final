@@ -1,0 +1,12 @@
+/* RNF-016: seguimiento legible en móvil, con controles y datos que se ajustan. */
+.m05-seguimiento { display: grid; gap: 24px; align-items: start; }
+.m05-seguimiento > section { min-width: 0; }
+.m05-seguimiento .m05-datos dd { overflow-wrap: anywhere; }
+.m05-estado { display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 5px; color: var(--crp-oscuro); background: #edf5f3; font-size: .8rem; font-weight: 650; }
+.m05-seguimiento .m05-acciones:empty { display: none; }
+.m05-respuesta, .m05-optout, .m05-paso-siguiente { margin-top: 20px; }
+.m05-seguimiento .m05-casilla { display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+.m05-seguimiento .m05-casilla input { min-height: 20px; min-width: 20px; width: 20px; margin-top: 2px; }
+.m05-seguimiento .boton { white-space: normal; text-align: center; }
+.m05-enlace { color: var(--crp-accion); text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 1024px) { .m05-seguimiento { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); } }

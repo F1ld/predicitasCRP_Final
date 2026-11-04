@@ -1,0 +1,936 @@
+# Plan integral de reestructuración por fases — PrediCitas CRP
+
+## 0. Propósito, alcance y estado real
+
+**Arquitectura objetivo:** monorepositorio con frontend independiente, backend monolítico modular por capas, servicio de inferencia IA independiente y PostgreSQL administrado por el backend.
+
+Este documento es un plan ejecutable y una bitácora de seguimiento. **Su creación no significa que la migración esté aplicada, que las pruebas pasen o que el arranque objetivo exista actualmente.** Las rutas y comandos marcados como objetivo deben implementarse en la fase indicada antes de usarse.
+
+### Entrega de planificación
+
+- [x] Inspeccionar estructura, configuración y dependencias relevantes del proyecto.
+- [x] Redactar este plan sin modificar el funcionamiento de las aplicaciones.
+- [x] Crear `backend-predicitas/Skills/` y `frontend-predicitas/Skills/` vacías; verificar su existencia al finalizar la entrega.
+- [ ] Ejecutar las fases de reestructuración.
+
+Las carpetas `Skills` no contienen código, instrucciones ni archivos `.gitkeep`. Al mover las aplicaciones deberán conservarse como `apps/backend/Skills/` y `apps/frontend/Skills/`. Git no versiona directorios vacíos: los futuros scripts de preparación deben recrearlos, sin añadir contenido.
+
+### Reglas de ejecución
+
+1. No ejecutar todas las fases como una mudanza masiva. Cerrar y validar cada una antes de continuar.
+2. Separar movimientos mecánicos, cambios de lógica y cambios de esquema en entregas distintas.
+3. No borrar CSV, modelos, capturas, configuraciones, documentación ni código antiguo sin inventario y revisión de consumidores.
+4. No usar `docker compose down -v`, `alembic downgrade base`, eliminación de volúmenes o reinicialización de la BD como procedimiento de migración.
+5. Mantener endpoints, contratos públicos y comportamiento observable salvo cambio explícitamente aprobado.
+6. Conservar el historial de Alembic; una mudanza de carpetas no requiere regenerar tablas.
+7. No introducir simultáneamente actualizaciones de frameworks, librerías o algoritmo del modelo.
+8. Ninguna fase se completa solo porque la aplicación compila: debe aportar evidencia funcional.
+9. Si aparece una diferencia entre documentación y código, registrarla y decidirla; no cambiar silenciosamente las reglas del piloto.
+10. Las fases que descubran defectos previos deben distinguirlos de regresiones. Un defecto crítico no queda aprobado por ser previo.
+
+## 1. Diagnóstico de partida verificado
+
+| Área | Situación observada | Implicación para el plan |
+|---|---|---|
+| Directorio raíz | `backend-predicitas/`, `frontend-predicitas/`, Compose, `.env`, documentos y un CSV | Ordenar aplicaciones, datos, infraestructura y documentación sin perder archivos |
+| Control de versiones | La raíz de esta sesión no se identifica como repositorio Git | Confirmar repositorios internos y acordar estrategia antes de moverlos |
+| Backend | FastAPI con `app/main.py`, `app/core/` y ocho módulos funcionales | Mantener un backend único; fortalecer encapsulación, no convertir cada módulo en microservicio |
+| Persistencia | PostgreSQL 16, SQLAlchemy, Alembic y nueve tablas de negocio | Preservar nombres físicos, claves, secuencias, políticas y triggers |
+| Migraciones | Revisiones `2cfdcb7d3da2`, `m00_002_rol_operativo`, `m01_001_indices_auditoria` | Conservar cadena de revisiones y comprobar el head real en fase 0 |
+| Roles BD | `predicitas_owner` para administración y `predicitas_app` para operación | El backend operativo no debe recibir credenciales de propietario |
+| IA | LightGBM local importado desde `app/modules/ia/service.py` | Hay que crear un cliente HTTP real; configurar `IA_URL` no extrae la IA por sí solo |
+| Modelo | Existe `app/modules/ia/artifacts/modelo_predicitas_v1.joblib` | Respaldar y verificar compatibilidad antes de mover o sustituir |
+| Entrenamiento | `obtener_artefacto_modelo()` entrena si falta el archivo | Eliminar este comportamiento del camino de inferencia mediante una fase explícita |
+| Dataset | Generador en `citas/synthetic.py`; predictor puede consultar BD o generar sintéticos | Definir procedencia inequívoca y evitar fallback silencioso a otro dataset |
+| CSV | Dos copias de `citas_para_importar_variado.csv` y ejemplos en `backend/data/` | Clasificar, verificar hashes y definir una ubicación canónica |
+| Frontend | React/TypeScript, Vite; `modulos/` y `nucleo/` junto a `pages/`, `auth/`, `components/`, `lib/` | Revisar referencias antes de consolidar las dos estructuras |
+| Rutas frontend | `App.tsx` descubre `modulos/*/rutas.tsx`; existe `prueba-ranura` usado por tests | No retirar la ranura sin sustituir su papel en las pruebas |
+| Acoplamiento | Hay imports cruzados de modelos/repositorios y de `citas.router.reloj` | Formalizar contratos internos y mover dependencias técnicas fuera de routers |
+| Escrituras | Citas e Intervenciones modifican citas y crean cupos; algunos routers hacen commits | Centralizar propietarios y transacciones sin duplicar historial/auditoría |
+| Compose | Uno raíz con nombre `predicitas-crp` y otro backend con `predicitas-backend` | Pueden existir volúmenes diferentes; no asumir que ambos contienen los mismos datos |
+| Configuración | Varios `.env`, referencias a contratos no localizados y puertos BD distintos | Crear una matriz de configuración y una única entrada Compose oficial |
+| Pruebas | pytest con BD y cobertura mínima 75%; Vitest con mínimo 75% de líneas | Aislar la BD de pruebas y mantener umbrales durante la migración |
+| Entorno local | Windows, ruta con espacios y carpeta bajo OneDrive | Considerar PowerShell, CRLF, permisos, sincronización y rutas montadas |
+
+### Evidencias de archivos al redactar el plan
+
+Las copias raíz y `backend-predicitas/data/citas_para_importar_variado.csv` tienen el mismo SHA-256:
+
+`8EEBF37844262AC33EBBE2453E62EDC321AE67A2BCF0A9FDD43B6761FA328282`
+
+El artefacto IA existente tiene SHA-256:
+
+`89297942F603DC040C9954D534AE6DAE97590203F0345925C12FC4E0A90E9074`
+
+Recalcular antes de migrar: estos valores describen esta inspección, no futuras modificaciones.
+
+## 2. Arquitectura objetivo y límites
+
+```text
+Navegador
+   │ HTTP + JWT (dirección visible desde el equipo)
+   ▼
+Frontend React ───────────────► Backend FastAPI modular
+                                      │
+                                      ├── SQL ─────► PostgreSQL
+                                      │
+                                      └── HTTP interno + clave ──► IA / inferencia
+                                                                      │ lectura
+                                                                      ▼
+                                                               Artefacto versionado
+
+Proceso manual de preparación/entrenamiento IA
+   Dataset explícito ─► validación ─► entrenamiento ─► candidato ─► promoción
+
+Migrador y seed: procesos puntuales; no son servidores permanentes.
+```
+
+### Decisiones obligatorias
+
+- El navegador solo consume la API del backend; nunca PostgreSQL ni la API interna de IA.
+- Los módulos de negocio del backend se llaman en memoria, mediante contratos; no mediante HTTP entre ellos.
+- La IA no recibe JWT de pacientes/usuarios, no conoce tablas operativas y no tiene `DATABASE_URL`.
+- La IA calcula; el backend autoriza, decide elegibilidad, persiste predicciones y audita.
+- La IA no modifica estados de citas, envía mensajes ni reasigna cupos.
+- Los datos del negocio viven en PostgreSQL; un CSV no se convierte en una segunda base operacional.
+- El piloto sigue usando datos sintéticos y seudonimizados. No incorporar datos personales reales, teléfonos, DNI o diagnósticos por reorganizar el almacenamiento; cualquier uso real requiere autorización y un diseño de privacidad independiente.
+- La caída de IA no bloquea login, consulta, registro, seguimiento ni atención de citas.
+- Entrenamiento e inferencia son procesos separados, aunque compartan código dentro de `apps/ia/`.
+- No incorporar Kubernetes, Redis, Kafka, Celery o microservicios adicionales como requisito de esta reorganización.
+- No activar integraciones reales de WhatsApp/SMS/llamadas ni modificar consentimiento, opt-out o confirmación humana como parte de la extracción técnica.
+- Docker Compose es la vía local oficial. La ejecución nativa es una alternativa documentada y probada.
+- Los proyectos Python se ejecutan en entornos/contenedores distintos: ambos pueden usar un paquete local llamado `app` sin mezclar sus `PYTHONPATH`.
+
+## 3. Árbol final propuesto
+
+El árbol es objetivo, no un listado de directorios ya creados. Se crearán carpetas cuando tengan una responsabilidad efectiva; `Skills/` es la excepción solicitada.
+
+```text
+Proyecto_PredicitasCRP/
+├── apps/
+│   ├── frontend/
+│   │   ├── Skills/                         # Vacía
+│   │   ├── src/
+│   │   │   ├── modulos/                    # Citas, sesión, usuarios, intervenciones, lista-espera, IA
+│   │   │   ├── nucleo/                     # API, sesión, layout y UI compartida
+│   │   │   ├── pruebas/                    # Setup y soporte de pruebas unitarias
+│   │   │   ├── assets/
+│   │   │   ├── App.tsx
+│   │   │   └── main.tsx
+│   │   ├── public/                         # Solo recursos públicos, nunca datasets o secretos
+│   │   ├── tests/                          # Tests de navegador/diseño; fixtures propios si son exclusivos
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   ├── vite.config.ts
+│   │   ├── tsconfig.json
+│   │   ├── Dockerfile
+│   │   └── .env.example
+│   ├── backend/
+│   │   ├── Skills/                         # Vacía
+│   │   ├── app/
+│   │   │   ├── main.py                     # Composición de la aplicación
+│   │   │   ├── bootstrap/                  # Registro ORM y cableado de adaptadores
+│   │   │   ├── core/                       # Configuración, errores, BD, reloj, seguridad técnica
+│   │   │   ├── workflows/                  # Casos de uso que coordinan varios módulos
+│   │   │   └── modules/
+│   │   │       ├── auth/
+│   │   │       ├── usuarios/
+│   │   │       ├── citas/
+│   │   │       ├── ia/                     # Integración HTTP y predicciones persistidas, no LightGBM
+│   │   │       ├── intervenciones/
+│   │   │       ├── lista_espera/
+│   │   │       ├── reportes/
+│   │   │       └── auditoria/
+│   │   ├── migrations/                     # Único historial Alembic del negocio
+│   │   ├── scripts/                        # Seed, chequeo BD y exportación controlada
+│   │   ├── tests/                          # Unitarias, integración, BD y arquitectura
+│   │   ├── requirements.txt
+│   │   ├── requirements-dev.txt            # Separación de tests si se implementa
+│   │   ├── alembic.ini
+│   │   ├── pytest.ini
+│   │   ├── Dockerfile
+│   │   └── .env.example
+│   └── ia/
+│       ├── app/
+│       │   ├── main.py                     # Solo API de inferencia/metadatos
+│       │   ├── api/
+│       │   ├── core/                       # Configuración, autenticación interna y logging
+│       │   ├── datasets/                   # Generación, validación y lectura; no los CSV físicos
+│       │   ├── features/                   # Transformaciones canónicas pre-cita
+│       │   ├── training/                   # Baseline, LightGBM, evaluación, manifest y promoción
+│       │   └── inference/                  # Carga y uso del artefacto, sin entrenar
+│       ├── scripts/                        # Comandos generar, entrenar, verificar y promover
+│       ├── tests/
+│       ├── requirements.txt
+│       ├── requirements-dev.txt
+│       ├── Dockerfile
+│       └── .env.example
+├── contracts/
+│   ├── backend/                           # Snapshot OpenAPI + compatibilidad pública
+│   ├── ia/                                # OpenAPI interno y ejemplos v1
+│   └── data/                              # Esquemas CSV, features y manifiestos
+├── data/
+│   ├── README.md
+│   ├── samples/                           # Ejemplos sintéticos revisados y versionables
+│   │   └── importacion/
+│   ├── fixtures/                          # Casos sintéticos compartidos deterministas
+│   ├── raw/                               # Snapshots de entrada inmutables por versión
+│   ├── processed/                         # Train/val/test y transformaciones reproducibles
+│   └── manifests/                         # Linaje, hashes, semilla, fecha y esquema
+├── artifacts/
+│   ├── models/                            # Modelos por versión; no dentro del código
+│   └── reports/                           # Métricas/equidad/calidad por ejecución IA
+├── runtime/
+│   ├── imports/                           # Solo si se aprueba retener archivos subidos
+│   ├── exports/                           # Exportaciones persistidas por pedido explícito
+│   ├── tmp/                               # Temporales con limpieza segura
+│   └── test-results/                      # Cobertura, capturas y resultados generados
+├── backups/                               # Local, ignorado; copia adicional fuera de esta carpeta
+├── infrastructure/
+│   ├── database/
+│   │   └── init/                          # Creación inicial del rol operativo
+│   └── docker/                            # Overrides auxiliares si realmente hacen falta
+├── scripts/
+│   ├── bootstrap.ps1                      # A implementar en fase 9
+│   ├── smoke.ps1                          # A implementar en fase 10
+│   └── README.md
+├── tests/
+│   ├── contracts/                         # Compatibilidad backend/IA/frontend
+│   └── e2e/                               # Recorrido integrado completo
+├── docs/
+│   ├── arquitectura/
+│   ├── requisitos/
+│   ├── operacion/
+│   ├── pruebas/
+│   ├── migracion/                         # Evidencias y decisiones por fase
+│   └── historico/                         # Informes previos preservados y fechados
+├── PLAN_REESTRUCTURACION_POR_FASES.md        # Mantener aquí como índice/bitácora de la migración
+├── compose.yaml                           # Única entrada oficial local
+├── .env.example                           # Variables de orquestación, sin secretos reales
+├── .gitignore
+├── .gitattributes
+└── README.md                              # Inicio rápido vigente y enlaces
+```
+
+### Organización interna de módulos backend
+
+Mantener inicialmente los nombres actuales `router.py`, `schemas.py`, `service.py`, `repository.py`, `models.py`, `reglas.py`. Añadir `public.py`/contratos de operaciones donde haya consumidores externos al módulo. No generar cinco subcarpetas por módulo por formalidad.
+
+- **Router:** protocolo HTTP, autorización y adaptación de entrada/salida. No SQL ni commits.
+- **Servicio/caso de uso:** coordinación, políticas y transacción del caso de uso de nivel superior.
+- **Reglas:** decisiones de negocio puras cuando sea posible; sin FastAPI ni conexiones externas.
+- **Repositorio:** persistencia de entidades propias; `flush()` permitido, no commits ocultos.
+- **Modelos:** representación ORM interna; no respuesta pública ni API entre aplicaciones.
+- **Contrato público:** operaciones/consultas y DTO estables; no exportar `repository` entero.
+- **Workflow:** operación que coordina Citas, Intervenciones y/o Lista de Espera en una sesión y transacción.
+
+Las consultas de lectura compuestas pueden tener adaptadores explícitos de reporting. La excepción no autoriza escrituras en tablas ajenas ni imports circulares entre módulos.
+
+## 4. Mapa de movimientos y responsabilidades
+
+| Origen actual | Destino objetivo | Tratamiento |
+|---|---|---|
+| `backend-predicitas/` | `apps/backend/` | Mover mecánicamente conservando imports `app.*` y tests; excluir después solo lo extraído y validado |
+| `frontend-predicitas/` | `apps/frontend/` | Mover conservando configuración y lockfile; consolidar interiores en otra fase |
+| `backend-predicitas/Skills/` | `apps/backend/Skills/` | Mantener vacía |
+| `frontend-predicitas/Skills/` | `apps/frontend/Skills/` | Mantener vacía |
+| `backend/db/init/` | `infrastructure/database/init/` | Ajustar montaje Compose; preservar LF y comportamiento |
+| `backend/db/README.md` y diseño SQL | `docs/arquitectura/` o `docs/operacion/` | Clasificar; Alembic continúa como fuente ejecutable del esquema |
+| `backend/migrations/` y `alembic.ini` | Dentro de `apps/backend/` | No reescribir IDs ni nombres físicos |
+| `backend/app/core/models.py` | `apps/backend/app/bootstrap/models.py` | Registro ORM, coordinado con `main.py`, Alembic, scripts y tests |
+| `backend/app/modules/ia/predictor.py` | Responsabilidades dentro de `apps/ia/app/` | Extraer, no copiar como segunda implementación permanente |
+| `backend/app/modules/citas/synthetic.py` | `apps/ia/app/datasets/` | Generador sintético único; seed backend pasa a consumir CSV explícito |
+| Modelo `.joblib` actual | `artifacts/models/legacy-import/` | Guardar bytes y hash; promover solo tras verificación |
+| CSV variado raíz y backend | `data/samples/importacion/citas_para_importar_variado.csv` | Hashes iguales al inspeccionar; retirar duplicado solo tras actualizar consumidores |
+| `backend/data/citas_demo.csv` | `data/samples/importacion/citas_demo.csv` | Documentar que puede contener filas inválidas intencionadas |
+| `frontend/tests/fixtures/*.csv` | Permanecen inicialmente en tests frontend | Promover a `data/fixtures/` solo si se comparten; conservar identidad por hash |
+| Documentos Markdown raíz | `docs/` según categoría | Mantener informes históricos; actualizar enlaces y un índice |
+| Dos Compose existentes | `compose.yaml` raíz | Unificar después de fijar volumen; archivar descripción previa sin dejar dos entradas ambiguas |
+| Resultados/capturas existentes | `docs/pruebas/` si son evidencia curada | Nueva salida automática a `runtime/test-results/`, no reescribir evidencia antigua |
+
+Las rutas `backend/...` y `frontend/...` abreviadas en esta tabla representan las carpetas actuales o sus equivalentes movidas según la fase. Registrar cada movimiento real con ruta completa en la evidencia.
+
+### Propietario lógico de cada tabla
+
+| Módulo | Entidades/escrituras propias |
+|---|---|
+| Usuarios | `usuarios`; Auth usa operaciones internas aprobadas para credenciales, bloqueo y sesión |
+| Citas | `citas`, `historial_estados_cita`; incluye check-in y desenlace |
+| IA backend | `predicciones_ia`, snapshots y trazabilidad de inferencia |
+| Intervenciones | `intervenciones`, consentimiento, opt-out y respuestas |
+| Lista de espera | `lista_espera`, `cupos_liberados`, `reasignaciones` |
+| Auditoría | `auditoria_eventos` mediante append público, sin commit propio |
+| Reportes | Lectura transversal explícita; ninguna entidad operativa propia |
+
+Mover `Usuario` de Auth a Usuarios requiere actualizar imports y registro ORM conjuntamente, manteniendo la tabla `usuarios`. Auth y Usuarios forman un área de identidad y acceso; evitar que Usuarios siga importando repositorios privados de Auth. Si esta separación crea ciclos, resolver con contratos y cableado en bootstrap, no con imports tardíos como solución permanente.
+
+## 5. Política de CSV, datasets, artefactos y archivos
+
+### 5.1 Clasificación y versionado
+
+| Tipo | Ubicación | ¿Versionar en Git? | Consumidor |
+|---|---|---|---|
+| CSV sintético pequeño de demostración | `data/samples/importacion/` | Sí, tras revisión | Persona que importa desde UI/API |
+| Fixture determinista compartido | `data/fixtures/` | Sí si es pequeño | Tests de integración/E2E |
+| Fixture exclusivo unitario | Junto al test de su aplicación | Sí si es pequeño | Solo ese test |
+| Dataset bruto de entrenamiento | `data/raw/<dataset_version>/` | No por defecto; publicar paquete reproducible aparte | Preparación IA |
+| Train/val/test | `data/processed/<dataset_version>/` | No por defecto | Entrenamiento/evaluación |
+| Manifiesto sin datos sensibles | `data/manifests/` | Sí si es una versión aprobada | Auditoría y reproducción |
+| Modelo Joblib | `artifacts/models/<model_version>/` | No por defecto; conservar entrega/backup con hash | Inferencia |
+| Métricas y calidad | `artifacts/reports/<run_id>/` | Solo resumen curado en docs | Técnico IA |
+| Upload recibido | En memoria como hoy; opcional `runtime/imports/<import_id>/` | No | Backend |
+| CSV/Excel de descarga | Streaming como hoy; opcional `runtime/exports/` | No | Backend/usuario |
+| Dump BD | `backups/<fecha>/` y copia externa | Nunca | Administrador local |
+| Datos internos de PostgreSQL | Volumen Docker nombrado | Nunca | PostgreSQL |
+
+No montar el volumen de PostgreSQL dentro de OneDrive ni guardar CSV/modelos en `frontend/public/`. Los directorios `data/raw`, `data/processed`, `artifacts`, `runtime` y `backups` deben tener reglas de ignore y exclusión de contextos Docker. Versionar únicamente excepciones explícitas revisadas, no subir toda la carpeta por accidente.
+
+### 5.2 Contrato de importación operacional
+
+Conservar el contrato actual de trece columnas del CSV de ejemplo:
+
+```text
+id_cita_externa,paciente_anon_id,sede,especialidad,medico,fecha_hora_cita,fecha_registro_cita,tipo_paciente,canal_origen,inasistencias_previas,reprogramaciones_prev,asistencias_previas,estado_actual
+```
+
+- UTF-8, admitir BOM como hace hoy `utf-8-sig`; separador coma y cabecera documentada.
+- Mantener las reglas reales sobre celdas vacías/opcionales de `CitaImportIn`; no endurecerlas por una mudanza.
+- Conservar límites actuales: 2 MiB y 5.000 filas, salvo cambio aprobado y probado.
+- Fechas ISO 8601 con offset; reglas de negocio en `America/Lima`, no en la zona local de Windows.
+- Respetar sede San Isidro, tres especialidades, días habilitados, duplicados y orden cronológico del historial.
+- Mantener aceptación/rechazo parcial por validación y motivos por fila. La implementación actual valida antes de insertar; no asumir SAVEPOINT por fila porque lo diga un documento.
+- `target_no_show` no se toma del CSV operacional: el backend lo deriva del desenlace permitido, y debe ser nulo en estados sin desenlace.
+- Probar rollback ante errores de persistencia además de rechazos de validación; no prometer continuidad ante cualquier error SQL sin implementarla.
+- Nunca usar el nombre original de upload como ruta de disco. Si se retiene, generar ID seguro, hash y metadatos, limitar tamaño y no permitir traversal.
+- La reestructuración conserva el procesamiento en memoria por defecto; no introducir retención indefinida de archivos.
+- Si se activa retención local: plazo inicial 7 días para imports/exports y 24 h para temporales, configurable, con limpieza restringida a esos directorios y trazabilidad. Backups quedan fuera de esa limpieza.
+- Proteger exportaciones CSV/Excel frente a fórmulas de hojas de cálculo sin modificar el dato almacenado.
+
+### 5.3 Dataset de entrenamiento y reproducibilidad
+
+- Definir un esquema separado del CSV operacional. Puede incluir etiqueta y campos de trazabilidad, pero no utilizarlos como features.
+- Registrar `dataset_version`, esquema, semilla, fecha de corte, origen, conteos, clases, SHA-256 y comando de generación/exportación.
+- Mantener inicialmente la baseline de 1.000 históricos, semilla 42 y partición estratificada 70/15/15. No cambiar a 5.000 dentro de una extracción estructural.
+- Separar fixtures históricos de fecha fija y demos operativas con fecha de referencia explícita. El seed actual usa por defecto `2026-10-29`; no asumir que sus citas seguirán siendo futuras en otro mes.
+- Un dataset generado con distinta fecha de referencia recibe nueva versión/hash aunque conserve semilla.
+- Congelar conjuntos de entrenamiento/validación/test; no ajustar umbrales repetidamente usando test reservado.
+- Mantener control anti-leakage: identificadores, estado actual, target y otros campos post-cita no entran en X.
+- La fuente de entrenamiento se elige explícitamente: sintético generado o snapshot exportado por el backend. No consultar BD y, si falla, entrenar silenciosamente con otros datos.
+- El backend puede exportar un snapshot autorizado con un script local; IA lee el archivo, sin credenciales BD.
+- Unificar el generador en IA. El seed backend consume un CSV operacional generado explícitamente, no importa código de `apps/ia`.
+- Para generación de seed, emitir exactamente el esquema operacional; las etiquetas del entrenamiento van en un archivo separado. Conservar filas inválidas solo en fixtures de rechazo, no en el seed normal.
+
+### 5.4 Artefactos IA
+
+Cada versión promovida debe incluir modelo, manifiesto, métricas, esquema de features y dependencias usadas. El manifiesto registra al menos algoritmo, versión de modelo/dataset, fecha UTC, semilla, hash del modelo y dataset, Python/librerías, umbrales, métricas y rótulo de simulación.
+
+- Servir únicamente artefactos internos confiables: `joblib.load` puede ejecutar código. No ofrecer upload arbitrario de modelos.
+- Mantener candidato, activo y anterior; no sobrescribir el activo mientras se escribe un candidato.
+- Usar promoción atómica y proceso documentado de reinicio/recarga. Montar el directorio padre de modelos, no únicamente un archivo que se sustituye por rename.
+- El proceso de inferencia solo lee modelos; el proceso de entrenamiento escribe candidatos con permisos separados.
+- Si no hay artefacto compatible, la IA no está lista y responde error controlado; nunca entrena en una petición.
+- Cambiar features, preprocesado o umbrales exige nueva versión del modelo. La restricción actual `(id_cita, version_modelo)` impide distinguir dos modelos distintos con el mismo nombre.
+- Al extraer, comparar predicciones del modelo antiguo y nuevo sobre un conjunto congelado, con tolerancia numérica acordada. Si hay reentrenamiento, tratarlo como nueva versión, no como movimiento equivalente.
+
+## 6. Contratos de integración y tolerancia a fallos
+
+### 6.1 API pública del backend
+
+Inventariar OpenAPI completo antes de cambios y guardar snapshot en `contracts/backend/`. Preservar métodos, rutas, formularios de login, multipart de upload, respuestas, paginación, descargas y errores existentes.
+
+En especial preservar las familias `/auth`, `/usuarios`, `/citas`, `/ia`, intervenciones, lista de espera/cupos y reportes; obtener los prefijos exactos de sus routers. No sustituirlas globalmente por `/api/v1` durante la mudanza.
+
+La integración IA mantiene al menos los consumidores actuales:
+
+- `POST /ia/predecir/{id_cita}`.
+- `POST /ia/predecir-lote` y su parámetro `forzar`.
+- `GET /ia/predicciones/{id_cita}`.
+- `GET /ia/metricas`.
+- `GET /ia/dataset-resumen`.
+- `POST /citas/{id_cita}/prediccion`, que hoy llama al servicio local.
+
+Las predicciones ya persistidas siguen consultables aunque la IA esté caída. El resumen de dataset combina explícitamente metadatos de IA y conteos operativos de BD; no inventa conteos cuando falta un componente. Preservar el DTO o versionar una extensión compatible.
+
+### 6.2 API interna IA propuesta, a implementar en fase 5
+
+| Endpoint objetivo | Función |
+|---|---|
+| `GET /health/live` | Proceso vivo, sin entrenar ni depender de BD |
+| `GET /health/ready` | Modelo y manifiesto compatibles, cargados y utilizables |
+| `GET /v1/model` | Versión, esquema, umbrales y metadata activa |
+| `GET /v1/metrics` | Métricas aprobadas del artefacto activo |
+| `GET /v1/dataset` | Metadatos del dataset, sin exponer filas |
+| `POST /v1/predict` | Predicción individual sin persistir |
+| `POST /v1/predict-batch` | Lote acotado, correlacionado por ID de petición |
+
+Definir OpenAPI, ejemplos y pruebas antes de conectar el backend. Usar autenticación `X-IA-API-Key` en endpoints `/v1/*`; la clave nunca va al frontend ni a logs. Healthchecks internos no devuelven datos sensibles. El puerto IA se expone solo en loopback local, o se deja sin publicar cuando no sea necesario.
+
+**Entrada de predicción:** versión de contrato, ID de correlación opaco y features crudas autorizadas: `especialidad`, `tipo_paciente`, `canal_origen`, `franja_horaria`, `dia_semana`, `antelacion_dias`, `inasistencias_previas`, `asistencias_previas`, `reprogramaciones_prev`. El esquema define tipo/rango/catálogos y tratamiento de nulos. No enviar nombres, teléfonos, DNI ni etiquetas de desenlace.
+
+**Salida:** ID de correlación, versión de modelo y features, probabilidad finita entre 0 y 1, nivel, umbrales, features efectivas/snapshot, explicación y rótulo sintético. El backend verifica identidad de respuesta, versión, tipos y consistencia antes de guardar. Preservar explicabilidad y precisión numérica del contrato/columna actual.
+
+**Fuente única de umbrales:** manifiesto del modelo. Mantener al principio BAJO `< 0.300`, MEDIO `0.300..0.450`, ALTO `> 0.450`; probar bordes exactos. La variable actual `IA_CORTE_MEDIO` no debe contradecir el modelo: deprecarla o validar igualdad, no clasificar dos veces con criterios distintos.
+
+### 6.3 Lotes, concurrencia y errores
+
+- Definir tamaño máximo del lote interno, timeout total y particionado backend. Fijarlos con medición local; no enviar 5.000 filas a un endpoint ilimitado ni mantener una transacción abierta durante toda la inferencia.
+- Para esta migración, mantener el contrato de lote público síncrono con límite comprobado; colas/jobs quedan fuera. Si no cumple tiempo, aprobar un diseño de jobs antes de cambiar el contrato.
+- Fijar la versión de modelo en toda la ejecución del lote. Si cambia o hay respuestas incompletas/duplicadas, abortar el guardado de esa ejecución con error controlado.
+- Mantener atomicidad del guardado de un lote como comportamiento inicial. Si se desea éxito parcial, necesita contrato y pruebas específicas, no hacerlo implícitamente.
+- Leer un snapshot, cerrar la transacción de lectura antes del HTTP externo y revalidar elegibilidad/features al guardar en una transacción corta. Si la cita cambió o pasó a ATENDIDA/NO_SHOW, no guardar una predicción obsoleta.
+- Bloqueos o control de concurrencia solo en la etapa corta de validación/persistencia; orden consistente de locks en lote. Probar doble petición sobre `(id_cita, version_modelo)`.
+- Timeouts de conexión/lectura explícitos. Sin reintentos infinitos; inicialmente sin retry automático o uno solo para errores transitorios seguros y dentro del presupuesto total.
+- Timeout IA: backend devuelve error controlado, por ejemplo HTTP 504 con código estable. Servicio no disponible/modelo ausente: HTTP 503. Respuesta inválida/incompatible: HTTP 502. Documentar estos códigos nuevos y su representación en UI.
+- No guardar riesgo cero o BAJO como fallback. No borrar una predicción previa al fallar una actualización.
+- Los fallos técnicos se registran sin secretos; si se exige auditoría del fallo, usar una transacción explícita posterior al rollback del negocio.
+- Agregar ID de correlación entre frontend/backend/IA y tiempos por operación. No registrar JWT, claves, contraseñas, CSV completos ni snapshots sensibles.
+
+## 7. Configuración, almacenamiento y seguridad local
+
+### 7.1 Matriz de variables
+
+Las nuevas variables se implementan donde corresponda; escribirlas en `.env` no las vuelve funcionales por sí solo.
+
+| Ámbito | Variables/decisiones | Criterio |
+|---|---|---|
+| Compose raíz | `COMPOSE_PROJECT_NAME`, `POSTGRES_USER`, `POSTGRES_DB`, `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `DB_PUERTO_HOST`, `PGDATA_VOLUME_NAME` | Mantener nombre estable y elegir volumen real en fase 0 |
+| Backend operativo | `DATABASE_URL`, `SECRET_KEY`, JWT/login, `CORS_ORIGENES`, `INTERVENCION_MODO_SOMBRA` | Solo rol operativo; preservar comportamiento y expiración actual configurable |
+| Migrador/seed admin | `DATABASE_URL_MIGRACIONES`, password seed y variables necesarias para importar settings | Credenciales owner únicamente en estos procesos; no inyectarlas al backend permanente |
+| Cliente IA backend | `IA_URL`, `IA_API_KEY`, `IA_TIMEOUT_SEGUNDOS`; tamaño de chunk si se necesita | Docker `http://ia:8100`; nativo `http://127.0.0.1:8100` |
+| Servicio IA | `IA_API_KEY`, `MODEL_REGISTRY_DIR`, manifiesto activo y configuración de logging | No JWT de negocio ni credenciales PostgreSQL |
+| Proceso entrenamiento | Rutas dataset/modelos/reports, versión, semilla y fecha de referencia | Opciones explícitas; entrenamiento no depende de un servidor HTTP vivo |
+| Backend archivos | Directorios de datos/runtime por variables o argumentos de scripts | No rutas de usuario absolutas ni basadas accidentalmente en CWD |
+| Frontend | `VITE_API_URL` | URL que resuelve el navegador: `http://localhost:8000`, no `http://backend:8000` |
+| Pruebas | URLs/credenciales para BD separada y servicios de prueba | Nunca reutilizar BD de demo por defecto |
+
+Compose debe interpolar las variables realmente usadas. Hoy el Compose raíz fija algunos valores aunque aparezcan en `.env.example`; al unificar, elegir nombres fijos documentados o parametrización completa, sin aparentar soporte que no existe.
+
+- `.env` raíz: entrada local de orquestación. No se copia a imágenes ni se publica.
+- `.env.example`: valores ficticios/seguros de desarrollo y explicación de obligatorios.
+- `.env` por aplicación: solo para ejecución nativa, con precedencia y CWD documentados. No depender de que Pydantic encuentre por casualidad el `.env` raíz.
+- Las variables `VITE_*` son públicas. Ningún secreto de backend/IA se coloca en ellas.
+- Con `vite dev`, se leen al iniciar; con build estático se fijan durante build salvo configuración runtime diseñada expresamente.
+- Preservar rol operacional sin DELETE e inmutabilidad de historial/auditoría. No desactivar RLS o triggers para hacer pasar tests.
+- La revisión leída crea políticas RLS permisivas para el rol app; no confundir RLS habilitado con autorización por rol de usuario. Verificar RBAC real y no afirmar aislamiento que no existe.
+- El script init actual crea específicamente `predicitas_app`. Si se conserva `APP_DB_USER`, validar que coincide o parametrizar de forma segura; no cambiar solo `.env`.
+- Rotar password de `.env` no cambia automáticamente el rol de un volumen existente. Documentar rotación SQL separada, con respaldo.
+
+### 7.2 Puertos y volúmenes
+
+- Frontend: 5173; backend: 8000; IA: 8100 opcional solo loopback; PostgreSQL interno: 5432.
+- Elegir un único puerto host BD, por defecto 5432 si está libre; 5433 es alternativa por `DB_PUERTO_HOST`, no un segundo stack simultáneo.
+- El nombre lógico `pgdata` puede resolver a volúmenes físicos diferentes según el nombre de proyecto Compose. Inspeccionar antes de mover/renombrar.
+- Declarar nombre real del volumen mediante configuración explícita. Para datos existentes, usar volumen externo conocido o restaurar en uno nuevo; no crear uno vacío sin avisar.
+- Separar volúmenes de desarrollo y pruebas. Un entorno de pruebas nunca comparte `pgdata` con demo.
+- Datos/modelos en bind mounts del host pueden sincronizarse con OneDrive; preferir almacenamiento local no sincronizado para archivos grandes y PostgreSQL siempre en volumen Docker. Las rutas externas deben ser configurables y documentadas.
+- Probar lectura/escritura con el UID no-root. Dataset/modelos de inferencia en solo lectura; outputs de entrenamiento/runtime en montajes escribibles autorizados.
+- `.sh` de inicialización con LF, no CRLF. No introducir pasos que dependan de bash instalado en Windows.
+
+## 8. Fases de ejecución
+
+### Seguimiento general
+
+Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Una fase completada registra fecha, responsable, evidencia y punto de retorno. Todas las fases de implementación parten pendientes.
+
+| Fase | Resultado | Dependencia | Estado |
+|---|---|---|---|
+| 0 | Inventario, baseline y recuperación comprobada | Ninguna | PENDIENTE |
+| 1 | Contratos y decisiones congelados | 0 | PENDIENTE |
+| 2 | Mudanza mecánica a monorepositorio operativo | 1 | PENDIENTE |
+| 3 | Datos, CSV y archivos centralizados | 2 | PENDIENTE |
+| 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
+| 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
+| 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
+| 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
+| 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
+| 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
+| 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
+| 11 | Corte final, documentación y cierre | 10 | PENDIENTE |
+
+#### Fase 0 — Inventario, respaldo y línea base
+
+**Objetivo:** saber qué existe, qué funciona y cómo volver atrás antes de tocar estructura.
+
+**Qué se hace**
+
+- [ ] Inventariar archivos, repositorios internos, `.git`/worktrees si existen, rutas absolutas, servicios y versiones instaladas.
+- [ ] Acordar monorepositorio: preservar historial de repositorios internos mediante estrategia aprobada o conservar backups y origen si se inicia historial raíz. No borrar `.git` anidados por comodidad.
+- [ ] Registrar Docker/Compose, Python, Node, PostgreSQL y hashes de dependencias/lockfiles. Verificar que las versiones fijadas son instalables antes de actualizarlas.
+- [ ] Inventariar Compose activos, nombre de proyecto, contenedores, puertos y volúmenes con herramientas de inspección de solo lectura.
+- [ ] Registrar versión Alembic, nueve tablas, conteos, secuencias, índices, constraints, triggers, permisos y políticas RLS.
+- [ ] Respaldar código completo, `.env` por canal privado, CSV, modelo y BD; conservar copia adicional fuera del árbol/OneDrive.
+- [ ] Crear dump consistente PostgreSQL en formato custom y respaldo de roles/globals protegido. Comprobar restauración en un entorno aislado con permisos/triggers, no solo que existe un archivo.
+- [ ] En PowerShell evitar redirigir un dump binario con `>` sin garantizar flujo binario: preferir `pg_dump -Fc -f` dentro del contenedor y `docker cp`, o cliente nativo `-f`. No publicar dumps o globals con hashes de passwords.
+- [ ] Ejecutar pruebas actuales en BD de pruebas aislada; registrar fallos previos, screenshots y flujos que sí funcionan.
+- [ ] Guardar OpenAPI, ejemplos de respuesta, conteos, hashes y predicciones sobre un fixture fijo. Documentar qué credenciales demo permiten validar cada rol sin publicar secretos.
+- [ ] Confirmar la existencia y vaciedad de ambas carpetas `Skills`.
+
+**Se toca:** exclusivamente evidencias, backups, configuración aislada de pruebas y estrategia de control de versiones.
+
+**No se toca:** código funcional, esquema activo, modelo, datos operativos, volúmenes y archivos originales.
+
+**Configurar:** almacenamiento privado de backups y BD de prueba con nombres inequívocos. Las fixtures actuales usan el engine configurado globalmente: validar URL antes de importar tests.
+
+**Aceptación:** inventario y baseline firmados; restauración aislada comprobada; se conoce inequívocamente qué volumen contiene los datos a conservar. Sin esto, bloquear fase 2.
+
+**Retorno:** no hay cambio funcional que revertir. Conservar respaldos verificados.
+
+#### Fase 1 — Contratos y decisiones de arquitectura
+
+**Objetivo:** fijar el destino antes de mover implementaciones.
+
+- [ ] Documentar decisiones en `docs/arquitectura/`: componentes, dueños de datos, módulos, transacciones, fuente de datos IA, artifact registry y errores.
+- [ ] Crear inventario completo de endpoints/rutas UI, alias, descargas, formularios y permisos; snapshot OpenAPI backend.
+- [ ] Definir contratos IA v1, CSV operacional, dataset entrenamiento, features y manifiestos en `contracts/`.
+- [ ] Documentar fuente de umbrales, versión de contrato, rangos, nulos y correlación individual/lote.
+- [ ] Decidir volumen existente versus restauración, puerto host BD y nombre estable de proyecto Compose.
+- [ ] Elaborar mapa de importaciones y escrituras cruzadas, incluyendo import local en `/citas/{id}/prediccion`.
+- [ ] Definir recorrido E2E actual y qué funcionalidades están incompletas; no prometer reportes o pantallas no implementados.
+- [ ] Definir compatibilidad: conservar contratos públicos; cualquier corrección funcional fuera de alcance requiere decisión y prueba independiente.
+
+**Se toca:** documentación, esquemas de contrato y fixtures de referencia; pruebas de contrato pueden prepararse sin modificar producción.
+
+**No se toca:** lógica, tablas, entrenamiento ni versiones de dependencias.
+
+**Configurar:** política de compatibilidad y ubicación de evidencias de cada fase.
+
+**Aceptación:** contratos con ejemplos válidos e inválidos, matriz de consumidores y decisiones sin pendientes críticos.
+
+**Retorno:** ajustar decisiones/documentos sin alterar aplicaciones.
+
+#### Fase 2 — Mudanza mecánica y primer arranque desde `apps/`
+
+**Objetivo:** cambiar ubicaciones, no comportamiento.
+
+- [ ] Mover backend completo a `apps/backend/` y frontend completo a `apps/frontend/`; conservar `Skills/` vacías.
+- [ ] Mantener imports Python `app.*`, estructura interna y lockfiles. No extraer todavía LightGBM.
+- [ ] No copiar `.venv`/`node_modules` como instalación definitiva: recrear entornos cuando proceda; los entornos Python pueden contener rutas absolutas.
+- [ ] Crear entrada `compose.yaml` raíz que reproduzca el stack actual con contextos/rutas actualizados. No añadir dependencia obligatoria de IA todavía.
+- [ ] Ajustar Dockerfiles/COPY, mounts, `alembic.ini`, scripts y pruebas afectados por rutas. Mantener `WORKDIR /app` por aplicación.
+- [ ] Fijar explícitamente el volumen físico elegido antes del primer arranque del nuevo Compose.
+- [ ] No ejecutar a la vez stacks viejos y nuevos contra la misma BD; detener escritores antiguos de forma controlada y esperar salida.
+- [ ] Mantener configuraciones anteriores como referencia temporal, claramente marcadas; no dejar dos comandos oficiales contradictorios.
+- [ ] Crear `.gitignore` y `.gitattributes` raíz con excepciones para ejemplos, LF de shell y exclusión de secretos/binarios generados.
+
+**Se toca:** rutas de aplicaciones, configuración de build/orquestación y referencias a esas rutas.
+
+**No se toca:** reglas, endpoints, algoritmo, formato de CSV, IDs Alembic o tablas. No consolidar código frontend antiguo aún.
+
+**Configurar:** contexto Compose raíz, `.env` explícito, puertos y volumen estable. Con contextos `apps/backend`/`apps/frontend`, no intentar `COPY ../../data`: usar montajes para datos y contratos.
+
+**Aceptación:** mismo recorrido baseline desde rutas nuevas; mismos datos/IDs/conteos; Alembic mantiene revisión; build frontend y pruebas conocidas no empeoran.
+
+**Retorno:** restaurar configuración/rutas de fase anterior desde snapshot/commit, conservando el mismo volumen. No restaurar BD innecesariamente si no hubo cambios de datos.
+
+#### Fase 3 — Centralización de archivos y datasets
+
+**Objetivo:** que cada CSV/dataset/output tenga un propietario y ruta inequívocos.
+
+- [ ] Crear estructura de `data/`, `artifacts/`, `runtime/` y política de ignore según sección 5.
+- [ ] Mover CSV canónico variado y demo; verificar hashes antes/después y localizar consumidores antes de retirar duplicados.
+- [ ] Mantener fixtures exclusivos de frontend; compartir solo los usados por varias aplicaciones.
+- [ ] Adaptar `scripts/exportar_csv.py`: parámetro de salida explícito, creación segura del directorio y no sobrescritura accidental. No depender de `Path('data')` relativo al CWD.
+- [ ] Definir fecha de referencia para muestras regenerables; conservar ejemplos históricos originales como evidencia, sin editarles fechas en silencio.
+- [ ] Copiar artefacto antiguo a `artifacts/models/legacy-import/`, registrar hash y permisos; en esta fase la inferencia integrada puede seguir leyendo su ruta antigua hasta el corte validado.
+- [ ] Crear inventario/manifiestos de datos; documentar qué ejemplos tienen errores intencionales y resultado esperado de importación.
+- [ ] Mantener uploads y descargas en memoria por defecto. Si se aprueba retención, implementar IDs, permisos, límites, expiración y limpieza acotada.
+- [ ] Actualizar scripts de validación visual, paths de fixtures y salidas generadas sin alterar capturas históricas.
+
+**Se toca:** rutas de archivos, argumentos de scripts, mounts y documentación de datos.
+
+**No se toca:** reglas de importación, esquema DB, algoritmo ni corpus de referencia usado para comparar predicciones.
+
+**Configurar:** paths absolutos efectivos mediante variables/argumentos, montajes lectura/escritura y exclusiones Docker; no incluir todo `data/` en imágenes.
+
+**Aceptación:** importación desde ubicación canónica funciona; hashes preservados; archivos no aparecen en frontend público; scripts funcionan desde el CWD documentado y no escriben en código fuente.
+
+**Retorno:** restablecer referencias de rutas; conservar ambas copias hasta verificar consumidores. No eliminar el único original ni el único backup.
+
+#### Fase 4 — Encapsulación backend y transacciones
+
+**Objetivo:** convertir la división por carpetas en límites reales.
+
+- [ ] Añadir contratos públicos por módulo y tests que prohíban imports a routers/repositorios/modelos privados ajenos, con excepciones explícitas de composición/reporting.
+- [ ] Llevar reloj/zona horaria técnica a `core`, actualizar dependency overrides de pruebas y retirar dependencia de `intervenciones.router` hacia `citas.router`.
+- [ ] Llevar registro global ORM a `bootstrap` y actualizar `main.py`, Alembic, scripts y tests; registrar todos los modelos antes de construir metadata.
+- [ ] Definir propiedad de `Usuario` en Usuarios y contratos con Auth; conservar tabla, hashing, tokens, expiración, bloqueo y revocación existentes.
+- [ ] Extraer operaciones públicas de Citas para confirmar/liberar/cambiar estado y de Lista de Espera para crear cupo, ofrecer y reasignar.
+- [ ] Consolidar reglas duplicadas entre Citas e Intervenciones: una transición legal debe generar exactamente un historial y la auditoría requerida.
+- [ ] Introducir workflows para operaciones multímódulo; todos participan en la misma sesión/transacción del caso de uso.
+- [ ] Quitar SQL y commits de routers, incluidos endpoints de ofertas/rechazo/desistimiento; mover validaciones/estados a servicios propios.
+- [ ] Separar operaciones componibles sin commit de casos de uso de nivel superior que sí cierran transacción. Actualizar importador/seed para evitar transacciones anidadas incorrectas.
+- [ ] Mantener auditoría append-only dentro de la transacción de negocio cuando hay éxito. Fallos de login requieren su propia persistencia explícita, sin perder bloqueo/registro al responder 401.
+- [ ] Crear adaptadores de lectura para bandeja/detalle/reportes que hoy consultan varias tablas; no duplicar datos para evitar un JOIN.
+- [ ] Probar concurrencia y rollback completo: cita + historial + intervención + cupo + auditoría, según la operación.
+
+**Se toca:** organización y lógica interna necesaria para delimitar responsabilidades; actualizar tests y composición.
+
+**No se toca:** contrato público, políticas del piloto, datos existentes, versiones de modelo ni esquema salvo necesidad aprobada. No usar autogenerate para renombrar tablas por mover clases.
+
+**Configurar:** política transaccional uniforme y lista de dependencias permitidas. Si aparece cambio de esquema imprescindible, crear revisión nueva aditiva y detenerse para aprobación.
+
+**Aceptación:** cero escrituras ajenas fuera de contratos/workflows aprobados, sin ciclos, routers sin SQL/commits; permisos y estados conservados; rollback y doble reasignación probados en PostgreSQL.
+
+**Retorno:** revertir solo entrega de lógica desde punto de control, manteniendo datos. Si hubo revisión nueva aprobada, usar procedimiento compatible y restauración ensayada, no downgrade genérico.
+
+#### Fase 5 — Extraer y probar la aplicación IA independiente
+
+**Objetivo:** disponer de IA autónoma antes de cambiar sus consumidores.
+
+- [ ] Crear `apps/ia/` con API, configuración, autenticación interna, tests y dependencias propias.
+- [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado.
+- [ ] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada.
+- [ ] Eliminar dependencias de FastAPI backend, ORM operativo y `app.modules.citas` de la nueva aplicación IA.
+- [ ] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas.
+- [ ] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible.
+- [ ] Implementar carga en startup/caché controlada por versión; ningún endpoint entrena ni escribe modelos.
+- [ ] Fijar límites de request/lote, validación estricta, timeout y número de workers compatible con memoria disponible; cada worker puede duplicar modelo en RAM.
+- [ ] Crear Dockerfile IA no-root, con librerías nativas necesarias para LightGBM (`libgomp1` si aplica) y TZ/data requeridas.
+- [ ] Comparar probabilidades, niveles y explicaciones con baseline congelado; comprobar que una predicción no modifica artefactos.
+
+**Se toca:** nueva app IA, contrato interno, ubicación de código matemático y packaging IA.
+
+**No se toca:** conexión productiva del backend, BD, estados, UI ni versión del modelo si el cálculo es equivalente.
+
+**Configurar:** clave interna, registry montado RO para serving, readiness y puerto local. El servicio puede levantarse aisladamente sin BD/backend.
+
+**Aceptación:** API IA cumple contratos y paridad, no importa backend ni contiene DSN, no entrena en inferencia; el backend sigue funcionando con implementación integrada hasta fase 7.
+
+**Retorno:** desactivar servicio nuevo sin afectar backend actual; preservar artefactos y evidencia de comparación.
+
+#### Fase 6 — Pipeline de datos, entrenamiento y promoción
+
+**Objetivo:** poder preparar un equipo limpio sin depender de un `.joblib` oculto o entrenamiento automático.
+
+- [ ] Implementar comandos documentados para generar dataset/seed, validar, particionar, entrenar baseline/LightGBM y producir candidato/manifiestos.
+- [ ] Establecer flags explícitos para versión, semilla, fecha de corte, fuente y directorios. Nunca sobrescribir una versión distinta con el mismo nombre.
+- [ ] Si se entrena con snapshot BD, implementar exportación backend autorizada con trazabilidad y sin acceso IA a PostgreSQL.
+- [ ] Crear manifest de split y controles anti-leakage/calidad/equidad; conservar dataset sintético rotulado.
+- [ ] Implementar promoción de candidato aprobado y rollback a versión anterior; verificar hash y dependencias antes de cargar.
+- [ ] Ajustar seed backend para consumir CSV operacional explícito y crear usuarios demo sin imports a generador IA. Respetar tratamiento de nulos, desenlaces y fechas.
+- [ ] Usar `SEED_PASSWORD` local/no registrada en logs, no contraseña fija en YAML. No modificar credenciales de usuarios existentes en un rerun silencioso.
+- [ ] Hacer seed repetible sin duplicar citas/usuarios; detectar carga parcial y reportar/reconciliar, no dar éxito simplemente porque existe alguna `CIT-SIM-*`.
+- [ ] Mantener normalización/importación por servicios backend, no SQL directo que omita historial/auditoría.
+- [ ] Definir camino limpio: generar sintéticos explícitos, entrenar/promover, importar seed; camino existente: preservar datos/modelo y no sembrar por defecto.
+
+**Se toca:** procesos puntuales, manifiestos, scripts seed/export y retirada programada del generador duplicado.
+
+**No se toca:** BD existente para regenerar datos, modelo activo sin promoción, parámetros para mejorar métricas durante esta migración.
+
+**Configurar:** proceso entrenamiento escribible en datasets/artefactos; inferencia RO. La meta F1 documentada se verifica, no se declara cumplida sin medición.
+
+**Aceptación:** un equipo sin artefactos puede generarlos de forma explícita y reproducible; se conoce qué dataset entrenó cada versión; rerun no destruye ni duplica datos.
+
+**Retorno:** volver al manifest/artefacto previo con reinicio/recarga controlada; no regenerar BD ni sobreescribir versiones previas.
+
+#### Fase 7 — Conectar backend con IA y retirar predictor integrado
+
+**Objetivo:** completar la separación real manteniendo API pública y persistencia.
+
+- [ ] Crear puerto/contrato de motor predictivo en módulo IA backend y adaptador HTTP con `httpx`, lifecycle y timeouts explícitos.
+- [ ] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.
+- [ ] Mantener comprobación de rol/estado, snapshot, versión, explicación, persistencia y auditoría en backend.
+- [ ] Implementar reglas de validación de respuesta, concurrencia, lote y fallos de sección 6.3.
+- [ ] Propagar ID de correlación; no reenviar JWT a IA.
+- [ ] Sustituir tests que monkeypatchean predictor local por dobles del puerto predictivo; separar tests HTTP contra IA real.
+- [ ] Probar IA caída, lenta, clave inválida, modelo ausente, respuesta malformada y cambio de versión a mitad de lote.
+- [ ] Solo después de paridad y regresión, retirar copia matemática/generador integrada y dependencias ML del backend.
+- [ ] Mantener Joblib/NumPy/scikit-learn/LightGBM únicamente donde se utilicen; revisar otros scripts/tests antes de quitar paquetes o `libgomp1` del Dockerfile backend.
+- [ ] Reproducir instalaciones con versiones fijadas; separar dependencias de tests sin actualizar librerías por iniciativa de la migración.
+
+**Se toca:** integración/backend IA, tests, configuración y dependencias extraídas.
+
+**No se toca:** tablas, permisos, rutas públicas, modo de guardar versiones ni estado de citas al fallar IA.
+
+**Configurar:** `IA_URL` real por entorno, clave igual en backend/IA, timeout; CORS solo para navegador-backend. Backend startup/readiness no debe depender de IA.
+
+**Aceptación:** backend operativo sin librerías ML y sin IA; inferencia exitosa cuando vuelve el servicio; predicciones guardadas y métricas compatibles; no queda fallback silencioso al predictor antiguo.
+
+**Retorno:** recuperar adaptador anterior desde entrega etiquetada mientras exista compatibilidad y modelo preservado. No conservar dos motores activos indefinidamente ni cambiar de motor silenciosamente por error HTTP.
+
+#### Fase 8 — Consolidar frontend sin perder funcionalidad
+
+**Objetivo:** una única organización activa de UI y consumidores consistentes.
+
+- [ ] Mapear imports reales de `pages/`, `auth/`, `components/`, `lib/` y equivalentes en `nucleo/`/`modulos/`; revisar también tests y entradas alternativas.
+- [ ] Comparar pantallas antiguas con nuevas antes de migrar. En particular, verificar si `pages/ModeloIA.jsx` contiene funcionalidad no expuesta por los módulos actuales.
+- [ ] Consolidar features en `modulos/` y utilidades compartidas en `nucleo/`; mantener tests/cambios pequeños por funcionalidad.
+- [ ] Mantener rutas públicas, redirects, deep links, permisos, menú por rol y descubrimiento `rutas.tsx`/`menu.ts`.
+- [ ] Tratar `prueba-ranura` como soporte de pruebas: preservar la prueba de descubrimiento sin exponer un módulo de demostración al usuario final; hacerlo mediante fixture/configuración de test explícita.
+- [ ] Centralizar URL y transporte HTTP, incluidos `descargas.ts` y `lista-espera/exportar.ts`; preservar descargas binarias, nombres y MIME, no forzarlas por un cliente exclusivamente JSON.
+- [ ] Conservar `sessionStorage`, manejo de 401 tardío, expiración, cancelación de fetch y protección de sesión nueva.
+- [ ] Mostrar IA no disponible sin bloquear bandeja, confirmación o atención. Distinguir sin predicción, fallo técnico y riesgo BAJO.
+- [ ] Mantener estados de carga/error/vacío, validaciones de formulario, rótulo sintético y accesibilidad básica.
+- [ ] Actualizar imports y tests antes de retirar archivos antiguos. Evitar conversión masiva JS→TS o rediseño visual no solicitado.
+
+**Se toca:** organización/frontend, cliente compartido, UI necesaria para errores de integración y tests.
+
+**No se toca:** branding/diseño por iniciativa propia, semántica API, reglas backend, almacenamiento real de datos o modelo.
+
+**Configurar:** `VITE_API_URL`, origen CORS, tipos frontend alineados con contratos y salidas de cobertura/capturas.
+
+**Aceptación:** build/typecheck/lint/tests y navegación por tres roles; no referencias vivas a estructura retirada; deep links y descargas funcionan; IA caída no inutiliza pantallas operativas.
+
+**Retorno:** volver por módulo a versión frontend anterior compatible con backend; no tocar BD.
+
+#### Fase 9 — Compose oficial, configuración y bootstrap local
+
+**Objetivo:** iniciar el proyecto completo desde la raíz sin conocimiento implícito.
+
+- [ ] Consolidar `compose.yaml` con `db`, `migraciones`, `backend`, `ia`, `frontend` y tareas por perfil para preparación/entrenamiento/seed/pruebas.
+- [ ] Crear `scripts/bootstrap.ps1` idempotente y documentado; validar herramientas, `.env`, paths, puertos, volumen elegido y permisos antes de escribir datos.
+- [ ] Ofrecer modos explícitos: **Existing** preserva y valida datos/modelo; **FreshDemo** exige BD nueva vacía autorizada y prepara sintéticos/modelo/usuarios; **Verify** no siembra ni entrena.
+- [ ] El bootstrap no sobrescribe `.env`, no rota contraseñas ni promueve modelos existentes sin confirmación. Si falta configuración, explica cómo completarla.
+- [ ] Definir perfiles Compose `setup`, `training`, `test` o equivalentes; que no arranquen procesos destructivos al ejecutar `up` normal.
+- [ ] Implementar dependencias: DB saludable → migrador puntual exitoso → backend; IA con artefacto listo en paralelo; frontend inicia con backend disponible. No condicionar arranque backend a IA saludable.
+- [ ] Para FreshDemo, el bootstrap espera readiness IA antes de declarar stack completo; no confundir degradación aceptada del backend con instalación completa exitosa.
+- [ ] Mover init BD a infraestructura, asegurar creación de rol antes de migración y manejar volúmenes ya inicializados donde los init scripts no se reejecutan.
+- [ ] Diferenciar proceso vivo y listo: `/health` existente se mantiene compatible; agregar comprobación real de BD para readiness backend sin exigir IA. Healthcheck no debe usar solo `/docs` como prueba de dependencias.
+- [ ] Inyectar owner solo en tareas de administración. Backend permanente e IA sin credenciales administrativas.
+- [ ] Revisar `restart`, tiempos de gracia, límites razonables y logs por servicio; los procesos puntuales terminan con código útil y no reinician en bucle.
+- [ ] Mantener un único nombre/volumen, sin colisiones con Compose históricos. Archivar instrucciones anteriores y retirar entradas ambiguas solo tras verificación.
+- [ ] Implementar preparación de directorios, incluidas `Skills` vacías; no agregar `.gitkeep` dentro de ellas.
+- [ ] Documentar ejecución nativa: Python/venv separados, Node, BD/roles, migraciones, dataset/artefacto explícito, IA, backend y frontend en terminales separadas.
+
+**Se toca:** infraestructura, Dockerfiles si procede, ejemplos de entorno, scripts de operación y documentación de arranque.
+
+**No se toca:** datos de usuarios existentes, modelos activos sin autorización, historial Alembic o reglas de negocio.
+
+**Configurar:** matriz sección 7 completa y renderizado verificado por `docker compose config`, protegiendo su salida si incluye secretos. No añadir nginx/HTTPS como requisito del demo local.
+
+**Aceptación:** Existing conserva datos y FreshDemo parte de entorno aislado vacío y funciona; Verify no altera BD/modelo; reiniciar preserva datos; backend sigue disponible si IA falla.
+
+**Retorno:** configuración Compose/imagen previa apuntando al volumen correcto, sin `down -v`. Si se seleccionó otro volumen, conservar ambos y cambiar referencia de forma controlada.
+
+#### Fase 10 — Validación integral y controles de regresión
+
+**Objetivo:** demostrar que la organización nueva funciona y mantiene límites.
+
+- [ ] Ejecutar matriz de sección 9 en PostgreSQL real de pruebas y entorno E2E aislado.
+- [ ] Mantener mínimo 75% de cobertura backend/frontend y medir cobertura IA definida en fase 1; no reducir umbrales para terminar.
+- [ ] Tests de arquitectura: backend sin imports ML/IA app, IA sin imports backend/SQL operativo, frontend sin credenciales internas, módulos sin dependencias prohibidas/ciclos.
+- [ ] Tests de contratos backend-frontend e IA; snapshot OpenAPI con diferencias revisadas, no regenerado ciegamente para ocultarlas.
+- [ ] Comparar BD antes/después, restricciones, permisos, historial y auditoría. Probar migraciones tanto desde baseline existente como instalación nueva.
+- [ ] Probar dos reasignaciones simultáneas, dos predicciones de misma versión, cambio de cita durante inferencia y fallos después de flush antes de commit.
+- [ ] Parar solo IA y demostrar degradación controlada; reiniciarla y repetir inferencia sin reiniciar ni borrar BD.
+- [ ] Probar modelo corrupto/ausente/incompatible en copia aislada, no dañando el activo real.
+- [ ] Verificar límites CSV/lote, fechas, BOM, duplicados, opt-out y ausencia de cancelación/liberación por silencio.
+- [ ] Medir arranque frío/caliente, latencias de inferencia/lote y RAM. Registrar valores medidos y presupuesto acordado, no afirmar mejoras sin datos.
+- [ ] Buscar secretos y rutas antiguas/absolutas en archivos activos, imágenes y logs; referencias históricas se permiten si están identificadas.
+- [ ] Crear `scripts/smoke.ps1` que verifique servicios, login/demo, lectura e inferencia opcional con resultados claros; escrituras de prueba solo en entorno aislado o con autorización explícita.
+- [ ] Integrar validaciones reproducibles por script y pipeline CI cuando exista remoto/proveedor acordado. No asumir GitHub ni publicar repositorio por esta tarea.
+
+**Se toca:** pruebas, scripts de validación, correcciones concretas de regresión y evidencia.
+
+**No se toca:** baseline para ocultar diferencias, umbrales de cobertura, seguridad BD o datos demo reales bajo pretexto de tests.
+
+**Configurar:** BD/test volúmenes separados, secretos ficticios de tests y salida `runtime/test-results/`.
+
+**Aceptación:** matriz crítica pasa; fallos previos no críticos documentados y aceptados; ninguna regresión crítica abierta; recuperación de backup y modelo demostrada.
+
+**Retorno:** detener corte final y volver a fase responsable del fallo; no declarar cierre parcial como migración completa.
+
+#### Fase 11 — Corte, documentación final y cierre
+
+**Objetivo:** dejar una única estructura vigente y una guía local probada.
+
+- [ ] Fijar ventana de corte, detener escritores, respaldar otra vez y registrar conteos/revisión/modelo justo antes de cambiar el stack local principal.
+- [ ] Aplicar estructura/configuración validadas; ejecutar migrador si hay revisiones nuevas aprobadas. No sembrar sobre datos existentes por defecto.
+- [ ] Ejecutar smoke y recorrido manual por tres roles; verificar persistencia tras reinicio.
+- [ ] Crear README raíz con requisitos, arranque Existing/FreshDemo/Verify, URLs, errores comunes, recuperación y enlaces a contratos.
+- [ ] Clasificar documentos previos en `docs/`, conservar fechas y distinguir diseño antiguo de arquitectura vigente. Corregir enlaces y referencias `contratos/comun.json` solo tras localizar o sustituir esa fuente explícitamente.
+- [ ] Consolidar o retirar archivos/configuraciones antiguas únicamente con evidencia de cero consumidores y respaldo. No borrar históricos válidos ni evidencias de pruebas.
+- [ ] Confirmar `apps/frontend/Skills/` y `apps/backend/Skills/` existen y siguen vacías.
+- [ ] Actualizar todos los checklists y bitácoras con fechas reales, comandos ejecutados, resultados y limitaciones pendientes.
+- [ ] Conservar último backup y versión anterior hasta aceptación del equipo y cumplimiento de la política de retención acordada.
+
+**Se toca:** documentación vigente, referencias restantes, configuración de corte y limpieza aprobada.
+
+**No se toca:** funcionalidades adicionales, aumento de dataset, nuevos canales reales de mensajería ni decisiones clínicas automatizadas.
+
+**Configurar:** punto de retorno final, acceso a backups y responsables de mantenimiento.
+
+**Aceptación:** definición de terminado de sección 12 completa y equipo capaz de arrancar siguiendo únicamente README.
+
+**Retorno:** detener escrituras, volver a imágenes/config compatibles y volumen correcto. Restaurar BD solo si es necesario y tras preservar operaciones posteriores al respaldo; restaurar un dump antiguo puede perder datos nuevos.
+
+## 9. Matriz mínima de pruebas y evidencia
+
+| Área | Casos obligatorios | Evidencia esperada |
+|---|---|---|
+| Arranque | FreshDemo, Existing, Verify y reinicio | Comandos, exit codes, servicios saludables y conteos |
+| BD | Instalación vacía y actualización desde copia existente | Alembic head, mismas entidades/IDs, permisos y triggers |
+| Identidad | Login correcto/incorrecto, bloqueo, expiración, revocación y usuario inactivo | pytest/integración y prueba UI por rol |
+| RBAC | Acceso autorizado/no autorizado a cada familia de endpoints | Matriz rol×operación, no solo ocultar menú |
+| CSV | Válido, BOM, vacío, demasiado grande, >5.000, duplicados, celdas vacías y filas inválidas | Conteos y motivos estables, hashes y no doble importación |
+| Fechas | Lima, offsets, domingo, desenlace futuro y registro posterior a cita | Tests con reloj controlado |
+| Citas | Estados legales/ilegales, check-in y desenlaces | Un historial por transición y target correcto |
+| IA | Predicción individual, alias Citas, lote/forzar, métricas, dataset y consulta histórica | Contratos, paridad y snapshot persistido |
+| Resiliencia IA | Timeout, desconexión, clave mala, modelo ausente y JSON inválido | Error visible y operación no predictiva funcionando |
+| Concurrencia IA | Cita modificada durante cálculo, versión cambiada y duplicados simultáneos | Sin predicciones obsoletas ni violación silenciosa de unicidad |
+| Intervenciones | Consentimiento, opt-out, límite de contactos, confirmación y liberación voluntaria | Reglas vigentes preservadas; resolver discrepancias documentales antes de aceptar |
+| Silencio paciente | No responde al contacto | No cancela ni libera cita automáticamente |
+| Cupos | Compatibilidad, oferta, rechazo, desistimiento y doble reasignación | Una asignación, confirmación humana y trazabilidad |
+| Transacciones | Fallo entre escritura de cita, cupo, historial y auditoría | Todo o nada por caso de uso; fallos de login registrados aparte |
+| Reportes | Filtros, datos, permisos y exportación JSON/CSV/Excel existentes | MIME/filename correctos, sin fórmulas peligrosas |
+| UI | Login, menú, deep link, recarga, logout, carga/error/vacío | Vitest y E2E/manual reproducible |
+| Sesión UI | 401 antiguo y sesión nueva, cancelación y expiración | Pruebas actuales no degradadas |
+| Datos/archivos | Paths nuevos, no exposición pública, permisos no-root y limpieza | Inventario, inspección de mounts y tests |
+| Arquitectura | Imports/ciclos/escrituras fuera de propietario | Tests automáticos y excepciones justificadas |
+| Reproducibilidad | Misma fuente/semilla/split y promoción de versión | Manifiestos/hashes, no garantía de igualdad bit a bit entre plataformas distintas |
+| Recuperación | Restore DB aislado y rollback del modelo | Procedimiento ejecutado con resultados verificables |
+
+No usar SQLite para dar por probados RLS, JSONB, locks o triggers específicos de PostgreSQL. Los tests de BD existentes deben seguir verificándose en PostgreSQL.
+
+## 10. Operación local objetivo
+
+**Esta sección describe el resultado a implementar en fases 9–11. No ejecutar estos comandos como si los scripts ya existieran.** Los parámetros del bootstrap quedan fijados como interfaz objetivo; su implementación debe documentar y validar exactamente estas opciones.
+
+### Camino A — Conservar datos existentes
+
+1. Verificar backup/restauración y elegir `PGDATA_VOLUME_NAME` real.
+2. Preparar `.env` privado con credenciales reales existentes, clave IA, puertos y paths.
+3. Ejecutar desde la raíz en PowerShell:
+
+```powershell
+.\scripts\bootstrap.ps1 -Mode Existing
+docker compose -f compose.yaml --env-file .env up -d --build
+.\scripts\smoke.ps1
+```
+
+`Existing` verifica modelo compatible y revisión; si falta artefacto no entrena silenciosamente: explica cómo preparar uno explícitamente. No ejecuta seed ni vacía BD. Debe aplicar migraciones pendientes solo si están aprobadas y el respaldo está confirmado.
+
+### Camino B — Demo nueva aislada
+
+Seleccionar volumen nuevo inequívoco, sin reutilizar uno con datos. El script debe rechazar BD no vacía en este modo salvo procedimiento de adopción explícito, nunca borrarla.
+
+```powershell
+.\scripts\bootstrap.ps1 -Mode FreshDemo -ReferenceDate 2026-11-03
+docker compose -f compose.yaml --env-file .env up -d --build
+.\scripts\smoke.ps1
+```
+
+La fecha es ejemplo reproducible, no promesa de citas futuras permanentemente. Para una demo en otra fecha elegir referencia explícita y nueva versión de datos; respetar calendario piloto.
+
+El bootstrap implementa en orden: preflight → directorios/config → BD/rol → migraciones → generación explícita dataset y CSV seed → entrenamiento/verificación/promoción → seed autorizado → arranque servicios → readiness → resumen. Usa procesos puntuales y no entrena en el servidor API.
+
+### Camino C — Verificación sin regeneración
+
+```powershell
+.\scripts\bootstrap.ps1 -Mode Verify
+docker compose -f compose.yaml --env-file .env ps
+```
+
+Verify inspecciona configuración/servicios/modelo/revisión y no siembra, migra, entrena, promueve ni cambia credenciales. No imprimir el `.env` ni un Compose renderizado con secretos en evidencias compartidas.
+
+### URLs y diagnóstico esperado
+
+- UI: `http://localhost:5173`.
+- Backend/docs: `http://localhost:8000/docs`.
+- Salud backend existente: `/health`; readiness adicional documentado en implementación.
+- IA: `http://127.0.0.1:8100/health/ready` solo si el puerto se publica en loopback.
+- PostgreSQL: `localhost:<DB_PUERTO_HOST>` solo para herramientas locales autorizadas; dentro de Docker siempre `db:5432`.
+- Consultar logs por servicio, comprobar rol DB, CORS y disponibilidad de modelo; no resolver fallos borrando volúmenes.
+- `docker compose ... down` sin `-v` conserva volúmenes; antes de detener confirmar que es el proyecto correcto. No incluir borrado de datos en el comando habitual de parada.
+
+### Alternativa nativa a documentar y probar
+
+1. PostgreSQL 16 con roles correctos, o solo servicio DB en Docker.
+2. Venv Python 3.12 del backend, instalar dependencias fijadas desde `apps/backend/`, `.env` local apuntando a host/puerto correctos, crear rol si falta y ejecutar Alembic.
+3. Venv independiente para `apps/ia/`; preparar dataset/artefacto con comandos documentados, cargar el modelo y servir en 8100.
+4. Backend desde `apps/backend/` con `uvicorn app.main:app --host 127.0.0.1 --port 8000`, `IA_URL=http://127.0.0.1:8100` y credenciales operativas.
+5. Frontend desde `apps/frontend/`: `npm ci`, `npm run dev -- --host 127.0.0.1 --port 5173` y `VITE_API_URL` del navegador.
+6. No copiar comandos de entrenamiento no implementados: el README final debe contener los nombres/flags reales probados. No compartir venv ni ejecutar ambas apps Python desde un `PYTHONPATH` global.
+
+### Verificaciones por aplicación
+
+Ejecutar cada comando desde la carpeta indicada y registrar resultado/exit code. Son verificaciones para la estructura objetivo; no constituyen evidencia de que ya se ejecutaron.
+
+| Carpeta objetivo | Comandos/validaciones |
+|---|---|
+| `apps/frontend/` | `npm ci`, `npm run typecheck`, `npm run lint`, `npm run test`, `npm run build` |
+| `apps/backend/` | Instalación de requirements runtime/dev, `alembic heads`, `alembic current`, `python -m pytest`; solo con BD de pruebas aislada para pytest |
+| `apps/ia/` | Instalación de requirements runtime/dev y `python -m pytest` con registry/dataset de fixtures, nunca modificando el modelo activo |
+| Raíz | Verificación de contratos, pruebas E2E y smoke con los comandos efectivamente implementados y documentados en fases 9–10 |
+
+El test suite backend importa configuración y engine al cargar módulos: establecer y validar las variables de la BD de pruebas **antes** de arrancar pytest, no después. No ejecutar tests dentro del backend operativo usando sin cambios su `DATABASE_URL`.
+
+## 11. Riesgos y decisiones que pueden bloquear
+
+| Riesgo | Prevención/respuesta |
+|---|---|
+| Se ve BD vacía tras mover Compose | Inspeccionar nombre/volumen; detener y corregir referencia, no sembrar inmediatamente |
+| `.env` nuevo con password diferente rompe conexión | Confirmar credenciales del volumen; `.env` no rota roles existentes |
+| Init no corre en volumen existente | Ejecutar provisión idempotente autorizada, no reinicializar datos |
+| Modelo no carga tras mover código | Verificar clases serializadas/dependencias en copia; conservar artefacto y entorno anterior |
+| IA intenta escribir en ruta de código no-root | Servir RO; entrenamiento solo en mounts autorizados |
+| Contexto Docker no contiene CSV/contratos | Usar mounts o empaquetado explícito; no ampliar contexto a todos los secretos de la raíz |
+| CSV estático queda temporalmente obsoleto | Fechas de referencia/versionado; tests con reloj fijo y demos regenerables explícitas |
+| Doble historial/auditoría al centralizar | Tests de unicidad lógica por transición y una transacción coordinadora |
+| Refactor de usuario provoca múltiples modelos para misma tabla | Cambiar propietario e imports conjuntamente; un solo registro ORM |
+| Lote mantiene locks durante HTTP | Snapshot fuera de transacción larga, revalidación y guardado corto |
+| Reentrenamiento silencioso cambia resultados | Sin fallback de dataset/modelo; promoción/versionado explícitos |
+| Eliminación de archivos frontend pierde pantalla no migrada | Grafo de referencias y comparación funcional antes de retirar |
+| Repositorios anidados/historial perdido | Estrategia de monorepositorio aprobada; conservar origen y backup |
+| OneDrive bloquea/sincroniza archivos grandes | Volúmenes DB fuera de bind mount y paths de datos/artefactos configurables |
+| Tests escriben sobre BD de demo | URL/nombre test explícitos y guardas antes de importar engine/ejecutar fixtures |
+| Se prometen funcionalidades no terminadas | Baseline funcional explícita; separar migración de ampliación de alcance |
+| Políticas documentadas no coinciden con código | Registrar decisión y pruebas; no corregir silenciosamente durante movimientos |
+
+## 12. Definición de terminado
+
+- [ ] Un repositorio/estrategia aprobada con aplicaciones, contratos, infraestructura, datos y documentación separados.
+- [ ] `apps/frontend/Skills/` y `apps/backend/Skills/` existen y están completamente vacías.
+- [ ] Un Compose oficial y nombres de proyecto/volumen inequívocos.
+- [ ] README probado en equipo/entorno limpio y procedimiento de adopción de BD existente probado.
+- [ ] Sin pérdida de citas, usuarios, predicciones, auditoría, historial, IDs, claves o secuencias existentes.
+- [ ] Migraciones preservadas; permisos, triggers y RLS verificados sin atribuirles garantías no implementadas.
+- [ ] CSV/fixtures/datasets/modelos con rutas y propietarios documentados, sin exposición pública o secretos versionados.
+- [ ] Backend modular con contratos, propietarios y transacciones coherentes; routers sin SQL/commits.
+- [ ] IA realmente independiente, sin credenciales/imports backend y sin entrenamiento en inferencia.
+- [ ] Backend sin dependencias ML innecesarias y capaz de operar cuando IA no está disponible.
+- [ ] Contratos públicos mantenidos y nuevos errores documentados; frontend maneja degradación IA.
+- [ ] Modelo/dataset/umbral versionados, promoción y rollback comprobados.
+- [ ] Pruebas unitarias, BD, contratos, arquitectura y recorrido E2E aprobados con cobertura sin rebajas.
+- [ ] FreshDemo, Existing, Verify y reinicio validados; ningún camino habitual elimina datos.
+- [ ] Backup restaurado en entorno aislado y rollback de modelo demostrados.
+- [ ] Cero regresiones críticas abiertas; limitaciones previas y cambios aprobados identificados.
+- [ ] Documentación histórica conservada y arquitectura vigente claramente distinguida.
+- [ ] Todas las fases cerradas con evidencia real, no solo checklists marcados.
+
+## 13. Bitácora para retomar el trabajo
+
+Actualizar este documento al iniciar y cerrar cada fase. Guardar evidencias detalladas en `docs/migracion/fase-XX/`, sin secretos. Antes de retomar, leer el último registro, comprobar archivos reales y ejecutar la validación de la fase anterior.
+
+### Plantilla por fase/entrega
+
+```text
+Fase / subentrega:
+Estado: PENDIENTE | EN CURSO | BLOQUEADA | COMPLETADA
+Fecha real y responsable:
+Objetivo de esta sesión:
+Punto de partida / commit o snapshot:
+Archivos y rutas afectados:
+Archivos y comportamientos deliberadamente no tocados:
+Cambios de configuración (nombres, nunca valores secretos):
+Movimientos realizados y hashes relevantes:
+Cambios de lógica / esquema (si los hubo y aprobación):
+Comandos ejecutados y directorio de ejecución:
+Pruebas ejecutadas, resultado, duración y cobertura:
+Evidencia antes/después:
+Datos / volumen / revisión Alembic preservados:
+Modelo / dataset / contrato activos:
+Fallos previos frente a regresiones nuevas:
+Pendientes y bloqueos:
+Procedimiento y punto de retorno:
+Próxima acción concreta:
+Aceptación de fase y fecha:
+```
+
+### Registro inicial de esta entrega
+
+- **Tipo:** planificación, no implementación de la arquitectura.
+- **Creado:** este documento y las dos carpetas `Skills` vacías en las aplicaciones actuales.
+- **Sin modificar:** código, modelos, datos, CSV, `.env`, Dockerfiles, Compose, migraciones y pruebas existentes.
+- **Validación de esta entrega:** comprobar existencia del Markdown, presencia/vaciedad de `Skills` y correspondencia del plan con archivos inspeccionados. No se ejecutó la matriz funcional de la migración.
+- **Siguiente acción:** fase 0 — inventario operativo, respaldo/restauración y baseline en entorno aislado.

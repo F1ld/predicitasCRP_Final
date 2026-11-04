@@ -1,0 +1,41 @@
+/* REP-02 y RNF-016: métricas legibles, barras propias y salida PDF del navegador. */
+.m05-reporte-filtros { display: grid; gap: 16px; margin-top: 18px; }
+.m05-reporte-exportaciones { margin: 24px 0 18px; }
+.m05-indicadores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 24px; }
+.m05-indicadores > div { padding: 18px; border: 1px solid var(--borde); border-radius: 10px; background: #fff; }
+.m05-indicadores dt { font-size: 13px; color: var(--texto-suave); }
+.m05-indicadores dd { margin-top: 6px; color: var(--texto); font-size: 28px; font-weight: 650; }
+.m05-reporte-graficos { display: grid; gap: 18px; margin: 0 0 20px; }
+.m05-grafico { min-width: 0; }
+.m05-grafico ul { display: grid; gap: 16px; margin-top: 20px; }
+.m05-barra-etiqueta { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.m05-barra-pista { height: 10px; margin-top: 7px; border-radius: 3px; background: #e7eeee; overflow: hidden; }
+.m05-barra-pista span { display: block; height: 100%; background: var(--crp-accion); }
+.m05-reporte-tabla { min-width: 1050px; }
+.m05-reporte-tabla caption { padding: 16px 20px; text-align: left; font-weight: 600; }
+.m05-reporte-tabla a { color: var(--crp-accion); font-weight: 650; text-decoration: underline; }
+@media (min-width: 640px) {
+  .m05-reporte-filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .m05-indicadores { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .m05-reporte-filtros { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .m05-reporte-graficos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .m05-indicadores { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media print {
+  @page { size: A4 landscape; margin: 12mm; }
+  body:has(.m05-reporte) header, body:has(.m05-reporte) nav, body:has(.m05-reporte) footer,
+  body:has(.m05-reporte) .franja-institucional, body:has(.m05-reporte) .enlace-salto,
+  .m05-reporte .m05-no-imprimir { display: none !important; }
+  body:has(.m05-reporte), .m05-reporte { background: #fff; color: #000; }
+  body:has(.m05-reporte) main { width: 100%; max-width: none; margin: 0; padding: 0; }
+  .m05-reporte .tabla-contenedor { overflow: visible; border: 0; }
+  .m05-reporte-tabla { width: 100%; min-width: 0; font-size: 9px; }
+  .m05-reporte-tabla th, .m05-reporte-tabla td { padding: 6px; overflow-wrap: anywhere; }
+  .m05-reporte-tabla thead { display: table-header-group; }
+  .m05-reporte-tabla tr, .m05-indicadores > div, .m05-grafico { break-inside: avoid; }
+  .m05-indicadores { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .m05-reporte-graficos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .m05-reporte a { color: inherit; text-decoration: none; }
+}

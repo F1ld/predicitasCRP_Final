@@ -1,0 +1,21 @@
+/* RF-004 a RF-008, RNF-016: extensión local de los tokens y componentes existentes. */
+.usuarios-modal-fondo { position: fixed; z-index: 80; inset: 0; display: grid; place-items: center; padding: 16px; background: #173c43a8; }
+.usuarios-dialogo { width: 100%; max-width: 540px; max-height: calc(100dvh - 32px); overflow: auto; border: 1px solid var(--borde); border-radius: 14px; padding: 24px; background: white; color: var(--texto); box-shadow: 0 24px 80px #11383c30; }
+.usuarios-dialogo-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.usuarios-dialogo-cabecera h2 { font-size: 1.2rem; }
+.usuarios-formulario { display: grid; gap: 16px; }
+.usuarios-error-campo { margin-top: 6px; font-size: 13px; color: #9f1239; }
+.usuarios-ayuda { margin-top: 6px; color: var(--texto-suave); font-size: 13px; line-height: 1.65; }
+.usuarios-acciones { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.usuarios-dialogo .usuarios-acciones { justify-content: flex-end; margin-top: 20px; }
+.usuarios-politica { margin-top: 8px; display: grid; gap: 4px; color: var(--texto-suave); font-size: 12px; }
+.usuarios-politica li[data-cumple="true"] { color: #116149; }
+.usuarios-tabla { min-width: 760px; width: 100%; }
+.usuarios-tabla .usuarios-acciones { min-width: 240px; }
+.usuarios-tabla .usuarios-acciones button { padding: 8px 10px; font-size: 12px; }
+.usuarios-tabla th[scope="row"] { white-space: normal; min-width: 180px; font-size: 14px; color: var(--texto); }
+.usuarios-tabla .usuarios-correo { display: block; margin-top: 4px; overflow-wrap: anywhere; color: var(--texto-suave); font-size: 12px; font-weight: 400; }
+.usuarios-clave-temporal { display: block; margin-block: 16px; padding: 18px; border: 1px solid #a6cfca; border-radius: 7px; background: #eff8f5; color: var(--crp-oscuro); font-family: monospace; font-size: 1.35rem; overflow-wrap: anywhere; user-select: all; }
+.usuarios-estado-activo { background: #d1fae5; color: #065f46; }
+.usuarios-estado-inactivo { background: #f1f5f9; color: #475569; }
+@media (max-width: 480px) { .usuarios-dialogo { padding: 20px; } .usuarios-dialogo-cabecera h2 { font-size: 1.05rem; } .usuarios-dialogo .usuarios-acciones > button { flex-grow: 1; } }

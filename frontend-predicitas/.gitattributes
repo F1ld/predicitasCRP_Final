@@ -1,0 +1,12 @@
+# Normaliza finales de línea en el repositorio
+* text=auto
+
+# La imagen de desarrollo se construye en Linux
+Dockerfile text eol=lf
+*.sh text eol=lf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.ico binary
+*.svg text

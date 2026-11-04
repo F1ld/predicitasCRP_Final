@@ -1,0 +1,141 @@
+from datetime import datetime
+from decimal import Decimal
+from typing import Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
+
+from app.modules.citas.reglas import LIMA
+
+
+class PlantillaOut(BaseModel):
+    id: str
+    canal_contacto: Literal["WHATSAPP", "SMS", "LLAMADA_TELEFONICA"]
+    descripcion: str
+    contenido: str
+
+
+class IntervencionCreateIn(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    id_cita: int | None = None
+    canal_contacto: Literal["WHATSAPP", "SMS", "LLAMADA_TELEFONICA"]
+    plantilla_mensaje: str = Field(
+        default="RECORDATORIO_CONFIRMACION_V1",
+        min_length=1,
+        max_length=100,
+    )
+    consentimiento_confirmado: Any = None
+    consentimiento_optout: bool = False
+    estado_intervencion: Literal["PENDIENTE", "ENVIADA", "ENTREGADA", "FALLIDA"] = "PENDIENTE"
+
+
+class IntervencionEstadoIn(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    estado_intervencion: Literal["ENVIADA", "ENTREGADA", "FALLIDA"]
+
+
+class IntervencionRespuestaIn(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    respuesta_paciente: Literal["CONFIRMA", "SOLICITA_LIBERACION", "SOLICITA_REPROG", "SIN_RESPUESTA"]
+    optout: bool = False
+    consentimiento_optout: bool | None = None
+    observacion: str | None = Field(default=None, max_length=255)
+
+
+class LiberarCupoIn(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    motivo: str | None = Field(default=None, max_length=255)
+
+
+class IntervencionOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id_intervencion: int
+    id_cita: int
+    id_cita_externa: str = ""
+    id_operador: int | None
+    canal_contacto: str
+    plantilla_mensaje: str
+    consentimiento_optout: bool
+    estado_intervencion: str
+    respuesta_paciente: str | None
+    fecha_hora_envio: datetime
+    fecha_hora_respuesta: datetime | None
+    estado_cita_actual: str | None = None
+    id_cupo_liberado_generado: int | None = None
+    acciones_disponibles: list[str] = Field(default_factory=list)
+
+    @field_serializer("fecha_hora_envio", "fecha_hora_respuesta", when_used="json")
+    def serializar_fecha(self, dt: datetime | None) -> str | None:
+        if dt is None:
+            return None
+        if dt.tzinfo is not None:
+            return dt.astimezone(LIMA).isoformat()
+        return dt.replace(tzinfo=LIMA).isoformat()
+
+
+class CitaSugeridaIntervencionOut(BaseModel):
+    id_cita: int
+    id_cita_externa: str
+    paciente_anon_id: str
+    especialidad: str
+    medico: str
+    fecha_hora_cita: datetime
+    franja_horaria: str
+    estado_actual: str
+    probabilidad_no_show: Decimal
+    nivel_riesgo: str
+    explicabilidad_resumen: str | None
+    accion_sugerida: str
+    canal_sugerido: str
+    intervenciones_enviadas: int
+    tiene_optout: bool
+
+
+class RiesgoResumen(BaseModel):
+    id_prediccion: int
+    probabilidad_no_show: float
+    nivel_riesgo: str
+    version_modelo: str
+    fecha_hora_inferencia: datetime
+    resultado_simulado: bool = False
+
+
+class ElegibleOut(BaseModel):
+    id_cita: int
+    id_cita_externa: str
+    paciente_anon_id: str
+    especialidad: str
+    medico: str
+    fecha_hora_cita: datetime
+    estado_actual: str
+    riesgo: RiesgoResumen
+    intervenciones_previas: int = 0
+
+
+class PaginaElegiblesOut(BaseModel):
+    total: int
+    limite: int
+    desplazamiento: int
+    items: list[ElegibleOut]
+
+
+class PaginaIntervencionesOut(BaseModel):
+    total: int
+    limite: int
+    desplazamiento: int
+    items: list[IntervencionOut]
+    total_sugeridas: int = 0
+    total_intervenciones: int = 0
+    citas_sugeridas: list[CitaSugeridaIntervencionOut] = Field(default_factory=list)
+    historial_intervenciones: list[IntervencionOut] = Field(default_factory=list)
+
+
+class BandejaIntervencionesOut(BaseModel):
+    total_sugeridas: int
+    total_intervenciones: int
+    citas_sugeridas: list[CitaSugeridaIntervencionOut]
+    historial_intervenciones: list[IntervencionOut]

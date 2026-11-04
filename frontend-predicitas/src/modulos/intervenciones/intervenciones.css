@@ -1,0 +1,34 @@
+/* RF-057 a RF-068, RNF-016: extensión local del sistema de diseño, sin estilos globales nuevos. */
+.m05-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.m05-formulario { display: grid; gap: 18px; min-width: 0; }
+.m05-grid { display: grid; gap: 16px; }
+.m05-ayuda { font-size: 13px; line-height: 1.65; color: var(--texto-suave); }
+.m05-campo-error { color: #9f1239; font-size: 13px; margin-top: 6px; }
+.m05-filtros { margin-block: 24px; }
+.m05-filtros h2 { margin-bottom: 18px; }
+.m05-filtros .m05-acciones { margin-top: 18px; }
+.m05-contenido { display: grid; gap: 24px; }
+.m05-pestanas { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--borde); padding-bottom: 12px; }
+.m05-pestanas [aria-selected="true"] { background: var(--crp-accion); color: #fff; border-color: var(--crp-accion); }
+.m05-tabla { width: 100%; min-width: 790px; font-size: 13px; }
+.m05-tabla th, .m05-tabla td { padding: 16px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--borde); }
+.m05-tabla thead { background: #eff4f2; }
+.m05-tabla tbody tr:last-child > * { border-bottom: 0; }
+.m05-tabla td > small, .m05-tabla th > small { display: block; margin-top: 5px; font-size: 12px; font-weight: 400; }
+.m05-tabla .m05-acciones { min-width: 180px; }
+.m05-datos { display: grid; gap: 18px; }
+.m05-datos dt { font-size: 12px; color: var(--texto-suave); }
+.m05-datos dd { margin-top: 5px; overflow-wrap: anywhere; }
+.m05-modal-fondo { position: fixed; inset: 0; z-index: 80; background: #173c43a8; display: grid; place-items: center; padding: 16px; }
+.m05-dialogo { width: 100%; max-width: 580px; max-height: calc(100dvh - 32px); overflow: auto; border-radius: 14px; border: 1px solid var(--borde); padding: 22px; background: white; color: var(--texto); box-shadow: 0 24px 80px #11383c30; }
+.m05-dialogo-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.m05-dialogo-cabecera h2 { font-size: 1.2rem; }
+.m05-consentimiento { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.6; cursor: pointer; }
+.m05-consentimiento input[type="checkbox"] { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 3px; accent-color: var(--crp-accion); }
+.m05-plantilla { white-space: pre-wrap; overflow-wrap: anywhere; border-left: 3px solid var(--crp-accion); padding: 12px 14px; background: var(--superficie); font-size: 13px; line-height: 1.7; }
+.m05-formulario input:not([type="checkbox"]), .m05-formulario select, .m05-formulario textarea, .m05-filtros input, .m05-filtros select { border-color: #738d8d; }
+.m05-formulario [aria-invalid="true"] { border-color: #9f1239; }
+@media (min-width: 640px) { .m05-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .m05-datos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .m05-filtros .m05-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .navegacion-fila:has(a[href="/intervenciones"]) nav { flex-wrap: wrap; column-gap: 14px; row-gap: 0; } .navegacion-fila:has(a[href="/intervenciones"]) .nav-enlace { font-size: 13px; } }
+@media (max-width: 480px) { .m05-dialogo { padding: 18px; } .m05-dialogo .m05-acciones > button { flex-grow: 1; } }

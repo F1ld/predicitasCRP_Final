@@ -1,0 +1,140 @@
+{
+  "marca": "50ae5732",
+  "prefijo": "CIT-UX-50ae5732-",
+  "usuarios": {
+    "ADMINISTRADOR": "ux.administrador.50ae5732@predicitas.crp",
+    "RECEPCION": "ux.recepcion.50ae5732@predicitas.crp",
+    "TECNICO_IA": "ux.tecnico_ia.50ae5732@predicitas.crp"
+  },
+  "csv": "C:\\Users\\arami\\OneDrive\\Documentos\\Programacion\\Desarrollo Web\\PrediCitas\\Frontend\\tests\\fixtures\\citas-diseno-50ae5732.csv",
+  "pruebas_api": [
+    {
+      "prueba": "Salud API",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "CORS http://localhost:5173",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "CORS http://127.0.0.1:5173",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Citas sin token: 401",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Token inválido: 401",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Login incorrecto: 401",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Login ADMINISTRADOR",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Me ADMINISTRADOR",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Login RECEPCION",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Me RECEPCION",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Login TECNICO_IA",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Me TECNICO_IA",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Bandeja y total reales",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Paginación sin repetir filas",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Filtros de especialidad, estado y fechas",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Búsqueda vacía",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Técnico puede leer citas",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Cita inexistente: 404",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Técnico no modifica: 403",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "LIBERADA manual: 422",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Confirmación e historial",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "ATENDIDA: target 0",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Estado final: 409",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "NO_SHOW: target 1",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Técnico no importa: 403",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "CSV: 20 aceptadas y 4 rechazadas",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "CSV repetido: 0 aceptadas y 24 rechazadas",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Sin filas: 422",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "No UTF-8: 422",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Mayor a 2 MB: 422",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Más de 5000 filas: 422",
+      "resultado": "OK"
+    },
+    {
+      "prueba": "Logout: 204",
+      "resultado": "OK"
+    }
+  ]
+}

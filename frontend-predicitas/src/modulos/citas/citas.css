@@ -1,0 +1,285 @@
+/* RF-015, RF-018, RF-024, RF-041 a RF-056, RNF-016:
+ * Estilos del Módulo de Citas y Predicción Clínica - Clínica Ricardo Palma (Sede San Isidro)
+ */
+
+.citas-acciones, .citas-enlaces { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.citas-ayuda { color: var(--texto-suave, #64748b); font-size: .8125rem; line-height: 1.6; margin-top: 6px; }
+.citas-panel { min-width: 0; overflow-wrap: anywhere; }
+.citas-panel dl, .citas-panel ul { min-width: 0; }
+.citas-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: inherit; font-size: .8125rem; }
+.citas-panel + .citas-panel { margin-top: 24px; }
+.citas-casilla { display: flex; gap: 10px; align-items: flex-start; }
+.citas-casilla input[type="checkbox"] { width: 20px; height: 20px; min-height: 20px; margin-top: 2px; flex-shrink: 0; }
+.citas-casilla label { margin: 0; }
+.dialogo-cambio { max-height: calc(100dvh - 32px); overflow-y: auto; width: min(460px, calc(100% - 32px)); border-radius: 12px; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); padding: 24px; }
+.citas-panel :is(dd, p, li), .datos-cita dd { overflow-wrap: anywhere; }
+.citas-tabla { overflow-x: auto; }
+.citas-tabla table { min-width: 660px; }
+.citas-lista-detalle { list-style: none; padding: 0; display: grid; gap: 16px; }
+.citas-lista-detalle > li { min-width: 0; padding: 18px; border: 1px solid var(--borde, #e2e8f0); border-radius: 8px; overflow-wrap: anywhere; }
+.citas-prediccion { display: grid; gap: 14px; }
+.citas-seccion-vacia { color: var(--texto-suave, #64748b); font-size: .875rem; line-height: 1.6; margin-top: 16px; }
+.citas-check-control { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.citas-check-control input[type="checkbox"] { width: 18px; height: 18px; min-height: 18px; flex-shrink: 0; margin-top: 2px; }
+.citas-check-control label { margin: 0; }
+.citas-vinculos { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+.citas-instantanea { margin-top: 12px; font-size: .8125rem; }
+.citas-instantanea summary { cursor: pointer; min-height: 38px; display: flex; align-items: center; color: #087c7c; text-decoration: underline; }
+.citas-instantanea pre { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 8px; padding: 12px; background: #f8fafc; border-radius: 7px; border: 1px solid #e2e8f0; }
+
+/* KPI CARD DESTACADA DE IA LIGHTGBM */
+.tarjeta-ia-destacada {
+  border: 1px solid #0f766e;
+  border-top: 4px solid #0f766e;
+  background: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.08);
+}
+
+.kpi-hero {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.kpi-secundario {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.boton-ia-calcular {
+  background-color: #0f766e;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.boton-ia-calcular:hover:not(:disabled) {
+  background-color: #115e59;
+}
+.boton-ia-calcular:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* BOTONES CROMÁTICOS CLÍNICOS PARA ACCIONES DE CITA */
+.boton-transicion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.boton-accion-confirmada {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1.5px solid #10b981;
+}
+.boton-accion-confirmada:hover:not(:disabled) {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.boton-accion-reprogramada {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1.5px solid #3b82f6;
+}
+.boton-accion-reprogramada:hover:not(:disabled) {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.boton-accion-cancelada {
+  background-color: #fffbeb;
+  color: #92400e;
+  border: 1.5px solid #f59e0b;
+}
+.boton-accion-cancelada:hover:not(:disabled) {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.boton-accion-noshow {
+  background-color: #fff1f2;
+  color: #9f1239;
+  border: 1.5px solid #f43f5e;
+}
+.boton-accion-noshow:hover:not(:disabled) {
+  background-color: #f43f5e;
+  color: #ffffff;
+}
+
+/* ENLACES DE ACCIÓN Y TRAZABILIDAD */
+.boton-accion-trazabilidad {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0f766e;
+  background-color: #f0fdfa;
+  border: 1px solid #99f6e4;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.boton-accion-trazabilidad:hover {
+  background-color: #ccfbf1;
+  color: #115e59;
+}
+
+.boton-enlace-trazabilidad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0f766e;
+  background-color: #f0fdfa;
+  border: 1px dashed #0f766e;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.boton-enlace-trazabilidad:hover {
+  background-color: #ccfbf1;
+}
+
+.boton-enlace-intervencion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1e40af;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.boton-enlace-intervencion:hover {
+  background-color: #dbeafe;
+}
+
+/* ESTILOS TIMELINE DE TRAZABILIDAD */
+.trazabilidad-timeline {
+  position: relative;
+  margin-left: 16px;
+  padding-left: 24px;
+  border-left: 2px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-nodo {
+  position: relative;
+}
+
+.timeline-marcador {
+  position: absolute;
+  left: -32px;
+  top: 14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nodo-activo .timeline-marcador {
+  border-color: #0d9488;
+  background: #0d9488;
+  box-shadow: 0 0 0 4px #ccfbf1;
+}
+
+.marcador-circulo {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.timeline-contenido {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.nodo-activo .timeline-contenido {
+  border-color: #99f6e4;
+  box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.1);
+}
+
+@media (max-width: 760px) {
+  .citas-acciones > :is(a, button) { width: 100%; justify-content: center; }
+  .citas-panel .datos-cita { grid-template-columns: minmax(0, 1fr); }
+  .trazabilidad-timeline { margin-left: 8px; padding-left: 16px; }
+  .timeline-marcador { left: -24px; }
+}
+
+/* Zona de Drag & Drop para Importar Citas */
+.selector-archivo-dropzone {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  gap: 12px;
+}
+
+.selector-archivo-dropzone:hover {
+  border-color: #0d9488;
+  background-color: #f0fdfa;
+}
+
+.selector-archivo-dropzone.arrastrando {
+  border-color: #0f766e !important;
+  border-style: solid !important;
+  background-color: #ccfbf1 !important;
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.2) !important;
+  transform: scale(1.01);
+}
+
+.archivo-seleccionado-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 460px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #5eead4;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
