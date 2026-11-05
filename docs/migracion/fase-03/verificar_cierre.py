@@ -1,155 +1,167 @@
-"""Revisión final de integridad, resultados y alcance, sin escribir en BD."""
-import hashlib
+"""Cierre estricto de una ejecución y verificación portable sin Docker ni secretos."""
+import argparse
 import json
 from pathlib import Path
-import re
-import subprocess
 import xml.etree.ElementTree as ET
 
-ROOT = Path(__file__).resolve().parents[3]
-HERE = Path(__file__).resolve().parent
-RESULTS = ROOT / "runtime/test-results/fase-03"
-
-
-def load(path):
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+from evidencia import (ROOT, HERE, cargar_run, destinos, escribir, leer, sha,
+                       salida, verificar_laboratorio)
 
 
 def junit(path):
     records = {}
     for case in ET.parse(path).getroot().iter("testcase"):
         key = (case.get("classname", ""), case.get("name", ""))
-        state = next((tag for tag in ("failure", "error", "skipped") if case.find(tag) is not None), "passed")
-        records[key] = state
+        if key in records:
+            raise ValueError(f"Caso JUnit duplicado: {key}")
+        records[key] = next((tag for tag in ("failure", "error", "skipped") if case.find(tag) is not None), "passed")
     return records
 
 
-def frontend(path):
-    text = re.sub(r"\x1b\[[0-9;]*m", "", path.read_text(encoding="utf-8"))
-    return {"failures": sorted(re.findall(r"^ FAIL\s+(.+)$", text, re.MULTILINE)), "counts": re.findall(r"Tests\s+(\d+ failed \| \d+ passed \(\d+\))", text)}
+def exigir(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def junit_publico(source, target):
+    """Solo identidad y estado; nunca tracebacks, stdout, propiedades o variables."""
+    records = junit(source)
+    suite = ET.Element("testsuite", tests=str(len(records)),
+                       failures=str(sum(v == "failure" for v in records.values())),
+                       errors=str(sum(v == "error" for v in records.values())),
+                       skipped=str(sum(v == "skipped" for v in records.values())))
+    for (classname, name), state in sorted(records.items()):
+        case = ET.SubElement(suite, "testcase", classname=classname, name=name)
+        if state != "passed":
+            ET.SubElement(case, state)
+    with target.open("xb") as stream:
+        ET.ElementTree(suite).write(stream, encoding="utf-8", xml_declaration=True)
+
+
+def comparar(public):
+    baseline = junit(public / "baseline_diagnostico.xml")
+    current = junit(public / "backend_diagnostico.xml")
+    nuevos = {"test_archivos_fase3", "test_evidencia_fase3"}
+    added = {k: v for k, v in current.items() if k[0].split(".")[-1] in nuevos}
+    existing = {k: v for k, v in current.items() if k not in added}
+    exigir(existing == baseline, "Cambió algún caso/estado backend previo")
+    exigir(bool(added) and all(v == "passed" for v in added.values()), "Pruebas nuevas no aprobadas")
+    unit = junit(public / "unitarias.xml")
+    exigir(unit == added, "Unitarias y diagnóstico no contienen los mismos casos nuevos aprobados")
+    exigir(junit(public / "backend_completo.xml") == junit(public / "baseline_completo.xml"),
+           "Cambió la colección de suite completa; no ocultar errores con filtros")
+    coverage = leer(public / "cobertura.json")
+    exigir(coverage["percent_covered"] >= 75, "Cobertura menor a 75 %")
+    importer = leer(public / "importacion_canonica.json")
+    exigir(set(importer["database_initial_counts"]) == {"citas", "historial_estados_cita", "auditoria_eventos", "usuarios"}
+           and not any(importer["database_initial_counts"].values()), "Laboratorio no vacío al iniciar integración")
+    exigir(all(importer[k] for k in ("model_hash_unchanged", "prediction_parity", "openapi_unchanged", "database_isolated")),
+           "Integración sin paridad o sin aislamiento")
+    expected = [("citas_para_importar_variado.csv", 40, 0), ("citas_demo.csv", 20, 4)]
+    exigir([(s["archivo"], s["aceptables_sin_duplicados_bd"], s["rechazadas"]) for s in importer["samples"]] == expected,
+           "Resultados de muestras incorrectos")
+    uploads = importer["uploads"]
+    exigir(len(uploads) == 4 and all(u["rollback_verified"] for u in uploads), "Rollback/BOM incompleto")
+    for filename, accepted, rejected in expected:
+        cases = [u for u in uploads if u["archivo"] == filename]
+        exigir({u["bom"] for u in cases} == {True, False}, "Falta caso BOM")
+        for u in cases:
+            exigir((u["primera_carga"]["aceptadas"], u["primera_carga"]["rechazadas"]) == (accepted, rejected)
+                   and u["segunda_carga"]["aceptadas"] == 0
+                   and u["segunda_carga"]["rechazadas"] == accepted + rejected, "Duplicados/cargas incorrectos")
+    image = leer(public / "imagen_y_mounts.json")
+    exigir(image["first_export_exit_code"] == 0 and image["second_export_exit_code"] == 2
+           and image["existing_export_unchanged"] and image["packaging"]["uid"] == 1000
+           and all(image["packaging"][k] for k in ("legacy_samples_excluded", "root_artifacts_excluded", "private_env_excluded", "active_model_packaged")),
+           "Verificación de empaquetado incompleta")
+    return {"old_backend_passed": sum(v == "passed" for v in existing.values()),
+            "old_backend_failed": sum(v == "failure" for v in existing.values()),
+            "new_unit_tests_passed": len(unit), "backend_diagnostic_passed": sum(v == "passed" for v in current.values()),
+            "backend_coverage_percent": coverage["percent_covered"],
+            "backend_full_suite": "Error de colección previo conservado; no es suite verde",
+            "frontend_status": "Baseline citado: 451 aprobadas / 56 fallidas; no reejecutado"}
+
+
+def verificar_portable(run_id):
+    _, public = destinos(run_id)
+    summary = leer(public / "verificacion.json")
+    exigir(summary["run_id"] == run_id, "run-id de cierre incorrecto")
+    for entry in summary["public_evidence"]:
+        path = public / entry["path"]
+        exigir(path.resolve().is_relative_to(public.resolve()), "Ruta de evidencia fuera del paquete")
+        exigir(sha(path) == entry["sha256"], f"Evidencia alterada: {entry['path']}")
+    meta = leer(public / "ejecucion.json")
+    exigir(meta["commit_tested"] == summary["commit_tested"] and meta["image_id"] == summary["image_id"], "Identidad inconsistente")
+    for entry in meta["source_files"]:
+        path = ROOT / entry["path"]
+        exigir(path.resolve().is_relative_to(ROOT), "Fuente fuera del repositorio")
+        blob = salida(["git", "hash-object", "--path=" + entry["path"], str(path)])
+        exigir(blob == entry["git_blob"], f"Fuente distinta de la probada: {entry['path']}")
+    exigir(comparar(public) == summary["results"], "El resumen no coincide con la evidencia")
+    print(json.dumps({"run_id": run_id, "portable_verification": "PASÓ", "results": summary["results"]}, ensure_ascii=False))
+
+
+def cerrar(run_id):
+    raw, public, meta = cargar_run(run_id)
+    exigir(not public.exists(), "Ya existe paquete público; usar otro run-id")
+    acciones = {}
+    expected_codes = {"build": 0, "unitarias": 0, "reanudar": 0, "alembic": 0,
+                      "integracion": 0, "backend_completo": 2, "backend_diagnostico": 1, "detener": 0}
+    for name, code in expected_codes.items():
+        record = leer(raw / f"{name}.json")
+        exigir(record["run_id"] == run_id and record["commit_tested"] == meta["commit_tested"], "Acciones de distinta ejecución")
+        exigir(record["image_id"] == (None if name == "build" else meta["image_id"]), "Imagen inconsistente")
+        exigir(record["exit_code"] == code, f"Exit code inesperado: {name}")
+        acciones[name] = record
+    lab, state = verificar_laboratorio()
+    exigir(state == "exited", "Detener laboratorio antes del cierre")
+    image = leer(raw / "imagen_y_mounts.json")
+    exigir(image["run_id"] == run_id and image["commit_tested"] == meta["commit_tested"]
+           and image["image_id"] == meta["image_id"], "Empaquetado de otra ejecución")
+    # Preservación de originales, incluyendo secretos: solo hashes, nunca contenido.
+    allowed = {".gitattributes", "README.md", "PLAN_REESTRUCTURACION_POR_FASES.md", "GUIA_DE_PRUEBAS_PARA_EL_EQUIPO.md", "INSTRUCCIONES_RAPIDAS_ZIP.md", "apps/backend/.dockerignore", "apps/frontend/.dockerignore", "apps/backend/scripts/exportar_csv.py", "apps/frontend/tests/validar_diseno.py", "docs/migracion/fase-02/README.md"}
+    prep = leer(HERE / "preparacion.json")
+    changed = [e["path"] for e in prep["files"] if not (ROOT / e["path"]).is_file() or sha(ROOT / e["path"]) != e["sha256"]]
+    exigir(set(changed) <= allowed, "Cambios inesperados respecto al inventario inicial")
+    inventory = leer(ROOT / "data/manifests/inventario-fase-03.v1.json")
+    for record in inventory["files"]:
+        exigir(sha(ROOT / record["source"]) == sha(ROOT / record["destination"]) == record["sha256"], "Muestra/modelo alterado")
+    public.mkdir(parents=True, exist_ok=False)
+    escribir(public / "ejecucion.json", meta)
+    escribir(public / "acciones.json", acciones)
+    escribir(public / "imagen_y_mounts.json", image)
+    # Resumen funcional por allowlist: no publicar tokens, URLs ni rechazos detallados.
+    importer = leer(raw / "importacion_canonica.json")
+    safe = {k: importer[k] for k in ("reference_clock", "database_initial_counts", "model_hash_unchanged", "prediction_parity", "openapi_unchanged", "database_isolated")}
+    safe["samples"] = [{k: s[k] for k in ("archivo", "recibidas", "aceptables_sin_duplicados_bd", "rechazadas")} for s in importer["samples"]]
+    safe["uploads"] = [{"archivo": u["archivo"], "bom": u["bom"], "rollback_verified": u["rollback_verified"],
+                        "primera_carga": {k: u["primera_carga"][k] for k in ("recibidas", "aceptadas", "rechazadas")},
+                        "segunda_carga": u["segunda_carga"]} for u in importer["uploads"]]
+    escribir(public / "importacion_canonica.json", safe)
+    escribir(public / "cobertura.json", leer(raw / "backend_coverage.json")["totals"])
+    for name in ("unitarias", "backend_diagnostico", "backend_completo"):
+        junit_publico(raw / f"{name}.xml", public / f"{name}.xml")
+    for name in ("diagnostico", "completo"):
+        junit_publico(HERE.parent / f"fase-02/backend_despues_{name}.xml", public / f"baseline_{name}.xml")
+    results = comparar(public)
+    summary = {"run_id": run_id, "commit_tested": meta["commit_tested"], "image_id": meta["image_id"],
+               "results": results, "original_files_examined": len(prep["files"]),
+               "expected_modified_files": changed, "laboratory": {"db": lab["db"], "volume": lab["volume"], "state": state},
+               "public_evidence": [{"path": p.name, "sha256": sha(p)} for p in sorted(public.iterdir())],
+               "raw_evidence": [{"path": p.relative_to(ROOT).as_posix(), "sha256": sha(p)} for p in sorted(raw.iterdir()) if p.is_file()]}
+    escribir(public / "verificacion.json", summary)
+    verificar_portable(run_id)
 
 
 def main():
-    import argparse
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--sufijo", default="final", help="Sufijo de archivos de prueba (default: final)")
-    parser.add_argument("--sobrescribir", action="store_true", help="Sobrescribir archivo de verificación")
+    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--verify-only", action="store_true", help="Solo evidencia pública y fuentes; no requiere Docker, modelo ni .env")
     args = parser.parse_args()
-    sufijo_str = f"_{args.sufijo}" if args.sufijo else ""
-
-    target = HERE / f"verificacion{sufijo_str}.json"
-    if target.exists() and not args.sobrescribir:
-        raise SystemExit(f"No sobrescribir {target.name}. Usa --sobrescribir si es una revalidación autorizada.")
-    prep = load(HERE / "preparacion.json")
-    allowed = {"README.md", "PLAN_REESTRUCTURACION_POR_FASES.md", "GUIA_DE_PRUEBAS_PARA_EL_EQUIPO.md", "INSTRUCCIONES_RAPIDAS_ZIP.md", "apps/backend/.dockerignore", "apps/frontend/.dockerignore", "apps/backend/scripts/exportar_csv.py", "apps/frontend/tests/validar_diseno.py", "docs/migracion/fase-02/README.md"}
-    changed, unexpected = [], []
-    for entry in prep["files"]:
-        path = ROOT / entry["path"]
-        if not path.is_file() or sha(path) != entry["sha256"]:
-            changed.append(entry["path"])
-            if entry["path"] not in allowed:
-                unexpected.append(entry["path"])
-    assert not unexpected, unexpected
-    inventory = load(ROOT / "data/manifests/inventario-fase-03.v1.json")
-    for record in inventory["files"]:
-        assert sha(ROOT / record["source"]) == sha(ROOT / record["destination"]) == record["sha256"]
-    for record in inventory["frontend_exclusive_fixtures"]:
-        assert sha(ROOT / record["path"]) == record["sha256"]
-    baseline = junit(HERE.parent / "fase-02/backend_despues_diagnostico.xml")
-    diag_file = RESULTS / f"backend_diagnostico{sufijo_str}.xml"
-    if not diag_file.exists():
-        diag_file = RESULTS / "backend_diagnostico_final.xml"
-    current = junit(diag_file)
-    existing = {key: state for key, state in current.items() if "test_archivos_fase3" not in key[0]}
-    added = {key: state for key, state in current.items() if "test_archivos_fase3" in key[0]}
-    assert existing == baseline, "Cambió algún resultado de una prueba backend previa"
-    assert added and all(state == "passed" for state in added.values())
-    
-    comp_file = RESULTS / f"backend_completo{sufijo_str}.xml"
-    if not comp_file.exists():
-        comp_file = RESULTS / "backend_completo_final.xml"
-    assert junit(comp_file) == junit(HERE.parent / "fase-02/backend_despues_completo.xml")
-
-    frontend_current = frontend(RESULTS / "frontend_test.log") if (RESULTS / "frontend_test.log").exists() else frontend(HERE.parent / "fase-02/frontend_despues_test.log")
-    assert frontend_current == frontend(HERE.parent / "fase-02/frontend_despues_test.log")
-    
-    unit_file = RESULTS / f"unitarias_archivos{sufijo_str}.xml"
-    if not unit_file.exists():
-        unit_file = RESULTS / "unitarias_archivos_final.xml"
-    unit = junit(unit_file)
-    assert unit and all(state == "passed" for state in unit.values())
-    lab = load(HERE / "laboratorio.json")
-    mounts = json.loads(subprocess.check_output(["docker", "inspect", "--format", "{{json .Mounts}}", lab["db"]], text=True))
-    volume_mounts = [m for m in mounts if m["Type"] == "volume"]
-    assert len(volume_mounts) == 1 and volume_mounts[0]["Name"] == lab["volume"]
-    original_volumes = []
-    for name in ("predicitas-crp_pgdata", "predicitas-backend_pgdata", "predicitas-guia-qa_qa_pgdata"):
-        running = subprocess.check_output(["docker", "ps", "-q", "--filter", f"volume={name}"], text=True).strip()
-        assert not running
-        original_volumes.append({"name": name, "no_running_writers": True, "mounted_by_phase3_test_server": False})
-    for name in ("data/raw", "data/processed"):
-        assert (ROOT / name).is_dir() and not list((ROOT / name).iterdir())
-    for name in ("apps/backend/Skills", "apps/frontend/Skills"):
-        assert (ROOT / name).is_dir() and not list((ROOT / name).iterdir())
-    assert not (ROOT / "runtime/imports").exists(), "No activar retención de uploads"
-    public = ROOT / "apps/frontend/public"
-    assert not list(public.rglob("*.csv")) and not list(public.rglob("*.joblib"))
-    for name in ("artifacts/models/legacy-import/modelo_predicitas_v1.joblib", "runtime/test-results/fase-03/importacion_canonica.json"):
-        assert subprocess.run(["git", "check-ignore", "-q", name], cwd=ROOT).returncode == 0
-    assert subprocess.run(["git", "check-ignore", "-q", "data/samples/importacion/citas_demo.csv"], cwd=ROOT).returncode == 1
-    cov_file = RESULTS / f"backend_coverage{sufijo_str}.json"
-    if not cov_file.exists():
-        cov_file = RESULTS / "backend_coverage_final.json"
-    coverage = load(cov_file)["totals"]
-    importer = load(RESULTS / "importacion_canonica.json")
-    # Resultado funcional relevante versionable, sin volcar CSV, tokens o credenciales.
-    with (HERE / "importacion_canonica.json").open("w", encoding="utf-8") as stream:
-        json.dump(importer, stream, ensure_ascii=False, indent=2)
-
-    try:
-        commit_hash = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    except Exception:
-        commit_hash = "desconocido"
-    try:
-        image_id = subprocess.check_output(["docker", "image", "inspect", "--format", "{{.Id}}", "predicitas-fase3-backend:validacion"], text=True).strip()
-    except Exception:
-        image_id = "desconocido"
-
-    result = {
-        "commit_tested": commit_hash,
-        "image_tested": "predicitas-fase3-backend:validacion",
-        "image_id": image_id,
-        "original_files_examined": len(prep["files"]),
-        "expected_modified_files": changed,
-        "unexpected_changes": unexpected,
-        "all_original_csv_and_active_model_bytes_unchanged": True,
-        "three_env_files_unchanged": True,
-        "migration_contract_sources_and_lockfiles_unchanged": True,
-        "old_backend_tests_identical": True,
-        "old_backend_passed": sum(v == "passed" for v in existing.values()),
-        "old_backend_failed": sum(v == "failure" for v in existing.values()),
-        "new_backend_tests_passed": len(added),
-        "new_unit_tests_passed": len(unit),
-        "backend_coverage_percent": coverage["percent_covered"],
-        "backend_full_suite_retains_preexisting_collection_error": True,
-        "frontend_tests_identical": True,
-        "frontend_status": "Línea base Fase 2 citada (sin cambios en código apps/frontend)",
-        "frontend_counts": frontend_current["counts"],
-        "original_volumes": original_volumes,
-        "skills_empty": True,
-        "raw_and_processed_empty": True,
-        "legacy_copies_preserved": True,
-        "retention_enabled": False,
-        "critical_actions_without_confirmation": False,
-        "raw_evidence": [{"path": p.relative_to(ROOT).as_posix(), "sha256": sha(p)} for p in sorted(RESULTS.iterdir()) if p.is_file()]
-    }
-    with target.open("w", encoding="utf-8") as stream:
-        json.dump(result, stream, ensure_ascii=False, indent=2)
-    print(json.dumps({key: result[key] for key in ("commit_tested", "image_id", "old_backend_tests_identical", "new_backend_tests_passed", "new_unit_tests_passed", "backend_coverage_percent", "frontend_tests_identical", "unexpected_changes")}))
+    if args.verify_only:
+        verificar_portable(args.run_id)
+    else:
+        cerrar(args.run_id)
 
 
 if __name__ == "__main__":

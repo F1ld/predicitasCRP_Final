@@ -150,11 +150,14 @@ def test_importacion_limpia_validar_diseno_sin_efectos_secundarios():
     codigo = (
         "import os\n"
         "cwd_antes = os.path.realpath(os.getcwd())\n"
+        "import sys\n"
+        "path_antes = list(sys.path)\n"
         "import apps.frontend.tests.validar_diseno as vd\n"
         "cwd_despues = os.path.realpath(os.getcwd())\n"
         "print('CWD_ANTES:' + cwd_antes)\n"
         "print('CWD_DESPUES:' + cwd_despues)\n"
         "assert cwd_antes == cwd_despues, f'{cwd_antes} != {cwd_despues}'\n"
+        "assert sys.path == path_antes, 'Import cambió sys.path'\n"
         "assert hasattr(vd, 'main'), 'validar_diseno debe exponer funcion main'\n"
     )
 
@@ -172,6 +175,49 @@ def test_importacion_limpia_validar_diseno_sin_efectos_secundarios():
 
     dirs_after = set(diseno_dir.iterdir()) if diseno_dir.exists() else set()
     assert dirs_before == dirs_after, f"Se crearon directorios al importar: {dirs_after - dirs_before}"
+
+
+def test_main_qa_valida_antes_de_crear_y_crea_solo_al_ejecutar(tmp_path):
+    """Camino positivo acotado: conexión simulada corta antes de usar BD/servidor."""
+    codigo = r'''
+import os
+from pathlib import Path
+from unittest.mock import Mock, patch
+import apps.frontend.tests.validar_diseno as vd
+from app.core import database
+
+base = Path(os.environ["PREDICITAS_TEST_RESULTS_DIR"])
+engine = Mock()
+engine.url.database = "predicitas_fase3_test"
+class FinSimulado(Exception):
+    pass
+engine.connect.side_effect = FinSimulado
+with patch.object(database, "engine", engine):
+    try:
+        vd.main()
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Debió rechazar la BD no confirmada")
+    assert not list(base.iterdir()), "La guarda creó resultados"
+    engine.connect.assert_not_called()
+    os.environ["PREDICITAS_QA_DATABASE_NAME"] = "predicitas_fase3_test"
+    with patch.object(vd.uuid, "uuid4") as uuid:
+        uuid.return_value.hex = "a1b2c3d4" * 4
+        try:
+            vd.main()
+        except FinSimulado:
+            pass
+        else:
+            raise AssertionError("No se llegó a la conexión simulada")
+    engine.connect.assert_called_once_with()
+    assert (base / "diseno/a1b2c3d4").is_dir()
+'''
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join((str(ROOT), str(BACKEND))),
+           "PREDICITAS_TEST_RESULTS_DIR": str(tmp_path)}
+    env.pop("PREDICITAS_QA_DATABASE_NAME", None)
+    result = subprocess.run([sys.executable, "-c", codigo], cwd=ROOT, env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
 
 
 def test_invariantes_centralizacion_y_manifiesto():

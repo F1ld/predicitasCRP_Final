@@ -94,8 +94,15 @@ def main():
     if "@predicitas-fase3-" not in url or not url.endswith("/predicitas_fase3_test"):
         raise SystemExit("Prohibido ejecutar fuera de BD fase3_test aislada")
     target = RESULTS / "importacion_canonica.json"
+    if target.exists():
+        raise SystemExit("No sobrescribir evidencia: usar otro run-id")
     if not RUTA_ARTEFACTO.is_file():
         raise SystemExit("No permitir entrenamiento automático: artefacto del modelo no encontrado")
+    with engine.connect() as conn:
+        conn.execute(text("SET TRANSACTION READ ONLY"))
+        initial_counts = conteos(conn)
+    if any(initial_counts.values()):
+        raise SystemExit("Laboratorio no vacío: no limpiar ni reutilizar sin revisión")
     model_before = hashlib.sha256(RUTA_ARTEFACTO.read_bytes()).hexdigest()
     cases = json.loads((ROOT / "docs/migracion/fase-00/ia_baseline.json").read_text(encoding="utf-8"))["predictions"]
     predictions = [predecir_cita_dict(case["features"]) for case in cases]
@@ -112,8 +119,8 @@ def main():
     model_after = hashlib.sha256(RUTA_ARTEFACTO.read_bytes()).hexdigest()
     assert model_before == model_after
     assert app.openapi() == baseline["openapi"]
-    result = {"reference_clock": AHORA.isoformat(), "samples": samples, "uploads": uploads, "model_hash_unchanged": model_before == model_after, "prediction_parity": True, "openapi_unchanged": True, "database_isolated": True, "new_retention_enabled": False}
-    with target.open("w", encoding="utf-8") as stream:
+    result = {"reference_clock": AHORA.isoformat(), "database_initial_counts": initial_counts, "samples": samples, "uploads": uploads, "model_hash_unchanged": model_before == model_after, "prediction_parity": True, "openapi_unchanged": True, "database_isolated": True, "new_retention_enabled": False}
+    with target.open("x", encoding="utf-8") as stream:
         json.dump(result, stream, ensure_ascii=False, indent=2, default=str)
     print("Importación API canónica 40/0 y 20/4, BOM, duplicados, rollback, OpenAPI y tres predicciones: PASÓ")
 

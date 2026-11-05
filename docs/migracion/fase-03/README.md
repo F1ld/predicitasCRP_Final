@@ -1,6 +1,6 @@
 # Fase 3 — Centralización de muestras, artefactos y salidas
 
-**Estado: COMPLETADA (con deuda técnica D-01 a D-04) — 05/11/2026.** Implementación aplicada, revalidada con imagen oficial `predicitas-fase3-backend:validacion` (`sha256:a6e71ea3...`) y commit de código `8314479`. Punto de retorno inicial: **`a5a1f5f`**.
+**Estado: BLOQUEADA para cierre durante la revalidación de trazabilidad — 05/11/2026.** La implementación anterior y su evidencia se conservan como históricos. La ejecución nueva debe cumplir [el procedimiento y los criterios congelados de cierre](REVALIDACION.md). Punto de retorno inicial: **`a5a1f5f`**. No iniciar fase 4 hasta registrar la evidencia vigente y verificarla desde un clon limpio.
 
 ## Resultado y límites
 
@@ -31,7 +31,7 @@ Solo se cambia infraestructura de archivos en `apps/frontend/tests/validar_disen
 
 El helper puro `rutas_validacion.py` valida IDs/rutas y añade una guarda antes de abrir conexión: `PREDICITAS_QA_DATABASE_NAME` debe coincidir con un nombre test/qa explícito. El flujo de negocio QA no se rediseñó. **No se ejecutó/certificó el E2E visual legacy completo**; se probaron rutas, exclusividad, traversal, importación limpia y bloqueo de bases no confirmadas. La guarda no sustituye inspeccionar host/URL/volumen.
 
-## Evidencia ejecutada
+## Evidencia histórica anterior a la corrección de trazabilidad
 
 | Verificación | Resultado |
 |---|---|
@@ -42,7 +42,7 @@ El helper puro `rutas_validacion.py` valida IDs/rutas y añade una guarda antes 
 | Build backend desde contexto actual | PASÓ; imagen `predicitas-fase3-backend:validacion` (`sha256:a6e71ea3...`) |
 | Exportación dentro de imagen, sin red/credenciales | PASÓ; salida host explícita, segundo intento rechazado sin cambiar bytes |
 | Exclusiones Docker | Datos legacy, copia registry raíz y `.env` privado ausentes; artefacto activo presente e idéntico |
-| Frontend tests y typecheck/lint/build | Línea base citada: 451 aprobadas / 56 fallidas preexistentes; 0 regresiones (sin cambios en código fuente de frontend) |
+| Frontend tests y typecheck/lint/build | Línea base citada: 451 aprobadas / 56 fallidas preexistentes; no reejecutados en este cierre. Sin cambios en fuentes de aplicación, dependencias ni configuración frontend; sí en herramientas QA. |
 | Backend diagnóstico sin `tests/ia` | 251 aprobadas / 1 fallida: 218 previas + 33 nuevas; mismos casos previos; **87,13 % cobertura app**, sin rebajar 75 % |
 | Suite backend completa | Conserva error previo de colección por `app.modules.ia.cliente` inexistente (S-02); no se presenta como suite verde |
 | Integridad y clon limpio | 444 originales examinados, únicamente cambios previstos; clon limpio en directorio temporal verificado con todas las muestras y manifiestos presentes |
@@ -52,7 +52,7 @@ El helper puro `rutas_validacion.py` valida IDs/rutas y añade una guarda antes 
 - **D-01 (Retiro de CSVs legacy):** Las copias en la raíz y `apps/backend/data/` se mantienen transitoriamente por compatibilidad; su eliminación queda programada para las Fases 6 y 7 al migrar importers y extraer IA. Responsable: Arquitectura de Datos.
 - **D-02 (Mensaje informativo `+4` en CLI):** Conteo cableado en mensaje de salida de `exportar_csv.py`; no afecta lógica de generación/importación ni contrato operacional.
 - **D-03 (Ubicación de `rutas_validacion.py`):** Helper auxiliar mantenido en `apps/frontend/tests/` hasta la armonización de herramientas de prueba en Fase 10.
-- **D-04 (Ausencia de pin en `coverage`):** Versión de paquete `coverage` sin pin fijo en backend (7.17.0 vs 7.17.2), produciendo pequeñas variaciones decimales en cobertura sin comprometer el umbral exigido (≥ 75 %).
+- **D-04 (Ausencia de pin en `coverage`):** Versión transitiva sin pin fijo (se observaron 7.17.0 y 7.17.2). Es un riesgo de reproducibilidad; no se demostró que causara variaciones del porcentaje. Cada ejecución nueva registra versiones efectivas y exige cobertura ≥ 75 %.
 
 No se arreglaron defectos previos ni actualizaron snapshots para ocultarlos. Las primeras comprobaciones se conservaron; tras añadir la guarda extra de QA se repitieron unitarias, regresión y build como `*_final`, sin sobrescribir resultados anteriores.
 
@@ -71,7 +71,7 @@ No se arreglaron defectos previos ni actualizaron snapshots para ocultarlos. Las
 - `validacion_*.json`: comandos/checks y códigos de salida. `*_final` es la revalidación del código definitivo.
 - `importacion_canonica.json`: pruebas API, validación real, duplicados/BOM y rollback; sin tokens/passwords.
 - `imagen_y_mounts_final.json`: empaquetado, exclusiones, exportación no-root y rechazo de sobrescritura.
-- `verificacion_final.json`: hashes, equivalencia de casos de tests previos, 31 pruebas nuevas, cobertura, guards/ignore y volúmenes no usados.
+- `verificacion_final.json`: cierre histórico con hashes, equivalencia de casos de tests previos, 33 pruebas nuevas, cobertura, guards/ignore y volúmenes no usados. No identifica la nueva ejecución.
 - `runtime/test-results/fase-03/`: logs, JUnit y cobertura crudos ignorados en Git. Sus hashes se registran y se incluyen en respaldo privado de cierre, no en frontend público.
 - `respaldo_cierre.json`: ZIP privado adicional de código/archivos resultantes y evidencias crudas, con hash y CRC. Los respaldos siguen en el mismo equipo; se recomienda una copia externa cifrada independiente.
 
@@ -79,4 +79,4 @@ No ejecutar scripts de preparación/centralización como bootstrap sobre una ent
 
 **Retorno:** conservar cualquier trabajo posterior; usar `a5a1f5f`, el ZIP previo y manifiestos para revertir solo herramientas/referencias/ignore de esta entrega. Las fuentes CSV y el artefacto activo siguen en sus rutas previas y respaldadas; no hace falta restaurar BD. No eliminar las únicas muestras ni usar `reset --hard`, `down -v` o limpieza recursiva. Las nuevas copias pueden permanecer preservadas sin conectarlas a inferencia.
 
-**Continuación:** fase 4 — límites internos y transacciones backend, en entrega separada. Esta fase 3 no la implementa ni autoriza cambios de esquema/negocio implícitos.
+**Continuación:** solo tras el cierre de trazabilidad, fase 4 — límites internos y transacciones backend, en entrega separada. Esta fase 3 no la implementa ni autoriza cambios de esquema/negocio implícitos.

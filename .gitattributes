@@ -15,3 +15,6 @@
 
 # Lock files are generated
 package-lock.json -diff
+
+# Evidence hashes must survive Windows/Linux checkouts byte for byte.
+/docs/migracion/fase-03/evidencia/** text eol=lf

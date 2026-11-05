@@ -5,22 +5,27 @@ from pathlib import Path
 import subprocess
 import sys
 
+from evidencia import cargar_run, escribir
+
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 
 
 def main():
-    suffix = "_final" if sys.argv[1:] == ["--final"] else ""
-    assert not sys.argv[1:] or suffix
-    target = HERE / f"imagen_y_mounts{suffix}.json"
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run-id", required=True)
+    args = parser.parse_args()
+    raw, _, meta = cargar_run(args.run_id)
+    target = raw / "imagen_y_mounts.json"
     if target.exists():
         raise SystemExit("No sobrescribir evidencia")
-    output_dir = ROOT / f"runtime/exports/fase-03{suffix}"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = ROOT / "runtime/exports/fase-03" / args.run_id
+    output_dir.mkdir(parents=True, exist_ok=False)
     output = output_dir / "demo-ref-2026-11-05-seed-7.csv"
     if output.exists():
         raise SystemExit("Destino de prueba ya existe")
-    image = "predicitas-fase3-backend:validacion"
+    image = meta["image_id"]
     cmd = ["docker", "run", "--rm", "--network", "none", "--mount", f"type=bind,source={output_dir},target=/exports", image, "python", "-m", "scripts.exportar_csv", "--salida", "/exports/demo-ref-2026-11-05-seed-7.csv", "--fecha-referencia", "2026-11-05", "--semilla", "7"]
     first = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     assert first.returncode == 0, first.stderr
@@ -41,8 +46,8 @@ print(json.dumps({'uid':os.getuid(),'legacy_samples_excluded':True,'root_artifac
     source = ROOT / "apps/backend/app/modules/ia/artifacts/modelo_predicitas_v1.joblib"
     assert packaged["active_model_sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
     data = {"image": image, "first_export_exit_code": first.returncode, "second_export_exit_code": second.returncode, "existing_export_unchanged": True, "output_sha256": before, "export_requires_no_database_credentials": True, "network": "none", "only_writable_host_mount": output_dir.relative_to(ROOT).as_posix(), "packaging": packaged}
-    with target.open("x", encoding="utf-8") as stream:
-        json.dump(data, stream, indent=2)
+    data.update({"run_id": args.run_id, "commit_tested": meta["commit_tested"], "image_id": image})
+    escribir(target, data)
     print("Imagen: CLI no-root escribe solo destino explícito, rechaza sobrescritura, modelo activo intacto y datos/secretos excluidos.")
 
 
