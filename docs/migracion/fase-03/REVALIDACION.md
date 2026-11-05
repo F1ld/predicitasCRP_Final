@@ -13,17 +13,17 @@
 
 ## Ejecución (PowerShell, desde la raíz)
 
-Ejemplo de ID: `cierre-20261105-01`. Elegir otro para una ejecución nueva o fallida; nunca borrar la anterior para liberar nombres.
+Ejemplo de ID: `cierre-20261105-02`. Elegir otro para una ejecución nueva o fallida; nunca borrar la anterior para liberar nombres. El intento `cierre-20261105-01` se conserva en runtime: pasó pruebas, pero su paquete candidato se retiró antes de publicar por conversión CRLF/LF. La escritura JSON ahora fija LF explícitamente y la prueba de exclusividad comprueba sus bytes.
 
 ```powershell
-python -B docs/migracion/fase-03/validar.py build --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/validar.py unitarias --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/probar_imagen.py --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/validar.py reanudar --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/validar.py integracion --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/validar.py regresion --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/validar.py detener --run-id cierre-20261105-01
-python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-01
+python -B docs/migracion/fase-03/validar.py build --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/validar.py unitarias --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/probar_imagen.py --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/validar.py reanudar --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/validar.py integracion --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/validar.py regresion --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/validar.py detener --run-id cierre-20261105-02
+python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-02
 ```
 
 Detener **siempre** el laboratorio después de pruebas, incluso si estas fallan. No usar `down -v`, no recrear ni eliminar recursos. `reanudar` comprueba etiqueta, volumen, red interna, ausencia de puertos y destinos de las dos URLs privadas. Los tests usan rollback; no se promete revertir secuencias PostgreSQL. No aprovisiona laboratorios ni busca uno alternativo.
@@ -37,7 +37,7 @@ Detener **siempre** el laboratorio después de pruebas, incluso si estas fallan.
 - El clon limpio sí debe poder verificar fuentes, muestras, manifiestos y el paquete de resultados públicos, solo con Python estándar y Git. Esa verificación no equivale a reejecutar la aplicación ni a reconstruir el modelo.
 
 ```powershell
-python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-01 --verify-only
+python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-02 --verify-only
 ```
 
 ## Disposición de evidencia

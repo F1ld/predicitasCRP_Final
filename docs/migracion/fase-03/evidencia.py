@@ -20,7 +20,7 @@ def leer(path):
 
 def escribir(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x", encoding="utf-8") as stream:
+    with path.open("x", encoding="utf-8", newline="\n") as stream:
         json.dump(value, stream, ensure_ascii=False, indent=2)
         stream.write("\n")
 

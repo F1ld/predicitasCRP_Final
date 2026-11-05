@@ -33,6 +33,7 @@ def test_evidencia_exclusiva_no_sobrescribe(herramientas, tmp_path):
     path = tmp_path / "resultado.json"
     evidencia.escribir(path, {"original": True})
     before = path.read_bytes()
+    assert b"\r" not in before, "La evidencia pública debe tener LF también en Windows"
     with pytest.raises(FileExistsError):
         evidencia.escribir(path, {"original": False})
     assert path.read_bytes() == before
