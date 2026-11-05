@@ -1,0 +1,89 @@
+{
+  "reference_clock": "2026-11-05T08:00:00-05:00",
+  "database_initial_counts": {
+    "citas": 0,
+    "historial_estados_cita": 0,
+    "auditoria_eventos": 0,
+    "usuarios": 0
+  },
+  "model_hash_unchanged": true,
+  "prediction_parity": true,
+  "openapi_unchanged": true,
+  "database_isolated": true,
+  "samples": [
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "recibidas": 40,
+      "aceptables_sin_duplicados_bd": 40,
+      "rechazadas": 0
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "recibidas": 24,
+      "aceptables_sin_duplicados_bd": 20,
+      "rechazadas": 4
+    }
+  ],
+  "uploads": [
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "bom": false,
+      "rollback_verified": true,
+      "primera_carga": {
+        "recibidas": 40,
+        "aceptadas": 40,
+        "rechazadas": 0
+      },
+      "segunda_carga": {
+        "recibidas": 40,
+        "aceptadas": 0,
+        "rechazadas": 40
+      }
+    },
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "bom": true,
+      "rollback_verified": true,
+      "primera_carga": {
+        "recibidas": 40,
+        "aceptadas": 40,
+        "rechazadas": 0
+      },
+      "segunda_carga": {
+        "recibidas": 40,
+        "aceptadas": 0,
+        "rechazadas": 40
+      }
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "bom": false,
+      "rollback_verified": true,
+      "primera_carga": {
+        "recibidas": 24,
+        "aceptadas": 20,
+        "rechazadas": 4
+      },
+      "segunda_carga": {
+        "recibidas": 24,
+        "aceptadas": 0,
+        "rechazadas": 24
+      }
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "bom": true,
+      "rollback_verified": true,
+      "primera_carga": {
+        "recibidas": 24,
+        "aceptadas": 20,
+        "rechazadas": 4
+      },
+      "segunda_carga": {
+        "recibidas": 24,
+        "aceptadas": 0,
+        "rechazadas": 24
+      }
+    }
+  ]
+}

@@ -545,7 +545,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Inicio (05/11/2026):** autorizado por el usuario con confirmación previa exigida para acciones críticas/alto riesgo. Punto de retorno `a5a1f5f`, árbol limpio. Se preservan CSV/fixtures históricos y artefacto activo; solo copias canónicas/snapshot legacy, CLI de archivos y salidas futuras de QA. No borrar duplicados, promover/cargar copia legacy, reentrenar, cambiar esquema/credenciales ni intervenir el principal. Pruebas de persistencia únicamente en una BD nueva aislada. Evidencia en `docs/migracion/fase-03/`.
 
-**Resultado (05/11/2026): BLOQUEADA para cierre de trazabilidad.** La implementación de fase 3 se conserva con deuda D-01 a D-04; no iniciar fase 4. La nueva ejecución debe cumplir los [criterios congelados de revalidación](docs/migracion/fase-03/REVALIDACION.md), sin sobrescribir históricos, con imagen por ID, JUnit sanitizados públicos y comprobación desde clon limpio. [Evidencia histórica de fase 3](docs/migracion/fase-03/README.md).
+**Resultado (05/11/2026): COMPLETADA, con deuda D-01 a D-04.** Corrección de trazabilidad en `dd4ae83` y ajuste LF en `05716fe`, árbol limpio al validar; ejecución vigente `cierre-20261105-02`. Imagen ejecutada por ID `sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3`. **43/43 pruebas nuevas aprobadas**, diagnóstico backend **261/1** (218 previas + 43 nuevas, mismo fallo previo), cobertura 87,13 %. Suite completa conserva error de colección IA; no se presenta como verde. Integración 40/0 y 20/4 con BOM/duplicados/rollback, OpenAPI/predicciones y empaquetado aprobados. Frontend: baseline citado, no reejecutado. Laboratorio existente reanudado tras comprobar aislamiento y detenido al terminar; originales intactos. Muestras y herramientas comprobadas en clon limpio; evidencia pública sanitizada y verificable sin modelo/env privados. [Criterios y comandos](docs/migracion/fase-03/REVALIDACION.md), [índice vigente](docs/migracion/fase-03/evidencia/actual.json) y [detalle de fase 3](docs/migracion/fase-03/README.md). Fase 4 no implementada.
 
 ##### Deuda técnica aceptada de fase 3
 
@@ -1012,7 +1012,9 @@ Aceptación de fase y fecha:
 - **Siguiente acción:** fase 3 — centralización de archivos y datasets.
 - **Detalle/retorno:** [docs/migracion/fase-02/README.md](docs/migracion/fase-02/README.md), `preparacion.json`, `movimientos.json`, `comparacion.json`, verificaciones de integridad y respaldo privado de cierre. No restaurar BD innecesariamente ni descartar cambios posteriores.
 
-### Ejecución y cierre de fase 3 — 5 de noviembre de 2026
+### Ejecución inicial de fase 3 — registro histórico del 5 de noviembre de 2026
+
+Los números de este apartado corresponden a la ejecución inicial (31 pruebas), no a la revalidación vigente `cierre-20261105-02` (43 pruebas) descrita arriba. Los archivos históricos no se sobrescriben.
 
 - **Estado:** COMPLETADA; fase 4 permanece PENDIENTE. Usuario exigió confirmación para acciones críticas/de alto riesgo; ninguna fue necesaria ni ejecutada.
 - **Punto de retorno:** `a5a1f5f`, árbol limpio. Respaldo privado previo con ACL restringida de 444 archivos y revalidación del ZIP de fase 2; copia adicional privada de cierre con evidencia cruda.

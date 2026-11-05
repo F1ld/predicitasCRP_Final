@@ -1,0 +1,74 @@
+{
+  "build": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": null,
+    "check": "build",
+    "exit_code": 0,
+    "seconds": 5.37,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/build.log"
+  },
+  "unitarias": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "unitarias",
+    "exit_code": 0,
+    "seconds": 17.95,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/unitarias.log"
+  },
+  "reanudar": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "reanudar",
+    "exit_code": 0,
+    "seconds": 0.81,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/reanudar.log"
+  },
+  "alembic": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "alembic",
+    "exit_code": 0,
+    "seconds": 3.51,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/alembic.log"
+  },
+  "integracion": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "integracion",
+    "exit_code": 0,
+    "seconds": 9.76,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/integracion.log"
+  },
+  "backend_completo": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "backend_completo",
+    "exit_code": 2,
+    "seconds": 18.35,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/backend_completo.log"
+  },
+  "backend_diagnostico": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "backend_diagnostico",
+    "exit_code": 1,
+    "seconds": 113.45,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/backend_diagnostico.log"
+  },
+  "detener": {
+    "run_id": "cierre-20261105-02",
+    "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+    "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "check": "detener",
+    "exit_code": 0,
+    "seconds": 0.59,
+    "log": "runtime/test-results/fase-03/cierre-20261105-02/detener.log"
+  }
+}

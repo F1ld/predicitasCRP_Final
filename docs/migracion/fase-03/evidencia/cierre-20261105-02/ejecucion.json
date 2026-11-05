@@ -1,0 +1,1264 @@
+{
+  "run_id": "cierre-20261105-02",
+  "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+  "image": "predicitas-fase3-backend:validacion",
+  "started_utc": "2026-11-05T22:32:38.569052+00:00",
+  "source_files": [
+    {
+      "path": ".gitattributes",
+      "git_blob": "78047ca20d439d7b8908f8cb8d5e3868e06304dc"
+    },
+    {
+      "path": "apps/backend/.dockerignore",
+      "git_blob": "146962af6c0edc6ca66f5166d5f3ee58cb4ceb19"
+    },
+    {
+      "path": "apps/backend/.env.example",
+      "git_blob": "9ca7dd71dbd96448846ea0fa21e15cfb2b0068dc"
+    },
+    {
+      "path": "apps/backend/.gitattributes",
+      "git_blob": "e2a45dfdb87ba2d04cf40047a4108a2f635fa878"
+    },
+    {
+      "path": "apps/backend/.gitignore",
+      "git_blob": "21c0a01c0aec5994f5dfebec652140ec17c1ebd1"
+    },
+    {
+      "path": "apps/backend/Dockerfile",
+      "git_blob": "f25615d4608207e4f0700cb184f1b2d43bd04714"
+    },
+    {
+      "path": "apps/backend/ESTADO_BASE_DATOS_DATASET_Y_REPRODUCIBILIDAD.md",
+      "git_blob": "57c31259d8c132141191d2617738e0eef711d85a"
+    },
+    {
+      "path": "apps/backend/README.md",
+      "git_blob": "6eeefdccd51cf44d3964b485e71ec4d8c40b2fc9"
+    },
+    {
+      "path": "apps/backend/alembic.ini",
+      "git_blob": "08f1d9f87820b013575caa6bbb23b084e3364683"
+    },
+    {
+      "path": "apps/backend/app/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/core/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/core/config.py",
+      "git_blob": "74f82f5e35bf754818f0ef6e99e4dbde989e57e8"
+    },
+    {
+      "path": "apps/backend/app/core/database.py",
+      "git_blob": "cd795b5030bcafc9976a893b65184772c077f186"
+    },
+    {
+      "path": "apps/backend/app/core/dominio.py",
+      "git_blob": "a6d3bc8cc71a3262ef787e13804376db4dc31c6e"
+    },
+    {
+      "path": "apps/backend/app/core/errores.py",
+      "git_blob": "307f69cb5e320362ffba143f59bb641162099db5"
+    },
+    {
+      "path": "apps/backend/app/core/exportacion.py",
+      "git_blob": "8bd55f7e47ab6926afa8e5778277591d5c3a7660"
+    },
+    {
+      "path": "apps/backend/app/core/http.py",
+      "git_blob": "88234db3542ee2190fb705be0024fcd904784262"
+    },
+    {
+      "path": "apps/backend/app/core/manejadores.py",
+      "git_blob": "9edc9aba9f62c4bab3997a423371e9e649395497"
+    },
+    {
+      "path": "apps/backend/app/core/models.py",
+      "git_blob": "5311da95898688ca41395499af9e1deabd33742d"
+    },
+    {
+      "path": "apps/backend/app/core/ranuras.py",
+      "git_blob": "0b8233ba4e2039a9c961707f7a4fedd1714ab337"
+    },
+    {
+      "path": "apps/backend/app/core/security.py",
+      "git_blob": "72f02aa033815cb46f922b6cc16b5e105788a699"
+    },
+    {
+      "path": "apps/backend/app/main.py",
+      "git_blob": "56ec7ce39324b06a51331a87b96858f73edbf5d9"
+    },
+    {
+      "path": "apps/backend/app/modules/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/auditoria/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/auditoria/models.py",
+      "git_blob": "2bbd5e368a5e15112b85d2378f5d8ac203bdf239"
+    },
+    {
+      "path": "apps/backend/app/modules/auditoria/service.py",
+      "git_blob": "ffdb656b302a83c6332dba886830fa27e275df98"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/dependencies.py",
+      "git_blob": "acd7313140ee02e6bfe3332cad87a8d2ed0dcf14"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/models.py",
+      "git_blob": "ab734c51a8cb073e0d8eabb60108f9282f9ffffa"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/reloj.py",
+      "git_blob": "ad834c13c696c190be7200f67288b38b713739c7"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/repository.py",
+      "git_blob": "099141e9f706199ca5ea8cc9e99332da3e625431"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/router.py",
+      "git_blob": "9f7d94dabfbfee7f55ab462b0e505cff2c97eaf2"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/schemas.py",
+      "git_blob": "156cce77c9aa44f5469954ce59affac06fec7b71"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/service.py",
+      "git_blob": "3edc27335a716f5d5fdf06b1b15076c45b55aa8c"
+    },
+    {
+      "path": "apps/backend/app/modules/auth/tokens.py",
+      "git_blob": "58cf107850adfe15ed8bf2d13c82046909862a23"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/importer.py",
+      "git_blob": "7e3c75587a8f895ffeb21a7e1551be5d2ee6079c"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/models.py",
+      "git_blob": "fd13996c3074c8d4fcba4d4ff327c86697719ba2"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/reglas.py",
+      "git_blob": "0f5b9f8e8fb4e11900158028bc86b6bbd80c6a0f"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/repository.py",
+      "git_blob": "f2414615fb46d03ae41aeec5bcb8ddb1bd33c657"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/router.py",
+      "git_blob": "03935d3f7e00fb179420a38438bb06a7f5229f1f"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/schemas.py",
+      "git_blob": "2b521634a47ded2cbebc034e12a94139cfceb5d2"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/service.py",
+      "git_blob": "d45d29b104b3f51788169a7a6f6678639dfe907e"
+    },
+    {
+      "path": "apps/backend/app/modules/citas/synthetic.py",
+      "git_blob": "767675d2906982a40e411e593c1ed4cac164e845"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/models.py",
+      "git_blob": "566c1966fded7cdd1b510f38eb9088163896cd6b"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/predictor.py",
+      "git_blob": "099d9ab89d2dbb78b9b1dd3ca3c57d39a19b4e20"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/repository.py",
+      "git_blob": "9f6206beff800ad68b796e156ff0c3f1de2ba804"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/router.py",
+      "git_blob": "f9e44ebb273e0266ce53c49999241c6669e5d316"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/schemas.py",
+      "git_blob": "fa0e1b6e21a29bfd3efcbae834d57e9cba008c0d"
+    },
+    {
+      "path": "apps/backend/app/modules/ia/service.py",
+      "git_blob": "d3084de658ab28639ffb7ad0a1c5b7ec6cecc2a8"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/models.py",
+      "git_blob": "3c8e01a9d27ef37a7fcad25377c3ed7460e8e2e9"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/reglas.py",
+      "git_blob": "c591468d01f56804c2551c674dba23cbeca80a4e"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/repository.py",
+      "git_blob": "e2a49ee9703c4cdc924ef1c21320a91115a72b43"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/router.py",
+      "git_blob": "70da364f4fd6e177617687ae3043642a1e28fefd"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/schemas.py",
+      "git_blob": "6c08188151391abaf9a2c3465212b5df802fdfc5"
+    },
+    {
+      "path": "apps/backend/app/modules/intervenciones/service.py",
+      "git_blob": "7f899f167d62026f3df07d078c713f4b13244be5"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/models.py",
+      "git_blob": "62e4dcd00a7f15debf62478d929afe23ab4bd8ae"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/repository.py",
+      "git_blob": "e53b199dbed4d1fb014f3e2eacb05c97407c55ad"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/router.py",
+      "git_blob": "8731f2f88ae7e98fc0030705ce167806c8cdef72"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/schemas.py",
+      "git_blob": "a22d506aa2b52cea9aac6a90ef6c607af6ac1aad"
+    },
+    {
+      "path": "apps/backend/app/modules/lista_espera/service.py",
+      "git_blob": "ff63e53aa998bb089b97107e13b132608d7a714b"
+    },
+    {
+      "path": "apps/backend/app/modules/reportes/__init__.py",
+      "git_blob": "38501b8d889a908d6b08b788405cecf28a2c42ae"
+    },
+    {
+      "path": "apps/backend/app/modules/reportes/router.py",
+      "git_blob": "8bff1ff3e0c8e227802c3bfe1e3c967112fdeb93"
+    },
+    {
+      "path": "apps/backend/app/modules/reportes/schemas.py",
+      "git_blob": "50234470589aa5c5383baad4a3ac123305363728"
+    },
+    {
+      "path": "apps/backend/app/modules/reportes/service.py",
+      "git_blob": "d23d505d1bbee166544ab33e79c3b656783740d6"
+    },
+    {
+      "path": "apps/backend/app/modules/usuarios/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/app/modules/usuarios/repository.py",
+      "git_blob": "5aaa18990aa48f4f598da4bc47e448542aefd017"
+    },
+    {
+      "path": "apps/backend/app/modules/usuarios/router.py",
+      "git_blob": "20ddbb8620d20999fb889852d48e7fa866bcf658"
+    },
+    {
+      "path": "apps/backend/app/modules/usuarios/schemas.py",
+      "git_blob": "e551b16b6448dd2b4b3c7a092b9ada5ea4eb9748"
+    },
+    {
+      "path": "apps/backend/app/modules/usuarios/service.py",
+      "git_blob": "99dfbe7bb3b67cd6d613890f7eae3442713ea00a"
+    },
+    {
+      "path": "apps/backend/data/README.md",
+      "git_blob": "c0cefaa0ddfbbe8fc5114c5d11bd54cc50c6e8a8"
+    },
+    {
+      "path": "apps/backend/data/citas_demo.csv",
+      "git_blob": "3ad2eab74009b01ed52c4c817569aa9bb4fda1cc"
+    },
+    {
+      "path": "apps/backend/data/citas_para_importar_variado.csv",
+      "git_blob": "20dda95847b9f4ea99fa6e72b4830983ddd86b13"
+    },
+    {
+      "path": "apps/backend/db/README.md",
+      "git_blob": "c2cd98a08d3abea85e4de23bd7d3989ca3bfd9cf"
+    },
+    {
+      "path": "apps/backend/db/init/01_rol_app.sh",
+      "git_blob": "350a04a033c19a91db7214d861f5098d5364f327"
+    },
+    {
+      "path": "apps/backend/migrations/README",
+      "git_blob": "98e4f9c44effe479ed38c66ba922e7bcc672916f"
+    },
+    {
+      "path": "apps/backend/migrations/env.py",
+      "git_blob": "abcfe12ec210b79ec1433223a198d0e82d1b4cc2"
+    },
+    {
+      "path": "apps/backend/migrations/script.py.mako",
+      "git_blob": "11016301e749297acb67822efc7974ee53c905c6"
+    },
+    {
+      "path": "apps/backend/migrations/versions/2cfdcb7d3da2_esquema_inicial_con_las_9_tablas.py",
+      "git_blob": "b61275483af24fef045a51aa99337e7b770a4a93"
+    },
+    {
+      "path": "apps/backend/migrations/versions/m00_002_rol_operativo.py",
+      "git_blob": "6f15d552da01b9dd87cf714126f4d9ef05b183d7"
+    },
+    {
+      "path": "apps/backend/migrations/versions/m01_001_indices_auditoria.py",
+      "git_blob": "2e54be6b0538ecba29def31d8975e018c0f4aa9a"
+    },
+    {
+      "path": "apps/backend/pytest.ini",
+      "git_blob": "1a54e7a6913f20b8669005f4c3ea5708a3fa3f6f"
+    },
+    {
+      "path": "apps/backend/requirements.txt",
+      "git_blob": "7f640cc8c127e740c612665bb22d33753f7d9ed8"
+    },
+    {
+      "path": "apps/backend/scripts/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/scripts/check_db.py",
+      "git_blob": "65e7b25cf3e33b8d5c39689a15a752b2a5c51441"
+    },
+    {
+      "path": "apps/backend/scripts/crear_rol_app.py",
+      "git_blob": "cbb9a380ccb93bf7b902d591ac2c8adf0636e8aa"
+    },
+    {
+      "path": "apps/backend/scripts/exportar_csv.py",
+      "git_blob": "213df287d80b815ef4baf116a9342bf9133d245e"
+    },
+    {
+      "path": "apps/backend/scripts/seed.py",
+      "git_blob": "74fa3a0a913ccf9c7a4580662a055dee85f9e379"
+    },
+    {
+      "path": "apps/backend/tests/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/auth/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/auth/conftest.py",
+      "git_blob": "145629a46c1b6a9b2b311ee3ffbbcbb137b5f0a4"
+    },
+    {
+      "path": "apps/backend/tests/auth/test_auth.py",
+      "git_blob": "c072dd10d2e76beedf157550c3c0fb60bf9ab486"
+    },
+    {
+      "path": "apps/backend/tests/auth/test_bloqueo.py",
+      "git_blob": "22b8e88412b36e0a93ab0a0074ca3f1ceb5833fc"
+    },
+    {
+      "path": "apps/backend/tests/auth/test_sesion.py",
+      "git_blob": "74c0fce38bf9a234b3478156a188f5d900f98b41"
+    },
+    {
+      "path": "apps/backend/tests/bd/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/bd/test_rol_operativo.py",
+      "git_blob": "81794302d1809d35709406834ea82f8ba11bd092"
+    },
+    {
+      "path": "apps/backend/tests/citas/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/citas/conftest.py",
+      "git_blob": "d38e62474f9bd77839ef001611f1cc51dfe9a555"
+    },
+    {
+      "path": "apps/backend/tests/citas/test_citas.py",
+      "git_blob": "7ce4e68466039809943cd070958c939675e10e44"
+    },
+    {
+      "path": "apps/backend/tests/citas/test_m02_contrato.py",
+      "git_blob": "216302d1a6175422e78d5c4c55881c0e9569e30f"
+    },
+    {
+      "path": "apps/backend/tests/conftest.py",
+      "git_blob": "985c052953b9e2b5e783a076898f8fe2ba65c5b2"
+    },
+    {
+      "path": "apps/backend/tests/ia/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/ia/conftest.py",
+      "git_blob": "098d094ff436218c7a17182c800d71ff5deee24a"
+    },
+    {
+      "path": "apps/backend/tests/ia/test_cliente.py",
+      "git_blob": "26a9e8e89975e496df10453856a2bea2f37e5dfc"
+    },
+    {
+      "path": "apps/backend/tests/ia/test_predicciones.py",
+      "git_blob": "1276caf5bd65eb873450c35a5c79e1f0646eef1c"
+    },
+    {
+      "path": "apps/backend/tests/intervenciones/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/intervenciones/conftest.py",
+      "git_blob": "51e0e1f36e97e37e7f15374256531ff0abf59617"
+    },
+    {
+      "path": "apps/backend/tests/intervenciones/test_intervenciones.py",
+      "git_blob": "2e1e69e186b62e37fb74b759973d025416ecad3a"
+    },
+    {
+      "path": "apps/backend/tests/sistema/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_archivos_fase3.py",
+      "git_blob": "a6dee03e7f8c6c62682687502946657139786e08"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_cabeceras.py",
+      "git_blob": "187a9be02cac5af38188bde4481af5e09a121d5b"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_config.py",
+      "git_blob": "e30017d0cc96afa85b981038792beb6d5ffcf118"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_errores.py",
+      "git_blob": "ad7fc64876c28f1fe06867f85c6b9ff7f0d80770"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_evidencia_fase3.py",
+      "git_blob": "8150f501e7b89bb3ef5f64b63ec5d614898269ba"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_exportacion.py",
+      "git_blob": "f6b0e0e4a6ad5b39c77c4b15fa6521bccea6132a"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_health.py",
+      "git_blob": "28a60a00b3c60d573f8834fbe37cbea8c183d70d"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_integridad_bd.py",
+      "git_blob": "689aae65a5d82d4db0e8865d38f971427940c235"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_modelos.py",
+      "git_blob": "278a25b1234fc06fdd4b15df7d6922b3978743b3"
+    },
+    {
+      "path": "apps/backend/tests/sistema/test_ranuras.py",
+      "git_blob": "4b6df4290d9127e88a15aaf1da77df5a39c29214"
+    },
+    {
+      "path": "apps/backend/tests/test_ia_endpoints.py",
+      "git_blob": "fb42bde6585b8d87c700666d86558864b85efa5d"
+    },
+    {
+      "path": "apps/backend/tests/test_ia_predictor.py",
+      "git_blob": "dc1f7ef80ff7e6eedbe745d62724514bcfe62249"
+    },
+    {
+      "path": "apps/backend/tests/test_intervenciones.py",
+      "git_blob": "a35c94dbe92b3b1e0c3bf508524801c460ed1e50"
+    },
+    {
+      "path": "apps/backend/tests/test_reasignacion.py",
+      "git_blob": "2a1aafe5d8e51fac353fb4eb6b0340322a476db7"
+    },
+    {
+      "path": "apps/backend/tests/usuarios/__init__.py",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "apps/backend/tests/usuarios/conftest.py",
+      "git_blob": "6de3cfbb60787ba3579c1ea253d26650730444bd"
+    },
+    {
+      "path": "apps/backend/tests/usuarios/test_usuarios.py",
+      "git_blob": "df340c59eb4afc3845b31d56de03f38e73c8be24"
+    },
+    {
+      "path": "apps/frontend/.dockerignore",
+      "git_blob": "5a70220bba9e02877eb5de557d87ebf9c137ee5d"
+    },
+    {
+      "path": "apps/frontend/.env.example",
+      "git_blob": "ad82eb26012defab5c6ba9f81ce7f39bf17fdf01"
+    },
+    {
+      "path": "apps/frontend/.gitattributes",
+      "git_blob": "f77a5e659aff5f74bc11db337b23b93578db1511"
+    },
+    {
+      "path": "apps/frontend/.gitignore",
+      "git_blob": "cfe640d54c37cd2b69f43060e5899ae23a6df944"
+    },
+    {
+      "path": "apps/frontend/Dockerfile",
+      "git_blob": "cdc7c304174ec7cbdb2f46da47cba861ca22599c"
+    },
+    {
+      "path": "apps/frontend/README.md",
+      "git_blob": "bc95be04f1905740cbe5b195f022f940638006c1"
+    },
+    {
+      "path": "apps/frontend/eslint.config.js",
+      "git_blob": "a82211c1ed2989827101119b42f819ddbfc9a9e6"
+    },
+    {
+      "path": "apps/frontend/index.html",
+      "git_blob": "34795a5a5000c9aa0907d49dff6018083be0d1c6"
+    },
+    {
+      "path": "apps/frontend/package-lock.json",
+      "git_blob": "369ffd70851bab9295b379776f496b27a7865255"
+    },
+    {
+      "path": "apps/frontend/package.json",
+      "git_blob": "57aca9f5a4b8c10a1a7b49e89027b25780069549"
+    },
+    {
+      "path": "apps/frontend/public/favicon.svg",
+      "git_blob": "6893eb13237060adc0c968a690149a49faa2d7d3"
+    },
+    {
+      "path": "apps/frontend/public/icons.svg",
+      "git_blob": "e9522193d9f796a9748e9ad8c952a5df73c87db9"
+    },
+    {
+      "path": "apps/frontend/src/App.test.tsx",
+      "git_blob": "526b2fc14e5553e50b86ae1dd6f77d58c9d467c6"
+    },
+    {
+      "path": "apps/frontend/src/App.tsx",
+      "git_blob": "2af78c2507355de2b4c617572ff4c300f9b9e243"
+    },
+    {
+      "path": "apps/frontend/src/assets/logo.svg",
+      "git_blob": "812caf84d6f4fc86ea9e10e965985bb8458d31b4"
+    },
+    {
+      "path": "apps/frontend/src/auth/AuthContext.jsx",
+      "git_blob": "feec93d7ad9b9360b2961238463471d6b026a887"
+    },
+    {
+      "path": "apps/frontend/src/auth/RutaProtegida.jsx",
+      "git_blob": "f80aac2ded33fb377f77be704e8c747833ac16fb"
+    },
+    {
+      "path": "apps/frontend/src/auth/contexto.js",
+      "git_blob": "7bda14755dcd2256c509a4a6eda44789ce912a65"
+    },
+    {
+      "path": "apps/frontend/src/auth/useAuth.js",
+      "git_blob": "510164ab62c95928315a9477ccc2ed0fa920422a"
+    },
+    {
+      "path": "apps/frontend/src/components/Cargando.jsx",
+      "git_blob": "4408fc13afee9858319ab53301546da31c13f8e2"
+    },
+    {
+      "path": "apps/frontend/src/components/EstadoBadge.jsx",
+      "git_blob": "1218841ff426b501b6d5e21705d1faaae51cdb81"
+    },
+    {
+      "path": "apps/frontend/src/components/Icono.jsx",
+      "git_blob": "daf754339173a62e7ad5cbb597b0daa812418339"
+    },
+    {
+      "path": "apps/frontend/src/components/Layout.jsx",
+      "git_blob": "885cdd31954654eb01525605556953013c5257c7"
+    },
+    {
+      "path": "apps/frontend/src/components/Marca.jsx",
+      "git_blob": "ee2b805a82f0cb8b3ef22c5954cccde8e8edaff1"
+    },
+    {
+      "path": "apps/frontend/src/components/Mensaje.jsx",
+      "git_blob": "bf9f06bd931a742c5619738ee6c3c175e8d8111c"
+    },
+    {
+      "path": "apps/frontend/src/index.css",
+      "git_blob": "2ca3d0225c7c4439e1a50aa0b407bbdf98461113"
+    },
+    {
+      "path": "apps/frontend/src/lib/api.js",
+      "git_blob": "2ec639f3effb3b56a29a4cbc088b386e70e066b0"
+    },
+    {
+      "path": "apps/frontend/src/lib/formato.js",
+      "git_blob": "3c4d37974a9056e4390e42c941f0f95c265d95c4"
+    },
+    {
+      "path": "apps/frontend/src/lib/transiciones.js",
+      "git_blob": "bbff0d798c50f748a56d69b90255e0f1c9e9c3c2"
+    },
+    {
+      "path": "apps/frontend/src/lib/useConsulta.js",
+      "git_blob": "6ece90bb05b96d4f16d0d89823ee5eccec733759"
+    },
+    {
+      "path": "apps/frontend/src/main.tsx",
+      "git_blob": "7c91270a9801098ab50ee2ad62fd9247d70e5bd3"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Bandeja.test.tsx",
+      "git_blob": "665a4d6f2ba89899438c8e516a45fe7f6641a5f6"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Bandeja.tsx",
+      "git_blob": "60b66380b500477ee5a8ec6fde98c98ac16aed47"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Detalle.test.tsx",
+      "git_blob": "7f1aff8c0cf2f11ff22a6877de0d34e27d7881b2"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Detalle.tsx",
+      "git_blob": "56fc167ec88794118b0b58d6970884038a641a20"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/DetallePrediccion.tsx",
+      "git_blob": "4c02de8b52ec6eecf2cfc19c250b26a498b3bcde"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/DetalleSecciones.tsx",
+      "git_blob": "2e927ac5a840d86fbc151a0c83f2b79369281be4"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Importar.tsx",
+      "git_blob": "e276f5cd35b02344bbc05e651202ff148318cf9c"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Registrar.css",
+      "git_blob": "c5fc6c51a3867d674927aed204232a6a93a3aa13"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Registrar.test.tsx",
+      "git_blob": "4472eb24858705d5d88a9f60c08b36f7e0bd1a3c"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/Registrar.tsx",
+      "git_blob": "a833ed22f3be3462f6e1f59388ad351b839c373f"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/TrazabilidadCita.tsx",
+      "git_blob": "005e61fd8f16b0580c5a446798391f0753bf23e0"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/citas.css",
+      "git_blob": "f07b0ea26ca4d3e93174dbf9fba107897c330245"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/citas.test.tsx",
+      "git_blob": "6dfce44882f23aa22fe2c943cabc54a6e8e57519"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/errores.test.ts",
+      "git_blob": "e4d5dc052b2360940ab506ede724e8cdb7a79377"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/errores.ts",
+      "git_blob": "2be6fea10a0a4d627ee41512968931722011c424"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/menu.ts",
+      "git_blob": "84536cb18364f56be8093cb02de405c4095a67aa"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/rutas.tsx",
+      "git_blob": "6d2eab65377c74b7e758d5f915ce12ce7d365ea1"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/tipos.ts",
+      "git_blob": "d0c39a5255e6bbd808d1e50a8fb052998b2f9682"
+    },
+    {
+      "path": "apps/frontend/src/modulos/citas/transiciones.ts",
+      "git_blob": "5ed0a9bf911bb97b6cbad8e4a61dc774aaf9900e"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Dialogo.test.tsx",
+      "git_blob": "79a645385b0061f4fff86b227cfd795c03db00c0"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Dialogo.tsx",
+      "git_blob": "709ee741336671831855814adef775d4e3f0bc4d"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Intervenciones.test.tsx",
+      "git_blob": "80eb312441d604b42eaa54817e99ed249c0c3769"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Intervenciones.tsx",
+      "git_blob": "bf83230100d8462ad521b5fd9c3a508e36167e81"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/NuevaIntervencion.test.tsx",
+      "git_blob": "190231b20a27d39b4bfc12ba48a1e785b83619e1"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/NuevaIntervencion.tsx",
+      "git_blob": "d0aa6663e416c95f31013232eed6a7b6858831f4"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Reporte.test.tsx",
+      "git_blob": "f725142f657f505a5a73a8094f0e937a651d1369"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Reporte.tsx",
+      "git_blob": "ed636ec73e506f47df070aa9b14177a85fa43edf"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Seguimiento.test.tsx",
+      "git_blob": "eb8cab97c9ce5d92d57e22ffc28151b1ea33e4b4"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/Seguimiento.tsx",
+      "git_blob": "290fd3e2c3adb150b1480585f97ea353dd28c24e"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/descargas.test.ts",
+      "git_blob": "da0f7addc199dfa5f8f4905eac069198800a9b6e"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/descargas.ts",
+      "git_blob": "a8b46e75c0a7b6b63a2b4621dbb51387cd910366"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/errores.ts",
+      "git_blob": "371497938db0f338c2727aa3dda23f66deed8c5e"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/intervenciones.css",
+      "git_blob": "4302da3b47ea5707d4fb9ff1ed9b2494f03d7417"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/menu.ts",
+      "git_blob": "f2c161a304ae46ea9193275ff8ad7c179de482b3"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/presentacion.ts",
+      "git_blob": "e07f5744847f0bf8d4c6bec3b0e9415d850cba0c"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/reporte.css",
+      "git_blob": "40732a8c19cc1d8366a7bb0151c099d2207e419b"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/rutas.tsx",
+      "git_blob": "13f9f4753e035e70c695eaddf27fb6928f7685c0"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/seguimiento.css",
+      "git_blob": "52d722354665bfbe93a962b8027348d48ddf2a96"
+    },
+    {
+      "path": "apps/frontend/src/modulos/intervenciones/tipos.ts",
+      "git_blob": "19eef7a76515177273de4f66be091272d88bb5b6"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/Cupos.test.tsx",
+      "git_blob": "3414d2e92df2ead1c53d48bf475497a9036fdcdd"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/Cupos.tsx",
+      "git_blob": "30f68af25b042db7426e37146ba25d035ac58395"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/DetalleCupo.test.tsx",
+      "git_blob": "619d5479f6e8772ae0e5339fdd2466210f3a53e7"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/DetalleCupo.tsx",
+      "git_blob": "f625cec8d7d939991bb35613e1d90636c144ec94"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/ListaEspera.test.tsx",
+      "git_blob": "79e1905169ba4dd011d501f63e41f64486983d40"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/ListaEspera.tsx",
+      "git_blob": "c81149c8e39827f14be92bedd57455554f94b321"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/Reporte.test.tsx",
+      "git_blob": "cd3fe7bb5f61ab2ac382f25d93862977744982fa"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/Reporte.tsx",
+      "git_blob": "9ced5043e039eaa0bc0fec01a564ee49f5a26cc7"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/errores.ts",
+      "git_blob": "842053c6c539ee415113766ffbc895a9c3bd6c8b"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/exportar.test.ts",
+      "git_blob": "d207db0968d0519691b3897700d5e2582dbfafae"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/exportar.ts",
+      "git_blob": "f8d389af13eb1def1c9a2720a408b8dbbf0392da"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/lista-espera.css",
+      "git_blob": "d9def704d1c0f29ec4cfe6b415484909dc8685b3"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/menu.ts",
+      "git_blob": "737de5510846a11b3f2fc418a3ca1f3cb530f062"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/rutas.tsx",
+      "git_blob": "209d07da782c1a97e8979c319a193d8cb07889c8"
+    },
+    {
+      "path": "apps/frontend/src/modulos/lista-espera/tipos.ts",
+      "git_blob": "e46c7544205eff8fbb1ab42e04d6d82fead9c663"
+    },
+    {
+      "path": "apps/frontend/src/modulos/prueba-ranura/menu.ts",
+      "git_blob": "7191d94746a22087fed88e1af1ad221bf3b9b9c1"
+    },
+    {
+      "path": "apps/frontend/src/modulos/prueba-ranura/rutas.tsx",
+      "git_blob": "16a6db9a530e4defefdf391f3e3f498cb4ff030c"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/IntegracionM01.test.tsx",
+      "git_blob": "9fa82e2e2f15762fc378be5be2ce2999f19c8094"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/Login.test.tsx",
+      "git_blob": "1b0d0f056d8dc7e0effb8ad7840df052d664e791"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/Login.tsx",
+      "git_blob": "856110f26c6c70900b3b63f633a1a034e013b398"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/MiCuenta.test.tsx",
+      "git_blob": "43207ef4d2d64cad190216bca2f63259b3d2b999"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/MiCuenta.tsx",
+      "git_blob": "05a8d341dac71d65906c74a2529d7405d1f0b019"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/cuenta.css",
+      "git_blob": "ae4f5f96c801f3e697f8648a883a76d703f9ae57"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/menu.ts",
+      "git_blob": "e5697eb7c70417aa0b78db2605ac801425cf4589"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/politicaClave.ts",
+      "git_blob": "c7735579186b716a69844ecf72a0048c07d2f06d"
+    },
+    {
+      "path": "apps/frontend/src/modulos/sesion/rutas.tsx",
+      "git_blob": "28ad37dca1daffbb4c1729c6c462bd243e2fc643"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/AccionesUsuario.tsx",
+      "git_blob": "4e426b3050ae22fa8881221e2493450ef6e6b3f3"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/Dialogo.tsx",
+      "git_blob": "a5aa1ecd2809fabd1a2d756b93581682b9da0977"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/FormularioUsuario.tsx",
+      "git_blob": "64791b5ce47192af5a15b961207034115c56a168"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/Usuarios.test.tsx",
+      "git_blob": "8b0ad5a0e135f1e0bc3951865faf0cb6dffe969b"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/Usuarios.tsx",
+      "git_blob": "b335eedb21a50696d9f05572a2a85e66d91658c9"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/menu.ts",
+      "git_blob": "482758ea41f6a91d43ad6772065c5558300ec1a8"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/rutas.tsx",
+      "git_blob": "f16e8018e389a1849bc2911057982c9874be4375"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/tipos.ts",
+      "git_blob": "5d432d4c0726f4f3080e215092feb3cf53c5ff8c"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/usuarios.css",
+      "git_blob": "e22129680d5a15bffd5baf9ea11fae5db14a8880"
+    },
+    {
+      "path": "apps/frontend/src/modulos/usuarios/validacion.ts",
+      "git_blob": "a316eac06ae9dfbba6086fffe2921e09bd5a5556"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/api/cliente.test.ts",
+      "git_blob": "79906f7e3126ece6d2ae5bd6d7e5155ce78506a7"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/api/cliente.ts",
+      "git_blob": "d9f1834b078ff965fa29a0490645e0ac92a0fcc9"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/api/tipos.ts",
+      "git_blob": "80fed325bf71b46ffdb08159548301a8ebcdeacb"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/api/useConsulta.ts",
+      "git_blob": "7a0f1d74ae308f3712220ebb57008cb9b1dc83fd"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/AuthProvider.test.tsx",
+      "git_blob": "4744c877b63914fb22cb93669bde2fee889a3e98"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/AuthProvider.tsx",
+      "git_blob": "5458bd5f9084c8b9a46739410554e8f0fe71141f"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/RutaProtegida.test.tsx",
+      "git_blob": "534f6ff9ebb4966ea82170def866513163bbdaef"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/RutaProtegida.tsx",
+      "git_blob": "b6b89799dd7ebb5cbbfc8e49583d5d1de4685b86"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/contexto.ts",
+      "git_blob": "2462b57ef5c144e93eb6496ed94aca1c592e55c7"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/auth/useAuth.ts",
+      "git_blob": "7f71c493d246d24d490be6668dbd2dad19c69e87"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/Cargando.tsx",
+      "git_blob": "915a1158c8f75a29ab71bbbd23499bc230d3afe9"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/EstadoBadge.tsx",
+      "git_blob": "d3c37cded80e202b43140f7be93f818d6629d5a3"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/Icono.tsx",
+      "git_blob": "45ca104ff0fdef9fee4cfe2b81ada4d23aa123af"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/Marca.tsx",
+      "git_blob": "e303e367aa2c56cad8b4d9f3b4fe19291b454ea7"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/Mensaje.tsx",
+      "git_blob": "b6f060d26e529a49392179bb308c825d2bfc0970"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/NivelRiesgoBadge.tsx",
+      "git_blob": "1dee8956a46253ee8133396525ad85015551094b"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/RotuloSimulado.tsx",
+      "git_blob": "67da92c0b07b6498d1eaa7b46586040db92bf7d5"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/componentes/componentes.test.tsx",
+      "git_blob": "d0f1947dd2dc4cee3f2b49c6b079d5d20e1ddda9"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/formato/formato.ts",
+      "git_blob": "5610e758c6cb582c66c4ac2bbcecc8b3611c5f81"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/layout/Layout.tsx",
+      "git_blob": "f68715dd54d972f037b5a4d95b80b7b0b1423528"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/layout/ranuras.ts",
+      "git_blob": "91b375da8faefea296d9c0731d46a6566d9d687a"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/GestorSesion.test.tsx",
+      "git_blob": "1899bb2b5117796e41d896218fef627ea3daa6ce"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/GestorSesion.tsx",
+      "git_blob": "69a0fd25dad4fcd23837a9c20b82c9355b006a77"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/controlador.test.ts",
+      "git_blob": "815f9da402bf02b8eb38c15e44f6006f9825194c"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/controlador.ts",
+      "git_blob": "6e39c3361b5eddd471f0cb191ce1a3336b09fbf3"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/credenciales.ts",
+      "git_blob": "f11d4eefa33155b24b8993d1cc587b1e659fe78e"
+    },
+    {
+      "path": "apps/frontend/src/nucleo/sesion/index.ts",
+      "git_blob": "13fc884b073347380ac329d089f2ac39cc5903e7"
+    },
+    {
+      "path": "apps/frontend/src/pages/CitaDetalle.jsx",
+      "git_blob": "68099063229fa914b2f9e80950c1a1fc66b5e87e"
+    },
+    {
+      "path": "apps/frontend/src/pages/Citas.jsx",
+      "git_blob": "cf1c821475c9204d57d86aba04ab5c67612ab46a"
+    },
+    {
+      "path": "apps/frontend/src/pages/Importar.jsx",
+      "git_blob": "ef1b32b461f3b927ee0ec0042d183a17966f9b1e"
+    },
+    {
+      "path": "apps/frontend/src/pages/Intervenciones.jsx",
+      "git_blob": "3f38ed14321cea7c9a1ee4f126cf8fa02d69ca3c"
+    },
+    {
+      "path": "apps/frontend/src/pages/Login.jsx",
+      "git_blob": "e08b3b53580255cee20f7ac6c02e69f0459a986c"
+    },
+    {
+      "path": "apps/frontend/src/pages/ModeloIA.jsx",
+      "git_blob": "89a4c9095b9c8cb1ce8ce6ea985728a8c954819f"
+    },
+    {
+      "path": "apps/frontend/src/pages/Reasignacion.jsx",
+      "git_blob": "507ffa6ecc38d0bd93b4cc37c912ca5bce812136"
+    },
+    {
+      "path": "apps/frontend/src/pruebas/configurar.ts",
+      "git_blob": "7583943a66802c7def779d4541c2c385130849f3"
+    },
+    {
+      "path": "apps/frontend/src/vite-env.d.ts",
+      "git_blob": "11f02fe2a0061d6e6e1f271b21da95423b448b32"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/bandeja-diseno.jpg",
+      "git_blob": "127b3ef1425df05f7ffc22bfcfcc932c6a10433f"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/bandeja-movil.jpg",
+      "git_blob": "11a0f8258cd9691736cd9f54002dd996d9060239"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/detalle-diseno.jpg",
+      "git_blob": "5957a7f9c1e24ee44a04762eb15ef8c468a48329"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/importacion-diseno.jpg",
+      "git_blob": "0dcde1223eaa561ce49a710cf58587dfb2b4f631"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/importacion-movil.jpg",
+      "git_blob": "a24ece1e2634cd3b649aa2b1842b0a8849a120f9"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/login-diseno.jpg",
+      "git_blob": "12cc5b9befa1bca07f4d3efc971252ac4236fbe9"
+    },
+    {
+      "path": "apps/frontend/tests/capturas/login-movil.jpg",
+      "git_blob": "c1519cffd8820645be0c5dd97df91bcdc6d5617a"
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-18f4e1db.csv",
+      "git_blob": "98f57cec71d754d70ef88508f1fa8df03f8d2184"
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-1d6d6124.csv",
+      "git_blob": "fed627eda65c3e91ea7f2bcd40a31658f53e4127"
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-50ae5732.csv",
+      "git_blob": "6ba769374ad0fb2511c494516c68e6d7edd2aacf"
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-e5e4dbc4.csv",
+      "git_blob": "5e1a66c370b1614c9cad79df658d0388d756764e"
+    },
+    {
+      "path": "apps/frontend/tests/rutas_validacion.py",
+      "git_blob": "d3f4e423f24d2aab586e7ba92613479392349f7b"
+    },
+    {
+      "path": "apps/frontend/tests/ultima_validacion_diseno.json",
+      "git_blob": "ece40259f6bb7985eb98c73fe5e218db4e6ebbfa"
+    },
+    {
+      "path": "apps/frontend/tests/validar_diseno.py",
+      "git_blob": "257393a4f2449930ac4376012f903b748a9d54c3"
+    },
+    {
+      "path": "apps/frontend/tsconfig.json",
+      "git_blob": "6f860c98e7b76cc04dc5589d4a36d35a5c9eefb9"
+    },
+    {
+      "path": "apps/frontend/vite.config.ts",
+      "git_blob": "cd19e8e853d9d5e5356fbf9a06265dcb3727734e"
+    },
+    {
+      "path": "data/manifests/inventario-fase-03.v1.json",
+      "git_blob": "92f03e38d2ec9ed3b727f0bae1d68bbafe3e85da"
+    },
+    {
+      "path": "data/samples/importacion/citas_demo.csv",
+      "git_blob": "3ad2eab74009b01ed52c4c817569aa9bb4fda1cc"
+    },
+    {
+      "path": "data/samples/importacion/citas_para_importar_variado.csv",
+      "git_blob": "20dda95847b9f4ea99fa6e72b4830983ddd86b13"
+    },
+    {
+      "path": "docs/migracion/fase-03/archivos.py",
+      "git_blob": "6c39ad9904d659f088f6ab60239cd0b451d3be2f"
+    },
+    {
+      "path": "docs/migracion/fase-03/evidencia.py",
+      "git_blob": "28d28a2a9846b54e1057039a80985fe77355f276"
+    },
+    {
+      "path": "docs/migracion/fase-03/inventariar.py",
+      "git_blob": "89949303760a97d15a1f80e7420fa4f07cf2b3c0"
+    },
+    {
+      "path": "docs/migracion/fase-03/probar_imagen.py",
+      "git_blob": "94ad88132249df6542d9958178c61ab1e0b118d9"
+    },
+    {
+      "path": "docs/migracion/fase-03/probar_importacion.py",
+      "git_blob": "b549422b8dbf9932de6770b1ca772c546f4be5f2"
+    },
+    {
+      "path": "docs/migracion/fase-03/respaldar_cierre.py",
+      "git_blob": "91ad7de649634c3c9378d27237e79f64238a765f"
+    },
+    {
+      "path": "docs/migracion/fase-03/validar.py",
+      "git_blob": "42dda43352316ba2be8404e7dc2a057c32ba27e3"
+    },
+    {
+      "path": "docs/migracion/fase-03/verificar_cierre.py",
+      "git_blob": "7f761ed2eda027a07affe718378a6161d4ac7d65"
+    }
+  ],
+  "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+  "environment": {
+    "python": "3.12.16",
+    "pip_freeze": [
+      "alembic==1.20.0",
+      "annotated-doc==0.0.5",
+      "annotated-types==0.8.0",
+      "anyio==4.15.1",
+      "argon2-cffi==25.1.0",
+      "argon2-cffi-bindings==26.1.0",
+      "certifi==2026.7.22",
+      "cffi==2.1.1",
+      "click==8.5.0",
+      "cloudpickle==3.1.2",
+      "colorama==0.4.6",
+      "coverage==7.17.2",
+      "dnspython==2.9.0",
+      "email-validator==2.3.0",
+      "et_xmlfile==2.0.0",
+      "fastapi==0.143.2",
+      "h11==0.16.0",
+      "httpcore==1.0.9",
+      "httptools==0.9.0",
+      "httpx==0.28.1",
+      "idna==3.20",
+      "iniconfig==2.3.1",
+      "joblib==1.6.0",
+      "lightgbm==4.7.0",
+      "Mako==1.4.3",
+      "MarkupSafe==3.0.4",
+      "narwhals==2.27.1",
+      "numpy==2.5.4",
+      "openpyxl==3.1.5",
+      "opentelemetry-api==1.45.1",
+      "packaging==26.3",
+      "pip==25.0.1",
+      "pluggy==1.7.0",
+      "psycopg==3.3.6",
+      "psycopg-binary==3.3.6",
+      "pycparser==3.11",
+      "pydantic==2.14.1",
+      "pydantic-settings==2.16.0",
+      "pydantic_core==2.50.1",
+      "Pygments==2.21.0",
+      "PyJWT==2.15.1",
+      "pytest==9.1.1",
+      "pytest-cov==7.1.0",
+      "python-dotenv==1.2.4",
+      "python-multipart==0.0.32",
+      "PyYAML==6.0.3",
+      "scikit-learn==1.9.1",
+      "scipy==1.18.1",
+      "SQLAlchemy==2.1.4",
+      "starlette==1.8.0",
+      "threadpoolctl==3.7.0",
+      "typing-inspection==0.4.4",
+      "typing_extensions==4.16.0",
+      "tzdata==2026.5",
+      "uvicorn==0.54.0",
+      "watchfiles==1.3.0",
+      "websockets==17.2"
+    ],
+    "pip_freeze_sha256": "444e73cfe232c4ce46bc629729933c74567d62977be850ab90a2cffab901d906"
+  }
+}

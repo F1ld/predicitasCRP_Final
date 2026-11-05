@@ -1,0 +1,21 @@
+{
+  "image": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+  "first_export_exit_code": 0,
+  "second_export_exit_code": 2,
+  "existing_export_unchanged": true,
+  "output_sha256": "cd050e4c8edfca84c8fdafe416ebab65e5e03cc002ad3666e5c0cc85442f0a95",
+  "export_requires_no_database_credentials": true,
+  "network": "none",
+  "only_writable_host_mount": "runtime/exports/fase-03/cierre-20261105-02",
+  "packaging": {
+    "uid": 1000,
+    "legacy_samples_excluded": true,
+    "root_artifacts_excluded": true,
+    "private_env_excluded": true,
+    "active_model_packaged": true,
+    "active_model_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074"
+  },
+  "run_id": "cierre-20261105-02",
+  "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+  "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3"
+}

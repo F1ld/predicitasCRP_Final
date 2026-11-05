@@ -1,6 +1,28 @@
 # Fase 3 — Centralización de muestras, artefactos y salidas
 
-**Estado: BLOQUEADA para cierre durante la revalidación de trazabilidad — 05/11/2026.** La implementación anterior y su evidencia se conservan como históricos. La ejecución nueva debe cumplir [el procedimiento y los criterios congelados de cierre](REVALIDACION.md). Punto de retorno inicial: **`a5a1f5f`**. No iniciar fase 4 hasta registrar la evidencia vigente y verificarla desde un clon limpio.
+**Estado: COMPLETADA, con deuda D-01 a D-04 — 05/11/2026.** Implementación correctiva en `dd4ae83` y ajuste de LF en **`05716fe`**, probado con árbol limpio. Ejecución vigente: **`cierre-20261105-02`**, imagen **`sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3`**. [Índice vigente](evidencia/actual.json), [cierre verificable](evidencia/cierre-20261105-02/verificacion.json) y [procedimiento/criterios congelados](REVALIDACION.md). Los cierres anteriores se conservan como históricos. Punto de retorno inicial: **`a5a1f5f`**.
+
+## Revalidación vigente de trazabilidad
+
+| Comprobación | Resultado de `cierre-20261105-02` |
+|---|---|
+| Build y entorno | PASÓ; imagen ejecutada por ID, commit y blobs Git de fuentes registrados; Python y pins efectivos en `ejecucion.json` |
+| Archivos, CLI, importación QA y harness | **43/43 aprobadas**, incluyendo conexión simulada de `main()`, exclusividad, LF y sanitización |
+| Diagnóstico backend | **261 aprobadas / 1 fallo previo**; 218 previas + 43 nuevas; casos/estados previos idénticos |
+| Cobertura aplicación | **87,13 %**, umbral 75 % intacto |
+| Suite completa | Mismo error previo de colección IA; **no es suite verde** |
+| Integración en laboratorio | BD comprobada vacía antes de cargar; 40/0 y 20/4, ambos con/sin BOM, duplicados y rollback comprobados |
+| OpenAPI / modelo / predicciones | Paridad con baseline; sin entrenar ni cambiar el artefacto |
+| Empaquetado | UID 1000, modelo activo incluido; datos legacy y `.env` excluidos; exportación sin red/credenciales y sobrescritura rechazada |
+| Frontend | Baseline citado, **no reejecutado**: 451 aprobadas / 56 fallidas. No equivale a nueva certificación de regresión UI |
+| Preservación | 444 originales examinados; solo diferencias permitidas, CSV/modelo/secretos preservados |
+| Laboratorio | Se reanudó exclusivamente el existente tras comprobar identidad/aislamiento; quedó **detenido**, sin borrar volúmenes |
+| Clon de implementación | Commit `05716fe` limpio: muestras/manifiesto y herramientas presentes; hashes y filas 40/24 correctos; sin modelo/env privados. [Registro](evidencia/clon-codigo-05716fe.json) |
+| Evidencia portable | JUnit sanitizados, baselines, cobertura, acciones e integración versionables; `--verify-only` comprueba hashes y fuentes sin Docker ni archivos privados |
+
+La evidencia se registra en un commit posterior **sin cambios de código**. Desde un clon del commit de entrega, ejecutar `python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-02 --verify-only`. Reconstruir la imagen o repetir integración sí requiere el modelo y el laboratorio privados documentados; no se promete reproducibilidad bit a bit ni E2E visual completo.
+
+El intento `cierre-20261105-01` pasó pruebas, pero no se publicó: la comprobación previa al commit detectó conversión CRLF/LF que alteraría hashes. Se conservó su paquete candidato bajo runtime, se corrigió la escritura JSON y se repitió la validación completa con el ID `02`; no se reutilizaron sus resultados.
 
 ## Resultado y límites
 

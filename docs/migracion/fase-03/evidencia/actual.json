@@ -1,0 +1,11 @@
+{
+  "run_id": "cierre-20261105-02",
+  "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+  "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+  "verification": "cierre-20261105-02/verificacion.json",
+  "procedure": "../REVALIDACION.md",
+  "code_clone_check": "clon-codigo-05716fe.json",
+  "historical_evidence": "Los JSON sin run-id y con sufijo _final son históricos, no fallback de esta ejecución.",
+  "frontend": "Baseline citado; no reejecutado",
+  "portable_command": "python -B docs/migracion/fase-03/verificar_cierre.py --run-id cierre-20261105-02 --verify-only"
+}

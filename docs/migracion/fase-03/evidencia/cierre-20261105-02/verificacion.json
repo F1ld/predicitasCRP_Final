@@ -1,0 +1,168 @@
+{
+  "run_id": "cierre-20261105-02",
+  "commit_tested": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+  "image_id": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+  "results": {
+    "old_backend_passed": 218,
+    "old_backend_failed": 1,
+    "new_unit_tests_passed": 43,
+    "backend_diagnostic_passed": 261,
+    "backend_coverage_percent": 87.12705330204493,
+    "backend_full_suite": "Error de colección previo conservado; no es suite verde",
+    "frontend_status": "Baseline citado: 451 aprobadas / 56 fallidas; no reejecutado"
+  },
+  "original_files_examined": 444,
+  "expected_modified_files": [
+    ".gitattributes",
+    "GUIA_DE_PRUEBAS_PARA_EL_EQUIPO.md",
+    "INSTRUCCIONES_RAPIDAS_ZIP.md",
+    "PLAN_REESTRUCTURACION_POR_FASES.md",
+    "README.md",
+    "apps/backend/.dockerignore",
+    "apps/backend/scripts/exportar_csv.py",
+    "apps/frontend/.dockerignore",
+    "apps/frontend/tests/validar_diseno.py",
+    "docs/migracion/fase-02/README.md"
+  ],
+  "laboratory": {
+    "db": "predicitas-fase3-20261105-134615-db",
+    "volume": "predicitas-fase3-20261105-134615-test-pgdata",
+    "state": "exited"
+  },
+  "public_evidence": [
+    {
+      "path": "acciones.json",
+      "sha256": "f7c7dd4880b1fd695ecba4e9e9f4279697cb7d3e5b09b1414124d8e6391dbfbb"
+    },
+    {
+      "path": "backend_completo.xml",
+      "sha256": "48a3b53bd507ee5c27b6764a665dd2245ba651ba12e98822e29fa631c32114d7"
+    },
+    {
+      "path": "backend_diagnostico.xml",
+      "sha256": "2ee9bceb83d72d07abeafd810b99cd48bd96055cf15da18ff40597088de33fa2"
+    },
+    {
+      "path": "baseline_completo.xml",
+      "sha256": "48a3b53bd507ee5c27b6764a665dd2245ba651ba12e98822e29fa631c32114d7"
+    },
+    {
+      "path": "baseline_diagnostico.xml",
+      "sha256": "e90ce0d95b9367baf985adef215aecf83b8b11ca7e5024c992a496a5f6a84a32"
+    },
+    {
+      "path": "cobertura.json",
+      "sha256": "d144d90da0b13fba67d11f26aeab231326cd1c504cfc2c4c8afc1cfa623b116c"
+    },
+    {
+      "path": "ejecucion.json",
+      "sha256": "8c71881dc49a9d37ea849c5b7d12b2e2fea38e38e1f73b3a7b1c72de74442c27"
+    },
+    {
+      "path": "imagen_y_mounts.json",
+      "sha256": "a9279f2ca6ffc7925fb7affc2b6688decf39cfb39080d71ca28242c478b29f62"
+    },
+    {
+      "path": "importacion_canonica.json",
+      "sha256": "a048f3038b9f08bc45c6d5984a4dfb82663687a934e516e4160cad72f62b4bdd"
+    },
+    {
+      "path": "unitarias.xml",
+      "sha256": "9e9814dddf5c17341e95a8084d129c7d97b8db169823804c237685f101c98d22"
+    }
+  ],
+  "raw_evidence": [
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/alembic.json",
+      "sha256": "2ab9e70fd7b6b52ec76e2bacf25ff0317e780ff079962fcaa74a56be464c5bdb"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/alembic.log",
+      "sha256": "84b9cfdaaae75628f3cbd7082d9c05399a66f8049b2a84369fcf326d0622ec92"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_completo.json",
+      "sha256": "5f94c4dfeed4eb8c6b4c9472734e69bf47d68974d08e0c3a1b9bcf022e935ca7"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_completo.log",
+      "sha256": "176fa5f5bf789304699e11e6efab3ea18263da3aac9d2a919fffd8687cf9ff3d"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_completo.xml",
+      "sha256": "c48c0bd5d24e2c0ac220e928d481e647eb4c1f611c124a7c5e46abd613ffb9be"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_coverage.json",
+      "sha256": "4f7dabdc3189c6a3e4bb7c5c94b48478931521187a7b780b8ae4a5f1c35642f2"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_diagnostico.json",
+      "sha256": "0fbfce60aa53248adb6e9f9f7c55d8cc8aa5826f8cb214681fb8d31b820e3459"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_diagnostico.log",
+      "sha256": "2e4cbb57dced9622fe75ffe0a1d344477c6a5b29bd924e1d656c05210d4ded57"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/backend_diagnostico.xml",
+      "sha256": "837871440fdfe3e868f0ea4d3a9c194690012b7ebcf0ee68cc8f93be487d84f0"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/build.json",
+      "sha256": "3406ce8b73e8fadb82bdc8ddb6da0c434bca260a5dc654c555c6aa46a9f368fe"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/build.log",
+      "sha256": "7a04a9c9d3f78233ff9cf8823fb2c168fa0d1ff40fb624452c141ec34c648f73"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/detener.json",
+      "sha256": "34540a186ff75c5e27da397e1d63ecb090117bfe8147bae690728c57864c1af6"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/detener.log",
+      "sha256": "d3c231aec4e7e00a0bdf3a22d57c87fe2ca13608f84f65ffd61e21d51b7a54d1"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/ejecucion.json",
+      "sha256": "8c71881dc49a9d37ea849c5b7d12b2e2fea38e38e1f73b3a7b1c72de74442c27"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/imagen_y_mounts.json",
+      "sha256": "a9279f2ca6ffc7925fb7affc2b6688decf39cfb39080d71ca28242c478b29f62"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/importacion_canonica.json",
+      "sha256": "2e88998a7f53589dc80c523850b9067a8061da40819739a4d4d91f8c67c90649"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/integracion.json",
+      "sha256": "db9d781382e1e284f67772195ad85426cf77729491036ef57e579e6025358f64"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/integracion.log",
+      "sha256": "a135f88aefa225869adf7ea731cfe20437bd8cfa2244666dd3960427ef1f37e9"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/reanudar.json",
+      "sha256": "07fc679407d73404ebd2101d63df48b505fc0d164457acf774e7fcbba7245daf"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/reanudar.log",
+      "sha256": "d3c231aec4e7e00a0bdf3a22d57c87fe2ca13608f84f65ffd61e21d51b7a54d1"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/unitarias.json",
+      "sha256": "45ed0bd48937926d09b12795352a597af74522f4cb0a8b34c14b2f89456905c6"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/unitarias.log",
+      "sha256": "52e7b4e6bf08a940ebb43330526dffed6f9edbdfaf3660a1be400a6ea4f85604"
+    },
+    {
+      "path": "runtime/test-results/fase-03/cierre-20261105-02/unitarias.xml",
+      "sha256": "6d8bca56617200cd3a7f13a479e23fd47b55ace68177a343cf479d4f7dc224ba"
+    }
+  ]
+}

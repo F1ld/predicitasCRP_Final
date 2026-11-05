@@ -1,0 +1,21 @@
+{
+  "commit": "05716fe19a89128f5fa86a5cbf68e5adf0408b59",
+  "method": "git clone --no-hardlinks desde el repositorio local a un directorio temporal nuevo; sin copiar archivos ignorados",
+  "clean": true,
+  "samples": [
+    {
+      "path": "data/samples/importacion/citas_para_importar_variado.csv",
+      "sha256_matches_inventory": true,
+      "rows": 40
+    },
+    {
+      "path": "data/samples/importacion/citas_demo.csv",
+      "sha256_matches_inventory": true,
+      "rows": 24
+    }
+  ],
+  "tool_syntax_checked": 8,
+  "private_model_and_env_absent": true,
+  "runtime_absent": true,
+  "scope": "Disponibilidad de código, muestras, manifiesto y herramientas; no reejecución de integración ni reconstrucción de imagen sin prerrequisitos privados"
+}
