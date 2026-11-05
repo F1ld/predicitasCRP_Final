@@ -1,14 +1,21 @@
-[
-  {
-    "check": "backend_completo_final",
-    "exit_code": 2,
-    "seconds": 17.55,
-    "log": "runtime/test-results/fase-03/backend_completo_final.log"
+{
+  "metadata": {
+    "image": "predicitas-fase3-backend:validacion",
+    "image_id": "sha256:a6e71ea3a0679548953680c848c140eb680a225a7e40db55213266e318900dd0",
+    "commit": "83144798b7fb5283ad4f13f871debaa3e09535dc"
   },
-  {
-    "check": "backend_diagnostico_final",
-    "exit_code": 1,
-    "seconds": 99.37,
-    "log": "runtime/test-results/fase-03/backend_diagnostico_final.log"
-  }
-]
+  "results": [
+    {
+      "check": "backend_completo_final",
+      "exit_code": 2,
+      "seconds": 16.27,
+      "log": "runtime/test-results/fase-03/backend_completo_final.log"
+    },
+    {
+      "check": "backend_diagnostico_final",
+      "exit_code": 1,
+      "seconds": 108.21,
+      "log": "runtime/test-results/fase-03/backend_diagnostico_final.log"
+    }
+  ]
+}

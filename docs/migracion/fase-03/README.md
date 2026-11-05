@@ -1,6 +1,6 @@
 # Fase 3 — Centralización de muestras, artefactos y salidas
 
-**Estado: BLOQUEADA para cierre — 05/11/2026.** Implementación aplicada; en proceso de revalidación con imagen oficial de fase 3, suite de 33 unitarias y cierre formal acotado con deuda catalogada (D-01 a D-04). Punto de retorno: **`a5a1f5f`**, árbol limpio al comenzar.
+**Estado: COMPLETADA (con deuda técnica D-01 a D-04) — 05/11/2026.** Implementación aplicada, revalidada con imagen oficial `predicitas-fase3-backend:validacion` (`sha256:a6e71ea3...`) y commit de código `8314479`. Punto de retorno inicial: **`a5a1f5f`**.
 
 ## Resultado y límites
 
@@ -10,7 +10,7 @@
 - Estructura `data/raw`, `data/processed`, `data/manifests`, `data/fixtures`, `artifacts/models`, `artifacts/reports`, `runtime/exports`, `runtime/tmp`, `runtime/test-results`. Raw/processed siguen vacíos: esta fase no prepara ni entrena datasets.
 - Copia del modelo en `artifacts/models/legacy-import/modelo_predicitas_v1.joblib`, con hash idéntico y atributo Windows de solo lectura. **No se carga/promueve esa copia ni se cambia la ruta activa integrada**. No se creó `active.json`, manifiesto de promoción ni linaje inventado.
 - `data/manifests/inventario-fase-03.v1.json` documenta procedencia, bytes/hashes, columnas, filas, fechas observadas, resultados esperados, copias de compatibilidad y permisos observados. Fechas/semillas originales y hashes de entrenamiento desconocidos son null. Es inventario de preservación, no certificado de entrenamiento.
-- `.dockerignore` raíz de defensa y exclusiones por app. Contextos oficiales siguen limitados a cada app; la imagen backend excluye `data/` legacy pero **conserva el modelo activo**. Compose no requería cambios ni montajes permanentes nuevos: las muestras se suben vía navegador/API en memoria.
+- `.dockerignore` en la raíz documentado como no aplicable a los contextos oficiales `apps/*` de `compose.yaml`. Contextos oficiales siguen limitados a cada app; la imagen backend excluye `data/` legacy pero **conserva el modelo activo**. Compose no requería cambios ni montajes permanentes nuevos: las muestras se suben vía navegador/API en memoria.
 - Los uploads/descargas operacionales siguen en memoria/streaming; no se activó retención, TTL, limpieza automática ni `runtime/imports`.
 
 Guía vigente: [`data/README.md`](../../../data/README.md), [operación de archivos/resultados](../../operacion/ARCHIVOS_Y_RESULTADOS.md) y README raíz. Los informes históricos y capturas no se reescribieron.
@@ -27,26 +27,32 @@ La fecha no se deduce del día del equipo. Nuevas fechas/nombres producen otra m
 
 ### Salidas de QA
 
-Solo se cambia infraestructura de archivos en `apps/frontend/tests/validar_diseno.py`: nuevas salidas en `runtime/test-results/diseno/<id>/`, CSV por ejecución y `manifest.json` exclusivo; no se sobrescribe `ultima_validacion_diseno.json` ni fixtures/capturas históricos. La base alternativa `PREDICITAS_TEST_RESULTS_DIR` debe ser absoluta y no apuntar a código.
+Solo se cambia infraestructura de archivos en `apps/frontend/tests/validar_diseno.py`: toda la ejecución imperativa se aísla dentro de `main()` protegido por `if __name__ == "__main__":`; se invierte el orden validando la BD antes de crear carpetas o conectar; cero efectos colaterales al importar (CWD intacto, sin conexiones ni carpetas huérfanas). Nuevas salidas en `runtime/test-results/diseno/<id>/`, CSV por ejecución y `manifest.json` exclusivo; no se sobrescribe `ultima_validacion_diseno.json` ni fixtures/capturas históricos. La base alternativa `PREDICITAS_TEST_RESULTS_DIR` debe ser absoluta y no apuntar a código.
 
-El helper puro `rutas_validacion.py` valida IDs/rutas y añade una guarda antes de abrir conexión: `PREDICITAS_QA_DATABASE_NAME` debe coincidir con un nombre test/qa explícito. El flujo de negocio QA no se rediseñó. **No se ejecutó/certificó el E2E visual legacy completo**; se probaron rutas, exclusividad, traversal y bloqueo de bases no confirmadas. La guarda no sustituye inspeccionar host/URL/volumen.
+El helper puro `rutas_validacion.py` valida IDs/rutas y añade una guarda antes de abrir conexión: `PREDICITAS_QA_DATABASE_NAME` debe coincidir con un nombre test/qa explícito. El flujo de negocio QA no se rediseñó. **No se ejecutó/certificó el E2E visual legacy completo**; se probaron rutas, exclusividad, traversal, importación limpia y bloqueo de bases no confirmadas. La guarda no sustituye inspeccionar host/URL/volumen.
 
 ## Evidencia ejecutada
 
 | Verificación | Resultado |
 |---|---|
-| 31 pruebas nuevas de archivos/CLI/QA | **31 aprobadas** |
+| 33 pruebas nuevas de archivos/CLI/QA/invariantes | **33 aprobadas** (incluye test de importación limpia e invariantes de centralización/manifiesto) |
 | Importación API desde CSV canónicos | **40/0** variado, **20/4** demo, BD inicialmente vacía y reloj fijo 2026-11-05 08:00 Lima |
-| BOM, segunda importación y rollback | PASÓ; segunda carga no duplica; usuarios/citas/historial/auditoría se revierten |
+| BOM, segunda importación y rollback | PASÓ; segunda carga no duplica; usuarios/citas/historial/auditoría se revierten limpiamente |
 | OpenAPI y tres predicciones congeladas | Idénticos; modelo activo sin cambios |
-| Build backend desde contexto actual | PASÓ; imagen final no-root UID 1000 |
+| Build backend desde contexto actual | PASÓ; imagen `predicitas-fase3-backend:validacion` (`sha256:a6e71ea3...`) |
 | Exportación dentro de imagen, sin red/credenciales | PASÓ; salida host explícita, segundo intento rechazado sin cambiar bytes |
 | Exclusiones Docker | Datos legacy, copia registry raíz y `.env` privado ausentes; artefacto activo presente e idéntico |
-| Frontend typecheck/lint/build | PASÓ |
-| Frontend tests | 451 aprobadas / 56 fallidas, **mismos casos y estados** que baseline |
-| Backend diagnóstico sin `tests/ia` | 249 aprobadas / 1 fallida: 218 previas + 31 nuevas; mismos casos previos; **87,13 % cobertura app**, sin rebajar 75 % |
-| Suite backend completa | Conserva error previo de colección por `app.modules.ia.cliente` inexistente; no se presenta como suite verde |
-| Integridad | 444 originales examinados, únicamente cambios previstos; fuentes de negocio, esquema, contratos, dependencias, secretos, CSV, modelo activo y evidencia histórica intactos |
+| Frontend tests y typecheck/lint/build | Línea base citada: 451 aprobadas / 56 fallidas preexistentes; 0 regresiones (sin cambios en código fuente de frontend) |
+| Backend diagnóstico sin `tests/ia` | 251 aprobadas / 1 fallida: 218 previas + 33 nuevas; mismos casos previos; **87,13 % cobertura app**, sin rebajar 75 % |
+| Suite backend completa | Conserva error previo de colección por `app.modules.ia.cliente` inexistente (S-02); no se presenta como suite verde |
+| Integridad y clon limpio | 444 originales examinados, únicamente cambios previstos; clon limpio en directorio temporal verificado con todas las muestras y manifiestos presentes |
+
+## Deuda técnica aceptada de fase 3
+
+- **D-01 (Retiro de CSVs legacy):** Las copias en la raíz y `apps/backend/data/` se mantienen transitoriamente por compatibilidad; su eliminación queda programada para las Fases 6 y 7 al migrar importers y extraer IA. Responsable: Arquitectura de Datos.
+- **D-02 (Mensaje informativo `+4` en CLI):** Conteo cableado en mensaje de salida de `exportar_csv.py`; no afecta lógica de generación/importación ni contrato operacional.
+- **D-03 (Ubicación de `rutas_validacion.py`):** Helper auxiliar mantenido en `apps/frontend/tests/` hasta la armonización de herramientas de prueba en Fase 10.
+- **D-04 (Ausencia de pin en `coverage`):** Versión de paquete `coverage` sin pin fijo en backend (7.17.0 vs 7.17.2), produciendo pequeñas variaciones decimales en cobertura sin comprometer el umbral exigido (≥ 75 %).
 
 No se arreglaron defectos previos ni actualizaron snapshots para ocultarlos. Las primeras comprobaciones se conservaron; tras añadir la guarda extra de QA se repitieron unitarias, regresión y build como `*_final`, sin sobrescribir resultados anteriores.
 

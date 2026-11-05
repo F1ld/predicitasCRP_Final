@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "image": "predicitas-fase3-backend:validacion",
+    "image_id": "sha256:a6e71ea3a0679548953680c848c140eb680a225a7e40db55213266e318900dd0",
+    "commit": "83144798b7fb5283ad4f13f871debaa3e09535dc"
+  },
+  "results": [
+    {
+      "check": "alembic_test_upgrade_final",
+      "exit_code": 0,
+      "seconds": 3.96,
+      "log": "runtime/test-results/fase-03/alembic_test_upgrade_final.log"
+    },
+    {
+      "check": "importacion_canonica_final",
+      "exit_code": 0,
+      "seconds": 10.34,
+      "log": "runtime/test-results/fase-03/importacion_canonica_final.log"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent
 RESULTS = ROOT / "runtime/test-results/fase-03"
 IMAGE = "predicitas-fase3-backend:validacion"
 SUFIJO = ""
+SOBRESCRIBIR = False
 
 
 def obtener_metadatos_imagen():
@@ -37,7 +38,8 @@ def registrar(nombre, command, *, env=None):
     nombre += SUFIJO
     RESULTS.mkdir(parents=True, exist_ok=True)
     log = RESULTS / f"{nombre}.log"
-    with log.open("x", encoding="utf-8") as stream:
+    modo = "w" if SOBRESCRIBIR else "x"
+    with log.open(modo, encoding="utf-8") as stream:
         start = time.monotonic()
         process = subprocess.run(command, cwd=ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT)
     entry = {"check": nombre, "exit_code": process.returncode, "seconds": round(time.monotonic() - start, 2), "log": log.relative_to(ROOT).as_posix()}
@@ -93,7 +95,7 @@ def preparar_bd():
 
 
 def main():
-    global SUFIJO
+    global SUFIJO, SOBRESCRIBIR
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("accion", choices=("unitarias", "preparar-bd", "integracion", "regresion", "frontend", "build", "detener"))
     parser.add_argument("--final", action="store_true", help="Guardar revalidación separada sin sobrescribir evidencia anterior")
@@ -101,6 +103,7 @@ def main():
     parser.add_argument("--sobrescribir", action="store_true", help="Sobrescribir archivo de evidencia existente si procede")
     args = parser.parse_args()
     action = args.accion
+    SOBRESCRIBIR = args.sobrescribir
     if args.sufijo:
         SUFIJO = f"_{args.sufijo}"
     elif args.final:

@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "image": "predicitas-fase3-backend:validacion",
+    "image_id": "sha256:a6e71ea3a0679548953680c848c140eb680a225a7e40db55213266e318900dd0",
+    "commit": "83144798b7fb5283ad4f13f871debaa3e09535dc"
+  },
+  "results": [
+    {
+      "check": "detener_test_db_final",
+      "exit_code": 0,
+      "seconds": 0.64,
+      "log": "runtime/test-results/fase-03/detener_test_db_final.log"
+    }
+  ]
+}

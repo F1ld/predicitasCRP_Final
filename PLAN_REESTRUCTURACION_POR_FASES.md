@@ -437,7 +437,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 0 | Inventario, baseline y recuperación comprobada | Ninguna | COMPLETADA |
 | 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
-| 3 | Datos, CSV y archivos centralizados | 2 | BLOQUEADA |
+| 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
 | 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
@@ -545,7 +545,14 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Inicio (05/11/2026):** autorizado por el usuario con confirmación previa exigida para acciones críticas/alto riesgo. Punto de retorno `a5a1f5f`, árbol limpio. Se preservan CSV/fixtures históricos y artefacto activo; solo copias canónicas/snapshot legacy, CLI de archivos y salidas futuras de QA. No borrar duplicados, promover/cargar copia legacy, reentrenar, cambiar esquema/credenciales ni intervenir el principal. Pruebas de persistencia únicamente en una BD nueva aislada. Evidencia en `docs/migracion/fase-03/`.
 
-**Resultado (05/11/2026): BLOQUEADA para cierre.** [Evidencia de fase 3](docs/migracion/fase-03/README.md). En proceso de revalidación con imagen oficial de fase 3, suite ampliada a 33 unitarias y cierre formal acotado con deuda catalogada (D-01 a D-04).
+**Resultado (05/11/2026): COMPLETADA (con deuda D-01 a D-04).** [Evidencia de fase 3](docs/migracion/fase-03/README.md). Canonicalización por copias verificadas por SHA-256 sin borrar CSV legacy ni tocar modelo activo. Imagen oficial probada: `predicitas-fase3-backend:validacion` (`sha256:a6e71ea3a0679548953680c848c140eb680a225a7e40db55213266e318900dd0`). Commit probado: `8314479`. CLI y salidas QA seguras (sin efectos colaterales al importar); 33 pruebas unitarias aprobadas, API canónica 40/0 y 20/4 con BOM/duplicados/rollback verificado, OpenAPI y tres predicciones idénticos. Tests previos conservan casos y estados: frontend 451/56 (línea base citada); backend diagnóstico 251/1 (218 previas + 33 nuevas), cobertura 87,13 %. Suite completa conserva error de colección IA previo (S-02). BD de prueba aislada detenida y recursos originales intactos. Clon limpio verificado con éxito.
+
+##### Deuda técnica aceptada de fase 3
+
+- **D-01 (Retiro de CSVs legacy):** Las copias en la raíz y `apps/backend/data/` se mantienen transitoriamente por compatibilidad; su eliminación queda programada para las Fases 6 y 7 al migrar importers y extraer IA. Responsable: Arquitectura de Datos.
+- **D-02 (Mensaje informativo `+4` en CLI):** Conteo cableado en mensaje de salida de `exportar_csv.py`; no afecta lógica de generación/importación ni contrato operacional.
+- **D-03 (Ubicación de `rutas_validacion.py`):** Helper auxiliar mantenido en `apps/frontend/tests/` hasta la armonización de herramientas de prueba en Fase 10.
+- **D-04 (Ausencia de pin en `coverage`):** Versión de paquete `coverage` sin pin fijo en backend (7.17.0 vs 7.17.2), produciendo pequeñas variaciones decimales en cobertura sin comprometer el umbral exigido (≥ 75 %).
 
 - [x] Crear estructura de `data/`, `artifacts/`, `runtime/` y política de ignore según sección 5; raw/processed vacíos, sin dataset ficticio.
 - [x] Centralizar CSV canónico variado y demo con hash idéntico; localizar consumidores y actualizar guías. Por prudencia, copias antiguas preservadas como compatibilidad no canónica; retirada futura solo tras revisión externa, no borrar en esta entrega.
