@@ -1,0 +1,171 @@
+{
+  "reference_clock": "2026-11-05T08:00:00-05:00",
+  "samples": [
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "recibidas": 40,
+      "aceptables_sin_duplicados_bd": 40,
+      "rechazadas": 0,
+      "rechazos": []
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "recibidas": 24,
+      "aceptables_sin_duplicados_bd": 20,
+      "rechazadas": 4,
+      "rechazos": [
+        {
+          "fila": 21,
+          "tipo": "validacion",
+          "campos": [
+            "sede"
+          ]
+        },
+        {
+          "fila": 22,
+          "tipo": "validacion",
+          "campos": [
+            "especialidad"
+          ]
+        },
+        {
+          "fila": 23,
+          "tipo": "duplicada dentro del mismo archivo"
+        },
+        {
+          "fila": 24,
+          "tipo": "fecha_registro_cita es posterior a fecha_hora_cita"
+        }
+      ]
+    }
+  ],
+  "uploads": [
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "bom": false,
+      "primera_carga": {
+        "recibidas": 40,
+        "aceptadas": 40,
+        "rechazadas": 0,
+        "detalle_rechazos": []
+      },
+      "segunda_carga": {
+        "recibidas": 40,
+        "aceptadas": 0,
+        "rechazadas": 40
+      },
+      "rollback_verified": true
+    },
+    {
+      "archivo": "citas_para_importar_variado.csv",
+      "bom": true,
+      "primera_carga": {
+        "recibidas": 40,
+        "aceptadas": 40,
+        "rechazadas": 0,
+        "detalle_rechazos": []
+      },
+      "segunda_carga": {
+        "recibidas": 40,
+        "aceptadas": 0,
+        "rechazadas": 40
+      },
+      "rollback_verified": true
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "bom": false,
+      "primera_carga": {
+        "recibidas": 24,
+        "aceptadas": 20,
+        "rechazadas": 4,
+        "detalle_rechazos": [
+          {
+            "fila": 21,
+            "id_cita_externa": "CIT-DEMO-INV-001",
+            "motivos": [
+              "sede: Value error, valor fuera del dominio permitido: 'MIRAFLORES' (permitidos: SAN_ISIDRO)"
+            ]
+          },
+          {
+            "fila": 22,
+            "id_cita_externa": "CIT-DEMO-INV-002",
+            "motivos": [
+              "especialidad: Value error, valor fuera del dominio permitido: 'DERMATOLOGIA' (permitidos: CARDIOLOGIA, TRAUMATOLOGIA, PEDIATRIA)"
+            ]
+          },
+          {
+            "fila": 23,
+            "id_cita_externa": "CIT-DEMO-000001",
+            "motivos": [
+              "duplicada dentro del mismo archivo"
+            ]
+          },
+          {
+            "fila": 24,
+            "id_cita_externa": "CIT-DEMO-INV-003",
+            "motivos": [
+              "fecha_registro_cita es posterior a fecha_hora_cita"
+            ]
+          }
+        ]
+      },
+      "segunda_carga": {
+        "recibidas": 24,
+        "aceptadas": 0,
+        "rechazadas": 24
+      },
+      "rollback_verified": true
+    },
+    {
+      "archivo": "citas_demo.csv",
+      "bom": true,
+      "primera_carga": {
+        "recibidas": 24,
+        "aceptadas": 20,
+        "rechazadas": 4,
+        "detalle_rechazos": [
+          {
+            "fila": 21,
+            "id_cita_externa": "CIT-DEMO-INV-001",
+            "motivos": [
+              "sede: Value error, valor fuera del dominio permitido: 'MIRAFLORES' (permitidos: SAN_ISIDRO)"
+            ]
+          },
+          {
+            "fila": 22,
+            "id_cita_externa": "CIT-DEMO-INV-002",
+            "motivos": [
+              "especialidad: Value error, valor fuera del dominio permitido: 'DERMATOLOGIA' (permitidos: CARDIOLOGIA, TRAUMATOLOGIA, PEDIATRIA)"
+            ]
+          },
+          {
+            "fila": 23,
+            "id_cita_externa": "CIT-DEMO-000001",
+            "motivos": [
+              "duplicada dentro del mismo archivo"
+            ]
+          },
+          {
+            "fila": 24,
+            "id_cita_externa": "CIT-DEMO-INV-003",
+            "motivos": [
+              "fecha_registro_cita es posterior a fecha_hora_cita"
+            ]
+          }
+        ]
+      },
+      "segunda_carga": {
+        "recibidas": 24,
+        "aceptadas": 0,
+        "rechazadas": 24
+      },
+      "rollback_verified": true
+    }
+  ],
+  "model_hash_unchanged": true,
+  "prediction_parity": true,
+  "openapi_unchanged": true,
+  "database_isolated": true,
+  "new_retention_enabled": false
+}

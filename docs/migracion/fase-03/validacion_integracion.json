@@ -1,0 +1,14 @@
+[
+  {
+    "check": "alembic_test_upgrade",
+    "exit_code": 0,
+    "seconds": 3.7,
+    "log": "runtime/test-results/fase-03/alembic_test_upgrade.log"
+  },
+  {
+    "check": "importacion_canonica",
+    "exit_code": 0,
+    "seconds": 9.87,
+    "log": "runtime/test-results/fase-03/importacion_canonica.log"
+  }
+]

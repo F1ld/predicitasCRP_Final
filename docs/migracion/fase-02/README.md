@@ -4,6 +4,8 @@ Fecha: **04/11/2026**. Responsable: agente de implementación, a solicitud del u
 
 **Estado: COMPLETADA.** Mudanza aplicada y validada en aislamiento, gate de lint en Registrar.tsx resuelto, sin regresiones observadas en las comparaciones ejecutadas.
 
+**Aclaración de cierre (05/11/2026):** el commit `a5a1f5f` ya incorpora la corrección de lint. Antes de fase 3 se revalidaron lint/typecheck/build con salida 0. La tabla y los logs de la mudanza de abajo describen el fallo histórico anterior a esa corrección; no son un bloqueo vigente ni se sobrescriben. Evidencia adicional actual en `../fase-03/validacion_frontend.json`.
+
 ## Cambios limitados a estructura y configuración
 
 - `backend-predicitas/` → `apps/backend/`.
@@ -54,7 +56,7 @@ Al terminar se detuvo únicamente el stack de validación. Sus contenedores y vo
 
 Los fallos de colección IA, reasignación y 56 tests UI ya existían. No se borraron pruebas, rebajó cobertura ni actualizaron snapshots para ocultarlos. `npm ci` informó siete advisories moderados; no se ejecutó `audit fix` ni se actualizaron paquetes.
 
-S-01 ya estaba integrado al comenzar, pero eso no hacía pasar lint. El gate de fase 2 exige build/typecheck/lint, por lo que se requiere una **entrega separada mínima de lint**, sin mezclarla con movimientos ni consolidación frontend. El resto de deudas conserva sus gates de `../fase-01/README.md` y `../../arquitectura/ESTABILIZACION_Y_E2E.md`.
+S-01 ya estaba integrado al comenzar, pero eso no hacía pasar lint durante la mudanza. Ese bloqueo histórico se resolvió separadamente en `a5a1f5f`; el gate actual de build/typecheck/lint está aprobado. El resto de deudas conserva sus gates de `../fase-01/README.md` y `../../arquitectura/ESTABILIZACION_Y_E2E.md`.
 
 ## Evidencias y comandos
 
@@ -80,6 +82,6 @@ Los `.log` quedan locales/ignorados para diagnóstico; JSON, JUnit y manifiestos
 2. Antes de revertir, preservar cambios posteriores y parar únicamente los escritores del stack afectado.
 3. Revertir los movimientos de forma controlada desde `movimientos.json`, ajustando configuración con referencia al commit `80e3ce2` y ZIP previo. El node_modules viejo está conservado, pero se recomienda otra instalación limpia. Mantener el volumen correcto; esta fase no requiere restaurar datos.
 4. Los Compose históricos son material de retorno, no comandos de arranque alternativos activos. No ejecutar sus rutas antiguas sin reconstruir primero el estado anterior.
-5. Resolver lint en una entrega separada, repetir validación y cerrar fase 2 antes de iniciar fase 3. No saltar a extracción IA.
+5. Lint ya corregido y revalidado; fase 2 cerrada. Continuar por fase 3, sin saltar a extracción IA ni alterar las evidencias históricas de esta entrega.
 
 La validación funcional aquí no equivale a inspección visual completa de navegador ni al E2E final de fase 10. El corte del stack principal sigue pendiente de aceptación; no se hizo una conmutación silenciosa.

@@ -1,0 +1,10 @@
+{
+  "db": "predicitas-fase3-20261105-134615-db",
+  "network": "predicitas-fase3-20261105-134615-net",
+  "volume": "predicitas-fase3-20261105-134615-test-pgdata",
+  "database": "predicitas_fase3_test",
+  "private_env": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase3-20261105-134615\\backend-test.env",
+  "source_volume_used": false,
+  "host_ports": [],
+  "fresh_authorized_test_volume": true
+}

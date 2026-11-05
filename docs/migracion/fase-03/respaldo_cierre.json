@@ -1,0 +1,21 @@
+{
+  "date_utc": "2026-11-05T19:07:37.387638+00:00",
+  "private_archive": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase3-20261105-134615\\resultado_fase3_privado.zip",
+  "sha256": "b1649945bf726d4b55ee2b6fbd535565bfa3b834b0a86d9d7bf6cdd08e24b120",
+  "bytes": 2173710,
+  "files": 533,
+  "zip_crc_verified": true,
+  "raw_test_evidence_included": true,
+  "contains_secrets_do_not_publish": true,
+  "inherits_restricted_acl": true,
+  "same_machine_not_external_copy": true,
+  "empty_directories_not_stored": [
+    "apps/backend/Skills",
+    "apps/frontend/Skills",
+    "data/raw",
+    "data/processed",
+    "artifacts/reports",
+    "runtime/tmp"
+  ],
+  "note": "Manifiesto fuera del ZIP. No incluye instalaciones ni runtime ajeno a evidencia de fase3; recrear directorios vac\u00edos al recuperar."
+}

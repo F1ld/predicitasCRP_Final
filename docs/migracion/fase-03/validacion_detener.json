@@ -1,0 +1,8 @@
+[
+  {
+    "check": "detener_test_db",
+    "exit_code": 0,
+    "seconds": 0.57,
+    "log": "runtime/test-results/fase-03/detener_test_db.log"
+  }
+]

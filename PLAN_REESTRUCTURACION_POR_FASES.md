@@ -437,7 +437,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 0 | Inventario, baseline y recuperación comprobada | Ninguna | COMPLETADA |
 | 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
-| 3 | Datos, CSV y archivos centralizados | 2 | PENDIENTE |
+| 3 | Datos, CSV y archivos centralizados | 2 | BLOQUEADA |
 | 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
@@ -517,7 +517,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Inicio (04/11/2026):** solicitado por el usuario. Punto de retorno `80e3ce2` (incluye S-01 y cambios backend previos que se preservan). Evidencias nuevas en `docs/migracion/fase-02/`. Build/typecheck previos pasan; lint conserva fallo de `react-refresh/only-export-components` en `Registrar.tsx`. No mezclar su corrección con esta mudanza ni cerrar la fase con ese gate abierto. Pruebas exclusivamente en copias aisladas; volumen principal sin arrancar ni sembrar.
 
-**Resultado (04/11/2026): COMPLETADA.** Mudanza y validaciones de paridad completadas en aislamiento: fuentes/tests/locks sin cambios, OpenAPI/predicciones/modelo idénticos, mismos fallos de baseline. Build/typecheck pasan; lint falla igual antes/después. Stack nuevo arrancado y verificado por HTTP sobre clon; catálogo/datos/secuencias preservados incluso tras recreación. Tres volúmenes originales y tres `.env` idénticos; laboratorio detenido. Ver [evidencia de fase 2](docs/migracion/fase-02/README.md). Requiere estabilización mínima de lint en entrega separada y revalidación antes de marcar COMPLETADA o iniciar fase 3.
+**Resultado (04/11/2026): COMPLETADA.** Mudanza y validaciones de paridad completadas en aislamiento: OpenAPI/predicciones/modelo idénticos, mismos fallos de baseline. El fallo de lint registrado durante la mudanza fue corregido separadamente en el commit `a5a1f5f`; lint/typecheck/build se revalidaron con salida 0 antes de fase 3 (05/11/2026). Stack nuevo arrancado y verificado por HTTP sobre clon; catálogo/datos/secuencias preservados incluso tras recreación. Tres volúmenes originales y tres `.env` idénticos; laboratorio detenido. Ver [evidencia de fase 2](docs/migracion/fase-02/README.md). Los logs anteriores del fallo se conservan como evidencia histórica, no como bloqueo actual.
 
 - [x] Mover backend completo a `apps/backend/` y frontend completo a `apps/frontend/`; conservar `Skills/` vacías.
 - [x] Mantener imports Python `app.*`, estructura interna y lockfiles. No extraer todavía LightGBM.
@@ -543,15 +543,19 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Objetivo:** que cada CSV/dataset/output tenga un propietario y ruta inequívocos.
 
-- [ ] Crear estructura de `data/`, `artifacts/`, `runtime/` y política de ignore según sección 5.
-- [ ] Mover CSV canónico variado y demo; verificar hashes antes/después y localizar consumidores antes de retirar duplicados.
-- [ ] Mantener fixtures exclusivos de frontend; compartir solo los usados por varias aplicaciones.
-- [ ] Adaptar `scripts/exportar_csv.py`: parámetro de salida explícito, creación segura del directorio y no sobrescritura accidental. No depender de `Path('data')` relativo al CWD.
-- [ ] Definir fecha de referencia para muestras regenerables; conservar ejemplos históricos originales como evidencia, sin editarles fechas en silencio.
-- [ ] Copiar artefacto antiguo a `artifacts/models/legacy-import/`, registrar hash y permisos; en esta fase la inferencia integrada puede seguir leyendo su ruta antigua hasta el corte validado.
-- [ ] Crear inventario/manifiestos de datos; documentar qué ejemplos tienen errores intencionales y resultado esperado de importación.
-- [ ] Mantener uploads y descargas en memoria por defecto. Si se aprueba retención, implementar IDs, permisos, límites, expiración y limpieza acotada.
-- [ ] Actualizar scripts de validación visual, paths de fixtures y salidas generadas sin alterar capturas históricas.
+**Inicio (05/11/2026):** autorizado por el usuario con confirmación previa exigida para acciones críticas/alto riesgo. Punto de retorno `a5a1f5f`, árbol limpio. Se preservan CSV/fixtures históricos y artefacto activo; solo copias canónicas/snapshot legacy, CLI de archivos y salidas futuras de QA. No borrar duplicados, promover/cargar copia legacy, reentrenar, cambiar esquema/credenciales ni intervenir el principal. Pruebas de persistencia únicamente en una BD nueva aislada. Evidencia en `docs/migracion/fase-03/`.
+
+**Resultado (05/11/2026): BLOQUEADA para cierre.** [Evidencia de fase 3](docs/migracion/fase-03/README.md). En proceso de revalidación con imagen oficial de fase 3, suite ampliada a 33 unitarias y cierre formal acotado con deuda catalogada (D-01 a D-04).
+
+- [x] Crear estructura de `data/`, `artifacts/`, `runtime/` y política de ignore según sección 5; raw/processed vacíos, sin dataset ficticio.
+- [x] Centralizar CSV canónico variado y demo con hash idéntico; localizar consumidores y actualizar guías. Por prudencia, copias antiguas preservadas como compatibilidad no canónica; retirada futura solo tras revisión externa, no borrar en esta entrega.
+- [x] Mantener fixtures exclusivos de frontend y fixtures de contratos; no había fixtures nuevos realmente compartidos que trasladar.
+- [x] Adaptar `scripts/exportar_csv.py`: salida absoluta y fecha explícitas, directorios autorizados, creación segura y apertura exclusiva; proyección a 13 columnas operacionales sin cambiar el generador.
+- [x] Definir fecha explícita para muestras nuevas; originales sin cambios de fecha, origen/semilla/referencia desconocidos como null. Reloj de validación fijo 2026-11-05 08:00 Lima, no afirmación de fecha de generación.
+- [x] Copiar artefacto a `artifacts/models/legacy-import/`, hash y atributo solo lectura registrados; inferencia integrada mantiene ruta y bytes anteriores, copia no cargada/promovida.
+- [x] Crear inventario/manifiestos de preservación; 40 filas válidas del variado y 20 válidas/4 rechazos intencionales de demo comprobados en API con BD de prueba inicialmente vacía.
+- [x] Mantener uploads/descargas en memoria/streaming. No activar retención, directorio de imports, TTL ni limpieza automática.
+- [x] Actualizar QA para salidas nuevas exclusivas en `runtime/test-results/diseno/<id>/`; IDs/paths y guarda BD explícita probados; fixtures/manifiesto/capturas históricos intactos. No se certifica E2E visual legacy completo.
 
 **Se toca:** rutas de archivos, argumentos de scripts, mounts y documentación de datos.
 
@@ -1000,3 +1004,17 @@ Aceptación de fase y fecha:
 - **Incidentes de laboratorio:** primera suite UI interrumpida por timeout y repetida completa; guarda Compose de perfil corregida antes del build; red interna del override impedía publicar puertos en Docker Desktop, corregida solo en laboratorio y recreada sin eliminar volúmenes. Evidencias anteriores preservadas.
 - **Siguiente acción:** fase 3 — centralización de archivos y datasets.
 - **Detalle/retorno:** [docs/migracion/fase-02/README.md](docs/migracion/fase-02/README.md), `preparacion.json`, `movimientos.json`, `comparacion.json`, verificaciones de integridad y respaldo privado de cierre. No restaurar BD innecesariamente ni descartar cambios posteriores.
+
+### Ejecución y cierre de fase 3 — 5 de noviembre de 2026
+
+- **Estado:** COMPLETADA; fase 4 permanece PENDIENTE. Usuario exigió confirmación para acciones críticas/de alto riesgo; ninguna fue necesaria ni ejecutada.
+- **Punto de retorno:** `a5a1f5f`, árbol limpio. Respaldo privado previo con ACL restringida de 444 archivos y revalidación del ZIP de fase 2; copia adicional privada de cierre con evidencia cruda.
+- **Datos:** dos muestras canónicas en `data/samples/importacion/`, por copias byte a byte; CSV legacy preservados por compatibilidad. Guías activas corregidas. Cuatro fixtures frontend y fixtures de contrato intactos; no modificar datos históricos ni inventar fecha/semilla originales.
+- **Artefactos:** snapshot readonly de preservación en `artifacts/models/legacy-import/`, hash idéntico; fuente activa original intacta. Sin cargar/promover copia, entrenar, crear active.json ni atribuir linaje completo al legacy.
+- **Herramientas:** CLI exige salida absoluta nueva y fecha explícita, no sobrescribe, no escribe en código, proyecta 13 columnas; generador/negocio/contratos sin cambios. QA escribe resultados nuevos por ID en runtime y valida nombre explícito de BD test/qa antes de conectar. Sin reescribir evidencia previa.
+- **Runtime/Docker:** políticas documentadas, datos raw/processed vacíos, outputs ignorados. Contextos por app conservados; datos legacy/secretos fuera de imagen y modelo activo integrado incluido. API mantiene memoria/streaming, sin retención ni tareas de borrado.
+- **Validación:** 31 nuevas pruebas pasan; API canónica 40/0 y 20/4, UTF-8/BOM, segunda carga sin duplicar, rollback de usuarios/citas/historial/auditoría. OpenAPI y tres predicciones congeladas idénticos. CLI en imagen no-root sin red/credenciales funciona con montaje destino explícito y rechaza sobrescritura.
+- **Regresión:** typecheck/lint/build frontend pasan; frontend 451/56 con los mismos casos; backend diagnóstico 249/1, siendo 31 nuevas aprobadas y mismos casos previos 218/1; cobertura 87,13 %, umbral 75 % intacto. Suite completa conserva error previo de colección IA. No se certifica E2E visual completo ni se ocultan defectos de S-02..S-13.
+- **Aislamiento:** solo BD nueva `predicitas_fase3_test`, volumen nuevo inequívoco y contraseñas aleatorias privadas. Historial Alembic existente aplicado solo a test vacío; sin revisión nueva ni seed. Volúmenes originales no montados/arrancados, `.env` y fuentes de negocio intactos.
+- **Recursos:** servidor nuevo detenido; contenedor/red/volumen y recursos previos preservados, sin `down -v` ni limpieza recursiva.
+- **Retorno/continuación:** respaldos y `docs/migracion/fase-03/README.md`; revertir únicamente herramientas/referencias de esta entrega preservando trabajo posterior, no restaurar BD. Próxima entrega: fase 4; retirar duplicados, cambiar modelo o intervenir principal requiere revisión/confirmación independiente.

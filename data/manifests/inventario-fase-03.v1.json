@@ -1,0 +1,185 @@
+{
+  "format": "predicitas.file_inventory/v1",
+  "recorded_utc": "2026-11-05T18:56:29.618415+00:00",
+  "purpose": "Inventario de preservación y muestras, no manifiesto aprobado de dataset/modelo",
+  "reference_clock_for_import_validation": "2026-11-05T08:00:00-05:00",
+  "files": [
+    {
+      "source": "citas_para_importar_variado.csv",
+      "destination": "data/samples/importacion/citas_para_importar_variado.csv",
+      "sha256": "8eebf37844262ac33ebbe2453e62edc321ae67a2bcf0a9fdd43b6761fa328282",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": false,
+      "bytes": 6392,
+      "original_generation_date": null,
+      "original_seed": null,
+      "original_reference_date": null,
+      "columns": [
+        "id_cita_externa",
+        "paciente_anon_id",
+        "sede",
+        "especialidad",
+        "medico",
+        "fecha_hora_cita",
+        "fecha_registro_cita",
+        "tipo_paciente",
+        "canal_origen",
+        "inasistencias_previas",
+        "reprogramaciones_prev",
+        "asistencias_previas",
+        "estado_actual"
+      ],
+      "type": "OPERATIONAL_SYNTHETIC_SAMPLE",
+      "rows": 40,
+      "appointment_date_min": "2026-11-09T08:45:00-05:00",
+      "appointment_date_max": "2026-11-21T18:00:00-05:00",
+      "synthetic": true,
+      "canonical": true,
+      "versioned_in_git": true,
+      "validation": {
+        "archivo": "citas_para_importar_variado.csv",
+        "recibidas": 40,
+        "aceptables_sin_duplicados_bd": 40,
+        "rechazadas": 0,
+        "rechazos": []
+      }
+    },
+    {
+      "source": "apps/backend/data/citas_demo.csv",
+      "destination": "data/samples/importacion/citas_demo.csv",
+      "sha256": "6f1ab39d74e14b99640bb9ef0b64bd8ab1964f0ef31b0d52c85e7b006ddaddaa",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": false,
+      "bytes": 3917,
+      "original_generation_date": null,
+      "original_seed": null,
+      "original_reference_date": null,
+      "columns": [
+        "id_cita_externa",
+        "paciente_anon_id",
+        "sede",
+        "especialidad",
+        "medico",
+        "fecha_hora_cita",
+        "fecha_registro_cita",
+        "tipo_paciente",
+        "canal_origen",
+        "inasistencias_previas",
+        "reprogramaciones_prev",
+        "asistencias_previas",
+        "estado_actual"
+      ],
+      "type": "OPERATIONAL_SYNTHETIC_SAMPLE",
+      "rows": 24,
+      "appointment_date_min": "2026-10-20T10:30:00-05:00",
+      "appointment_date_max": "2026-11-02T17:30:00-05:00",
+      "synthetic": true,
+      "canonical": true,
+      "versioned_in_git": true,
+      "validation": {
+        "archivo": "citas_demo.csv",
+        "recibidas": 24,
+        "aceptables_sin_duplicados_bd": 20,
+        "rechazadas": 4,
+        "rechazos": [
+          {
+            "fila": 21,
+            "tipo": "validacion",
+            "campos": [
+              "sede"
+            ]
+          },
+          {
+            "fila": 22,
+            "tipo": "validacion",
+            "campos": [
+              "especialidad"
+            ]
+          },
+          {
+            "fila": 23,
+            "tipo": "duplicada dentro del mismo archivo"
+          },
+          {
+            "fila": 24,
+            "tipo": "fecha_registro_cita es posterior a fecha_hora_cita"
+          }
+        ]
+      }
+    },
+    {
+      "source": "apps/backend/app/modules/ia/artifacts/modelo_predicitas_v1.joblib",
+      "destination": "artifacts/models/legacy-import/modelo_predicitas_v1.joblib",
+      "sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": true,
+      "bytes": 457354,
+      "original_generation_date": null,
+      "original_seed": null,
+      "original_reference_date": null,
+      "type": "LEGACY_PRESERVATION_COPY",
+      "active_serving_source": "apps/backend/app/modules/ia/artifacts/modelo_predicitas_v1.joblib",
+      "copy_is_active": false,
+      "loaded_or_promoted": false,
+      "versioned_in_git": false,
+      "readonly_attribute_observed": true,
+      "mode_observed": "0o100444",
+      "raw_dataset_sha256": null,
+      "split_hashes": null,
+      "complete_training_lineage": false,
+      "trust_origin": "Artefacto interno local conservado y respaldado desde fase 0; no upload externo"
+    }
+  ],
+  "frontend_exclusive_fixtures": [
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-18f4e1db.csv",
+      "sha256": "e4749e956c8990ad0c3660a9307922cb282894864fd414f30d5c279d31267b60",
+      "owner": "frontend",
+      "moved": false
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-1d6d6124.csv",
+      "sha256": "8e30684677e691457f9df2282c04b5cf0d3a8112f3620d46ce2ca56f54e20861",
+      "owner": "frontend",
+      "moved": false
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-50ae5732.csv",
+      "sha256": "f09da7317721f952ebdd1e66fd336f5a100f8c993e1c46d2a1df9c09e24a6456",
+      "owner": "frontend",
+      "moved": false
+    },
+    {
+      "path": "apps/frontend/tests/fixtures/citas-diseno-e5e4dbc4.csv",
+      "sha256": "b51f85253461bb15633a7eb73d920765ce17d7c2a499a268393c667a6e35b1ed",
+      "owner": "frontend",
+      "moved": false
+    }
+  ],
+  "compatibility_copies": [
+    {
+      "path": "citas_para_importar_variado.csv",
+      "canonical": "data/samples/importacion/citas_para_importar_variado.csv",
+      "sha256": "8eebf37844262ac33ebbe2453e62edc321ae67a2bcf0a9fdd43b6761fa328282",
+      "status": "PRESERVED_COMPATIBILITY_COPY_NO_AUTO_SYNC"
+    },
+    {
+      "path": "apps/backend/data/citas_para_importar_variado.csv",
+      "canonical": "data/samples/importacion/citas_para_importar_variado.csv",
+      "sha256": "8eebf37844262ac33ebbe2453e62edc321ae67a2bcf0a9fdd43b6761fa328282",
+      "status": "PRESERVED_COMPATIBILITY_COPY_NO_AUTO_SYNC"
+    },
+    {
+      "path": "apps/backend/data/citas_demo.csv",
+      "canonical": "data/samples/importacion/citas_demo.csv",
+      "sha256": "6f1ab39d74e14b99640bb9ef0b64bd8ab1964f0ef31b0d52c85e7b006ddaddaa",
+      "status": "PRESERVED_COMPATIBILITY_COPY_NO_AUTO_SYNC"
+    }
+  ],
+  "unchanged_contract_fixtures": "contracts/examples/",
+  "unknown_metadata_policy": "null: no inferir fecha/semilla/linaje original de valores por defecto actuales",
+  "raw_or_processed_dataset_created": false
+}

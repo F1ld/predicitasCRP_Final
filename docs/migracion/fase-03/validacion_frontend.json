@@ -1,0 +1,26 @@
+[
+  {
+    "check": "frontend_typecheck",
+    "exit_code": 0,
+    "seconds": 13.48,
+    "log": "runtime/test-results/fase-03/frontend_typecheck.log"
+  },
+  {
+    "check": "frontend_lint",
+    "exit_code": 0,
+    "seconds": 20.17,
+    "log": "runtime/test-results/fase-03/frontend_lint.log"
+  },
+  {
+    "check": "frontend_build",
+    "exit_code": 0,
+    "seconds": 10.58,
+    "log": "runtime/test-results/fase-03/frontend_build.log"
+  },
+  {
+    "check": "frontend_test",
+    "exit_code": 1,
+    "seconds": 79.74,
+    "log": "runtime/test-results/fase-03/frontend_test.log"
+  }
+]

@@ -1,0 +1,145 @@
+{
+  "original_files_examined": 444,
+  "expected_modified_files": [
+    "GUIA_DE_PRUEBAS_PARA_EL_EQUIPO.md",
+    "INSTRUCCIONES_RAPIDAS_ZIP.md",
+    "PLAN_REESTRUCTURACION_POR_FASES.md",
+    "README.md",
+    "apps/backend/.dockerignore",
+    "apps/backend/scripts/exportar_csv.py",
+    "apps/frontend/.dockerignore",
+    "apps/frontend/tests/validar_diseno.py",
+    "docs/migracion/fase-02/README.md"
+  ],
+  "unexpected_changes": [],
+  "all_original_csv_and_active_model_bytes_unchanged": true,
+  "three_env_files_unchanged": true,
+  "migration_contract_sources_and_lockfiles_unchanged": true,
+  "old_backend_tests_identical": true,
+  "old_backend_passed": 218,
+  "old_backend_failed": 1,
+  "new_backend_tests_passed": 31,
+  "new_unit_tests_passed": 31,
+  "backend_coverage_percent": 87.12705330204493,
+  "backend_full_suite_retains_preexisting_collection_error": true,
+  "frontend_tests_identical": true,
+  "frontend_counts": [
+    "56 failed | 451 passed (507)"
+  ],
+  "original_volumes": [
+    {
+      "name": "predicitas-crp_pgdata",
+      "no_running_writers": true,
+      "mounted_by_phase3_test_server": false
+    },
+    {
+      "name": "predicitas-backend_pgdata",
+      "no_running_writers": true,
+      "mounted_by_phase3_test_server": false
+    },
+    {
+      "name": "predicitas-guia-qa_qa_pgdata",
+      "no_running_writers": true,
+      "mounted_by_phase3_test_server": false
+    }
+  ],
+  "skills_empty": true,
+  "raw_and_processed_empty": true,
+  "legacy_copies_preserved": true,
+  "retention_enabled": false,
+  "critical_actions_without_confirmation": false,
+  "raw_evidence": [
+    {
+      "path": "runtime/test-results/fase-03/alembic_test_upgrade.log",
+      "sha256": "cec9cda1adabe81c9675ea27b66d9d05b0385af826f60f8d89d4152244d9d2cf"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_completo.log",
+      "sha256": "3b242e8632dae41fab60daef8cace6b1f22904dafdc5c07d620c8db9fd939386"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_completo.xml",
+      "sha256": "4f800247c04f5e4909d4d330b026ad31b6d2df6f6ac67bed53324a3e14fdd3eb"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_completo_final.log",
+      "sha256": "374aa5e8b95ab764baf41daf11d5c79fd8d4abf80d144c8b4d114c9eb56e3ac3"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_completo_final.xml",
+      "sha256": "39bd8c53cfd01565a69237896baed7802d697829c7e5d21d3e2e4b8c7da3e6e9"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_coverage.json",
+      "sha256": "8c72e32ee37a2f89bba485746212ae50eab36e04bcad8ff8d195cebc463be5fd"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_coverage_final.json",
+      "sha256": "3c40759e3ad47e9883c5084c7d333b5068c19d6563eab7239bd54b85ffadee09"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_diagnostico.log",
+      "sha256": "cad69987ae20b2eb51ea7e154c5413c50185284ef1d35d253cf42d8e9c7400a7"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_diagnostico.xml",
+      "sha256": "1bb782efb2d4b99f0691c0cb808718d61149a87060a98f2d976b01f84e6a1c83"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_diagnostico_final.log",
+      "sha256": "938d4695510bd1cba5bb3d187927a9f49ccbbaf38a48e93df13c9e8b04217260"
+    },
+    {
+      "path": "runtime/test-results/fase-03/backend_diagnostico_final.xml",
+      "sha256": "c21522069ab405e638200f82bde5ba23ec3b2540cf2a28e819f225ffb2ed09a7"
+    },
+    {
+      "path": "runtime/test-results/fase-03/docker_build_backend.log",
+      "sha256": "f74eaa4e96b0e96948413a0d30460eb585f79ee97af40d4cb2e0b8074e6a7e44"
+    },
+    {
+      "path": "runtime/test-results/fase-03/docker_build_backend_final.log",
+      "sha256": "6f8a700b5d755284dc62cb0215ce32c7bd06e7be67fdcc2ea443393d0ac769e7"
+    },
+    {
+      "path": "runtime/test-results/fase-03/frontend_build.log",
+      "sha256": "b14b49a698a17cff0dc577896a3c7976fc1a826e766d90a90f5f485cab3e94c8"
+    },
+    {
+      "path": "runtime/test-results/fase-03/frontend_lint.log",
+      "sha256": "f43ed567dfcd71d00bd3b7cef11aca6e2e0acdbe4f50df843824b0b348408069"
+    },
+    {
+      "path": "runtime/test-results/fase-03/frontend_test.log",
+      "sha256": "149d8d102401489e5a40040b7fe19cc91268acdf2fe436f500b0391523c016fc"
+    },
+    {
+      "path": "runtime/test-results/fase-03/frontend_typecheck.log",
+      "sha256": "bedf29b8aa38d05d21fd24ef0520d5a53b511323370317ce791f19d6bcb764f1"
+    },
+    {
+      "path": "runtime/test-results/fase-03/importacion_canonica.json",
+      "sha256": "15f1d5fd2274c81cac9b572d371ab8f25f4130060e610a84fb17c710e94aea7b"
+    },
+    {
+      "path": "runtime/test-results/fase-03/importacion_canonica.log",
+      "sha256": "a135f88aefa225869adf7ea731cfe20437bd8cfa2244666dd3960427ef1f37e9"
+    },
+    {
+      "path": "runtime/test-results/fase-03/unitarias_archivos.log",
+      "sha256": "48b642ce30d46372dd5af14578a4f22502a32c590b8603ab6cf7796cd0f4497d"
+    },
+    {
+      "path": "runtime/test-results/fase-03/unitarias_archivos.xml",
+      "sha256": "065fff25d2ba7a82565af9781fdb25c55e274d6a629f1c54ae63b76b5ced3c75"
+    },
+    {
+      "path": "runtime/test-results/fase-03/unitarias_archivos_final.log",
+      "sha256": "6fddd1fca9efef5974fb87da329120cb777afc88278ee4242ddfa9e394ce6e4e"
+    },
+    {
+      "path": "runtime/test-results/fase-03/unitarias_archivos_final.xml",
+      "sha256": "0b5d89307cd7308e207624bf28db6411288577753a5031bb03a709cb9b663bc5"
+    }
+  ]
+}

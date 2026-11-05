@@ -1,0 +1,31 @@
+{
+  "copies": [
+    {
+      "source": "citas_para_importar_variado.csv",
+      "destination": "data/samples/importacion/citas_para_importar_variado.csv",
+      "sha256": "8eebf37844262ac33ebbe2453e62edc321ae67a2bcf0a9fdd43b6761fa328282",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": false
+    },
+    {
+      "source": "apps/backend/data/citas_demo.csv",
+      "destination": "data/samples/importacion/citas_demo.csv",
+      "sha256": "6f1ab39d74e14b99640bb9ef0b64bd8ab1964f0ef31b0d52c85e7b006ddaddaa",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": false
+    },
+    {
+      "source": "apps/backend/app/modules/ia/artifacts/modelo_predicitas_v1.joblib",
+      "destination": "artifacts/models/legacy-import/modelo_predicitas_v1.joblib",
+      "sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+      "source_preserved": true,
+      "identical": true,
+      "destination_readonly_attribute": true
+    }
+  ],
+  "legacy_csv_copies_preserved": true,
+  "model_loaded_or_promoted": false,
+  "note": "Ubicación canónica nueva; copias previas de CSV solo compatibilidad congelada. Joblib legacy es copia de preservación, no modelo activo ni versión aprobada."
+}

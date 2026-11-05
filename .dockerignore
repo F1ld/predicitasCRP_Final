@@ -1,0 +1,19 @@
+# Inerte / No aplicable para compose.yaml: los contextos de build oficiales son apps/backend y apps/frontend.
+# Se conserva como salvaguarda preventiva ante invocaciones manuales accidentales de docker build desde la raíz.
+.git
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.venv
+**/__pycache__
+**/coverage
+data/raw
+data/processed
+artifacts
+runtime
+backups
+*.log

@@ -1,0 +1,8 @@
+[
+  {
+    "check": "docker_build_backend_final",
+    "exit_code": 0,
+    "seconds": 6.84,
+    "log": "runtime/test-results/fase-03/docker_build_backend_final.log"
+  }
+]

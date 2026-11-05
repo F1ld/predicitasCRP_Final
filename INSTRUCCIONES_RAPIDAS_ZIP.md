@@ -79,7 +79,7 @@ Ingresa en la interfaz web con cualquiera de las cuentas del piloto asistencial:
 
 1. **Importación con Arrastrar y Soltar (Drag & Drop):**
    - Entra a [http://localhost:5173/citas/importar](http://localhost:5173/citas/importar).
-   - Toma el archivo `citas_para_importar_variado.csv` (incluido en la raíz o en `backend-predicitas/data/`) y **arrástralo directamente al recuadro punteado**.
+   - Toma `data/samples/importacion/citas_para_importar_variado.csv` (ubicación canónica desde fase 3) y **arrástralo directamente al recuadro punteado**. Las copias de rutas anteriores son solo compatibilidad, no muestras nuevas.
    - Verás el cambio de color, el mensaje de confirmación y podrás hacer clic en **"Importar archivo"**.
 2. **Jerarquía Visual de IA y Trazabilidad:**
    - Entra a [http://localhost:5173/citas](http://localhost:5173/citas) y abre cualquier cita.
@@ -93,4 +93,3 @@ Ingresa en la interfaz web con cualquiera de las cuentas del piloto asistencial:
 
 ---
 *Para ver la guía completa y detallada de casos de prueba, consulta el archivo `GUIA_DE_PRUEBAS_PARA_EL_EQUIPO.md` incluido en este mismo paquete.*
-

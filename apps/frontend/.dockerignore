@@ -8,3 +8,7 @@ tests
 !.env.example
 .env.local
 .env.*.local
+data
+artifacts
+runtime
+backups

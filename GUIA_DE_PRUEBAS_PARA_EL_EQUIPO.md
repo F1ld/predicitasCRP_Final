@@ -90,7 +90,7 @@ Sigue este checklist ordenado para validar cada cambio implementado:
 - **Ruta:** [http://localhost:5173/citas/importar](http://localhost:5173/citas/importar)
 - **Qué hacer:**
   1. Toma el archivo de prueba ubicado en:  
-     `backend-predicitas\data\citas_para_importar_variado.csv` (o en la raíz del repositorio).
+     `data\samples\importacion\citas_para_importar_variado.csv` (ubicación canónica desde fase 3; conserva sus fechas históricas, no regenerarlas para esta prueba).
   2. Arrástralo directamente desde tu Explorador de Windows hacia el recuadro punteado.
   3. **Verifica:**
      - El recuadro cambia de color a verde clínico (*teal*) y muestra el texto `"¡Suelta tu archivo CSV aquí!"`.
@@ -155,4 +155,3 @@ Si alguien del equipo recuerda cómo fallaba antes, aquí está el antes y despu
 | Error 405 ("Método no permitido") en `/intervenciones`. | **Corregido:** Precedencia de endpoints resuelta en backend. |
 | Pantalla en blanco en `/lista-espera`. | **Corregido:** Esquema paginado compatible y fallback tolerante. |
 | Error 404 ("El recurso no existe") en `/cupos`. | **Corregido:** Router `/cupos` unificado en backend. |
-

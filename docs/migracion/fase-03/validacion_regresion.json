@@ -1,0 +1,14 @@
+[
+  {
+    "check": "backend_completo",
+    "exit_code": 2,
+    "seconds": 17.82,
+    "log": "runtime/test-results/fase-03/backend_completo.log"
+  },
+  {
+    "check": "backend_diagnostico",
+    "exit_code": 1,
+    "seconds": 103.42,
+    "log": "runtime/test-results/fase-03/backend_diagnostico.log"
+  }
+]

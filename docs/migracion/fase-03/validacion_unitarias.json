@@ -1,0 +1,8 @@
+[
+  {
+    "check": "unitarias_archivos",
+    "exit_code": 0,
+    "seconds": 14.35,
+    "log": "runtime/test-results/fase-03/unitarias_archivos.log"
+  }
+]
