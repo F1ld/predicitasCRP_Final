@@ -1,3 +1,4 @@
+# HISTÓRICO PRE-FASE 2 — no ejecutar; entrada vigente: compose.yaml en la raíz.
 # PrediCitas CRP · backend por sí solo: PostgreSQL 16 + migraciones + API.
 # Arranque, desde esta carpeta: docker compose up --build   →   http://localhost:8000/docs
 # Los valores por defecto son SOLO para desarrollo local. Para cambiarlos, define las

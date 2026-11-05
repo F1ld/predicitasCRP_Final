@@ -1,0 +1,9 @@
+{
+  "mode": "build",
+  "exit_code": 0,
+  "external_volume": "predicitas-fase2-20261104-183050-pgdata",
+  "production_volume_used": false,
+  "seed_excluded": true,
+  "backend_without_owner_dsn": true,
+  "log": "compose_build.log"
+}

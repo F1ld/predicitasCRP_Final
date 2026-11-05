@@ -1,3 +1,4 @@
+# HISTÓRICO PRE-FASE 2 — no ejecutar; entrada vigente: compose.yaml en la raíz.
 # PrediCitas CRP · Orquestación Docker Compose del Stack Completo
 # Servicios: db (PostgreSQL 16) + migraciones (Alembic) + seed (Poblado Oficial) + backend (FastAPI/LightGBM) + frontend (React/Vite)
 name: predicitas-crp
@@ -87,4 +88,3 @@ services:
 
 volumes:
   pgdata:
-

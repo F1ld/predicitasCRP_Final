@@ -1,0 +1,29 @@
+# Override exclusivo de laboratorio. Nunca ejecutar sin la guarda de validar_compose.py.
+services:
+  db:
+    container_name: predicitas-fase2-validacion-db
+    ports: !override
+      - "127.0.0.1:55432:5432"
+  migraciones:
+    container_name: predicitas-fase2-validacion-migraciones
+    image: predicitas-fase2-backend:validacion
+  seed:
+    container_name: predicitas-fase2-validacion-seed
+    image: predicitas-fase2-backend:validacion
+  backend:
+    container_name: predicitas-fase2-validacion-backend
+    image: predicitas-fase2-backend:validacion
+    ports: !override
+      - "127.0.0.1:18000:8000"
+  frontend:
+    container_name: predicitas-fase2-validacion-frontend
+    image: predicitas-fase2-frontend:validacion
+    environment:
+      VITE_API_URL: http://localhost:18000
+    ports: !override
+      - "127.0.0.1:15173:5173"
+networks:
+  default:
+    # Docker Desktop no publica los puertos de una red internal en este entorno.
+    # Aislamiento por volumen/base/proyecto; accesos host limitados a loopback.
+    internal: false

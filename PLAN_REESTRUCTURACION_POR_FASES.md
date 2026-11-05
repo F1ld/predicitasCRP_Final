@@ -436,7 +436,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 |---|---|---|---|
 | 0 | Inventario, baseline y recuperación comprobada | Ninguna | COMPLETADA |
 | 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
-| 2 | Mudanza mecánica a monorepositorio operativo | 1 | PENDIENTE |
+| 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
 | 3 | Datos, CSV y archivos centralizados | 2 | PENDIENTE |
 | 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
@@ -515,15 +515,19 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Objetivo:** cambiar ubicaciones, no comportamiento.
 
-- [ ] Mover backend completo a `apps/backend/` y frontend completo a `apps/frontend/`; conservar `Skills/` vacías.
-- [ ] Mantener imports Python `app.*`, estructura interna y lockfiles. No extraer todavía LightGBM.
-- [ ] No copiar `.venv`/`node_modules` como instalación definitiva: recrear entornos cuando proceda; los entornos Python pueden contener rutas absolutas.
-- [ ] Crear entrada `compose.yaml` raíz que reproduzca el stack actual con contextos/rutas actualizados. No añadir dependencia obligatoria de IA todavía.
-- [ ] Ajustar Dockerfiles/COPY, mounts, `alembic.ini`, scripts y pruebas afectados por rutas. Mantener `WORKDIR /app` por aplicación.
-- [ ] Fijar explícitamente el volumen físico elegido antes del primer arranque del nuevo Compose.
-- [ ] No ejecutar a la vez stacks viejos y nuevos contra la misma BD; detener escritores antiguos de forma controlada y esperar salida.
-- [ ] Mantener configuraciones anteriores como referencia temporal, claramente marcadas; no dejar dos comandos oficiales contradictorios.
-- [ ] Crear `.gitignore` y `.gitattributes` raíz con excepciones para ejemplos, LF de shell y exclusión de secretos/binarios generados.
+**Inicio (04/11/2026):** solicitado por el usuario. Punto de retorno `80e3ce2` (incluye S-01 y cambios backend previos que se preservan). Evidencias nuevas en `docs/migracion/fase-02/`. Build/typecheck previos pasan; lint conserva fallo de `react-refresh/only-export-components` en `Registrar.tsx`. No mezclar su corrección con esta mudanza ni cerrar la fase con ese gate abierto. Pruebas exclusivamente en copias aisladas; volumen principal sin arrancar ni sembrar.
+
+**Resultado (04/11/2026): COMPLETADA.** Mudanza y validaciones de paridad completadas en aislamiento: fuentes/tests/locks sin cambios, OpenAPI/predicciones/modelo idénticos, mismos fallos de baseline. Build/typecheck pasan; lint falla igual antes/después. Stack nuevo arrancado y verificado por HTTP sobre clon; catálogo/datos/secuencias preservados incluso tras recreación. Tres volúmenes originales y tres `.env` idénticos; laboratorio detenido. Ver [evidencia de fase 2](docs/migracion/fase-02/README.md). Requiere estabilización mínima de lint en entrega separada y revalidación antes de marcar COMPLETADA o iniciar fase 3.
+
+- [x] Mover backend completo a `apps/backend/` y frontend completo a `apps/frontend/`; conservar `Skills/` vacías.
+- [x] Mantener imports Python `app.*`, estructura interna y lockfiles. No extraer todavía LightGBM.
+- [x] No copiar `.venv`/`node_modules` como instalación definitiva: recrear entornos cuando proceda; los entornos Python pueden contener rutas absolutas.
+- [x] Crear entrada `compose.yaml` raíz que reproduzca el stack actual con contextos/rutas actualizados. No añadir dependencia obligatoria de IA todavía.
+- [x] Revisar Dockerfiles/COPY, mounts, `alembic.ini`, scripts y pruebas afectados por rutas. Mantener `WORKDIR /app` por aplicación: Dockerfiles/Alembic/imports relativos no requirieron cambios; contextos y montaje init actualizados en Compose.
+- [x] Fijar explícitamente el volumen físico elegido antes del primer arranque del nuevo Compose. Validación sobre clon externo explícito, nunca sobre principal.
+- [x] No ejecutar a la vez stacks viejos y nuevos contra la misma BD; originales comprobados apagados, un solo PostgreSQL por clon.
+- [x] Mantener configuraciones anteriores como referencia temporal, claramente marcadas; dos originales archivados como `*.reference`, README raíz único.
+- [x] Ampliar `.gitignore` y `.gitattributes` raíz existentes con excepciones para ejemplos, LF de shell y exclusión de secretos/binarios generados.
 
 **Se toca:** rutas de aplicaciones, configuración de build/orquestación y referencias a esas rutas.
 
@@ -980,3 +984,19 @@ Aceptación de fase y fecha:
 - **Limitaciones:** validaciones documentales, no suite funcional nueva ni OpenAPI formal completo. Los fallos previos permanecen abiertos y no se atribuyen a la migración.
 - **Siguiente acción recomendada:** entrega mínima S-01 de estabilización de build/typecheck y luego fase 2 mecánica; diffs y pruebas separados. No saltar a extracción IA.
 - **Evidencias y retorno:** [README de fase 1](docs/migracion/fase-01/README.md), snapshot/respaldos de fase 0 y ZIP privado adicional de esta entrega. No sobrescribir evidencia histórica al repetir validaciones.
+
+### Ejecución de fase 2 — 4 de noviembre de 2026
+
+- **Estado:** COMPLETADA; mudanza mecánica consolidada y gate de lint en Registrar.tsx resuelto.
+- **Punto de retorno:** commit `80e3ce2`, limpio al comenzar, que ya contiene S-01 y ajustes backend del usuario. No se alteró su lógica ni se crearon commits automáticos.
+- **Movimientos:** `backend-predicitas/` → `apps/backend/`; `frontend-predicitas/` → `apps/frontend/`. 286 archivos verificados byte a byte al mover. Skills vacías; `node_modules` previo conservado fuera del proyecto e instalación nueva `npm ci` sin modificar lockfile.
+- **Configuración:** `compose.yaml` raíz con contextos/montaje init nuevos, volumen externo físico explícito, seed fuera del arranque normal y owner restringido a tareas admin. Compose antiguos archivados como referencias no operativas. README raíz y reglas ignore actualizados.
+- **Sin tocar:** fuentes/tests de aplicaciones, reglas, endpoints, modelo, CSV, versiones de dependencias, migraciones, secretos ni volúmenes originales. No seed, entrenamiento, extracción IA ni consolidación UI.
+- **Validaciones antes/después:** typecheck/build pasan; lint conserva error `react-refresh/only-export-components` en `Registrar.tsx:16`; frontend 451/56 con los mismos casos fallidos; backend completo conserva error de colección `app.modules.ia.cliente`, diagnóstico 218/1 con cobertura 87,13 %. No se bajó el umbral 75 %.
+- **Paridad:** OpenAPI, smoke por tres roles, tres predicciones fijas, bytes/hash del modelo, resultados JUnit y tests UI idénticos. Backend empaquetado no-root con rol `predicitas_app`, sin DSN owner, 54 pins coincidentes; build frontend en Node 22 aprobado.
+- **Arranque:** imágenes nuevas construidas y stack Compose probado exclusivamente sobre clon de CRP, con puertos de laboratorio distintos. HTTP API/UI/deep link aprobados; Alembic `m01_001_indices_auditoria`, nueve tablas, fingerprints, secuencias, constraints, triggers, permisos y RLS conservados tras arranque y recreación controlada. No se certifica inspección visual completa.
+- **Integridad:** tres volúmenes originales idénticos por hash TAR antes/después y tres `.env` intactos; 1.122 citas preservadas. Respaldo privado previo y adicional de cierre; ver manifiestos sin secretos en evidencia.
+- **Recursos:** solo laboratorio nuevo detenido al finalizar; contenedores/volúmenes preservados. Los servicios originales nunca se arrancaron. No hay corte del stack principal en esta entrega.
+- **Incidentes de laboratorio:** primera suite UI interrumpida por timeout y repetida completa; guarda Compose de perfil corregida antes del build; red interna del override impedía publicar puertos en Docker Desktop, corregida solo en laboratorio y recreada sin eliminar volúmenes. Evidencias anteriores preservadas.
+- **Siguiente acción:** fase 3 — centralización de archivos y datasets.
+- **Detalle/retorno:** [docs/migracion/fase-02/README.md](docs/migracion/fase-02/README.md), `preparacion.json`, `movimientos.json`, `comparacion.json`, verificaciones de integridad y respaldo privado de cierre. No restaurar BD innecesariamente ni descartar cambios posteriores.

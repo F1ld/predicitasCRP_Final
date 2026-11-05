@@ -1,0 +1,30 @@
+[
+  {
+    "command": "npm run typecheck",
+    "cwd": "apps/frontend",
+    "exit_code": 0,
+    "seconds": 9.0,
+    "log": "frontend_despues_typecheck.log"
+  },
+  {
+    "command": "npm run lint",
+    "cwd": "apps/frontend",
+    "exit_code": 1,
+    "seconds": 21.04,
+    "log": "frontend_despues_lint.log"
+  },
+  {
+    "command": "npm run build",
+    "cwd": "apps/frontend",
+    "exit_code": 0,
+    "seconds": 12.81,
+    "log": "frontend_despues_build.log"
+  },
+  {
+    "command": "npm run test",
+    "cwd": "apps/frontend",
+    "exit_code": 1,
+    "seconds": 81.57,
+    "log": "frontend_despues_test.log"
+  }
+]

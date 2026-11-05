@@ -1,0 +1,11 @@
+{
+  "command": "npm ci",
+  "cwd": "apps/frontend",
+  "exit_code": 0,
+  "packages_added": 264,
+  "packages_audited": 265,
+  "moderate_advisories_reported": 7,
+  "audit_fix_executed": false,
+  "dependencies_updated": false,
+  "previous_node_modules": "Conservado en directorio privado de preparación; no reutilizado como instalación definitiva"
+}

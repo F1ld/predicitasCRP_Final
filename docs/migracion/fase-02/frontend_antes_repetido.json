@@ -1,0 +1,30 @@
+[
+  {
+    "command": "npm run typecheck",
+    "cwd": "frontend-predicitas",
+    "exit_code": 0,
+    "seconds": 9.49,
+    "log": "frontend_antes_repetido_typecheck.log"
+  },
+  {
+    "command": "npm run lint",
+    "cwd": "frontend-predicitas",
+    "exit_code": 1,
+    "seconds": 22.58,
+    "log": "frontend_antes_repetido_lint.log"
+  },
+  {
+    "command": "npm run build",
+    "cwd": "frontend-predicitas",
+    "exit_code": 0,
+    "seconds": 10.69,
+    "log": "frontend_antes_repetido_build.log"
+  },
+  {
+    "command": "npm run test",
+    "cwd": "frontend-predicitas",
+    "exit_code": 1,
+    "seconds": 80.06,
+    "log": "frontend_antes_repetido_test.log"
+  }
+]

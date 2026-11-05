@@ -19,6 +19,7 @@ node_modules/
 
 # === Environment & secrets ===
 .env
+.env.*
 !.env.example
 
 # === PostgreSQL local ===
@@ -49,3 +50,7 @@ docker-compose.override.yml
 # === Runtime / generated ===
 runtime/
 backups/
+data/raw/
+data/processed/
+artifacts/
+*.tsbuildinfo

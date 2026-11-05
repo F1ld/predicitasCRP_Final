@@ -1,0 +1,70 @@
+[
+  {
+    "check": "alembic_test_upgrade",
+    "command": [
+      "alembic",
+      "upgrade",
+      "head"
+    ],
+    "exit_code": 0,
+    "seconds": 17.76,
+    "log": "backend_antes_alembic_test_upgrade.log"
+  },
+  {
+    "check": "alembic_existing_current",
+    "command": [
+      "alembic",
+      "current"
+    ],
+    "exit_code": 0,
+    "seconds": 4.16,
+    "log": "backend_antes_alembic_existing_current.log"
+  },
+  {
+    "check": "alembic_heads",
+    "command": [
+      "alembic",
+      "heads"
+    ],
+    "exit_code": 0,
+    "seconds": 2.53,
+    "log": "backend_antes_alembic_heads.log"
+  },
+  {
+    "check": "pytest_completo",
+    "command": [
+      "python",
+      "-m",
+      "pytest",
+      "--junitxml=/evidence/backend_antes_completo.xml"
+    ],
+    "exit_code": 2,
+    "seconds": 20.61,
+    "log": "backend_antes_pytest_completo.log"
+  },
+  {
+    "check": "pytest_diagnostico",
+    "command": [
+      "python",
+      "-m",
+      "pytest",
+      "--ignore=tests/ia",
+      "--junitxml=/evidence/backend_antes_diagnostico.xml",
+      "--cov-report=json:/evidence/backend_antes_coverage.json"
+    ],
+    "exit_code": 1,
+    "seconds": 105.7,
+    "log": "backend_antes_pytest_diagnostico.log"
+  },
+  {
+    "check": "smoke",
+    "command": [
+      "python",
+      "/evidence/smoke_backend.py",
+      "antes"
+    ],
+    "exit_code": 0,
+    "seconds": 8.23,
+    "log": "backend_antes_smoke.log"
+  }
+]

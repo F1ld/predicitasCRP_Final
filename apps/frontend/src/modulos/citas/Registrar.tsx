@@ -18,7 +18,7 @@ const INICIAL: Formulario = {
   fecha_hora_cita: "", fecha_registro_cita: "", tipo_paciente: "", canal_origen: "",
   inasistencias_previas: "", asistencias_previas: "", reprogramaciones_prev: "",
 };
-export function generarIdCitaExterna(): string {
+function generarIdCitaExterna(): string {
   const anio = new Date().getFullYear();
   const aleatorio = Math.floor(100000 + Math.random() * 900000);
   return `CIT-${anio}-${aleatorio}`;

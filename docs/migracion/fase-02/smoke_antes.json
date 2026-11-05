@@ -1,0 +1,6977 @@
+{
+  "results": [
+    {
+      "role": "ANONIMO",
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "role": "ANONIMO",
+      "path": "/citas",
+      "status": 401
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/citas?limite=1",
+      "status": 200
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/citas/catalogos",
+      "status": 200
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/ia/metricas",
+      "status": 200
+    },
+    {
+      "role": "ADMINISTRADOR",
+      "path": "/ia/dataset-resumen",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/citas?limite=1",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/citas/catalogos",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/ia/metricas",
+      "status": 200
+    },
+    {
+      "role": "RECEPCION",
+      "path": "/ia/dataset-resumen",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/citas?limite=1",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/citas/catalogos",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/ia/metricas",
+      "status": 200
+    },
+    {
+      "role": "TECNICO_IA",
+      "path": "/ia/dataset-resumen",
+      "status": 200
+    }
+  ],
+  "predictions": [
+    {
+      "version_modelo": "LightGBM_v1.0.0",
+      "probabilidad_no_show": "0.999",
+      "nivel_riesgo": "ALTO",
+      "umbral_aplicado": "0.450",
+      "features_snapshot": {
+        "antelacion_dias": 32,
+        "inasistencias_previas": 3,
+        "asistencias_previas": 1,
+        "reprogramaciones_prev": 2,
+        "tasa_no_show_previa": 0.6,
+        "es_reserva_lejana": 1,
+        "especialidad": "TRAUMATOLOGIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "CALL_CENTER",
+        "franja_horaria": "TARDE",
+        "dia_semana": "VIERNES"
+      },
+      "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]"
+    },
+    {
+      "version_modelo": "LightGBM_v1.0.0",
+      "probabilidad_no_show": "0.000",
+      "nivel_riesgo": "BAJO",
+      "umbral_aplicado": "0.450",
+      "features_snapshot": {
+        "antelacion_dias": 2,
+        "inasistencias_previas": 0,
+        "asistencias_previas": 12,
+        "reprogramaciones_prev": 0,
+        "tasa_no_show_previa": 0.0,
+        "es_reserva_lejana": 0,
+        "especialidad": "PEDIATRIA",
+        "tipo_paciente": "CONTINUADOR",
+        "canal_origen": "WEB",
+        "franja_horaria": "MANANA",
+        "dia_semana": "LUNES"
+      },
+      "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 0 (-2.08) | 2) Antelación: 2 días (-1.34) | 3) Asistencias previas: 12 (-0.70) [Simulado]"
+    },
+    {
+      "version_modelo": "LightGBM_v1.0.0",
+      "probabilidad_no_show": "0.000",
+      "nivel_riesgo": "BAJO",
+      "umbral_aplicado": "0.450",
+      "features_snapshot": {
+        "antelacion_dias": 8,
+        "inasistencias_previas": 0,
+        "asistencias_previas": 0,
+        "reprogramaciones_prev": 0,
+        "tasa_no_show_previa": 0.0,
+        "es_reserva_lejana": 0,
+        "especialidad": "CARDIOLOGIA",
+        "tipo_paciente": "NUEVO",
+        "canal_origen": "PRESENCIAL",
+        "franja_horaria": "MANANA",
+        "dia_semana": "MIERCOLES"
+      },
+      "explicabilidad_resumen": "Factores clave: 1) Antelación: 8 días (-1.81) | 2) Inasistencias previas: 0 (-1.79) | 3) Reprogramaciones: 0 (-0.52) [Simulado]"
+    }
+  ],
+  "model_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "model_unchanged": true,
+  "openapi": {
+    "openapi": "3.1.0",
+    "info": {
+      "title": "PrediCitas CRP API",
+      "version": "0.5.0"
+    },
+    "paths": {
+      "/auth/login": {
+        "post": {
+          "tags": [
+            "autenticación"
+          ],
+          "summary": "Login",
+          "description": "M01-E01 · RF-001, RNF-005: 401 genérico y 429 tras demasiados fallos.",
+          "operationId": "login_auth_login_post",
+          "requestBody": {
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_login_auth_login_post"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokenOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/me": {
+        "get": {
+          "tags": [
+            "autenticación"
+          ],
+          "summary": "Me",
+          "description": "M01-E02.",
+          "operationId": "me_auth_me_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioOut"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "tags": [
+            "autenticación"
+          ],
+          "summary": "Logout",
+          "description": "M01-E03 · RF-002, RNF-004: los tokens emitidos antes dejan de valer.",
+          "operationId": "logout_auth_logout_post",
+          "responses": {
+            "204": {
+              "description": "Successful Response"
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/auth/renovar": {
+        "post": {
+          "tags": [
+            "autenticación"
+          ],
+          "summary": "Renovar",
+          "description": "M01-E04 · RNF-004: token nuevo; el anterior vale hasta su exp.",
+          "operationId": "renovar_auth_renovar_post",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokenOut"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/auth/cambiar-clave": {
+        "post": {
+          "tags": [
+            "autenticación"
+          ],
+          "summary": "Cambiar Clave",
+          "description": "M01-E05 · RF-008: invalida los tokens anteriores y entrega uno nuevo.",
+          "operationId": "cambiar_clave_auth_cambiar_clave_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CambioClaveIn"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokenOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/citas": {
+        "get": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Listar",
+          "description": "M02-E01 (RF-016, RF-017).",
+          "operationId": "listar_citas_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "CARDIOLOGIA",
+                      "TRAUMATOLOGIA",
+                      "PEDIATRIA"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "medico",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Medico"
+              }
+            },
+            {
+              "name": "estado",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "RECIBIDA",
+                      "CONFIRMADA",
+                      "REPROGRAMADA",
+                      "CANCELADA",
+                      "LIBERADA",
+                      "ATENDIDA",
+                      "NO_SHOW"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Estado"
+              }
+            },
+            {
+              "name": "nivel_riesgo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "BAJO",
+                      "MEDIO",
+                      "ALTO",
+                      "SIN_PREDICCION"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Nivel Riesgo"
+              }
+            },
+            {
+              "name": "con_intervencion",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Con Intervencion"
+              }
+            },
+            {
+              "name": "q",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Busca en id_cita_externa, paciente_anon_id y medico",
+                "title": "Q"
+              },
+              "description": "Busca en id_cita_externa, paciente_anon_id y medico"
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaCitasOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Registrar",
+          "description": "M02-E03 (RF-010).",
+          "operationId": "registrar_citas_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CitaRegistroIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CitaDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/citas/catalogos": {
+        "get": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Catalogos",
+          "description": "M02-E07.",
+          "operationId": "catalogos_citas_catalogos_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CatalogosOut"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/citas/importar": {
+        "post": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Importar",
+          "description": "M02-E04 (F-04).",
+          "operationId": "importar_citas_importar_post",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_importar_citas_importar_post"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResultadoImportacionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/citas/{id_cita}": {
+        "get": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Detalle",
+          "description": "M02-E02 (RF-018).",
+          "operationId": "detalle_citas__id_cita__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CitaDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/citas/{id_cita}/estado": {
+        "post": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Cambiar Estado",
+          "description": "M02-E05 (F-06).",
+          "operationId": "cambiar_estado_citas__id_cita__estado_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CambioEstadoIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CitaDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/citas/{id_cita}/check-in": {
+        "post": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Check In",
+          "description": "M02-E06 (RF-104, D-012).",
+          "operationId": "check_in_citas__id_cita__check_in_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CheckInIn"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Datos"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckInOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/citas/{id_cita}/prediccion": {
+        "post": {
+          "tags": [
+            "citas"
+          ],
+          "summary": "Calcular Prediccion Cita",
+          "description": "Calcula la predicción IA en demanda para la cita (RF-041 a RF-056).",
+          "operationId": "calcular_prediccion_cita_citas__id_cita__prediccion_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/usuarios": {
+        "get": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Listar",
+          "description": "M01-E06 · RF-007: ordenada por nombre_completo.",
+          "operationId": "listar_usuarios_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "q",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Q"
+              }
+            },
+            {
+              "name": "rol",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "ADMINISTRADOR",
+                      "RECEPCION",
+                      "TECNICO_IA"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Rol"
+              }
+            },
+            {
+              "name": "activo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Activo"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaUsuariosOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Crear",
+          "description": "M01-E07 · RF-004.",
+          "operationId": "crear_usuarios_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioCrearIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/usuarios/{id_usuario}": {
+        "get": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Obtener",
+          "description": "M01-E08.",
+          "operationId": "obtener_usuarios__id_usuario__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_usuario",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Usuario"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Editar",
+          "description": "M01-E09 · RF-005.",
+          "operationId": "editar_usuarios__id_usuario__patch",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_usuario",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Usuario"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioEditarIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/usuarios/{id_usuario}/estado": {
+        "post": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Cambiar Estado",
+          "description": "M01-E10 · RF-006.",
+          "operationId": "cambiar_estado_usuarios__id_usuario__estado_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_usuario",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Usuario"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadoIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsuarioOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/usuarios/{id_usuario}/restablecer-acceso": {
+        "post": {
+          "tags": [
+            "usuarios"
+          ],
+          "summary": "Restablecer Acceso",
+          "description": "M01-E11 · RF-008: la clave temporal se muestra una sola vez.",
+          "operationId": "restablecer_acceso_usuarios__id_usuario__restablecer_acceso_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_usuario",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Usuario"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClaveTemporalOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ia/predecir/{id_cita}": {
+        "post": {
+          "tags": [
+            "ia"
+          ],
+          "summary": "Predecir Cita",
+          "operationId": "predecir_cita_ia_predecir__id_cita__post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrediccionIAOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ia/predecir-lote": {
+        "post": {
+          "tags": [
+            "ia"
+          ],
+          "summary": "Predecir Lote",
+          "operationId": "predecir_lote_ia_predecir_lote_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "forzar",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "description": "Si es True, recalcula también las citas que ya tienen predicción",
+                "default": false,
+                "title": "Forzar"
+              },
+              "description": "Si es True, recalcula también las citas que ya tienen predicción"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResultadoPrediccionLoteOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ia/predicciones/{id_cita}": {
+        "get": {
+          "tags": [
+            "ia"
+          ],
+          "summary": "Listar Predicciones Cita",
+          "operationId": "listar_predicciones_cita_ia_predicciones__id_cita__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PrediccionIAOut"
+                    },
+                    "title": "Response Listar Predicciones Cita Ia Predicciones  Id Cita  Get"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ia/metricas": {
+        "get": {
+          "tags": [
+            "ia"
+          ],
+          "summary": "Obtener Metricas",
+          "operationId": "obtener_metricas_ia_metricas_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MetricasModeloOut"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/ia/dataset-resumen": {
+        "get": {
+          "tags": [
+            "ia"
+          ],
+          "summary": "Obtener Dataset Resumen",
+          "operationId": "obtener_dataset_resumen_ia_dataset_resumen_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DatasetResumenOut"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/intervenciones/plantillas": {
+        "get": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Listar Plantillas",
+          "description": "M05-E09: Catálogo de plantillas aprobadas por canal de contacto.",
+          "operationId": "listar_plantillas_intervenciones_plantillas_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/PlantillaOut"
+                    },
+                    "type": "array",
+                    "title": "Response Listar Plantillas Intervenciones Plantillas Get"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ]
+        }
+      },
+      "/intervenciones/elegibles": {
+        "get": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Listar Intervenciones Elegibles",
+          "operationId": "listar_intervenciones_elegibles_intervenciones_elegibles_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "nivel_riesgo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Nivel Riesgo"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaElegiblesOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones": {
+        "get": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Listar Intervenciones",
+          "operationId": "listar_intervenciones_intervenciones_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "nivel_riesgo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Nivel Riesgo"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "estado_intervencion",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Estado Intervencion"
+              }
+            },
+            {
+              "name": "canal_contacto",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Canal Contacto"
+              }
+            },
+            {
+              "name": "respuesta_paciente",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Respuesta Paciente"
+              }
+            },
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "id_cita",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Id Cita"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaIntervencionesOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Crear Intervencion Directa",
+          "description": "M05-E02: Creación de intervención desde el formulario modal de frontend.",
+          "operationId": "crear_intervencion_directa_intervenciones_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervencionCreateIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones/{id_intervencion}/estado": {
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Cambiar Estado",
+          "description": "M05-E05: Registro explícito del avance de envío/entrega/fallo.",
+          "operationId": "cambiar_estado_intervenciones__id_intervencion__estado_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervencionEstadoIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones/{id_intervencion}/respuesta": {
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Registrar Respuesta Post",
+          "description": "M05-E06: Registro de respuesta del paciente (sin transicionar la cita).",
+          "operationId": "registrar_respuesta_post_intervenciones__id_intervencion__respuesta_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervencionRespuestaIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones/{id_intervencion}/optout": {
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Registrar Optout Endpoint",
+          "description": "M05-E07: Registro de derecho de oposición posterior (opt-out).",
+          "operationId": "registrar_optout_endpoint_intervenciones__id_intervencion__optout_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones/{id_intervencion}/liberar-cupo": {
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Liberar Cupo Endpoint",
+          "description": "M05-E08: Liberación atómica de cita y cupo tras confirmación del operador.",
+          "operationId": "liberar_cupo_endpoint_intervenciones__id_intervencion__liberar_cupo_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/LiberarCupoIn"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Datos"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoLiberadoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/intervenciones/{id_intervencion}": {
+        "get": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Obtener Intervencion",
+          "operationId": "obtener_intervencion_intervenciones__id_intervencion__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Registrar Respuesta Patch",
+          "description": "Endpoint legado PATCH: registra respuesta y actualiza cita si aplica.",
+          "operationId": "registrar_respuesta_patch_intervenciones__id_intervencion__patch",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_intervencion",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Intervencion"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervencionRespuestaIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/citas/{id_cita}/intervenciones": {
+        "get": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Listar Intervenciones De Cita",
+          "operationId": "listar_intervenciones_de_cita_citas__id_cita__intervenciones_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                    },
+                    "title": "Response Listar Intervenciones De Cita Citas  Id Cita  Intervenciones Get"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "intervenciones"
+          ],
+          "summary": "Crear Intervencion Para Cita",
+          "description": "Endpoint legado: creación vinculada directamente a la ruta /citas/{id_cita}.",
+          "operationId": "crear_intervencion_para_cita_citas__id_cita__intervenciones_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cita",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cita"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntervencionCreateIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/lista-espera": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Listar Espera",
+          "operationId": "listar_espera_lista_espera_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "q",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Q"
+              }
+            },
+            {
+              "name": "especialidad_req",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad Req"
+              }
+            },
+            {
+              "name": "franja_preferida",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Franja Preferida"
+              }
+            },
+            {
+              "name": "estado_candidato",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Estado Candidato"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaCandidatoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Registrar Candidato",
+          "operationId": "registrar_candidato_lista_espera_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatoCreateIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CandidatoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/lista-espera/{id_candidato}": {
+        "patch": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Actualizar Candidato",
+          "operationId": "actualizar_candidato_lista_espera__id_candidato__patch",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_candidato",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Candidato"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatoUpdateIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CandidatoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Listar Cupos Alias",
+          "operationId": "listar_cupos_alias_cupos_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "estado_cupo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Estado Cupo"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 20,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaCupoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos-liberados": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Listar Cupos Liberados",
+          "operationId": "listar_cupos_liberados_cupos_liberados_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "estado_cupo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Estado del cupo (DISPONIBLE por defecto, o TODOS)",
+                "title": "Estado Cupo"
+              },
+              "description": "Estado del cupo (DISPONIBLE por defecto, o TODOS)"
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "limite",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "maximum": 200,
+                "minimum": 1,
+                "default": 50,
+                "title": "Limite"
+              }
+            },
+            {
+              "name": "desplazamiento",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0,
+                "title": "Desplazamiento"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PaginaCupoOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Obtener Detalle Cupo",
+          "operationId": "obtener_detalle_cupo_cupos__id_cupo__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos-liberados/{id_cupo}": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Obtener Detalle Cupo Liberado",
+          "operationId": "obtener_detalle_cupo_liberado_cupos_liberados__id_cupo__get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}/candidatos": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Obtener Candidatos Para Cupo",
+          "operationId": "obtener_candidatos_para_cupo_cupos__id_cupo__candidatos_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CandidatoOut"
+                    },
+                    "title": "Response Obtener Candidatos Para Cupo Cupos  Id Cupo  Candidatos Get"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos-liberados/{id_cupo}/candidatos": {
+        "get": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Obtener Candidatos Compatibles",
+          "operationId": "obtener_candidatos_compatibles_cupos_liberados__id_cupo__candidatos_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PropuestaCandidatosOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}/reasignar": {
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Reasignar Cupo Alias",
+          "operationId": "reasignar_cupo_alias_cupos__id_cupo__reasignar_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReasignacionIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__lista_espera__schemas__ReasignacionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos-liberados/{id_cupo}/reasignar": {
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Reasignar Cupo",
+          "operationId": "reasignar_cupo_cupos_liberados__id_cupo__reasignar_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReasignacionIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/app__modules__lista_espera__schemas__ReasignacionOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}/ofertas": {
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Registrar Oferta",
+          "operationId": "registrar_oferta_cupos__id_cupo__ofertas_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaIn"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}/ofertas/rechazo": {
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Rechazo Oferta",
+          "operationId": "rechazo_oferta_cupos__id_cupo__ofertas_rechazo_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/cupos/{id_cupo}/ofertas/desistimiento": {
+        "post": {
+          "tags": [
+            "lista_espera_y_reasignacion"
+          ],
+          "summary": "Desistimiento Oferta",
+          "operationId": "desistimiento_oferta_cupos__id_cupo__ofertas_desistimiento_post",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id_cupo",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "title": "Id Cupo"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CupoDetalleOut"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/reportes/rep-02": {
+        "get": {
+          "tags": [
+            "reportes"
+          ],
+          "summary": "Obtener Rep02",
+          "operationId": "obtener_rep02_reportes_rep_02_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "canal_contacto",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Canal Contacto"
+              }
+            },
+            {
+              "name": "nivel_riesgo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Nivel Riesgo"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "formato",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "default": "json",
+                "title": "Formato"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Rep02Out"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/reportes/rep-03": {
+        "get": {
+          "tags": [
+            "reportes"
+          ],
+          "summary": "Obtener Rep03",
+          "operationId": "obtener_rep03_reportes_rep_03_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "id_operador",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Id Operador"
+              }
+            },
+            {
+              "name": "formato",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "pattern": "^(json|csv|xlsx)$",
+                "default": "json",
+                "title": "Formato"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Rep03Out"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/reportes/intervenciones": {
+        "get": {
+          "tags": [
+            "reportes"
+          ],
+          "summary": "Alias Reporte Intervenciones",
+          "operationId": "alias_reporte_intervenciones_reportes_intervenciones_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "canal_contacto",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Canal Contacto"
+              }
+            },
+            {
+              "name": "nivel_riesgo",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Nivel Riesgo"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "formato",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "pattern": "^(json|csv|xlsx)$",
+                "default": "json",
+                "title": "Formato"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Rep02Out"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/reportes/reasignaciones": {
+        "get": {
+          "tags": [
+            "reportes"
+          ],
+          "summary": "Alias Reporte Reasignaciones",
+          "operationId": "alias_reporte_reasignaciones_reportes_reasignaciones_get",
+          "security": [
+            {
+              "OAuth2PasswordBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "desde",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Desde"
+              }
+            },
+            {
+              "name": "hasta",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Hasta"
+              }
+            },
+            {
+              "name": "especialidad",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Especialidad"
+              }
+            },
+            {
+              "name": "id_operador",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Id Operador"
+              }
+            },
+            {
+              "name": "formato",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "pattern": "^(json|csv|xlsx)$",
+                "default": "json",
+                "title": "Formato"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Rep03Out"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/health": {
+        "get": {
+          "tags": [
+            "sistema"
+          ],
+          "summary": "Health",
+          "operationId": "health_health_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "BloqueMetricasOut": {
+          "properties": {
+            "umbral": {
+              "type": "number",
+              "title": "Umbral"
+            },
+            "f1_score": {
+              "type": "number",
+              "title": "F1 Score"
+            },
+            "precision": {
+              "type": "number",
+              "title": "Precision"
+            },
+            "recall": {
+              "type": "number",
+              "title": "Recall"
+            },
+            "roc_auc": {
+              "type": "number",
+              "title": "Roc Auc"
+            },
+            "pr_auc": {
+              "type": "number",
+              "title": "Pr Auc"
+            },
+            "matriz_confusion": {
+              "$ref": "#/components/schemas/MatrizConfusionOut"
+            }
+          },
+          "type": "object",
+          "required": [
+            "umbral",
+            "f1_score",
+            "precision",
+            "recall",
+            "roc_auc",
+            "pr_auc",
+            "matriz_confusion"
+          ],
+          "title": "BloqueMetricasOut"
+        },
+        "Body_importar_citas_importar_post": {
+          "properties": {
+            "archivo": {
+              "type": "string",
+              "contentMediaType": "application/octet-stream",
+              "title": "Archivo",
+              "description": "CSV UTF-8 con encabezados"
+            }
+          },
+          "type": "object",
+          "required": [
+            "archivo"
+          ],
+          "title": "Body_importar_citas_importar_post"
+        },
+        "Body_login_auth_login_post": {
+          "properties": {
+            "grant_type": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^password$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Grant Type"
+            },
+            "username": {
+              "type": "string",
+              "title": "Username"
+            },
+            "password": {
+              "type": "string",
+              "format": "password",
+              "title": "Password"
+            },
+            "scope": {
+              "type": "string",
+              "title": "Scope",
+              "default": ""
+            },
+            "client_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Client Id"
+            },
+            "client_secret": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "format": "password",
+              "title": "Client Secret"
+            }
+          },
+          "type": "object",
+          "required": [
+            "username",
+            "password"
+          ],
+          "title": "Body_login_auth_login_post"
+        },
+        "CambioClaveIn": {
+          "properties": {
+            "clave_actual": {
+              "type": "string",
+              "title": "Clave Actual"
+            },
+            "clave_nueva": {
+              "type": "string",
+              "title": "Clave Nueva"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "clave_actual",
+            "clave_nueva"
+          ],
+          "title": "CambioClaveIn"
+        },
+        "CambioEstadoIn": {
+          "properties": {
+            "estado_nuevo": {
+              "type": "string",
+              "enum": [
+                "CONFIRMADA",
+                "REPROGRAMADA",
+                "CANCELADA",
+                "ATENDIDA",
+                "NO_SHOW"
+              ],
+              "title": "Estado Nuevo"
+            },
+            "motivo": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Motivo"
+            },
+            "nueva_fecha_hora_cita": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Nueva Fecha Hora Cita"
+            },
+            "liberar_cupo": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Liberar Cupo"
+            },
+            "id_intervencion": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Intervencion"
+            }
+          },
+          "type": "object",
+          "required": [
+            "estado_nuevo"
+          ],
+          "title": "CambioEstadoIn"
+        },
+        "CandidatoCreateIn": {
+          "properties": {
+            "paciente_anon_id": {
+              "type": "string",
+              "maxLength": 50,
+              "minLength": 1,
+              "title": "Paciente Anon Id"
+            },
+            "especialidad_req": {
+              "type": "string",
+              "enum": [
+                "CARDIOLOGIA",
+                "TRAUMATOLOGIA",
+                "PEDIATRIA"
+              ],
+              "title": "Especialidad Req"
+            },
+            "franja_preferida": {
+              "type": "string",
+              "enum": [
+                "MANANA",
+                "TARDE",
+                "INDIFERENTE"
+              ],
+              "title": "Franja Preferida",
+              "default": "INDIFERENTE"
+            },
+            "prioridad_registro": {
+              "type": "integer",
+              "maximum": 10.0,
+              "minimum": 1.0,
+              "title": "Prioridad Registro",
+              "default": 1
+            }
+          },
+          "type": "object",
+          "required": [
+            "paciente_anon_id",
+            "especialidad_req"
+          ],
+          "title": "CandidatoCreateIn"
+        },
+        "CandidatoOut": {
+          "properties": {
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "especialidad_req": {
+              "type": "string",
+              "title": "Especialidad Req"
+            },
+            "franja_preferida": {
+              "type": "string",
+              "title": "Franja Preferida"
+            },
+            "estado_candidato": {
+              "type": "string",
+              "title": "Estado Candidato"
+            },
+            "prioridad_registro": {
+              "type": "integer",
+              "title": "Prioridad Registro"
+            },
+            "fecha_registro": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Registro"
+            },
+            "criterio_compatibilidad": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Criterio Compatibilidad"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_candidato",
+            "paciente_anon_id",
+            "especialidad_req",
+            "franja_preferida",
+            "estado_candidato",
+            "prioridad_registro",
+            "fecha_registro"
+          ],
+          "title": "CandidatoOut"
+        },
+        "CandidatoUpdateIn": {
+          "properties": {
+            "franja_preferida": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "MANANA",
+                    "TARDE",
+                    "INDIFERENTE"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Franja Preferida"
+            },
+            "estado_candidato": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "ACTIVO",
+                    "CONTACTADO",
+                    "ASIGNADO",
+                    "DESISTIDO"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Estado Candidato"
+            },
+            "prioridad_registro": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 10.0,
+                  "minimum": 1.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prioridad Registro"
+            }
+          },
+          "type": "object",
+          "title": "CandidatoUpdateIn"
+        },
+        "CatalogosOut": {
+          "properties": {
+            "especialidades": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Especialidades"
+            },
+            "estados": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Estados"
+            },
+            "niveles_riesgo": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Niveles Riesgo"
+            },
+            "medicos": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Medicos"
+            },
+            "canales_origen": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Canales Origen"
+            },
+            "tipos_paciente": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Tipos Paciente"
+            }
+          },
+          "type": "object",
+          "required": [
+            "especialidades",
+            "estados",
+            "niveles_riesgo",
+            "medicos",
+            "canales_origen",
+            "tipos_paciente"
+          ],
+          "title": "CatalogosOut"
+        },
+        "CheckInIn": {
+          "properties": {
+            "observacion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observacion"
+            }
+          },
+          "type": "object",
+          "title": "CheckInIn"
+        },
+        "CheckInOut": {
+          "properties": {
+            "fecha_hora_check_in": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Check In"
+            },
+            "id_usuario": {
+              "type": "integer",
+              "title": "Id Usuario"
+            },
+            "observacion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observacion"
+            }
+          },
+          "type": "object",
+          "required": [
+            "fecha_hora_check_in",
+            "id_usuario"
+          ],
+          "title": "CheckInOut"
+        },
+        "CitaDetalleOut": {
+          "properties": {
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "sede": {
+              "type": "string",
+              "title": "Sede"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cita"
+            },
+            "fecha_registro_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Registro Cita"
+            },
+            "antelacion_dias": {
+              "type": "integer",
+              "title": "Antelacion Dias"
+            },
+            "tipo_paciente": {
+              "type": "string",
+              "title": "Tipo Paciente"
+            },
+            "canal_origen": {
+              "type": "string",
+              "title": "Canal Origen"
+            },
+            "franja_horaria": {
+              "type": "string",
+              "title": "Franja Horaria"
+            },
+            "dia_semana": {
+              "type": "string",
+              "title": "Dia Semana"
+            },
+            "inasistencias_previas": {
+              "type": "integer",
+              "title": "Inasistencias Previas"
+            },
+            "reprogramaciones_prev": {
+              "type": "integer",
+              "title": "Reprogramaciones Prev"
+            },
+            "asistencias_previas": {
+              "type": "integer",
+              "title": "Asistencias Previas"
+            },
+            "estado_actual": {
+              "type": "string",
+              "title": "Estado Actual"
+            },
+            "target_no_show": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target No Show"
+            },
+            "historial": {
+              "items": {
+                "$ref": "#/components/schemas/HistorialOut"
+              },
+              "type": "array",
+              "title": "Historial"
+            },
+            "check_in": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CheckInOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "predicciones": {
+              "items": {
+                "$ref": "#/components/schemas/PrediccionOut"
+              },
+              "type": "array",
+              "title": "Predicciones"
+            },
+            "intervenciones": {
+              "items": {
+                "$ref": "#/components/schemas/app__modules__citas__schemas__IntervencionOut"
+              },
+              "type": "array",
+              "title": "Intervenciones"
+            },
+            "cupo_liberado": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CupoOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reasignacion": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/app__modules__citas__schemas__ReasignacionOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cita",
+            "id_cita_externa",
+            "paciente_anon_id",
+            "sede",
+            "especialidad",
+            "medico",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "antelacion_dias",
+            "tipo_paciente",
+            "canal_origen",
+            "franja_horaria",
+            "dia_semana",
+            "inasistencias_previas",
+            "reprogramaciones_prev",
+            "asistencias_previas",
+            "estado_actual",
+            "target_no_show",
+            "historial",
+            "check_in",
+            "predicciones",
+            "intervenciones",
+            "cupo_liberado",
+            "reasignacion"
+          ],
+          "title": "CitaDetalleOut"
+        },
+        "CitaRegistroIn": {
+          "properties": {
+            "id_cita_externa": {
+              "type": "string",
+              "maxLength": 50,
+              "minLength": 1,
+              "title": "Id Cita Externa"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "maxLength": 50,
+              "minLength": 1,
+              "title": "Paciente Anon Id"
+            },
+            "sede": {
+              "type": "string",
+              "title": "Sede"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Medico"
+            },
+            "fecha_hora_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cita"
+            },
+            "fecha_registro_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Registro Cita"
+            },
+            "tipo_paciente": {
+              "type": "string",
+              "title": "Tipo Paciente"
+            },
+            "canal_origen": {
+              "type": "string",
+              "title": "Canal Origen"
+            },
+            "inasistencias_previas": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Inasistencias Previas"
+            },
+            "asistencias_previas": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Asistencias Previas"
+            },
+            "reprogramaciones_prev": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Reprogramaciones Prev",
+              "default": 0
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "id_cita_externa",
+            "paciente_anon_id",
+            "sede",
+            "especialidad",
+            "medico",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "tipo_paciente",
+            "canal_origen"
+          ],
+          "title": "CitaRegistroIn",
+          "description": "Cuerpo de POST /citas (M02-E03). Los dominios se validan con CitaImportIn en el servicio,\npara distinguir FUERA_DE_PERIMETRO (sede, especialidad) de VALIDACION."
+        },
+        "CitaResumenOut": {
+          "properties": {
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "sede": {
+              "type": "string",
+              "title": "Sede"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cita"
+            },
+            "fecha_registro_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Registro Cita"
+            },
+            "antelacion_dias": {
+              "type": "integer",
+              "title": "Antelacion Dias"
+            },
+            "tipo_paciente": {
+              "type": "string",
+              "title": "Tipo Paciente"
+            },
+            "canal_origen": {
+              "type": "string",
+              "title": "Canal Origen"
+            },
+            "franja_horaria": {
+              "type": "string",
+              "title": "Franja Horaria"
+            },
+            "dia_semana": {
+              "type": "string",
+              "title": "Dia Semana"
+            },
+            "inasistencias_previas": {
+              "type": "integer",
+              "title": "Inasistencias Previas"
+            },
+            "reprogramaciones_prev": {
+              "type": "integer",
+              "title": "Reprogramaciones Prev"
+            },
+            "asistencias_previas": {
+              "type": "integer",
+              "title": "Asistencias Previas"
+            },
+            "estado_actual": {
+              "type": "string",
+              "title": "Estado Actual"
+            },
+            "target_no_show": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target No Show"
+            },
+            "riesgo": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/app__modules__citas__schemas__RiesgoResumen"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "estado_intervencion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Estado Intervencion"
+            },
+            "respuesta_paciente": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "tiene_check_in": {
+              "type": "boolean",
+              "title": "Tiene Check In"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cita",
+            "id_cita_externa",
+            "paciente_anon_id",
+            "sede",
+            "especialidad",
+            "medico",
+            "fecha_hora_cita",
+            "fecha_registro_cita",
+            "antelacion_dias",
+            "tipo_paciente",
+            "canal_origen",
+            "franja_horaria",
+            "dia_semana",
+            "inasistencias_previas",
+            "reprogramaciones_prev",
+            "asistencias_previas",
+            "estado_actual",
+            "target_no_show",
+            "riesgo",
+            "estado_intervencion",
+            "respuesta_paciente",
+            "tiene_check_in"
+          ],
+          "title": "CitaResumenOut"
+        },
+        "CitaSugeridaIntervencionOut": {
+          "properties": {
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cita"
+            },
+            "franja_horaria": {
+              "type": "string",
+              "title": "Franja Horaria"
+            },
+            "estado_actual": {
+              "type": "string",
+              "title": "Estado Actual"
+            },
+            "probabilidad_no_show": {
+              "type": "string",
+              "title": "Probabilidad No Show"
+            },
+            "nivel_riesgo": {
+              "type": "string",
+              "title": "Nivel Riesgo"
+            },
+            "explicabilidad_resumen": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Explicabilidad Resumen"
+            },
+            "accion_sugerida": {
+              "type": "string",
+              "title": "Accion Sugerida"
+            },
+            "canal_sugerido": {
+              "type": "string",
+              "title": "Canal Sugerido"
+            },
+            "intervenciones_enviadas": {
+              "type": "integer",
+              "title": "Intervenciones Enviadas"
+            },
+            "tiene_optout": {
+              "type": "boolean",
+              "title": "Tiene Optout"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cita",
+            "id_cita_externa",
+            "paciente_anon_id",
+            "especialidad",
+            "medico",
+            "fecha_hora_cita",
+            "franja_horaria",
+            "estado_actual",
+            "probabilidad_no_show",
+            "nivel_riesgo",
+            "explicabilidad_resumen",
+            "accion_sugerida",
+            "canal_sugerido",
+            "intervenciones_enviadas",
+            "tiene_optout"
+          ],
+          "title": "CitaSugeridaIntervencionOut"
+        },
+        "ClaveTemporalOut": {
+          "properties": {
+            "id_usuario": {
+              "type": "integer",
+              "title": "Id Usuario"
+            },
+            "clave_temporal": {
+              "type": "string",
+              "title": "Clave Temporal"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_usuario",
+            "clave_temporal"
+          ],
+          "title": "ClaveTemporalOut"
+        },
+        "CupoDetalleOut": {
+          "properties": {
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "id_cita_origen": {
+              "type": "integer",
+              "title": "Id Cita Origen"
+            },
+            "id_cita_externa_origen": {
+              "type": "string",
+              "title": "Id Cita Externa Origen",
+              "default": ""
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cupo": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cupo"
+            },
+            "franja_horaria": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Franja Horaria"
+            },
+            "estado_cupo": {
+              "type": "string",
+              "title": "Estado Cupo"
+            },
+            "origen_liberacion": {
+              "type": "string",
+              "title": "Origen Liberacion"
+            },
+            "liberado_en": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Liberado En"
+            },
+            "oferta_vigente": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OfertaOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reasignacion": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/app__modules__lista_espera__schemas__ReasignacionOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "historial_ofertas": {
+              "items": {
+                "$ref": "#/components/schemas/HistorialOfertaOut"
+              },
+              "type": "array",
+              "title": "Historial Ofertas"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cupo_liberado",
+            "id_cita_origen",
+            "especialidad",
+            "medico",
+            "fecha_hora_cupo",
+            "estado_cupo",
+            "origen_liberacion",
+            "liberado_en"
+          ],
+          "title": "CupoDetalleOut"
+        },
+        "CupoLiberadoOut": {
+          "properties": {
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "id_cita_origen": {
+              "type": "integer",
+              "title": "Id Cita Origen"
+            },
+            "id_cita_externa_origen": {
+              "type": "string",
+              "title": "Id Cita Externa Origen",
+              "default": ""
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cupo": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cupo"
+            },
+            "franja_horaria": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Franja Horaria"
+            },
+            "estado_cupo": {
+              "type": "string",
+              "title": "Estado Cupo"
+            },
+            "origen_liberacion": {
+              "type": "string",
+              "title": "Origen Liberacion"
+            },
+            "liberado_en": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Liberado En"
+            },
+            "oferta_vigente": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OfertaOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cupo_liberado",
+            "id_cita_origen",
+            "especialidad",
+            "medico",
+            "fecha_hora_cupo",
+            "estado_cupo",
+            "origen_liberacion",
+            "liberado_en"
+          ],
+          "title": "CupoLiberadoOut"
+        },
+        "CupoOut": {
+          "properties": {
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "id_cita_origen": {
+              "type": "integer",
+              "title": "Id Cita Origen"
+            },
+            "id_cita_externa_origen": {
+              "type": "string",
+              "title": "Id Cita Externa Origen"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cupo": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cupo"
+            },
+            "franja_horaria": {
+              "type": "string",
+              "title": "Franja Horaria"
+            },
+            "estado_cupo": {
+              "type": "string",
+              "title": "Estado Cupo"
+            },
+            "origen_liberacion": {
+              "type": "string",
+              "title": "Origen Liberacion"
+            },
+            "liberado_en": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Liberado En"
+            },
+            "oferta_vigente": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OfertaOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cupo_liberado",
+            "id_cita_origen",
+            "id_cita_externa_origen",
+            "especialidad",
+            "medico",
+            "fecha_hora_cupo",
+            "franja_horaria",
+            "estado_cupo",
+            "origen_liberacion",
+            "liberado_en",
+            "oferta_vigente"
+          ],
+          "title": "CupoOut",
+          "description": "Forma de contratos/modulo-06.json, construida desde cupos_liberados."
+        },
+        "DatasetResumenOut": {
+          "properties": {
+            "version_dataset": {
+              "type": "string",
+              "title": "Version Dataset"
+            },
+            "semilla": {
+              "type": "integer",
+              "title": "Semilla"
+            },
+            "total_historicas": {
+              "type": "integer",
+              "title": "Total Historicas"
+            },
+            "atendidas_historicas": {
+              "type": "integer",
+              "title": "Atendidas Historicas"
+            },
+            "no_show_historicas": {
+              "type": "integer",
+              "title": "No Show Historicas"
+            },
+            "proximas_operativas_bd": {
+              "type": "integer",
+              "title": "Proximas Operativas Bd"
+            },
+            "train_size": {
+              "type": "integer",
+              "title": "Train Size"
+            },
+            "val_size": {
+              "type": "integer",
+              "title": "Val Size"
+            },
+            "test_size": {
+              "type": "integer",
+              "title": "Test Size"
+            },
+            "tasa_no_show_global": {
+              "type": "number",
+              "title": "Tasa No Show Global"
+            },
+            "tasa_no_show_train": {
+              "type": "number",
+              "title": "Tasa No Show Train"
+            },
+            "tasa_no_show_val": {
+              "type": "number",
+              "title": "Tasa No Show Val"
+            },
+            "tasa_no_show_test": {
+              "type": "number",
+              "title": "Tasa No Show Test"
+            },
+            "features_autorizadas": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Features Autorizadas"
+            },
+            "control_leakage": {
+              "additionalProperties": true,
+              "type": "object",
+              "title": "Control Leakage"
+            },
+            "rotulo_etico": {
+              "type": "string",
+              "title": "Rotulo Etico"
+            }
+          },
+          "type": "object",
+          "required": [
+            "version_dataset",
+            "semilla",
+            "total_historicas",
+            "atendidas_historicas",
+            "no_show_historicas",
+            "proximas_operativas_bd",
+            "train_size",
+            "val_size",
+            "test_size",
+            "tasa_no_show_global",
+            "tasa_no_show_train",
+            "tasa_no_show_val",
+            "tasa_no_show_test",
+            "features_autorizadas",
+            "control_leakage",
+            "rotulo_etico"
+          ],
+          "title": "DatasetResumenOut"
+        },
+        "ElegibleOut": {
+          "properties": {
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "fecha_hora_cita": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Cita"
+            },
+            "estado_actual": {
+              "type": "string",
+              "title": "Estado Actual"
+            },
+            "riesgo": {
+              "$ref": "#/components/schemas/app__modules__intervenciones__schemas__RiesgoResumen"
+            },
+            "intervenciones_previas": {
+              "type": "integer",
+              "title": "Intervenciones Previas",
+              "default": 0
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cita",
+            "id_cita_externa",
+            "paciente_anon_id",
+            "especialidad",
+            "medico",
+            "fecha_hora_cita",
+            "estado_actual",
+            "riesgo"
+          ],
+          "title": "ElegibleOut"
+        },
+        "EstadoIn": {
+          "properties": {
+            "activo": {
+              "type": "boolean",
+              "title": "Activo"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "activo"
+          ],
+          "title": "EstadoIn"
+        },
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "HistorialOfertaOut": {
+          "properties": {
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "fecha_hora_oferta": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Oferta"
+            },
+            "cierre": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cierre"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_candidato",
+            "fecha_hora_oferta"
+          ],
+          "title": "HistorialOfertaOut"
+        },
+        "HistorialOut": {
+          "properties": {
+            "id_historial": {
+              "type": "integer",
+              "title": "Id Historial"
+            },
+            "id_usuario_actor": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Usuario Actor"
+            },
+            "estado_anterior": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Estado Anterior"
+            },
+            "estado_nuevo": {
+              "type": "string",
+              "title": "Estado Nuevo"
+            },
+            "motivo_cambio": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Motivo Cambio"
+            },
+            "fecha_hora_evento": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Evento"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_historial",
+            "id_usuario_actor",
+            "estado_anterior",
+            "estado_nuevo",
+            "motivo_cambio",
+            "fecha_hora_evento"
+          ],
+          "title": "HistorialOut"
+        },
+        "IntervencionCreateIn": {
+          "properties": {
+            "id_cita": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Cita"
+            },
+            "canal_contacto": {
+              "type": "string",
+              "enum": [
+                "WHATSAPP",
+                "SMS",
+                "LLAMADA_TELEFONICA"
+              ],
+              "title": "Canal Contacto"
+            },
+            "plantilla_mensaje": {
+              "type": "string",
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Plantilla Mensaje",
+              "default": "RECORDATORIO_CONFIRMACION_V1"
+            },
+            "consentimiento_confirmado": {
+              "title": "Consentimiento Confirmado"
+            },
+            "consentimiento_optout": {
+              "type": "boolean",
+              "title": "Consentimiento Optout",
+              "default": false
+            },
+            "estado_intervencion": {
+              "type": "string",
+              "enum": [
+                "PENDIENTE",
+                "ENVIADA",
+                "ENTREGADA",
+                "FALLIDA"
+              ],
+              "title": "Estado Intervencion",
+              "default": "PENDIENTE"
+            }
+          },
+          "type": "object",
+          "required": [
+            "canal_contacto"
+          ],
+          "title": "IntervencionCreateIn"
+        },
+        "IntervencionEstadoIn": {
+          "properties": {
+            "estado_intervencion": {
+              "type": "string",
+              "enum": [
+                "ENVIADA",
+                "ENTREGADA",
+                "FALLIDA"
+              ],
+              "title": "Estado Intervencion"
+            }
+          },
+          "type": "object",
+          "required": [
+            "estado_intervencion"
+          ],
+          "title": "IntervencionEstadoIn"
+        },
+        "IntervencionRespuestaIn": {
+          "properties": {
+            "respuesta_paciente": {
+              "type": "string",
+              "enum": [
+                "CONFIRMA",
+                "SOLICITA_LIBERACION",
+                "SOLICITA_REPROG",
+                "SIN_RESPUESTA"
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "optout": {
+              "type": "boolean",
+              "title": "Optout",
+              "default": false
+            },
+            "consentimiento_optout": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Consentimiento Optout"
+            },
+            "observacion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observacion"
+            }
+          },
+          "type": "object",
+          "required": [
+            "respuesta_paciente"
+          ],
+          "title": "IntervencionRespuestaIn"
+        },
+        "LiberarCupoIn": {
+          "properties": {
+            "motivo": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Motivo"
+            }
+          },
+          "type": "object",
+          "title": "LiberarCupoIn"
+        },
+        "MatrizConfusionOut": {
+          "properties": {
+            "tn": {
+              "type": "integer",
+              "title": "Tn"
+            },
+            "fp": {
+              "type": "integer",
+              "title": "Fp"
+            },
+            "fn": {
+              "type": "integer",
+              "title": "Fn"
+            },
+            "tp": {
+              "type": "integer",
+              "title": "Tp"
+            }
+          },
+          "type": "object",
+          "required": [
+            "tn",
+            "fp",
+            "fn",
+            "tp"
+          ],
+          "title": "MatrizConfusionOut"
+        },
+        "MetricasModeloOut": {
+          "properties": {
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "algoritmo": {
+              "type": "string",
+              "title": "Algoritmo"
+            },
+            "semilla": {
+              "type": "integer",
+              "title": "Semilla"
+            },
+            "fecha_entrenamiento": {
+              "type": "string",
+              "title": "Fecha Entrenamiento"
+            },
+            "es_simulacion": {
+              "type": "boolean",
+              "title": "Es Simulacion"
+            },
+            "rotulo_etico": {
+              "type": "string",
+              "title": "Rotulo Etico"
+            },
+            "umbral_alto": {
+              "type": "number",
+              "title": "Umbral Alto"
+            },
+            "umbral_medio": {
+              "type": "number",
+              "title": "Umbral Medio"
+            },
+            "cumple_meta_f1_82": {
+              "type": "boolean",
+              "title": "Cumple Meta F1 82"
+            },
+            "metricas_test": {
+              "$ref": "#/components/schemas/BloqueMetricasOut"
+            },
+            "metricas_val": {
+              "$ref": "#/components/schemas/BloqueMetricasOut"
+            },
+            "metricas_baseline_test": {
+              "$ref": "#/components/schemas/BloqueMetricasOut"
+            },
+            "auditoria_equidad": {
+              "additionalProperties": true,
+              "type": "object",
+              "title": "Auditoria Equidad"
+            },
+            "importancia_global_variables": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array",
+              "title": "Importancia Global Variables"
+            }
+          },
+          "type": "object",
+          "required": [
+            "version_modelo",
+            "algoritmo",
+            "semilla",
+            "fecha_entrenamiento",
+            "es_simulacion",
+            "rotulo_etico",
+            "umbral_alto",
+            "umbral_medio",
+            "cumple_meta_f1_82",
+            "metricas_test",
+            "metricas_val",
+            "metricas_baseline_test",
+            "auditoria_equidad",
+            "importancia_global_variables"
+          ],
+          "title": "MetricasModeloOut"
+        },
+        "OfertaIn": {
+          "properties": {
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_candidato"
+          ],
+          "title": "OfertaIn"
+        },
+        "OfertaOut": {
+          "properties": {
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "id_operador": {
+              "type": "integer",
+              "title": "Id Operador"
+            },
+            "fecha_hora_oferta": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Oferta"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_candidato",
+            "paciente_anon_id",
+            "id_operador",
+            "fecha_hora_oferta"
+          ],
+          "title": "OfertaOut"
+        },
+        "PaginaCandidatoOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/CandidatoOut"
+              },
+              "type": "array",
+              "title": "Items"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaCandidatoOut"
+        },
+        "PaginaCitasOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/CitaResumenOut"
+              },
+              "type": "array",
+              "title": "Items"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaCitasOut"
+        },
+        "PaginaCupoOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/CupoLiberadoOut"
+              },
+              "type": "array",
+              "title": "Items"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaCupoOut"
+        },
+        "PaginaElegiblesOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/ElegibleOut"
+              },
+              "type": "array",
+              "title": "Items"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaElegiblesOut"
+        },
+        "PaginaIntervencionesOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              },
+              "type": "array",
+              "title": "Items"
+            },
+            "total_sugeridas": {
+              "type": "integer",
+              "title": "Total Sugeridas",
+              "default": 0
+            },
+            "total_intervenciones": {
+              "type": "integer",
+              "title": "Total Intervenciones",
+              "default": 0
+            },
+            "citas_sugeridas": {
+              "items": {
+                "$ref": "#/components/schemas/CitaSugeridaIntervencionOut"
+              },
+              "type": "array",
+              "title": "Citas Sugeridas"
+            },
+            "historial_intervenciones": {
+              "items": {
+                "$ref": "#/components/schemas/app__modules__intervenciones__schemas__IntervencionOut"
+              },
+              "type": "array",
+              "title": "Historial Intervenciones"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaIntervencionesOut"
+        },
+        "PaginaUsuariosOut": {
+          "properties": {
+            "total": {
+              "type": "integer",
+              "title": "Total"
+            },
+            "limite": {
+              "type": "integer",
+              "title": "Limite"
+            },
+            "desplazamiento": {
+              "type": "integer",
+              "title": "Desplazamiento"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/UsuarioOut"
+              },
+              "type": "array",
+              "title": "Items"
+            }
+          },
+          "type": "object",
+          "required": [
+            "total",
+            "limite",
+            "desplazamiento",
+            "items"
+          ],
+          "title": "PaginaUsuariosOut"
+        },
+        "PlantillaOut": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "canal_contacto": {
+              "type": "string",
+              "enum": [
+                "WHATSAPP",
+                "SMS",
+                "LLAMADA_TELEFONICA"
+              ],
+              "title": "Canal Contacto"
+            },
+            "descripcion": {
+              "type": "string",
+              "title": "Descripcion"
+            },
+            "contenido": {
+              "type": "string",
+              "title": "Contenido"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id",
+            "canal_contacto",
+            "descripcion",
+            "contenido"
+          ],
+          "title": "PlantillaOut"
+        },
+        "PorCanalRep02": {
+          "properties": {
+            "canal_contacto": {
+              "type": "string",
+              "title": "Canal Contacto"
+            },
+            "respuesta_paciente": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "cantidad": {
+              "type": "integer",
+              "title": "Cantidad"
+            }
+          },
+          "type": "object",
+          "required": [
+            "canal_contacto",
+            "cantidad"
+          ],
+          "title": "PorCanalRep02"
+        },
+        "PorEspecialidadRep03": {
+          "properties": {
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "liberados": {
+              "type": "integer",
+              "title": "Liberados"
+            },
+            "reasignados": {
+              "type": "integer",
+              "title": "Reasignados"
+            }
+          },
+          "type": "object",
+          "required": [
+            "especialidad",
+            "liberados",
+            "reasignados"
+          ],
+          "title": "PorEspecialidadRep03"
+        },
+        "PrediccionIAOut": {
+          "properties": {
+            "id_prediccion": {
+              "type": "integer",
+              "title": "Id Prediccion"
+            },
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "probabilidad_no_show": {
+              "type": "string",
+              "title": "Probabilidad No Show"
+            },
+            "nivel_riesgo": {
+              "type": "string",
+              "title": "Nivel Riesgo"
+            },
+            "umbral_aplicado": {
+              "type": "string",
+              "title": "Umbral Aplicado"
+            },
+            "features_snapshot": {
+              "additionalProperties": true,
+              "type": "object",
+              "title": "Features Snapshot"
+            },
+            "explicabilidad_resumen": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Explicabilidad Resumen"
+            },
+            "fecha_hora_inferencia": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Inferencia"
+            },
+            "es_simulacion": {
+              "type": "boolean",
+              "title": "Es Simulacion",
+              "default": true
+            },
+            "rotulo_etico": {
+              "type": "string",
+              "title": "Rotulo Etico",
+              "default": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_prediccion",
+            "id_cita",
+            "version_modelo",
+            "probabilidad_no_show",
+            "nivel_riesgo",
+            "umbral_aplicado",
+            "features_snapshot",
+            "explicabilidad_resumen",
+            "fecha_hora_inferencia"
+          ],
+          "title": "PrediccionIAOut"
+        },
+        "PrediccionOut": {
+          "properties": {
+            "id_prediccion": {
+              "type": "integer",
+              "title": "Id Prediccion"
+            },
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "probabilidad_no_show": {
+              "type": "number",
+              "title": "Probabilidad No Show"
+            },
+            "nivel_riesgo": {
+              "type": "string",
+              "title": "Nivel Riesgo"
+            },
+            "umbral_aplicado": {
+              "type": "number",
+              "title": "Umbral Aplicado"
+            },
+            "features_snapshot": {
+              "additionalProperties": true,
+              "type": "object",
+              "title": "Features Snapshot"
+            },
+            "explicabilidad_resumen": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Explicabilidad Resumen"
+            },
+            "fecha_hora_inferencia": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Inferencia"
+            },
+            "resultado_simulado": {
+              "type": "boolean",
+              "title": "Resultado Simulado"
+            },
+            "ya_existia": {
+              "type": "boolean",
+              "title": "Ya Existia"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_prediccion",
+            "id_cita",
+            "version_modelo",
+            "probabilidad_no_show",
+            "nivel_riesgo",
+            "umbral_aplicado",
+            "features_snapshot",
+            "explicabilidad_resumen",
+            "fecha_hora_inferencia",
+            "resultado_simulado",
+            "ya_existia"
+          ],
+          "title": "PrediccionOut",
+          "description": "Forma de contratos/modulo-09.json, construida desde predicciones_ia."
+        },
+        "PropuestaCandidatosOut": {
+          "properties": {
+            "cupo": {
+              "$ref": "#/components/schemas/CupoLiberadoOut"
+            },
+            "total_compatibles": {
+              "type": "integer",
+              "title": "Total Compatibles"
+            },
+            "candidatos": {
+              "items": {
+                "$ref": "#/components/schemas/CandidatoOut"
+              },
+              "type": "array",
+              "title": "Candidatos"
+            }
+          },
+          "type": "object",
+          "required": [
+            "cupo",
+            "total_compatibles",
+            "candidatos"
+          ],
+          "title": "PropuestaCandidatosOut"
+        },
+        "ReasignacionIn": {
+          "properties": {
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "confirmacion_humana": {
+              "type": "boolean",
+              "title": "Confirmacion Humana"
+            },
+            "medio_confirmacion": {
+              "type": "string",
+              "enum": [
+                "LLAMADA_CONFIRMADA",
+                "PRESENCIAL"
+              ],
+              "title": "Medio Confirmacion",
+              "default": "LLAMADA_CONFIRMADA"
+            },
+            "observaciones": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observaciones"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_candidato",
+            "confirmacion_humana"
+          ],
+          "title": "ReasignacionIn"
+        },
+        "RechazoOut": {
+          "properties": {
+            "fila": {
+              "type": "integer",
+              "title": "Fila"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "motivos": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Motivos"
+            }
+          },
+          "type": "object",
+          "required": [
+            "fila",
+            "id_cita_externa",
+            "motivos"
+          ],
+          "title": "RechazoOut"
+        },
+        "Rep02Fila": {
+          "properties": {
+            "id_intervencion": {
+              "type": "integer",
+              "title": "Id Intervencion"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "nivel_riesgo": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Nivel Riesgo"
+            },
+            "canal_contacto": {
+              "type": "string",
+              "title": "Canal Contacto"
+            },
+            "estado_intervencion": {
+              "type": "string",
+              "title": "Estado Intervencion"
+            },
+            "respuesta_paciente": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "tiempo_respuesta_minutos": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tiempo Respuesta Minutos"
+            },
+            "cupo_liberado": {
+              "type": "boolean",
+              "title": "Cupo Liberado"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_intervencion",
+            "id_cita_externa",
+            "especialidad",
+            "canal_contacto",
+            "estado_intervencion",
+            "cupo_liberado"
+          ],
+          "title": "Rep02Fila"
+        },
+        "Rep02Out": {
+          "properties": {
+            "resumen": {
+              "$ref": "#/components/schemas/ResumenRep02"
+            },
+            "por_canal": {
+              "items": {
+                "$ref": "#/components/schemas/PorCanalRep02"
+              },
+              "type": "array",
+              "title": "Por Canal"
+            },
+            "filas": {
+              "items": {
+                "$ref": "#/components/schemas/Rep02Fila"
+              },
+              "type": "array",
+              "title": "Filas"
+            },
+            "resultado_simulado": {
+              "type": "boolean",
+              "title": "Resultado Simulado",
+              "default": false
+            }
+          },
+          "type": "object",
+          "required": [
+            "resumen",
+            "por_canal",
+            "filas"
+          ],
+          "title": "Rep02Out"
+        },
+        "Rep03Fila": {
+          "properties": {
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "fecha_hora_cupo": {
+              "type": "string",
+              "title": "Fecha Hora Cupo"
+            },
+            "especialidad": {
+              "type": "string",
+              "title": "Especialidad"
+            },
+            "medico": {
+              "type": "string",
+              "title": "Medico"
+            },
+            "horas_disponible": {
+              "type": "number",
+              "title": "Horas Disponible"
+            },
+            "paciente_anon_id_asignado": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Paciente Anon Id Asignado"
+            },
+            "id_operador_confirma": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Operador Confirma"
+            },
+            "estado_cupo": {
+              "type": "string",
+              "title": "Estado Cupo"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_cupo_liberado",
+            "fecha_hora_cupo",
+            "especialidad",
+            "medico",
+            "horas_disponible",
+            "estado_cupo"
+          ],
+          "title": "Rep03Fila"
+        },
+        "Rep03Out": {
+          "properties": {
+            "resumen": {
+              "$ref": "#/components/schemas/ResumenRep03"
+            },
+            "por_especialidad": {
+              "items": {
+                "$ref": "#/components/schemas/PorEspecialidadRep03"
+              },
+              "type": "array",
+              "title": "Por Especialidad"
+            },
+            "filas": {
+              "items": {
+                "$ref": "#/components/schemas/Rep03Fila"
+              },
+              "type": "array",
+              "title": "Filas"
+            }
+          },
+          "type": "object",
+          "required": [
+            "resumen",
+            "por_especialidad",
+            "filas"
+          ],
+          "title": "Rep03Out"
+        },
+        "ResultadoImportacionOut": {
+          "properties": {
+            "recibidas": {
+              "type": "integer",
+              "title": "Recibidas"
+            },
+            "aceptadas": {
+              "type": "integer",
+              "title": "Aceptadas"
+            },
+            "rechazadas": {
+              "type": "integer",
+              "title": "Rechazadas"
+            },
+            "detalle_rechazos": {
+              "items": {
+                "$ref": "#/components/schemas/RechazoOut"
+              },
+              "type": "array",
+              "title": "Detalle Rechazos"
+            }
+          },
+          "type": "object",
+          "required": [
+            "recibidas",
+            "aceptadas",
+            "rechazadas",
+            "detalle_rechazos"
+          ],
+          "title": "ResultadoImportacionOut"
+        },
+        "ResultadoPrediccionLoteOut": {
+          "properties": {
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "evaluadas": {
+              "type": "integer",
+              "title": "Evaluadas"
+            },
+            "riesgo_alto": {
+              "type": "integer",
+              "title": "Riesgo Alto"
+            },
+            "riesgo_medio": {
+              "type": "integer",
+              "title": "Riesgo Medio"
+            },
+            "riesgo_bajo": {
+              "type": "integer",
+              "title": "Riesgo Bajo"
+            },
+            "predicciones": {
+              "items": {
+                "$ref": "#/components/schemas/PrediccionIAOut"
+              },
+              "type": "array",
+              "title": "Predicciones"
+            }
+          },
+          "type": "object",
+          "required": [
+            "version_modelo",
+            "evaluadas",
+            "riesgo_alto",
+            "riesgo_medio",
+            "riesgo_bajo",
+            "predicciones"
+          ],
+          "title": "ResultadoPrediccionLoteOut"
+        },
+        "ResumenRep02": {
+          "properties": {
+            "enviadas": {
+              "type": "integer",
+              "title": "Enviadas"
+            },
+            "entregadas": {
+              "type": "integer",
+              "title": "Entregadas"
+            },
+            "respondidas": {
+              "type": "integer",
+              "title": "Respondidas"
+            },
+            "confirmaciones": {
+              "type": "integer",
+              "title": "Confirmaciones"
+            },
+            "liberaciones": {
+              "type": "integer",
+              "title": "Liberaciones"
+            },
+            "tasa_respuesta": {
+              "type": "number",
+              "title": "Tasa Respuesta"
+            }
+          },
+          "type": "object",
+          "required": [
+            "enviadas",
+            "entregadas",
+            "respondidas",
+            "confirmaciones",
+            "liberaciones",
+            "tasa_respuesta"
+          ],
+          "title": "ResumenRep02"
+        },
+        "ResumenRep03": {
+          "properties": {
+            "cupos_liberados": {
+              "type": "integer",
+              "title": "Cupos Liberados"
+            },
+            "cupos_reasignados": {
+              "type": "integer",
+              "title": "Cupos Reasignados"
+            },
+            "tasa_recuperacion": {
+              "type": "number",
+              "title": "Tasa Recuperacion"
+            },
+            "horas_promedio_matching": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Horas Promedio Matching"
+            }
+          },
+          "type": "object",
+          "required": [
+            "cupos_liberados",
+            "cupos_reasignados",
+            "tasa_recuperacion"
+          ],
+          "title": "ResumenRep03"
+        },
+        "TokenOut": {
+          "properties": {
+            "access_token": {
+              "type": "string",
+              "title": "Access Token"
+            },
+            "token_type": {
+              "type": "string",
+              "title": "Token Type",
+              "default": "bearer"
+            },
+            "expires_in": {
+              "type": "integer",
+              "title": "Expires In"
+            }
+          },
+          "type": "object",
+          "required": [
+            "access_token",
+            "expires_in"
+          ],
+          "title": "TokenOut"
+        },
+        "UsuarioCrearIn": {
+          "properties": {
+            "nombre_completo": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 2,
+              "title": "Nombre Completo"
+            },
+            "correo_institucional": {
+              "type": "string",
+              "format": "email",
+              "title": "Correo Institucional"
+            },
+            "rol": {
+              "type": "string",
+              "enum": [
+                "ADMINISTRADOR",
+                "RECEPCION",
+                "TECNICO_IA"
+              ],
+              "title": "Rol"
+            },
+            "clave_inicial": {
+              "type": "string",
+              "title": "Clave Inicial"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "nombre_completo",
+            "correo_institucional",
+            "rol",
+            "clave_inicial"
+          ],
+          "title": "UsuarioCrearIn"
+        },
+        "UsuarioEditarIn": {
+          "properties": {
+            "nombre_completo": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120,
+                  "minLength": 2
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Nombre Completo"
+            },
+            "rol": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "ADMINISTRADOR",
+                    "RECEPCION",
+                    "TECNICO_IA"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rol"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "title": "UsuarioEditarIn"
+        },
+        "UsuarioOut": {
+          "properties": {
+            "id_usuario": {
+              "type": "integer",
+              "title": "Id Usuario"
+            },
+            "nombre_completo": {
+              "type": "string",
+              "title": "Nombre Completo"
+            },
+            "correo_institucional": {
+              "type": "string",
+              "title": "Correo Institucional"
+            },
+            "rol": {
+              "type": "string",
+              "title": "Rol"
+            },
+            "activo": {
+              "type": "boolean",
+              "title": "Activo"
+            },
+            "creado_en": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Creado En"
+            },
+            "actualizado_en": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actualizado En"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_usuario",
+            "nombre_completo",
+            "correo_institucional",
+            "rol",
+            "activo",
+            "creado_en",
+            "actualizado_en"
+          ],
+          "title": "UsuarioOut",
+          "description": "Nunca incluye password_hash (RNF-002)."
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            },
+            "input": {
+              "title": "Input"
+            },
+            "ctx": {
+              "type": "object",
+              "title": "Context"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        },
+        "app__modules__citas__schemas__IntervencionOut": {
+          "properties": {
+            "id_intervencion": {
+              "type": "integer",
+              "title": "Id Intervencion"
+            },
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa"
+            },
+            "id_operador": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Operador"
+            },
+            "canal_contacto": {
+              "type": "string",
+              "title": "Canal Contacto"
+            },
+            "plantilla_mensaje": {
+              "type": "string",
+              "title": "Plantilla Mensaje"
+            },
+            "consentimiento_optout": {
+              "type": "boolean",
+              "title": "Consentimiento Optout"
+            },
+            "estado_intervencion": {
+              "type": "string",
+              "title": "Estado Intervencion"
+            },
+            "respuesta_paciente": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "fecha_hora_envio": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Envio"
+            },
+            "fecha_hora_respuesta": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fecha Hora Respuesta"
+            },
+            "acciones_disponibles": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Acciones Disponibles"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_intervencion",
+            "id_cita",
+            "id_cita_externa",
+            "id_operador",
+            "canal_contacto",
+            "plantilla_mensaje",
+            "consentimiento_optout",
+            "estado_intervencion",
+            "respuesta_paciente",
+            "fecha_hora_envio",
+            "fecha_hora_respuesta",
+            "acciones_disponibles"
+          ],
+          "title": "IntervencionOut",
+          "description": "Forma de contratos/modulo-05.json, construida desde intervenciones."
+        },
+        "app__modules__citas__schemas__ReasignacionOut": {
+          "properties": {
+            "id_reasignacion": {
+              "type": "integer",
+              "title": "Id Reasignacion"
+            },
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "paciente_anon_id": {
+              "type": "string",
+              "title": "Paciente Anon Id"
+            },
+            "id_operador_confirma": {
+              "type": "integer",
+              "title": "Id Operador Confirma"
+            },
+            "confirmacion_humana": {
+              "type": "boolean",
+              "title": "Confirmacion Humana"
+            },
+            "medio_confirmacion": {
+              "type": "string",
+              "title": "Medio Confirmacion"
+            },
+            "observaciones": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observaciones"
+            },
+            "fecha_hora_reasigna": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Reasigna"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_reasignacion",
+            "id_cupo_liberado",
+            "id_candidato",
+            "paciente_anon_id",
+            "id_operador_confirma",
+            "confirmacion_humana",
+            "medio_confirmacion",
+            "observaciones",
+            "fecha_hora_reasigna"
+          ],
+          "title": "ReasignacionOut"
+        },
+        "app__modules__citas__schemas__RiesgoResumen": {
+          "properties": {
+            "id_prediccion": {
+              "type": "integer",
+              "title": "Id Prediccion"
+            },
+            "probabilidad_no_show": {
+              "type": "number",
+              "title": "Probabilidad No Show"
+            },
+            "nivel_riesgo": {
+              "type": "string",
+              "title": "Nivel Riesgo"
+            },
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "fecha_hora_inferencia": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Inferencia"
+            },
+            "resultado_simulado": {
+              "type": "boolean",
+              "title": "Resultado Simulado"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_prediccion",
+            "probabilidad_no_show",
+            "nivel_riesgo",
+            "version_modelo",
+            "fecha_hora_inferencia",
+            "resultado_simulado"
+          ],
+          "title": "RiesgoResumen"
+        },
+        "app__modules__intervenciones__schemas__IntervencionOut": {
+          "properties": {
+            "id_intervencion": {
+              "type": "integer",
+              "title": "Id Intervencion"
+            },
+            "id_cita": {
+              "type": "integer",
+              "title": "Id Cita"
+            },
+            "id_cita_externa": {
+              "type": "string",
+              "title": "Id Cita Externa",
+              "default": ""
+            },
+            "id_operador": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Operador"
+            },
+            "canal_contacto": {
+              "type": "string",
+              "title": "Canal Contacto"
+            },
+            "plantilla_mensaje": {
+              "type": "string",
+              "title": "Plantilla Mensaje"
+            },
+            "consentimiento_optout": {
+              "type": "boolean",
+              "title": "Consentimiento Optout"
+            },
+            "estado_intervencion": {
+              "type": "string",
+              "title": "Estado Intervencion"
+            },
+            "respuesta_paciente": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Respuesta Paciente"
+            },
+            "fecha_hora_envio": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fecha Hora Envio"
+            },
+            "fecha_hora_respuesta": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fecha Hora Respuesta"
+            },
+            "estado_cita_actual": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Estado Cita Actual"
+            },
+            "id_cupo_liberado_generado": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Id Cupo Liberado Generado"
+            },
+            "acciones_disponibles": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Acciones Disponibles"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_intervencion",
+            "id_cita",
+            "id_operador",
+            "canal_contacto",
+            "plantilla_mensaje",
+            "consentimiento_optout",
+            "estado_intervencion",
+            "respuesta_paciente",
+            "fecha_hora_envio",
+            "fecha_hora_respuesta"
+          ],
+          "title": "IntervencionOut"
+        },
+        "app__modules__intervenciones__schemas__RiesgoResumen": {
+          "properties": {
+            "id_prediccion": {
+              "type": "integer",
+              "title": "Id Prediccion"
+            },
+            "probabilidad_no_show": {
+              "type": "number",
+              "title": "Probabilidad No Show"
+            },
+            "nivel_riesgo": {
+              "type": "string",
+              "title": "Nivel Riesgo"
+            },
+            "version_modelo": {
+              "type": "string",
+              "title": "Version Modelo"
+            },
+            "fecha_hora_inferencia": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Inferencia"
+            },
+            "resultado_simulado": {
+              "type": "boolean",
+              "title": "Resultado Simulado",
+              "default": false
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_prediccion",
+            "probabilidad_no_show",
+            "nivel_riesgo",
+            "version_modelo",
+            "fecha_hora_inferencia"
+          ],
+          "title": "RiesgoResumen"
+        },
+        "app__modules__lista_espera__schemas__ReasignacionOut": {
+          "properties": {
+            "id_reasignacion": {
+              "type": "integer",
+              "title": "Id Reasignacion"
+            },
+            "id_cupo_liberado": {
+              "type": "integer",
+              "title": "Id Cupo Liberado"
+            },
+            "id_candidato": {
+              "type": "integer",
+              "title": "Id Candidato"
+            },
+            "id_operador_confirma": {
+              "type": "integer",
+              "title": "Id Operador Confirma"
+            },
+            "confirmacion_humana": {
+              "type": "boolean",
+              "title": "Confirmacion Humana"
+            },
+            "medio_confirmacion": {
+              "type": "string",
+              "title": "Medio Confirmacion"
+            },
+            "observaciones": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Observaciones"
+            },
+            "fecha_hora_reasigna": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Fecha Hora Reasigna"
+            },
+            "estado_cupo_final": {
+              "type": "string",
+              "title": "Estado Cupo Final"
+            },
+            "estado_candidato_final": {
+              "type": "string",
+              "title": "Estado Candidato Final"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id_reasignacion",
+            "id_cupo_liberado",
+            "id_candidato",
+            "id_operador_confirma",
+            "confirmacion_humana",
+            "medio_confirmacion",
+            "observaciones",
+            "fecha_hora_reasigna",
+            "estado_cupo_final",
+            "estado_candidato_final"
+          ],
+          "title": "ReasignacionOut"
+        }
+      },
+      "securitySchemes": {
+        "OAuth2PasswordBearer": {
+          "type": "oauth2",
+          "flows": {
+            "password": {
+              "scopes": {},
+              "tokenUrl": "/auth/login"
+            }
+          }
+        }
+      }
+    }
+  },
+  "isolated_database": true,
+  "users_rolled_back": true
+}

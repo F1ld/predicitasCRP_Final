@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "url": "http://127.0.0.1:18000/health",
+      "status": 200,
+      "expected_status": 200,
+      "marker_found": true,
+      "passed": true
+    },
+    {
+      "url": "http://127.0.0.1:18000/docs",
+      "status": 200,
+      "expected_status": 200,
+      "marker_found": true,
+      "passed": true
+    },
+    {
+      "url": "http://127.0.0.1:18000/citas",
+      "status": 401,
+      "expected_status": 401,
+      "marker_found": true,
+      "passed": true
+    },
+    {
+      "url": "http://127.0.0.1:15173/",
+      "status": 200,
+      "expected_status": 200,
+      "marker_found": true,
+      "passed": true
+    },
+    {
+      "url": "http://127.0.0.1:15173/src/main.tsx",
+      "status": 200,
+      "expected_status": 200,
+      "marker_found": true,
+      "passed": true
+    },
+    {
+      "url": "http://127.0.0.1:15173/citas",
+      "status": 200,
+      "expected_status": 200,
+      "marker_found": true,
+      "passed": true
+    }
+  ],
+  "http_openapi_matches_before": true,
+  "writes_performed": false,
+  "browser_visual_certified": false
+}

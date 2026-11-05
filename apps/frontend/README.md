@@ -1,5 +1,7 @@
 # PrediCitas CRP · Frontend
 
+> **Fase 2:** ubicación vigente `apps/frontend/`. Consultar el [README raíz](../../README.md) para el arranque oficial. Los comandos de clonación independiente de este documento son históricos; los comandos npm se ejecutan ahora desde `apps/frontend/`.
+
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9%20estricto-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)

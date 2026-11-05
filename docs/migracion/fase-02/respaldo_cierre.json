@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-04T23:49:46.719228+00:00",
+  "private_archive": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase2-20261104-183050\\resultado_fase2_privado.zip",
+  "files": 473,
+  "bytes": 1857329,
+  "sha256": "444945c3eabf9d33aef6da6776367b7e143b8b25f6a9eaad0c7689c98252cea5",
+  "zip_crc_verified": true,
+  "contains_secrets_do_not_publish": true,
+  "same_machine_not_external_backup": true,
+  "empty_skills_directories": [
+    "apps/backend/Skills/",
+    "apps/frontend/Skills/"
+  ],
+  "note": "ZIP no contiene carpetas vac\u00edas; recrear Skills vac\u00edas al recuperar. Hereda ACL restringida del respaldo previo. El manifiesto de este ZIP se guarda fuera de \u00e9l."
+}

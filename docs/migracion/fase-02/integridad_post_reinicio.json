@@ -1,0 +1,49 @@
+{
+  "original_volumes": [
+    {
+      "source": "predicitas-crp_pgdata",
+      "sha256_before": "4c8661a547a992c8503272e392e8e5ac2d4c8a502caca531380afd33fa783cc3",
+      "sha256_after": "4c8661a547a992c8503272e392e8e5ac2d4c8a502caca531380afd33fa783cc3",
+      "identical": true
+    },
+    {
+      "source": "predicitas-backend_pgdata",
+      "sha256_before": "a369450177829f11f617910326f47a1faf526d2659e01bf8b6855f83767f799d",
+      "sha256_after": "a369450177829f11f617910326f47a1faf526d2659e01bf8b6855f83767f799d",
+      "identical": true
+    },
+    {
+      "source": "predicitas-guia-qa_qa_pgdata",
+      "sha256_before": "ce00af19996309b202671411648cde9ec1182809ef7024cb2fac7b0245d18f25",
+      "sha256_after": "ce00af19996309b202671411648cde9ec1182809ef7024cb2fac7b0245d18f25",
+      "identical": true
+    }
+  ],
+  "env_files": [
+    {
+      "path": ".env",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "apps/backend/.env",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "apps/frontend/.env",
+      "bytes_unchanged": true
+    }
+  ],
+  "skills": [
+    {
+      "path": "apps/backend/Skills",
+      "exists_and_empty": true
+    },
+    {
+      "path": "apps/frontend/Skills",
+      "exists_and_empty": true
+    }
+  ],
+  "clone_catalog_differences": [],
+  "same_nine_table_counts_and_fingerprints": true,
+  "same_catalog_and_sequences": true
+}

@@ -1,5 +1,7 @@
 # PrediCitas CRP · Backend
 
+> **Fase 2:** ubicación vigente `apps/backend/`. El arranque oficial está en el [README raíz](../../README.md) con `compose.yaml`. Las instrucciones de repositorio/Compose independiente de este documento son históricas; no levantar otro stack ni sembrar la BD existente.
+
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.143-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)

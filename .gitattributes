@@ -5,6 +5,10 @@
 # Mark binary files
 *.joblib binary
 *.pkl binary
+*.pickle binary
+*.dump binary
+*.zip binary
+*.tar binary
 *.jpg binary
 *.png binary
 *.csv text eol=crlf

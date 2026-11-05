@@ -1,0 +1,26 @@
+{
+  "private_directory": "C:\\Users\\arami\\AppData\\Local\\PrediCitasBackups\\fase2-20261104-183050",
+  "db": "predicitas-fase2-20261104-183050-db",
+  "network": "predicitas-fase2-20261104-183050-net",
+  "volume": "predicitas-fase2-20261104-183050-pgdata",
+  "original_volumes": [
+    {
+      "source": "predicitas-crp_pgdata",
+      "readonly": true,
+      "sha256": "4c8661a547a992c8503272e392e8e5ac2d4c8a502caca531380afd33fa783cc3"
+    },
+    {
+      "source": "predicitas-backend_pgdata",
+      "readonly": true,
+      "sha256": "a369450177829f11f617910326f47a1faf526d2659e01bf8b6855f83767f799d"
+    },
+    {
+      "source": "predicitas-guia-qa_qa_pgdata",
+      "readonly": true,
+      "sha256": "ce00af19996309b202671411648cde9ec1182809ef7024cb2fac7b0245d18f25"
+    }
+  ],
+  "database_ports_published": false,
+  "source_started": false,
+  "source_seeded": false
+}
