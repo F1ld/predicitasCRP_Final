@@ -1,6 +1,7 @@
 """B.1: payloads históricos y atomicidad observados en PostgreSQL aislado."""
 import pytest
 from sqlalchemy import func, select
+from unittest.mock import Mock
 
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas import public as citas_public
@@ -98,6 +99,8 @@ def test_fallo_auditoria_despues_de_crear_cupo_revierte_todo(client, headers, db
     inter = crear_intervencion(db, cita)
     db.commit()
     id_cita, id_inter = cita.id_cita, inter.id_intervencion
+    commit = Mock(wraps=db.commit)
+    monkeypatch.setattr(db, "commit", commit)
     original = service.registrar_evento
     def fallar(db, **kwargs):
         if kwargs["accion"] == "LIBERAR":
@@ -107,6 +110,10 @@ def test_fallo_auditoria_despues_de_crear_cupo_revierte_todo(client, headers, db
     with pytest.raises(RuntimeError, match="Fallo B.1"):
         client.patch(f"/intervenciones/{id_inter}", headers=headers,
                      json={"respuesta_paciente": "SOLICITA_LIBERACION"})
+    commit.assert_not_called()
+    # La fixture comparte sesión y reemplaza get_db; en producción su cierre
+    # revierte la transacción fallida. Reproducir aquí ese límite de petición.
+    db.rollback()
     db.expire_all()
     assert db.get(Cita, id_cita).estado_actual == "RECIBIDA"
     assert db.get(Intervencion, id_inter).estado_intervencion == "PENDIENTE"
