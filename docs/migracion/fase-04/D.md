@@ -38,3 +38,8 @@ de esquema, contratos HTTP, reglas, CSV, credenciales o artefacto del modelo.
 Implementación en revisión. Prevalidación sin BD: 37 aprobadas; no sustituye gates.
 La fase 4 permanece **EN CURSO** hasta evaluar los criterios del plan y evidencia.
 Cada intento formal usa un run-id nuevo; no se sobrescriben resultados.
+
+Intentos conservados: `bloque-d-20261106-01` interrumpido por timeout del host;
+`bloque-d-20261106-02` detectó un acceso a relación ORM opcional sin `getattr`
+en lectura de intervenciones. Corregido respetando la ausencia histórica de esa
+relación. Ninguno se considera aceptación; ambos laboratorios detenidos.

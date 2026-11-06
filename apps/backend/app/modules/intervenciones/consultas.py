@@ -10,7 +10,7 @@ from app.modules.citas.public import CitaConsulta
 
 
 def cita_relacionada(intervencion: Intervencion) -> CitaConsulta | None:
-    cita = intervencion.cita
+    cita = getattr(intervencion, "cita", None)
     return CitaConsulta(**{k: getattr(cita, k) for k in CitaConsulta.__dataclass_fields__}) if cita is not None else None
 
 
