@@ -1,0 +1,17 @@
+{
+  "run_id": "ia-correccion-20261106-03",
+  "files": [
+    {
+      "name": "openapi.json",
+      "sha256": "863f29593a45b2676c99642284105ce276d16a9a941bcb846ffddf218fd27c83"
+    },
+    {
+      "name": "pytest.xml",
+      "sha256": "b74c2a9ac668959b0764b027aef9b0b59c96e3be92abc5f866469fe16bd83b1f"
+    },
+    {
+      "name": "resumen.json",
+      "sha256": "d92a0dd28438e22e600d902f05fdb9320fe47bd11e5cfec71f27aa57a03bdf01"
+    }
+  ]
+}
