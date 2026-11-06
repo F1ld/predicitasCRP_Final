@@ -10,9 +10,13 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.core.errores import NoEncontrado, TransicionInvalida
+from app.core.transacciones import bloquear_fila
 from app.modules.auth.public import Principal as Usuario
 from app.modules.citas.models import Cita
 from app.modules.citas.reglas import ESTADOS_ACTIVOS, TRANSICIONES, puede_transicionar_a_liberada
+from app.modules.citas.transiciones import aplicar, foto
+from app.modules.citas.importer import importar_citas_interno
+from app.modules.citas.synthetic import generar_citas  # contrato temporal hasta extraer datasets IA
 
 
 @dataclass(frozen=True)
@@ -33,7 +37,7 @@ def _snapshot(cita: Cita) -> CitaConsulta:
 
 def obtener_cita_consulta(db: Session, id_cita: int, *, bloquear: bool = False) -> CitaConsulta | None:
     """Consulta de lectura de una cita sin exponer la fila ORM mutada."""
-    cita = db.get(Cita, id_cita, with_for_update=True) if bloquear else db.get(Cita, id_cita)
+    cita = bloquear_fila(db, Cita, id_cita) if bloquear else db.get(Cita, id_cita)
     if cita is None:
         return None
     return _snapshot(cita)
@@ -75,19 +79,18 @@ def transicionar_cita_interno(
     # derivadas; solo el caso de uso M02-E05 puede hacerlo.
     if estado_nuevo == "REPROGRAMADA":
         raise TransicionInvalida("REPROGRAMADA exige nueva_fecha_hora_cita: use POST /citas/{id_cita}/estado")
-    cita = db.get(Cita, id_cita, with_for_update=True)
+    cita = bloquear_fila(db, Cita, id_cita)
     if cita is None:
         raise NoEncontrado(f"No existe la cita {id_cita}")
 
-    from app.modules.citas.service import _aplicar_transicion, _foto
-    _aplicar_transicion(
+    aplicar(
         db,
         cita,
         estado_nuevo,
         usuario=usuario,
         ip=ip,
         motivo=motivo,
-        antes=_foto(cita),
+        antes=foto(cita),
         extra_despues=extra_despues,
         registrar_auditoria=registrar_auditoria,
     )

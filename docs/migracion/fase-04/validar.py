@@ -71,13 +71,13 @@ def protegidos():
     return {p.relative_to(ROOT).as_posix(): sha(p) for p in paths if p.is_file()}
 
 
-def contenedor(meta, raw, source, *, network=True):
+def contenedor(meta, raw, source, *, network=True, image=None):
     return ["docker", "run", "--rm", "--network", meta["network"] if network else "none",
             "--mount", f"type=bind,source={source},target=/repo,readonly",
             "--mount", f"type=bind,source={HERE},target=/fase4,readonly",
             "--mount", f"type=bind,source={raw},target=/results",
             "-w", "/repo/apps/backend", "-e", "PYTHONPATH=/repo/apps/backend",
-            "-e", "PYTHONDONTWRITEBYTECODE=1", "--env-file", meta["private_env"], IMAGE]
+            "-e", "PYTHONDONTWRITEBYTECODE=1", "--env-file", meta["private_env"], image or IMAGE]
 
 
 def accion(raw, nombre, command):
@@ -122,8 +122,8 @@ def preparar(raw, run_id, baseline_ref="2f4140e", scope="A"):
     commit = salida(["git", "rev-parse", "--verify", baseline_ref + "^{commit}"], cwd=ROOT)
     if scope == "A" and not commit_tested.startswith("2f4140e"):
         raise ValueError("Revisar nuevo punto de retorno antes de preparar otro laboratorio")
-    if scope in ("B1", "C"):
-        expected = {"B1": "2f95273", "C": "6da1c49"}[scope]
+    if scope in ("B1", "C", "D"):
+        expected = {"B1": "2f95273", "C": "6da1c49", "D": "2ad167e"}[scope]
         if not commit.startswith(expected):
             raise ValueError(f"Bloque {scope} exige baseline explícito: {expected}")
         if salida(["git", "status", "--porcelain"], cwd=ROOT):
@@ -234,6 +234,18 @@ def resumen(raw, meta):
         assert leer(raw / "c_rollback.accion.json")["exit_code"] == 0
         assert leer(raw / "actual_diagnostico.accion.json")["exit_code"] == 0
         assert changed == CAMBIO_S03, "Solo se permite corregir S-03, no ocultar otros cambios"
+    if meta.get("scope") == "D":
+        public["packaged_image"] = leer(raw / "imagen_d.json")
+        public["concurrency"] = leer(raw / "d_concurrencia.json")
+        public["rollback"] = leer(raw / "d_rollback.json")
+        public["image_id"] = public["packaged_image"]["image_id"]
+        assert all(public["packaged_image"]["parity"].values()) and public["packaged_image"]["source_mount_absent"]
+        assert len(public["concurrency"]["checks"]) == 9
+        assert all(c["database_lock_wait_observed"] and c["preloaded_identity_map"] for c in public["concurrency"]["checks"].values())
+        assert len(public["rollback"]["checks"]) == 4
+        assert all(c["independent_connection_rollback"] for c in public["rollback"]["checks"].values())
+        for check in ("actual_diagnostico", "paquete_runtime", "d_concurrencia", "d_rollback"):
+            assert leer(raw / f"{check}.accion.json")["exit_code"] == 0
     escribir(raw / "resumen.json", public)
     assert all(parity.values()) and set(added.values()) == {"passed"}
     assert changed == (CAMBIO_S03 if meta.get("scope") == "C" else {})
@@ -249,7 +261,7 @@ def main():
     parser.add_argument("accion", choices=("preparar", "baseline", "actual", "detener", "resumen"))
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--baseline-ref", default="2f4140e", help="B.1: 2f95273; C: 6da1c49; fijar explícitamente")
-    parser.add_argument("--scope", choices=("A", "B1", "C"), default="A")
+    parser.add_argument("--scope", choices=("A", "B1", "C", "D"), default="A")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,40}", args.run_id):
         raise ValueError("run-id inválido")
@@ -273,7 +285,8 @@ def main():
     source = Path(meta["baseline_source"]) if mode == "baseline" else ROOT
     before = fuentes(source)
     escribir(raw / f"{mode}_sources.json", before)
-    base = contenedor(meta, raw, source)
+    image = leer(raw / "imagen_d.json")["image_id"] if mode == "actual" and meta.get("scope") == "D" else IMAGE
+    base = contenedor(meta, raw, source, image=image)
     if mode == "baseline" and meta.get("scope") == "C":
         if accion(raw, "baseline_c_contratos", [*base, "python", "/fase4/caracterizar_baseline_c.py", "/results/baseline_c_contratos.json"]):
             raise RuntimeError("Baseline C no coincide con los contratos caracterizados")
@@ -286,6 +299,18 @@ def main():
     accion(raw, f"{mode}_diagnostico", [*base, "python", "-m", "pytest", "--ignore=tests/ia",
            f"--junitxml=/results/{mode}_diagnostico.xml", f"--cov-report=json:/results/{mode}_coverage.json"])
     if mode == "actual":
+        if meta.get("scope") == "D":
+            from imagen_d import runtime
+            package = runtime(meta, raw, image)
+            if accion(raw, "paquete_runtime", [*package, "python", "-m", "pytest", "tests/auth", "tests/citas",
+                    "tests/intervenciones", "tests/lista_espera", "tests/usuarios", "tests/test_reasignacion.py",
+                    "tests/test_intervenciones.py", "tests/test_ia_endpoints.py", "tests/test_ia_predictor.py",
+                    "--no-cov", "--junitxml=/results/paquete_runtime.xml"]):
+                raise RuntimeError("Regresión empaquetada D falló")
+            if accion(raw, "d_concurrencia", [*package, "python", "/checks/probar_concurrencia_d.py", "/results/d_concurrencia.json"]):
+                raise RuntimeError("Falló concurrencia D; no cerrar fase")
+            if accion(raw, "d_rollback", [*package, "python", "/checks/probar_rollback_d.py", "/results/d_rollback.json"]):
+                raise RuntimeError("Falló rollback D; no cerrar fase")
         if meta.get("scope") == "C":
             if accion(raw, "c_focalizadas", [*base, "python", "-m", "pytest", "--no-cov",
                     "tests/sistema/test_routers_c_fase4.py", "tests/lista_espera/test_ofertas_c_fase4.py",

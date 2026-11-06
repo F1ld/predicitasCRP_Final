@@ -21,7 +21,7 @@ from app.modules.intervenciones.schemas import (
     PaginaIntervencionesOut,
     PlantillaOut,
 )
-from app.modules.lista_espera.schemas import CupoLiberadoOut
+from app.modules.lista_espera.public import CupoLiberadoOut
 
 router = APIRouter(tags=["intervenciones"])
 

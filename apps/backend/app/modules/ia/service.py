@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.errores import Conflicto, NoEncontrado
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
-from app.modules.citas.models import Cita
+from app.modules.ia.consultas import CitaInferencia, cita_para_inferencia
 from app.modules.ia import repository
 from app.modules.ia.predictor import (
     FEATURES_ENTRADA_MODELO,
@@ -24,7 +24,7 @@ def listar_predicciones_cita(db: Session, id_cita: int) -> list[PrediccionIAOut]
     return [PrediccionIAOut.model_validate(p) for p in repository.listar_por_cita(db, id_cita)]
 
 
-def _cita_a_dict_features(cita: Cita) -> dict:
+def _cita_a_dict_features(cita: CitaInferencia) -> dict:
     return {
         "especialidad": cita.especialidad,
         "tipo_paciente": cita.tipo_paciente,
@@ -45,7 +45,7 @@ def predecir_cita(
     usuario: Usuario,
     ip: str,
 ) -> PrediccionIAOut:
-    cita = db.get(Cita, id_cita)
+    cita = cita_para_inferencia(db, id_cita)
     if cita is None:
         raise NoEncontrado(f"No existe la cita {id_cita}")
     if cita.estado_actual not in ESTADOS_ELEGIBLES_PREDICCION:

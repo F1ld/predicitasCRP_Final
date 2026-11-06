@@ -45,7 +45,7 @@ def test_transicion_por_id_retorna_snapshot_y_conserva_lock():
     row = cita_ejemplo()
     db.get.return_value = row
     result = citas.transicionar_cita_interno(db, 123, "CONFIRMADA", usuario=_usuario_prueba(), ip="127.0.0.1")
-    db.get.assert_called_once_with(Cita, 123, with_for_update=True)
+    db.get.assert_called_once_with(Cita, 123, with_for_update=True, populate_existing=True)
     assert inspect(result, raiseerr=False) is None
     assert result.estado_actual == row.estado_actual == "CONFIRMADA"
     with pytest.raises(FrozenInstanceError):

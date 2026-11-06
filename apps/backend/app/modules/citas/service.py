@@ -26,6 +26,7 @@ from app.modules.citas.schemas import (CambioEstadoIn, CatalogosOut, CheckInOut,
                                        PrediccionOut, ReasignacionOut, RiesgoResumen)
 from app.modules.intervenciones import public as intervenciones_public
 from app.modules.lista_espera import public as lista_espera_public
+from app.workflows import citas as workflow_citas
 
 # Mientras el modelo esté entrenado con datos sintéticos, todo score es simulado (RF-056, RN16).
 RESULTADO_SIMULADO = True
@@ -186,38 +187,7 @@ def registrar_cita(db: Session, datos: CitaRegistroIn, usuario: Usuario, ip: str
 
 # ---------------------------------------------------------------- cambios de estado
 
-def _foto(cita: Cita) -> dict:
-    return {"estado_actual": cita.estado_actual, "target_no_show": cita.target_no_show}
-
-
-def _validar_transicion(cita: Cita, estado_nuevo: str) -> None:
-    permitidos = TRANSICIONES.get(cita.estado_actual, set())
-    if estado_nuevo not in permitidos:
-        opciones = ", ".join(sorted(permitidos)) or "ninguno (estado final)"
-        raise TransicionInvalida(
-            f"No se permite pasar de {cita.estado_actual} a {estado_nuevo}. Permitidos: {opciones}"
-        )
-
-
-def _aplicar_transicion(
-    db: Session, cita: Cita, estado_nuevo: str, *, usuario: Usuario, ip: str, motivo: str | None,
-    antes: dict, extra_despues: dict | None = None, registrar_auditoria: bool = True,
-) -> None:
-    _validar_transicion(cita, estado_nuevo)
-    estado_anterior = cita.estado_actual
-    cita.estado_actual = estado_nuevo
-    if estado_nuevo in ESTADOS_DESENLACE:
-        cita.target_no_show = ESTADOS_DESENLACE[estado_nuevo]  # el target nace con el desenlace
-    db.add(HistorialEstadoCita(
-        id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario,
-        estado_anterior=estado_anterior, estado_nuevo=estado_nuevo, motivo_cambio=motivo,
-    ))
-    if registrar_auditoria:
-        registrar_evento(
-            db, modulo="CITAS", accion="UPDATE", entidad_afectada="citas", direccion_ip=ip,
-            id_usuario=usuario.id_usuario, id_entidad=cita.id_cita, datos_before=antes,
-            datos_after={**_foto(cita), **(extra_despues or {})},
-        )
+from app.modules.citas.transiciones import aplicar as _aplicar_transicion, foto as _foto, validar as _validar_transicion
 
 
 def transicionar(db, cita: Cita, estado_nuevo: str, *, usuario: Usuario, ip: str, motivo: str | None = None) -> None:
@@ -250,7 +220,8 @@ def cambiar_estado(
 ) -> CitaDetalleOut:
     """M02-E05 (F-06, RF-019 a RF-026, D-011)."""
     _validar_campos(cambio)
-    cita = db.get(Cita, id_cita, with_for_update=True)  # bloquea la fila: evita cambios concurrentes
+    from app.core.transacciones import bloquear_fila
+    cita = bloquear_fila(db, Cita, id_cita)
     if cita is None:
         raise NoEncontrado(f"No existe la cita {id_cita}")
 
@@ -288,32 +259,11 @@ def cambiar_estado(
         extra = {c: getattr(cita, c) for c in campos_fecha}
         extra["fecha_hora_cita"] = nueva.isoformat()
 
-    cupo = None
     if estado == "CANCELADA" and cambio.liberar_cupo:
-        if cita.fecha_hora_cita <= ahora:
-            raise Conflicto("Solo se libera el cupo de una cita futura", codigo="CITA_PASADA")
-        cupo = lista_espera_public.crear_cupo_liberado_interno(
-            db,
-            id_cita_origen=cita.id_cita,
-            especialidad=cita.especialidad,
-            medico=cita.medico,
-            fecha_hora_cupo=cita.fecha_hora_cita,
-            origen_liberacion="CANCELACION_EXTERNA",
-            usuario=usuario,
-            ip=ip,
-            registrar_auditoria=False,
-        )
-
-    _aplicar_transicion(db, cita, estado, usuario=usuario, ip=ip, motivo=cambio.motivo, antes=antes,
-                        extra_despues=extra)
-    if cupo is not None:
-        registrar_evento(
-            db, modulo="REASIGNACION", accion="LIBERAR", entidad_afectada="cupos_liberados", direccion_ip=ip,
-            id_usuario=usuario.id_usuario, id_entidad=cupo.id_cupo_liberado,
-            datos_after={"id_cita_origen": cita.id_cita, "estado_cupo": cupo.estado_cupo,
-                         "origen_liberacion": cupo.origen_liberacion,
-                         "fecha_hora_cupo": cupo.fecha_hora_cupo.isoformat()},
-        )
+        workflow_citas.cancelar_liberando(db, id_cita, usuario=usuario, ip=ip, ahora=ahora, motivo=cambio.motivo)
+    else:
+        _aplicar_transicion(db, cita, estado, usuario=usuario, ip=ip, motivo=cambio.motivo, antes=antes,
+                            extra_despues=extra)
     db.commit()  # cita + historial + cupo + auditoría: todo o nada (RNF-014)
     return detalle_cita(db, id_cita)
 
@@ -324,7 +274,8 @@ def registrar_check_in(
     db: Session, id_cita: int, observacion: str | None, usuario: Usuario, ip: str, ahora: datetime
 ) -> CheckInOut:
     """M02-E06 (RF-104, D-012): evento CHECK_IN en auditoria_eventos, sin cambiar el estado."""
-    cita = db.get(Cita, id_cita, with_for_update=True)  # serializa check-ins simultáneos
+    from app.core.transacciones import bloquear_fila
+    cita = bloquear_fila(db, Cita, id_cita)
     if cita is None:
         raise NoEncontrado(f"No existe la cita {id_cita}")
     if cita.estado_actual not in ESTADOS_ACTIVOS:

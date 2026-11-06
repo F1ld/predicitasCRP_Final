@@ -40,6 +40,10 @@ def main():
         assert summary["b1_rollback"]["rollback_visible_from_independent_connection"]
     if "c_rollback" in summary:
         assert all(v["independent_connection_rollback"] for v in summary["c_rollback"]["checks"].values())
+    if summary.get("block") == "D":
+        assert all(summary["packaged_image"]["parity"].values())
+        assert all(c["database_lock_wait_observed"] for c in summary["concurrency"]["checks"].values())
+        assert all(c["independent_connection_rollback"] for c in summary["rollback"]["checks"].values())
     target.mkdir(parents=True, exist_ok=False)
     escribir(target / "resumen.json", summary)
     names = ["baseline_diagnostico", "actual_diagnostico", "baseline_completo", "actual_completo"]
@@ -47,6 +51,8 @@ def main():
         names.append("b1_focalizadas")
     if "c_rollback" in summary:
         names.append("c_focalizadas")
+    if summary.get("block") == "D":
+        names.append("paquete_runtime")
     for name in names:
         original = raw / f"{name}.xml"
         root = ET.Element("testsuite")

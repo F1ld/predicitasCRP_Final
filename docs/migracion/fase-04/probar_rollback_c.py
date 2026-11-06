@@ -16,6 +16,7 @@ from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
 from app.modules.lista_espera import public, service
+from app.modules.lista_espera import casos
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera
 from app.modules.reportes import service as reportes
 from app.modules.usuarios.models import Usuario
@@ -60,7 +61,7 @@ def main():
     results = {}
     class FalloSimulado(RuntimeError):
         pass
-    for operacion, modulo, accion in (("oferta", service, "OFERTAR"), ("cierre", service, "DESISTIR"),
+    for operacion, modulo, accion in (("oferta", casos, "OFERTAR"), ("cierre", casos, "DESISTIR"),
                                       ("exportacion", reportes, "EXPORT")):
         if operacion == "cierre":
             with Session(engine) as db:

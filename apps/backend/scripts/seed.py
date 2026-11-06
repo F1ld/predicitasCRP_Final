@@ -17,7 +17,7 @@ import app.bootstrap.models  # noqa: F401
 from app.core.database import SessionLocal
 from app.core.security import hash_password
 from app.modules.usuarios.models import Usuario
-from app.modules.citas.importer import importar_citas
+from app.modules.citas.public import importar_citas_interno
 from app.modules.citas.models import Cita
 from app.modules.citas.synthetic import generar_citas
 
@@ -73,10 +73,11 @@ def main() -> None:
             else:
                 print(f"Usuario existe : {correo} ({rol})")
             por_rol[rol] = usuario
-        db.commit()
+        db.flush()  # IDs disponibles, todavía dentro de la transacción del seed
 
         existentes = db.scalar(select(func.count(Cita.id_cita)).where(Cita.id_cita_externa.like("CIT-SIM-%"))) or 0
         if existentes > 0:
+            db.commit()  # conserva alta de usuarios aunque las citas ya existan
             print(
                 f"Ya existen {existentes} citas sintéticas (CIT-SIM-*) en la tabla `citas`.\n"
                 "Nota: Como `historial_estados_cita` y `auditoria_eventos` tienen triggers INSERT-ONLY,\n"
@@ -93,13 +94,14 @@ def main() -> None:
             tasa_no_show=args.tasa_no_show,
             con_invalidas=args.con_invalidas,
         )
-        resultado = importar_citas(
+        resultado = importar_citas_interno(
             db,
             registros,
             id_usuario=por_rol["ADMINISTRADOR"].id_usuario,
             ip="127.0.0.1",
             origen=f"seed sintético acreditado E-04 (semilla={args.semilla}, hist={args.historicas}, prox={args.proximas})",
         )
+        db.commit()  # usuarios + citas + historial + auditoría en una transacción
 
         total_hist = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show.is_not(None))) or 0
         total_no_show = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show == 1)) or 0

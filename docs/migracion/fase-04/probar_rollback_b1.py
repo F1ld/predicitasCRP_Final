@@ -66,7 +66,7 @@ def main():
         id_cita, id_inter, id_user = cita.id_cita, inter.id_intervencion, user.id_usuario
     before = observar(id_cita, id_inter)
     reached = []
-    original = service.registrar_evento
+    original = service.workflow_intervenciones.registrar_evento
     class FalloSimulado(RuntimeError):
         pass
     def fallar(db, **kwargs):
@@ -78,7 +78,7 @@ def main():
         return original(db, **kwargs)
     with Session(engine) as db:
         user = db.get(Usuario, id_user)
-        with patch.object(service, "registrar_evento", fallar):
+        with patch.object(service.workflow_intervenciones, "registrar_evento", fallar):
             try:
                 service.registrar_respuesta_intervencion(db, id_inter,
                     IntervencionRespuestaIn(respuesta_paciente="SOLICITA_LIBERACION"), usuario=user,

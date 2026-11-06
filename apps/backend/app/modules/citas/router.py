@@ -140,5 +140,5 @@ def calcular_prediccion_cita(
     db: Session = Depends(get_db),
 ):
     """Calcula la predicción IA en demanda para la cita (RF-041 a RF-056)."""
-    from app.modules.ia.service import predecir_cita
+    from app.modules.ia.public import predecir_cita
     return predecir_cita(db, id_cita, usuario=usuario, ip=ip_cliente(request))

@@ -8,6 +8,7 @@ from sqlalchemy import select
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas import public as citas_public
 from app.modules.lista_espera import public as cupos_public, service
+from app.modules.lista_espera import casos
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from app.modules.lista_espera.schemas import CandidatoCreateIn
 from tests.conftest import cabecera
@@ -195,7 +196,7 @@ def test_fallo_tras_flush_revierte_estados_eventos_y_proyeccion(client, db, esce
     e = escenario
     if operacion == "DESISTIR":
         assert ofertar(client, e).status_code == 200
-    original = service.registrar_evento
+    original = casos.registrar_evento
     commit = Mock(wraps=db.commit)
     monkeypatch.setattr(db, "commit", commit)
     def fallar(db, **kwargs):
@@ -204,7 +205,7 @@ def test_fallo_tras_flush_revierte_estados_eventos_y_proyeccion(client, db, esce
             db.flush()
             raise RuntimeError("Fallo C tras flush")
         return event
-    monkeypatch.setattr(service, "registrar_evento", fallar)
+    monkeypatch.setattr(casos, "registrar_evento", fallar)
     with pytest.raises(RuntimeError, match="Fallo C"):
         if operacion == "OFERTAR":
             ofertar(client, e)

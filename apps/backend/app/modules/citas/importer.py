@@ -53,7 +53,7 @@ def nueva_cita(reg: CitaImportIn, derivadas: dict, inasistencias: int, asistenci
     )
 
 
-def importar_citas(
+def importar_citas_interno(
     db: Session, registros: list[dict], *, id_usuario: int | None, ip: str, origen: str,
     ahora: datetime | None = None,
 ) -> ResultadoImportacionOut:
@@ -119,8 +119,15 @@ def importar_citas(
         datos_after={"origen": origen, "recibidas": len(registros),
                      "aceptadas": len(citas), "rechazadas": len(rechazos)},
     )
-    db.commit()
     return ResultadoImportacionOut(
         recibidas=len(registros), aceptadas=len(citas),
         rechazadas=len(rechazos), detalle_rechazos=rechazos,
     )
+
+
+def importar_citas(db: Session, registros: list[dict], *, id_usuario: int | None, ip: str,
+                   origen: str, ahora: datetime | None = None) -> ResultadoImportacionOut:
+    """Caso de uso HTTP/histórico; un único cierre, sin begin anidado."""
+    resultado = importar_citas_interno(db, registros, id_usuario=id_usuario, ip=ip, origen=origen, ahora=ahora)
+    db.commit()
+    return resultado

@@ -4,7 +4,7 @@ from typing import Any
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.modules.citas.models import Cita
+from app.modules.ia.consultas import citas_operativas_sin_prediccion, conteos_dataset_bd
 from app.modules.ia.models import PrediccionIA
 
 
@@ -63,36 +63,3 @@ def guardar_o_actualizar_prediccion(
     db.add(nueva)
     db.flush()
     return nueva, None
-
-
-def citas_operativas_sin_prediccion(db: Session, version_modelo: str, forzar: bool = False) -> list[Cita]:
-    """Obtiene las citas próximas en estado RECIBIDA sin predicción vigente para version_modelo."""
-    stmt = (
-        select(Cita)
-        .where(
-            Cita.estado_actual == "RECIBIDA",
-            Cita.target_no_show.is_(None),
-        )
-        .order_by(Cita.fecha_hora_cita.asc(), Cita.id_cita.asc())
-    )
-    if not forzar:
-        subq = (
-            select(PrediccionIA.id_cita)
-            .where(PrediccionIA.version_modelo == version_modelo)
-        )
-        stmt = stmt.where(Cita.id_cita.not_in(subq))
-    return list(db.scalars(stmt))
-
-
-def conteos_dataset_bd(db: Session) -> dict[str, int]:
-    total_hist = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show.is_not(None))) or 0
-    no_show_hist = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show == 1)) or 0
-    atendidas_hist = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show == 0)) or 0
-    proximas_op = db.scalar(select(func.count(Cita.id_cita)).where(Cita.target_no_show.is_(None))) or 0
-    return {
-        "total_historicas_bd": int(total_hist),
-        "atendidas_bd": int(atendidas_hist),
-        "no_show_bd": int(no_show_hist),
-        "proximas_bd": int(proximas_op),
-    }
-

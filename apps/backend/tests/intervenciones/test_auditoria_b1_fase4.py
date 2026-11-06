@@ -101,12 +101,12 @@ def test_fallo_auditoria_despues_de_crear_cupo_revierte_todo(client, headers, db
     id_cita, id_inter = cita.id_cita, inter.id_intervencion
     commit = Mock(wraps=db.commit)
     monkeypatch.setattr(db, "commit", commit)
-    original = service.registrar_evento
+    original = service.workflow_intervenciones.registrar_evento
     def fallar(db, **kwargs):
         if kwargs["accion"] == "LIBERAR":
             raise RuntimeError("Fallo B.1 tras flush del cupo")
         return original(db, **kwargs)
-    monkeypatch.setattr(service, "registrar_evento", fallar)
+    monkeypatch.setattr(service.workflow_intervenciones, "registrar_evento", fallar)
     with pytest.raises(RuntimeError, match="Fallo B.1"):
         client.patch(f"/intervenciones/{id_inter}", headers=headers,
                      json={"respuesta_paciente": "SOLICITA_LIBERACION"})

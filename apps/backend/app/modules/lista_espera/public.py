@@ -12,6 +12,8 @@ from sqlalchemy.orm import Session
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
 from app.modules.lista_espera.models import CupoLiberado
+from app.modules.lista_espera.schemas import CupoLiberadoOut
+from app.modules.lista_espera.casos import registrar_oferta as ofrecer_cupo, cerrar_oferta, reasignar_cupo
 
 
 @dataclass(frozen=True)

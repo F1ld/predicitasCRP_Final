@@ -39,7 +39,7 @@ from app.core.dominio import (
     FRANJAS_CITA,
     TIPOS_PACIENTE,
 )
-from app.modules.citas.synthetic import generar_citas
+from app.modules.citas.public import generar_citas
 
 VERSION_MODELO = "LightGBM_v1.0.0"
 VERSION_DATASET = "DS_SINTETICO_CRP_v1.0"
@@ -320,15 +320,8 @@ def explicar_prediccion(
 def cargar_citas_historicas(db: Session | None = None) -> list[dict[str, Any]]:
     """Lee las 1,000 citas históricas con desenlace desde la tabla `citas` o desde el generador oficial."""
     if db is not None:
-        from app.modules.citas.models import Cita
-
-        filas_bd = list(
-            db.scalars(
-                select(Cita)
-                .where(Cita.target_no_show.is_not(None))
-                .order_by(Cita.id_cita_externa.asc())
-            )
-        )
+        from app.modules.ia.consultas import historicas
+        filas_bd = historicas(db)
         if len(filas_bd) >= 1000:
             return [
                 {
