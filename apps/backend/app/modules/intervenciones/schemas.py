@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
-from app.modules.citas.reglas import LIMA
+from app.core.reloj import LIMA
 
 
 class PlantillaOut(BaseModel):

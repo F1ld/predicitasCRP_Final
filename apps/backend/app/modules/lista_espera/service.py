@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from app.core.errores import ConflictoDeNegocio, NoEncontrado, ReglaDeNegocioInvalida
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
-from app.modules.citas.models import Cita
-from app.modules.citas.reglas import LIMA
+from app.core.reloj import LIMA
+from app.modules.citas import public as citas_public
 from app.modules.lista_espera import repository
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from sqlalchemy import select
@@ -21,19 +21,19 @@ from app.modules.lista_espera.schemas import (
 
 
 def _franja_de_cupo(db: Session, cupo: CupoLiberado) -> str:
-    cita_origen = db.get(Cita, cupo.id_cita_origen)
-    if cita_origen is not None:
-        return cita_origen.franja_horaria
+    meta = citas_public.obtener_metadatos_cita_para_cupo(db, cupo.id_cita_origen)
+    if meta is not None:
+        return meta[1]
     hora_lima = cupo.fecha_hora_cupo.astimezone(LIMA).hour
     return "MANANA" if hora_lima < 13 else "TARDE"
 
 
 def _cupo_a_out(db: Session, cupo: CupoLiberado) -> CupoLiberadoOut:
     out = CupoLiberadoOut.model_validate(cupo)
-    cita_origen = db.get(Cita, cupo.id_cita_origen)
-    if cita_origen is not None:
-        out.id_cita_externa_origen = cita_origen.id_cita_externa
-        out.franja_horaria = cita_origen.franja_horaria
+    meta = citas_public.obtener_metadatos_cita_para_cupo(db, cupo.id_cita_origen)
+    if meta is not None:
+        out.id_cita_externa_origen = meta[0]
+        out.franja_horaria = meta[1]
     else:
         out.id_cita_externa_origen = f"CIT-{cupo.id_cita_origen}"
         hora_lima = cupo.fecha_hora_cupo.astimezone(LIMA).hour

@@ -77,3 +77,6 @@ def listar_reasignaciones(db: Session) -> list[Reasignacion]:
     )
     return list(db.scalars(stmt))
 
+def obtener_cupo_por_cita_origen(db: Session, id_cita_origen: int) -> CupoLiberado | None:
+    stmt = select(CupoLiberado).where(CupoLiberado.id_cita_origen == id_cita_origen)
+    return db.scalar(stmt)

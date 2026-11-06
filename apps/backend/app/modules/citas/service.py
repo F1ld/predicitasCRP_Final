@@ -24,8 +24,8 @@ from app.modules.citas.schemas import (CambioEstadoIn, CatalogosOut, CheckInOut,
                                        CitaOut, CitaRegistroIn, CitaResumenOut, CupoOut,
                                        HistorialOut, IntervencionOut, OfertaOut, PaginaCitasOut,
                                        PrediccionOut, ReasignacionOut, RiesgoResumen)
-from app.modules.intervenciones.models import Intervencion
-from app.modules.lista_espera.models import CupoLiberado
+from app.modules.intervenciones import public as intervenciones_public
+from app.modules.lista_espera import public as lista_espera_public
 
 # Mientras el modelo esté entrenado con datos sintéticos, todo score es simulado (RF-056, RN16).
 RESULTADO_SIMULADO = True
@@ -57,28 +57,18 @@ def listar_citas(
     return PaginaCitasOut(total=total, limite=limite, desplazamiento=desplazamiento, items=items)
 
 
-def _acciones_intervencion(inter: Intervencion, cita: Cita) -> list[str]:
-    """Acciones de M05 según el estado (reglas-de-negocio F-09). Las ejecuta M05."""
-    estado, acciones = inter.estado_intervencion, []
-    if estado == "PENDIENTE":
-        acciones += ["REGISTRAR_ENVIO", "REGISTRAR_FALLO"]
-    elif estado == "ENVIADA":
-        acciones += ["REGISTRAR_ENTREGA", "REGISTRAR_FALLO"]
-        if inter.canal_contacto == "LLAMADA_TELEFONICA":
-            acciones.append("REGISTRAR_RESPUESTA")
-    elif estado == "ENTREGADA":
-        acciones.append("REGISTRAR_RESPUESTA")
-    if estado == "RESPONDIDA" and not inter.consentimiento_optout:
-        acciones.append("REGISTRAR_OPTOUT")
-    if estado == "RESPONDIDA" and cita.estado_actual in ESTADOS_ACTIVOS:
-        if inter.respuesta_paciente == "CONFIRMA" and cita.estado_actual != "CONFIRMADA":
-            acciones.append("CONFIRMAR_CITA")
-        if inter.respuesta_paciente == "SOLICITA_LIBERACION":
-            acciones.append("LIBERAR_CUPO")
-    return acciones
+def _acciones_intervencion(inter, cita: Cita) -> list[str]:
+    """Acciones de M05 según el estado (reglas-de-negocio F-09). Las calcula M05."""
+    return intervenciones_public.acciones_disponibles_intervencion(
+        inter.estado_intervencion,
+        inter.canal_contacto,
+        inter.respuesta_paciente,
+        inter.consentimiento_optout,
+        cita.estado_actual,
+    )
 
 
-def _cupo_out(db: Session, cupo: CupoLiberado, cita: Cita) -> CupoOut:
+def _cupo_out(db: Session, cupo, cita: Cita) -> CupoOut:
     oferta = None
     if cupo.estado_cupo == "EN_OFERTA":  # D-014: la vigente es el último OFERTAR
         ultima = repository.ultima_oferta(db, cupo.id_cupo_liberado)
@@ -211,7 +201,7 @@ def _validar_transicion(cita: Cita, estado_nuevo: str) -> None:
 
 def _aplicar_transicion(
     db: Session, cita: Cita, estado_nuevo: str, *, usuario: Usuario, ip: str, motivo: str | None,
-    antes: dict, extra_despues: dict | None = None,
+    antes: dict, extra_despues: dict | None = None, registrar_auditoria: bool = True,
 ) -> None:
     _validar_transicion(cita, estado_nuevo)
     estado_anterior = cita.estado_actual
@@ -222,11 +212,12 @@ def _aplicar_transicion(
         id_cita=cita.id_cita, id_usuario_actor=usuario.id_usuario,
         estado_anterior=estado_anterior, estado_nuevo=estado_nuevo, motivo_cambio=motivo,
     ))
-    registrar_evento(
-        db, modulo="CITAS", accion="UPDATE", entidad_afectada="citas", direccion_ip=ip,
-        id_usuario=usuario.id_usuario, id_entidad=cita.id_cita, datos_before=antes,
-        datos_after={**_foto(cita), **(extra_despues or {})},
-    )
+    if registrar_auditoria:
+        registrar_evento(
+            db, modulo="CITAS", accion="UPDATE", entidad_afectada="citas", direccion_ip=ip,
+            id_usuario=usuario.id_usuario, id_entidad=cita.id_cita, datos_before=antes,
+            datos_after={**_foto(cita), **(extra_despues or {})},
+        )
 
 
 def transicionar(db, cita: Cita, estado_nuevo: str, *, usuario: Usuario, ip: str, motivo: str | None = None) -> None:
@@ -274,11 +265,10 @@ def cambiar_estado(
             raise Conflicto("La cita tiene check-in: no puede ser NO_SHOW", codigo="CHECK_IN_REGISTRADO")
 
     if estado == "CONFIRMADA" and cambio.id_intervencion is not None:
-        inter = db.get(Intervencion, cambio.id_intervencion)
-        if inter is None or inter.id_cita != id_cita:
+        if not intervenciones_public.validar_intervencion_de_cita(db, cambio.id_intervencion, id_cita):
             raise Validacion("La intervención no pertenece a esta cita",
                              campos={"id_intervencion": "No existe o es de otra cita"})
-        extra["id_intervencion"] = inter.id_intervencion
+        extra["id_intervencion"] = cambio.id_intervencion
 
     if estado == "REPROGRAMADA":
         nueva = cambio.nueva_fecha_hora_cita
@@ -298,27 +288,23 @@ def cambiar_estado(
         extra = {c: getattr(cita, c) for c in campos_fecha}
         extra["fecha_hora_cita"] = nueva.isoformat()
 
-    cupo = None
     if estado == "CANCELADA" and cambio.liberar_cupo:
         if cita.fecha_hora_cita <= ahora:
             raise Conflicto("Solo se libera el cupo de una cita futura", codigo="CITA_PASADA")
-        cupo = CupoLiberado(
-            id_cita_origen=cita.id_cita, especialidad=cita.especialidad, medico=cita.medico,
-            fecha_hora_cupo=cita.fecha_hora_cita, estado_cupo="DISPONIBLE", origen_liberacion="CANCELACION_EXTERNA",
+        lista_espera_public.crear_cupo_liberado_interno(
+            db,
+            id_cita_origen=cita.id_cita,
+            especialidad=cita.especialidad,
+            medico=cita.medico,
+            fecha_hora_cupo=cita.fecha_hora_cita,
+            origen_liberacion="CANCELACION_EXTERNA",
+            usuario=usuario,
+            ip=ip,
+            modulo_auditoria="REASIGNACION",
         )
 
     _aplicar_transicion(db, cita, estado, usuario=usuario, ip=ip, motivo=cambio.motivo, antes=antes,
                         extra_despues=extra)
-    if cupo is not None:
-        db.add(cupo)
-        db.flush()
-        registrar_evento(
-            db, modulo="REASIGNACION", accion="LIBERAR", entidad_afectada="cupos_liberados", direccion_ip=ip,
-            id_usuario=usuario.id_usuario, id_entidad=cupo.id_cupo_liberado,
-            datos_after={"id_cita_origen": cita.id_cita, "estado_cupo": cupo.estado_cupo,
-                         "origen_liberacion": cupo.origen_liberacion,
-                         "fecha_hora_cupo": cupo.fecha_hora_cupo.isoformat()},
-        )
     db.commit()  # cita + historial + cupo + auditoría: todo o nada (RNF-014)
     return detalle_cita(db, id_cita)
 

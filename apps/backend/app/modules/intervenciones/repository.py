@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.modules.citas.models import Cita
 from app.modules.ia.models import PrediccionIA
 from app.modules.intervenciones.models import Intervencion
-from app.modules.lista_espera.models import CupoLiberado
+from app.modules.lista_espera import public as lista_espera_public
 
 
 def listar_por_cita(db: Session, id_cita: int) -> list[Intervencion]:
@@ -100,6 +100,5 @@ def obtener_prediccion_reciente(db: Session, id_cita: int) -> PrediccionIA | Non
     return db.scalar(stmt)
 
 
-def obtener_cupo_por_cita_origen(db: Session, id_cita: int) -> CupoLiberado | None:
-    stmt = select(CupoLiberado).where(CupoLiberado.id_cita_origen == id_cita)
-    return db.scalar(stmt)
+def obtener_cupo_por_cita_origen(db: Session, id_cita: int):
+    return lista_espera_public.obtener_cupo_por_cita_origen(db, id_cita)

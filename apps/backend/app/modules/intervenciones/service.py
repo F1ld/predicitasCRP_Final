@@ -5,9 +5,10 @@ from sqlalchemy.orm import Session
 from app.core.errores import Conflicto, NoEncontrado, TransicionInvalida, Validacion
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
-from app.modules.citas.models import Cita, HistorialEstadoCita
+from app.core.reloj import LIMA
+from app.modules.citas import public as citas_public
+from app.modules.citas.models import Cita
 from app.modules.citas.reglas import (
-    LIMA,
     TRANSICIONES,
     puede_transicionar_a_liberada,
 )
@@ -24,6 +25,7 @@ from app.modules.intervenciones.schemas import (
     PaginaIntervencionesOut,
     RiesgoResumen,
 )
+from app.modules.lista_espera import public as lista_espera_public
 from app.modules.lista_espera.models import CupoLiberado
 from app.modules.lista_espera.schemas import CupoLiberadoOut
 
@@ -453,62 +455,51 @@ def registrar_respuesta_intervencion(
             if cita.estado_actual != "CONFIRMADA":
                 permitidos = TRANSICIONES.get(cita.estado_actual, set())
                 if "CONFIRMADA" in permitidos:
-                    cita.estado_actual = "CONFIRMADA"
-                    db.add(
-                        HistorialEstadoCita(
-                            id_cita=cita.id_cita,
-                            id_usuario_actor=usuario.id_usuario,
-                            estado_anterior=estado_cita_anterior,
-                            estado_nuevo="CONFIRMADA",
-                            motivo_cambio=datos.observacion or "Confirmación del paciente mediante intervención preventiva",
-                        )
+                    citas_public.transicionar_cita_interno(
+                        db,
+                        cita,
+                        "CONFIRMADA",
+                        usuario=usuario,
+                        ip=ip,
+                        motivo=datos.observacion or "Confirmación del paciente mediante intervención preventiva",
+                        registrar_auditoria=False,
                     )
         elif datos.respuesta_paciente == "SOLICITA_LIBERACION":
             if puede_transicionar_a_liberada(cita.estado_actual):
-                cita.estado_actual = "LIBERADA"
-                db.add(
-                    HistorialEstadoCita(
-                        id_cita=cita.id_cita,
-                        id_usuario_actor=usuario.id_usuario,
-                        estado_anterior=estado_cita_anterior,
-                        estado_nuevo="LIBERADA",
-                        motivo_cambio=datos.observacion or "Liberación voluntaria del paciente en intervención (RN04)",
-                    )
+                citas_public.transicionar_cita_interno(
+                    db,
+                    cita,
+                    "LIBERADA",
+                    usuario=usuario,
+                    ip=ip,
+                    motivo=datos.observacion or "Liberación voluntaria del paciente en intervención (RN04)",
+                    registrar_auditoria=False,
                 )
                 cupo_existente = repository.obtener_cupo_por_cita_origen(db, cita.id_cita)
                 if cupo_existente is None:
-                    nuevo_cupo = CupoLiberado(
+                    from app.modules.intervenciones import service as _self_mod
+                    fabrica = getattr(_self_mod, "CupoLiberado", CupoLiberado)
+                    nuevo_cupo = lista_espera_public.crear_cupo_liberado_interno(
+                        db,
                         id_cita_origen=cita.id_cita,
                         especialidad=cita.especialidad,
                         medico=cita.medico,
                         fecha_hora_cupo=cita.fecha_hora_cita,
-                        estado_cupo="DISPONIBLE",
                         origen_liberacion="INTERVENCION_VOLUNTARIA",
+                        usuario=usuario,
+                        ip=ip,
+                        modulo_auditoria="INTERVENCION",
+                        datos_before={"estado_cita": estado_cita_anterior},
+                        datos_after_extra={
+                            "id_intervencion": intervencion.id_intervencion,
+                            "id_cupo_liberado": None,
+                            "estado_cita": "LIBERADA",
+                        },
+                        fabrica_cupo=fabrica,
                     )
-                    db.add(nuevo_cupo)
-                    db.flush()
                     id_cupo_generado = nuevo_cupo.id_cupo_liberado
                 else:
                     id_cupo_generado = cupo_existente.id_cupo_liberado
-
-                registrar_evento(
-                    db,
-                    modulo="INTERVENCION",
-                    accion="LIBERAR",
-                    entidad_afectada="cupos_liberados",
-                    direccion_ip=ip,
-                    id_usuario=usuario.id_usuario,
-                    id_entidad=id_cupo_generado,
-                    datos_before={"estado_cita": estado_cita_anterior},
-                    datos_after={
-                        "id_cita_origen": cita.id_cita,
-                        "id_intervencion": intervencion.id_intervencion,
-                        "id_cupo_liberado": id_cupo_generado,
-                        "estado_cita": "LIBERADA",
-                        "estado_cupo": "DISPONIBLE",
-                        "origen_liberacion": "INTERVENCION_VOLUNTARIA",
-                    },
-                )
 
     registrar_evento(
         db,
@@ -594,46 +585,35 @@ def liberar_cupo_desde_intervencion(
         raise Conflicto(f"La cita en estado '{cita.estado_actual}' no admite transición a LIBERADA", codigo="TRANSICION_INVALIDA")
 
     estado_anterior = cita.estado_actual
-    cita.estado_actual = "LIBERADA"
-
     motivo_final = motivo or "Paciente cede su cupo voluntariamente mediante intervención preventiva"
-    db.add(
-        HistorialEstadoCita(
-            id_cita=cita.id_cita,
-            id_usuario_actor=usuario.id_usuario,
-            estado_anterior=estado_anterior,
-            estado_nuevo="LIBERADA",
-            motivo_cambio=motivo_final,
-        )
+
+    citas_public.transicionar_cita_interno(
+        db,
+        cita,
+        "LIBERADA",
+        usuario=usuario,
+        ip=ip,
+        motivo=motivo_final,
+        registrar_auditoria=False,
     )
 
-    nuevo_cupo = CupoLiberado(
+    from app.modules.intervenciones import service as _self_mod
+    fabrica = getattr(_self_mod, "CupoLiberado", CupoLiberado)
+    nuevo_cupo = lista_espera_public.crear_cupo_liberado_interno(
+        db,
         id_cita_origen=cita.id_cita,
         especialidad=cita.especialidad,
         medico=cita.medico,
         fecha_hora_cupo=cita.fecha_hora_cita,
-        estado_cupo="DISPONIBLE",
         origen_liberacion="INTERVENCION_VOLUNTARIA",
-    )
-    db.add(nuevo_cupo)
-    db.flush()
-
-    registrar_evento(
-        db,
-        modulo="INTERVENCION",
-        accion="LIBERAR",
-        entidad_afectada="cupos_liberados",
-        direccion_ip=ip,
-        id_usuario=usuario.id_usuario,
-        id_entidad=nuevo_cupo.id_cupo_liberado,
+        usuario=usuario,
+        ip=ip,
+        modulo_auditoria="INTERVENCION",
         datos_before={"estado_cita": estado_anterior},
-        datos_after={
-            "id_cupo_liberado": nuevo_cupo.id_cupo_liberado,
-            "id_cita_origen": cita.id_cita,
-            "estado_cupo": "DISPONIBLE",
-            "origen_liberacion": "INTERVENCION_VOLUNTARIA",
+        datos_after_extra={
             "motivo": motivo_final,
         },
+        fabrica_cupo=fabrica,
     )
     db.commit()
     db.refresh(nuevo_cupo)
