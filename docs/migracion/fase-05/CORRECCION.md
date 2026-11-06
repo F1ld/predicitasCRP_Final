@@ -50,3 +50,8 @@ python -B docs/migracion/fase-05/validar_ia.py verificar --run-id ia-correccion-
 
 Estado de corrección: pendiente de validación formal. Seed complementario permanece
 aceptado en `seed-20261106-01`; no se reabre su laboratorio ni se alteran sus pruebas.
+
+Intento `ia-correccion-20261106-01` conservado: 83 pruebas empaquetadas aprobadas,
+pero la sonda externa no encontraba `/app` al ejecutarse desde `/checks`. Corregido
+PYTHONPATH del contenedor de validación; no fue fallo de inferencia. No se cuenta
+ese intento como aceptación; repetir con identidad nueva.

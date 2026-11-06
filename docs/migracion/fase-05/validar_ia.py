@@ -115,7 +115,7 @@ def execute(raw, run_id):
     with env.open("x", encoding="utf-8", newline="\n") as stream:
         stream.write("IA_API_KEY=" + secrets.token_urlsafe(32) + "\nMODEL_REGISTRY_DIR=/models\n")
     base = ["docker", "run", "--rm", "--network", "none", "--read-only", "--tmpfs", "/tmp:rw,nosuid,size=256m",
-        "--cpus", "2", "--memory", "1g", "--env-file", str(env),
+        "--cpus", "2", "--memory", "1g", "--env-file", str(env), "-e", "PYTHONPATH=/app",
         "--mount", f"type=bind,source={ROOT / 'artifacts/models/legacy-import'},target=/models,readonly",
         "--mount", f"type=bind,source={raw},target=/results",
         "--mount", f"type=bind,source={HERE},target=/checks,readonly", image]
