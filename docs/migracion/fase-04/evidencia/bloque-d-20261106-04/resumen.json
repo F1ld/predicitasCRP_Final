@@ -1,0 +1,854 @@
+{
+  "run_id": "bloque-d-20261106-04",
+  "commit_base": "2ad167e9da042de2e0834f3a874213c3f42d6648",
+  "image_id": "sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d",
+  "block": "D",
+  "commit_tested": "62f04ac13f4ea34510c985328c6b0d9ceb8487ec",
+  "scope": "Fase 4 bloque D; fase completa EN CURSO",
+  "parity": {
+    "openapi": true,
+    "ddl": true,
+    "predictions": true,
+    "model_sha256": true
+  },
+  "baseline": {
+    "passed": 341
+  },
+  "actual": {
+    "passed": 352
+  },
+  "changed_old_cases": {},
+  "new_cases": {
+    "tests.sistema.test_limites_d_fase4::test_limites_entre_todos_los_modulos_solo_public_o_lecturas_explicitas": "passed",
+    "tests.sistema.test_limites_d_fase4::test_adaptadores_de_lectura_no_mutan_ni_confirman[citas/consultas.py]": "passed",
+    "tests.sistema.test_limites_d_fase4::test_adaptadores_de_lectura_no_mutan_ni_confirman[ia/consultas.py]": "passed",
+    "tests.sistema.test_limites_d_fase4::test_adaptadores_de_lectura_no_mutan_ni_confirman[intervenciones/consultas.py]": "passed",
+    "tests.sistema.test_limites_d_fase4::test_adaptadores_de_lectura_no_mutan_ni_confirman[lista_espera/consultas.py]": "passed",
+    "tests.sistema.test_limites_d_fase4::test_adaptadores_de_lectura_no_mutan_ni_confirman[reportes/consultas.py]": "passed",
+    "tests.sistema.test_limites_d_fase4::test_workflows_solo_componen_contratos_y_no_hacen_commit": "passed",
+    "tests.sistema.test_limites_d_fase4::test_imports_de_aplicacion_sin_ciclos_incluyendo_imports_locales": "passed",
+    "tests.sistema.test_limites_d_fase4::test_lock_siempre_refresca_identity_map": "passed",
+    "tests.sistema.test_limites_d_fase4::test_transiciones_compuestas_conservan_cambio_propio_sin_commit": "passed",
+    "tests.sistema.test_limites_d_fase4::test_importador_componible_revierte_sin_begin_ni_commit": "passed"
+  },
+  "coverage_percent": 91.23445556566575,
+  "protected_unchanged": true,
+  "source_files": {
+    "apps/backend/alembic.ini": "19627055c3d68e661260c70523dbab3748bb374d46de3ebe1f1742d39c626d79",
+    "apps/backend/app/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/bootstrap/__init__.py": "bde92ba711ad9eee59e8610e9be3386887388e7a4a65c0c173203c76e6533737",
+    "apps/backend/app/bootstrap/limites.py": "ac729682d8ab3c71e2bfd5e1d3a17508ebd8776562a65f053da82a6bf1c1f49e",
+    "apps/backend/app/bootstrap/models.py": "6d3f1e5bafe33b950ce4719f05bb2bf74362f3ee9f8407c63d7135013e1eaf28",
+    "apps/backend/app/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/core/config.py": "9a26e14960d166de5dd093806cc38baa12bd911e4f99cfe82c797fce0a5bf632",
+    "apps/backend/app/core/database.py": "052789419bf0b053c50591acc3dd82c7e0ef4db3772e4da99f54d500f2c6d6c1",
+    "apps/backend/app/core/dominio.py": "dfd984bba6f694a76c1deb1f012f1e406fc20974673b7d6440980cb348b0d5bf",
+    "apps/backend/app/core/errores.py": "defa7a91083f5d70bc036b29eec00df3b1d5d0f66ad02f7eb9f6014f8f13786c",
+    "apps/backend/app/core/exportacion.py": "81696cc55e50eca964cbcd9a0010bdf265e3ddae4baf67a8f10d891d2d25e884",
+    "apps/backend/app/core/http.py": "680449972a402f22c4393ac56fda78b80eac21cd68408002a0dc71b8c78e3690",
+    "apps/backend/app/core/manejadores.py": "7bdcfe2907a7e2fadc0a987683a6f6c427b960ab38153f90ad3a241407b6394d",
+    "apps/backend/app/core/models.py": "22d2b47345403a25e8f332760696047a502b9f005a2ffb05e3f81babdd5bba4a",
+    "apps/backend/app/core/ranuras.py": "92efd6261c9d15100a3f25664c40f572d4359c56425ca28055163616ae07b041",
+    "apps/backend/app/core/reloj.py": "2c42514f4833052d1e11a3fd0615ef807e7425f681e9cb0ad3c3648c67e83780",
+    "apps/backend/app/core/security.py": "fb3952b2626d508f6b3f398c895ddd69783add0692ebb09091e06cdd2cf305d0",
+    "apps/backend/app/core/transacciones.py": "f63cd9e748727c6579127a99dcf8b14b6eaea150f57ed651b6a963e0047b8e4b",
+    "apps/backend/app/main.py": "740982bf4c5da2a0b6713594fa99b02163a6d44e829041041ceecce2bf5d1dd8",
+    "apps/backend/app/modules/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/auditoria/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/auditoria/consultas.py": "7634633338439a23ff904cc605ac3ad750f514bd0201ed870c0815918e5861ae",
+    "apps/backend/app/modules/auditoria/models.py": "d79a823a32fedb1225f612562d3debc0c07b6f89fd148e8de025ac44ae588b58",
+    "apps/backend/app/modules/auditoria/public.py": "f80146f485c8f2c949b32127228727f0511c25f58cb9955c18f65427eff62314",
+    "apps/backend/app/modules/auditoria/service.py": "9b68c8abfd6db4c8edfd3836980ce1a96c21e50cadc797f5ece2cd76eff12a77",
+    "apps/backend/app/modules/auth/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/auth/dependencies.py": "3024d37dc7f55178f10a35de48fa38838dede8d818088d940a5b9c503e5c8dac",
+    "apps/backend/app/modules/auth/models.py": "98b3471e5a4f07bd51593a0c811f15ae3f8ec7f32d953d2f49d0c8b97cbe56b1",
+    "apps/backend/app/modules/auth/public.py": "cb97bf8204b1846578502f24e7d2ff2c1599b33386180fdb4d920b127009533b",
+    "apps/backend/app/modules/auth/reloj.py": "f5df2414329ad97310ada8b84ee3e7df020501bf0dc0003878ffec3cc2368434",
+    "apps/backend/app/modules/auth/repository.py": "4e8c1182ef75fc39c99b98631262e310f67df9678febdd151b5e0dd84dc71736",
+    "apps/backend/app/modules/auth/router.py": "7ee2582250529dcc3bd0ec7ac82f6ef0a6c734e202e61f081fcbd00fddb0cd2c",
+    "apps/backend/app/modules/auth/schemas.py": "97dc223354a33f0f976491cf9075f01a4ee21f6a592829cb571a7ef2e8929046",
+    "apps/backend/app/modules/auth/service.py": "b38d843ea6f40d96ba28b65972b3b3f0079f7e3e7f50b71716123849bf6a1c3c",
+    "apps/backend/app/modules/auth/tokens.py": "dba999ebf000183e1b8edf127229f507cac2f8f332832f7438c8e615f971c071",
+    "apps/backend/app/modules/citas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/citas/consultas.py": "c84a5ea0d4af6e25643a827927c54fd34e3203e0b75f7af8fba88e22e2db9f9d",
+    "apps/backend/app/modules/citas/importer.py": "c6b61e39b365ea4cfd2af48e064897016fd4d5c80859444208d9fcc818d56c24",
+    "apps/backend/app/modules/citas/models.py": "296e119353ee02eda55227341d0f3f6cdad1a581d621ca1ee6506ee839970b94",
+    "apps/backend/app/modules/citas/public.py": "2621efcf1f9fee2c8eca96bcc3566da932ce9ba1322e8651f46c9fb5a3f5270c",
+    "apps/backend/app/modules/citas/reglas.py": "4c141e3de1dcfebf2389e8bd97cd29cb79cd1d1937105e4700e2240620729ecf",
+    "apps/backend/app/modules/citas/repository.py": "99889b68932400701334bb4409f9660b87f9e989695eb2ba57888e47300844d3",
+    "apps/backend/app/modules/citas/router.py": "6c6b1eba406a1868b49bb0737cfd1b6e9df27a1d8ebef14981747b1c58a49b82",
+    "apps/backend/app/modules/citas/schemas.py": "8a25f73d378c48d3399ec063611285179214f612dba2fce04ff0a717790ceade",
+    "apps/backend/app/modules/citas/service.py": "6148eb50236d393bdf1a8199ef5927bee70a3dd5f3734004aa961d3a4b88e77e",
+    "apps/backend/app/modules/citas/synthetic.py": "5d3d828f456940c668658bfafc4575b791d22cbe244c8cade1993b943da40fbd",
+    "apps/backend/app/modules/citas/transiciones.py": "e33fa428ea9cdec24e3bf429a6b8754ba4b67070911dd46dc7c185f04b1b0ddf",
+    "apps/backend/app/modules/ia/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/ia/consultas.py": "67be52673184f93ace67658365b5e9d68d42281f223055355de45eb8936519e3",
+    "apps/backend/app/modules/ia/models.py": "e29de76ddc257bea46848d53efff02491bd9460f36a935232b66127313739f66",
+    "apps/backend/app/modules/ia/predictor.py": "822a66424c4d0b383126cccc28abab52ba955317e90f7458fcd11483f5279f5f",
+    "apps/backend/app/modules/ia/public.py": "8054b81ef46900021239ad3c67ba8e34214812275101fa603f625f3e0857f629",
+    "apps/backend/app/modules/ia/repository.py": "e25d05d5f7c702d0efe35611220c37bae146fe8dffaa2bcac6310a2e061851bb",
+    "apps/backend/app/modules/ia/router.py": "b50e88bc3e0efaedc45cc59fd5ae2236ecc2a4cb77d0006670525d7d4e8c6d94",
+    "apps/backend/app/modules/ia/schemas.py": "a7c98294fd90941081c659716ae2c1a3cc20de4dabf750feea160c1c127192dd",
+    "apps/backend/app/modules/ia/service.py": "f62f5d3c235c00eb4a9158f6da74a1c0d996691c0dfea9efde55bd8e29a130eb",
+    "apps/backend/app/modules/intervenciones/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/intervenciones/consultas.py": "bca0dcf803b265385f917fb5a43b6d9c2f5f02ee70c0a7faf745ddfab6e2f315",
+    "apps/backend/app/modules/intervenciones/models.py": "330a6aae92166df11a6ff6250b79ab24a01a044405e2809f8ed1b3f207d078a2",
+    "apps/backend/app/modules/intervenciones/public.py": "a2f3197d13c129af74a6849d6996444710199a841c56118ed637e1f5150913f1",
+    "apps/backend/app/modules/intervenciones/reglas.py": "1f8c851c7f1f95bfee6e070c7625ca039cc2e992d69c7cb67ef42247584b8eba",
+    "apps/backend/app/modules/intervenciones/repository.py": "4c3cb25d9df090b732f48f7fe7626e34d3b6b4fc8642228579ae3aafab185e74",
+    "apps/backend/app/modules/intervenciones/router.py": "5a4d1124aac64ef2f9a53e417c2d53e9d4499cd132be17e521cfd8a4688f73f8",
+    "apps/backend/app/modules/intervenciones/schemas.py": "4aa92ce88bf2fe7ae56937d0c9f6765e3978ec3ede3abdd78adefd2ce072cc89",
+    "apps/backend/app/modules/intervenciones/service.py": "cd126da5611484446f8883b35e8bee06b56cf24dfc11229c7ca6a1439e4bc392",
+    "apps/backend/app/modules/lista_espera/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/lista_espera/casos.py": "c65eedca93722e9a42873b6349c0fd41d449c407f0bf37151cef59b4e600e156",
+    "apps/backend/app/modules/lista_espera/consultas.py": "91467e90b0b5cf145e297e33f3397898586f3e1d9f4230b0ed6b6fe03370a7a9",
+    "apps/backend/app/modules/lista_espera/models.py": "da1035b923e4274263b298c15fa14b7645150070fe6ae29f9da6d61b740aed54",
+    "apps/backend/app/modules/lista_espera/ofertas.py": "7cebf5299aa9a857368e775040c41bc7a10a6fbc41684c60193709f9dec3a603",
+    "apps/backend/app/modules/lista_espera/public.py": "7287e35ed839134e80f24164c622f4687a6f26c662ce7953db5fe6c383918657",
+    "apps/backend/app/modules/lista_espera/repository.py": "3fe8a693d5fa1ef223a6949e8c299714e7c4a60a75da1f9b242a04cfb1dcf844",
+    "apps/backend/app/modules/lista_espera/router.py": "2352f7bbf768dec617266fcd19500cfe856a7493e9f1d294f58b873397e71baf",
+    "apps/backend/app/modules/lista_espera/schemas.py": "c03d400bb09381a9e2c7112e02b665ee73ea17c07fc28c0b38943a2ce279c120",
+    "apps/backend/app/modules/lista_espera/service.py": "2875a621f44ae0ed890bbc42bbc1c3f9078f5085f00c8a56f1c8cafd80ba1131",
+    "apps/backend/app/modules/reportes/__init__.py": "1c3b24a46a47fa12eab29068e1c0ef5689b635fff7ccbbc89d5d28fe4c319f21",
+    "apps/backend/app/modules/reportes/consultas.py": "86c69f5e5afea414bcd4309dbecc5e5db8db847f4db29afa3f965964ebc47b0c",
+    "apps/backend/app/modules/reportes/public.py": "132348abbbe8e446d4e1f9d5829dd3291d636e898608f0badbcb23b51a7eed07",
+    "apps/backend/app/modules/reportes/router.py": "15d0f688d1b044bea2a49fa7a6814a7a4180e72d1a656c9bf32cc1bf1403117f",
+    "apps/backend/app/modules/reportes/schemas.py": "983f874810ce55ccbf396979b44538e99f5940f6ca649e6b8c88ace402212761",
+    "apps/backend/app/modules/reportes/service.py": "c0264d077720a2d284b8d624da4e0b47660141eb9c375a7ac1082c7b572c24ca",
+    "apps/backend/app/modules/usuarios/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/usuarios/contratos.py": "420026e22b67e04ccf578274b04595dbcd844467f37e0fb55a4178c3d262220e",
+    "apps/backend/app/modules/usuarios/identidad.py": "bf6beb9821f01fda8e8ef2b4ad9a98c9db24eee4145d61d121400f5f9a102dd0",
+    "apps/backend/app/modules/usuarios/models.py": "99d5d6b1d2dc3fc14f16f995fbc20fb13b9c4f86d967d0eb8beb4a11e5a68c3b",
+    "apps/backend/app/modules/usuarios/politicas.py": "a354e41877ab477603f7b437491823f16abda1ba2dce777c2238a62913fa7d26",
+    "apps/backend/app/modules/usuarios/public.py": "b227cc31477dbec244f55c56ce5ac3f6f6107f8722acfd9e9b2f6ede666d8b09",
+    "apps/backend/app/modules/usuarios/repository.py": "03da5f482d456c83c88be8817089d2c95fef9cb529e5a4c2f237bfaf97b7d05a",
+    "apps/backend/app/modules/usuarios/router.py": "b02b3140fade528e2da3c49a7706e2f1f85f2159d772045011f83f5731967e02",
+    "apps/backend/app/modules/usuarios/schemas.py": "ffc1b0eb71d74d4a2b23fbe3a9abac50d1bcabbc709976c2b73d9f4612a6eeb7",
+    "apps/backend/app/modules/usuarios/service.py": "026a686d4f6aab174fe4d53a6effb5e7112292896e05658e03a4795b4f443de3",
+    "apps/backend/app/workflows/__init__.py": "d8280c73e4ba88a09ce83059d05b85f04146c81179897f806bbeec386b2396d4",
+    "apps/backend/app/workflows/citas.py": "1c7991ca990306dd09099c94e5cdd91a7e449cad78987e330db5e4c269846799",
+    "apps/backend/app/workflows/intervenciones.py": "a9352d125eb60512f6a0fc23a11c5a930b28c2f4e736493b72ecfa481cea7af5",
+    "apps/backend/Dockerfile": "b87761adbe96aa0feed62820f0404489d2b665e0b93b9d6ef6c4bf740faf3ebf",
+    "apps/backend/migrations/env.py": "ce2fc48f5d73638bfd8f364aca68313beef46b48f5ff62a0491e331725dd371f",
+    "apps/backend/migrations/versions/2cfdcb7d3da2_esquema_inicial_con_las_9_tablas.py": "87e735c1eb99407d0a30914f72266e3c57ea07276724159994d2f9affa168d86",
+    "apps/backend/migrations/versions/m00_002_rol_operativo.py": "2a7f6971a7b20713eaf327b2f3dca25dd3502850afe86b2c2ead61439d01f0f9",
+    "apps/backend/migrations/versions/m01_001_indices_auditoria.py": "fbc05b7b255c6c1938d3304d04821e9956bb1a391aa50190474eedfb25ec3146",
+    "apps/backend/pytest.ini": "c4f003f6283750493fc94bf818698805656e02ae965fd8b86479654b59a2d35d",
+    "apps/backend/requirements.txt": "b1c2b94d9d303937bc1e62f781efba189f6c5b31034996c385b655219315831d",
+    "apps/backend/scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/scripts/check_db.py": "9a08c8bbd51da3e2449aa0a2d35fc997a6d3a8d6eab65d41ec81d804d618a468",
+    "apps/backend/scripts/crear_rol_app.py": "d809bbb1f569468ba0fa868b03316bdf1709a69bb1535b1afde17ee0f9c3aaee",
+    "apps/backend/scripts/exportar_csv.py": "d95c9aecc948e8da00944f45c8c28bc64138480c264447ca22ae4ab9badf1c62",
+    "apps/backend/scripts/seed.py": "f36ec5ce7fcc573733bbd000266d8be342be1792cdca6ceabfc76832ea5c5810",
+    "apps/backend/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/auth/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/auth/conftest.py": "0f3fcc26a54684a32585b9371e36975e5ab9892dc3bd8b928880f77ace65f314",
+    "apps/backend/tests/auth/test_auth.py": "4be6e662897a64ffe764c15e47857fbf98dc83ef4ff548c6d5b5d3ca5bf44984",
+    "apps/backend/tests/auth/test_bloqueo.py": "d57bd85b61e92add69d294554d79e660acd3e1034dd17970041fcf445161c698",
+    "apps/backend/tests/auth/test_sesion.py": "289ceaec936c00d971aaa41897c87a2ed68a721cde51a6c0f86a92c00cdfcb97",
+    "apps/backend/tests/bd/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/bd/test_rol_operativo.py": "7850efc5370f4229bdb8b2861f0e6e59a467dd3c079c2f9a414ef142b509f51f",
+    "apps/backend/tests/citas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/citas/conftest.py": "41792c2b6e284849a162264e2d192d4a03477e437798f1a8ad201e1b723cc489",
+    "apps/backend/tests/citas/test_citas.py": "553879942fb5f4cfe8be9600ce8ba530ff6b0f891f015d9340d23511038af94c",
+    "apps/backend/tests/citas/test_m02_contrato.py": "c0ed55697f7dfcfb2e3f57701b578b85921a491331e18278f197a67fd94a93ef",
+    "apps/backend/tests/conftest.py": "8c2bdf187b21e212a5160c429ec344f92dd5d8a52fd8c673eec5af8b27cfe046",
+    "apps/backend/tests/ia/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/ia/conftest.py": "8a476cd061891cf9cf6ecf83bf335bb9ce9a839363e3ccef7a10afd67808ff66",
+    "apps/backend/tests/ia/test_cliente.py": "0bc12fc97bfd3bbbcb7569ab1d163e4db415f495500bae31a256c06ed38e040a",
+    "apps/backend/tests/ia/test_predicciones.py": "cced86c25049082e0237534ced1c454201e22d6ef977278fa4dbaa68e16491dc",
+    "apps/backend/tests/intervenciones/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/intervenciones/conftest.py": "daa0c2ce1d16034bdc48371d8477bb7d86b04e85eace20efec5af12e35bcda9f",
+    "apps/backend/tests/intervenciones/test_auditoria_b1_fase4.py": "4a9d1b11f964886360b6ed1018ab36656ff4f3e1c66d3a32037cf9c15f307abf",
+    "apps/backend/tests/intervenciones/test_intervenciones.py": "80fb2f4d37acc4061009f56bba030d6b4a3ce3960f32a5b7811b53c07e2113b3",
+    "apps/backend/tests/intervenciones/test_lecturas_reportes_c_fase4.py": "2e65e47253f17a6794bf1ad2cdd131a074b566c2e8ddfc4d435ee4eedf649916",
+    "apps/backend/tests/lista_espera/test_ofertas_c_fase4.py": "4b67f99405b4f72acce06dbdfe2ee1ea52ed03c1f1d50f909fa62b97176c6e4d",
+    "apps/backend/tests/sistema/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/sistema/test_archivos_fase3.py": "f17202484fd1bed89ce1a5c81365a4e99e6bc46deb6e56a6ebb51bf0ca637d75",
+    "apps/backend/tests/sistema/test_cabeceras.py": "646b008335dc39453e523940ec0e3fd5bfca44b8e7862a661d22c91fe1284b74",
+    "apps/backend/tests/sistema/test_config.py": "7cc7dc51e1a8f99e052109542ac1a17ded6ebe77a2fb4e7cae7e60d4e560c465",
+    "apps/backend/tests/sistema/test_contratos_b1_fase4.py": "a916b37363afd88a6b85b32389b018b734903b76d60ac2f576d8638c2d1138f5",
+    "apps/backend/tests/sistema/test_errores.py": "4d913af152d8bc60ea2a4e0a733de5dd7a1981d25007300326bcc079995bd248",
+    "apps/backend/tests/sistema/test_evidencia_fase3.py": "9467913a3facb556ab360278ed05df8dfb1b69e2157d04f117855fb7ca953ebe",
+    "apps/backend/tests/sistema/test_exportacion.py": "0c12c4b19391a0efa6ad32a72ad7a2729fb0f24628262bbfcf326aed6e33206b",
+    "apps/backend/tests/sistema/test_health.py": "5497c4ffd26e936fec84d152065c50081f39b9b505bde99189ec1f60bd09e089",
+    "apps/backend/tests/sistema/test_integridad_bd.py": "283f66855477da652b90d905bbac06329b8dd839489c4461624fe04e8f2cd994",
+    "apps/backend/tests/sistema/test_limites_d_fase4.py": "a8e0c7b8c447adeafbd428244f615bf68230c8d642a5ebbaa8acb98e82f88f08",
+    "apps/backend/tests/sistema/test_limites_flujos_fase4.py": "3b10c71ea6be95b09815bcac8407bfdeb2b62465f3709f96e710024a9c7f7ee2",
+    "apps/backend/tests/sistema/test_limites_identidad_fase4.py": "ef198d448a44c6458320891d4f7ebac482b56bf5b9613b5132bfb560a6b3c159",
+    "apps/backend/tests/sistema/test_modelos.py": "bbeca9081533a1380be02b5b18766599b829b33abbecf4ce41b88fb41505ce22",
+    "apps/backend/tests/sistema/test_ranuras.py": "9024b78823fe9306347488b64cb0dfe711d6492d32974341fd9334a9250e8551",
+    "apps/backend/tests/sistema/test_routers_c_fase4.py": "e60b8f83ae1a74f777785896fc7ec9084de5e8a9cd1026067c14430578b16667",
+    "apps/backend/tests/test_ia_endpoints.py": "1247e89a2df6671a520de57a750553832a96190a1e727adfb9d179105372eeb9",
+    "apps/backend/tests/test_ia_predictor.py": "8c0eb4d46430e5cc0eecb41a242b71168b2b2152a9fa17d4822df9719380745f",
+    "apps/backend/tests/test_intervenciones.py": "ea0b16f650ff5bed5b53a1e2b325abb1d4af344a025551923d047e4eff5e78de",
+    "apps/backend/tests/test_reasignacion.py": "fcf0179deeb6ebb35324c6a815a419af604cfb28854a4acf351fb8865905c04a",
+    "apps/backend/tests/usuarios/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/tests/usuarios/conftest.py": "444b60c8a0193d52b9b05c525f8e0b81ed89aaf3d18aea062965896ed9cc49ea",
+    "apps/backend/tests/usuarios/test_usuarios.py": "4385d733726eefa9b0eb03444ad9caa5a3b9a6fd72383f7b17a6749fe89ba3e6",
+    "apps/frontend/tests/rutas_validacion.py": "7e0bbb964a4f4aa9606ba768aad0593cfe2eb68e186e59d11fa347f3db9d87db",
+    "apps/frontend/tests/validar_diseno.py": "a98297a85ab02c664b4eaac3c63f96fa37d683b283239bd40d5cdb85b7977e2f",
+    "docs/migracion/fase-04/capturar.py": "78bdf1713ddbfae9c75eaa0a4b3718d3442921476b476e1f1094f9e64e34b99d",
+    "docs/migracion/fase-04/caracterizar_baseline_c.py": "af8583eedbf20725e96f979a9639cd3e490a844d065fe44cb2a1b8590297ef30",
+    "docs/migracion/fase-04/imagen_d.py": "39b441943462e5461cedcfdf9b3905a4537562fe7bd19c4820823b08a342a71d",
+    "docs/migracion/fase-04/probar_concurrencia_d.py": "de9ea999490aeb28db5a587b64d382b05b57236152f79f9bd13107e286da7676",
+    "docs/migracion/fase-04/probar_rollback_b1.py": "3ad95be8a498402d36f9edc1b8af25af4c4263727978670f17cfe859581fb286",
+    "docs/migracion/fase-04/probar_rollback_c.py": "05542b682ba0b00ebbd60dfd6ce2ad0271bfbe8e401e2663039fdcacdcd9716f",
+    "docs/migracion/fase-04/probar_rollback_d.py": "0165bb858bc1940da74a61740c44b617fe7f8d12f3861363ccaa9946bdf52653",
+    "docs/migracion/fase-04/probar_transacciones_identidad.py": "1575697347f79e3c4d2198de4b9d960309203ec46188a5adb4d95e705b7ec042",
+    "docs/migracion/fase-04/publicar.py": "07ab1eb75263f3214aa53ec06372993b4b3f9dca3239dd12f09f34abbca9a9e8",
+    "docs/migracion/fase-04/validar.py": "1b73b21e38357cdd7da429912c4b76eca4f5d33de4480c2f6b7feaba9de384c5"
+  },
+  "complete_collection_unchanged": true,
+  "complete_exit_codes": {
+    "baseline": 2,
+    "actual": 2
+  },
+  "transactions": {
+    "failed_login_commits_visible_from_other_connections": 5,
+    "blocked_login_commit_visible_from_other_connection": true,
+    "password_rollback_after_flush_verified_from_other_connection": true,
+    "database": "predicitas_fase4_test",
+    "runtime_role": "predicitas_app",
+    "preservation": "Cuenta sintética QA conservada solo en el volumen nuevo de pruebas"
+  },
+  "full_suite": "Se conserva resultado explícito de colección; no se declara suite verde",
+  "frontend": "No reejecutado",
+  "laboratory_state": "exited",
+  "packaged_image": {
+    "run_id": "bloque-d-20261106-04",
+    "commit_tested": "62f04ac13f4ea34510c985328c6b0d9ceb8487ec",
+    "image_tag": "predicitas-fase4-backend:bloque-d-20261106-04",
+    "image_id": "sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d",
+    "baseline_dependencies_image": "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3",
+    "python": "3.12.16",
+    "pip_freeze": [
+      "alembic==1.20.0",
+      "annotated-doc==0.0.5",
+      "annotated-types==0.8.0",
+      "anyio==4.15.1",
+      "argon2-cffi==25.1.0",
+      "argon2-cffi-bindings==26.1.0",
+      "certifi==2026.7.22",
+      "cffi==2.1.1",
+      "click==8.5.0",
+      "cloudpickle==3.1.2",
+      "colorama==0.4.6",
+      "coverage==7.17.2",
+      "dnspython==2.9.0",
+      "email-validator==2.3.0",
+      "et_xmlfile==2.0.0",
+      "fastapi==0.143.2",
+      "h11==0.16.0",
+      "httpcore==1.0.9",
+      "httptools==0.9.0",
+      "httpx==0.28.1",
+      "idna==3.20",
+      "iniconfig==2.3.1",
+      "joblib==1.6.0",
+      "lightgbm==4.7.0",
+      "Mako==1.4.3",
+      "MarkupSafe==3.0.4",
+      "narwhals==2.27.1",
+      "numpy==2.5.4",
+      "openpyxl==3.1.5",
+      "opentelemetry-api==1.45.1",
+      "packaging==26.3",
+      "pip==25.0.1",
+      "pluggy==1.7.0",
+      "psycopg==3.3.6",
+      "psycopg-binary==3.3.6",
+      "pycparser==3.11",
+      "pydantic==2.14.1",
+      "pydantic-settings==2.16.0",
+      "pydantic_core==2.50.1",
+      "Pygments==2.21.0",
+      "PyJWT==2.15.1",
+      "pytest==9.1.1",
+      "pytest-cov==7.1.0",
+      "python-dotenv==1.2.4",
+      "python-multipart==0.0.32",
+      "PyYAML==6.0.3",
+      "scikit-learn==1.9.1",
+      "scipy==1.18.1",
+      "SQLAlchemy==2.1.4",
+      "starlette==1.8.0",
+      "threadpoolctl==3.7.0",
+      "typing-inspection==0.4.4",
+      "typing_extensions==4.16.0",
+      "tzdata==2026.5",
+      "uvicorn==0.54.0",
+      "watchfiles==1.3.0",
+      "websockets==17.2"
+    ],
+    "parity": {
+      "openapi": true,
+      "ddl": true,
+      "predictions": true,
+      "model_sha256": true
+    },
+    "uid": 1000,
+    "source_mount_absent": true,
+    "owner_env_absent": true,
+    "legacy_data_and_env_absent": true,
+    "model_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074"
+  },
+  "concurrency": {
+    "checks": {
+      "reasignar_cupo": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "CONFLICTO"
+          },
+          {
+            "status": 200,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "cupos_liberados",
+        "before": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          }
+        },
+        "after": {
+          "cupos": [
+            "REASIGNADO"
+          ],
+          "reasignaciones": 1,
+          "candidatos": [
+            "ASIGNADO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1,
+            "REASIGNAR": 1
+          }
+        }
+      },
+      "reasignar_candidato": {
+        "responses": [
+          {
+            "status": 200,
+            "codigo": null
+          },
+          {
+            "status": 409,
+            "codigo": "CONFLICTO"
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "lista_espera",
+        "before": {
+          "cupos": [
+            "DISPONIBLE",
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 2,
+          "audit": {
+            "LIBERAR": 2
+          }
+        },
+        "after": {
+          "cupos": [
+            "REASIGNADO",
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 1,
+          "candidatos": [
+            "ASIGNADO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 2,
+          "audit": {
+            "LIBERAR": 2,
+            "REASIGNAR": 1
+          }
+        }
+      },
+      "ofertar_cupo": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "CUPO_NO_DISPONIBLE"
+          },
+          {
+            "status": 200,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "cupos_liberados",
+        "before": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO",
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          }
+        },
+        "after": {
+          "cupos": [
+            "EN_OFERTA"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO",
+            "CONTACTADO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1,
+            "OFERTAR": 1
+          }
+        }
+      },
+      "ofertar_candidato": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "CANDIDATO_EN_OFERTA"
+          },
+          {
+            "status": 200,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "lista_espera",
+        "before": {
+          "cupos": [
+            "DISPONIBLE",
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 2,
+          "audit": {
+            "LIBERAR": 2
+          }
+        },
+        "after": {
+          "cupos": [
+            "DISPONIBLE",
+            "EN_OFERTA"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "CONTACTADO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 2,
+          "audit": {
+            "LIBERAR": 2,
+            "OFERTAR": 1
+          }
+        }
+      },
+      "liberar": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "CUPO_YA_LIBERADO"
+          },
+          {
+            "status": 201,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "citas",
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 2,
+          "historial_final": 0,
+          "audit": {}
+        },
+        "after": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 2,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          }
+        }
+      },
+      "cancelar_liberar": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "TRANSICION_INVALIDA"
+          },
+          {
+            "status": 201,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "citas",
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {}
+        },
+        "after": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          }
+        }
+      },
+      "responder": {
+        "responses": [
+          {
+            "status": 409,
+            "codigo": "TRANSICION_INVALIDA"
+          },
+          {
+            "status": 200,
+            "codigo": null
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "citas",
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {}
+        },
+        "after": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {
+            "RESPUESTA": 1
+          }
+        }
+      },
+      "cerrar": {
+        "responses": [
+          {
+            "status": 200,
+            "codigo": null
+          },
+          {
+            "status": 409,
+            "codigo": "SIN_OFERTA_VIGENTE"
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "cupos_liberados",
+        "before": {
+          "cupos": [
+            "EN_OFERTA"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "CONTACTADO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1,
+            "OFERTAR": 1
+          }
+        },
+        "after": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1,
+            "OFERTAR": 1,
+            "RECHAZAR": 1
+          }
+        }
+      },
+      "crear_intervencion": {
+        "responses": [
+          {
+            "status": 201,
+            "codigo": null
+          },
+          {
+            "status": 409,
+            "codigo": "LIMITE_INTERVENCION"
+          }
+        ],
+        "database_lock_wait_observed": true,
+        "preloaded_identity_map": true,
+        "lock_table": "citas",
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 0,
+          "historial_final": 0,
+          "audit": {}
+        },
+        "after": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {
+            "CREATE": 1
+          }
+        }
+      }
+    },
+    "scope": "Dos solicitudes HTTP concurrentes por escenario, conexiones independientes, sin borrar datos QA"
+  },
+  "rollback": {
+    "checks": {
+      "cancelacion": {
+        "failure_after_flush": true,
+        "independent_connection_rollback": true,
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 37,
+          "historiales_totales": 21,
+          "citas_totales": 12,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "RESPONDIDA",
+              "SOLICITA_LIBERACION",
+              "None"
+            ]
+          ]
+        },
+        "after": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 37,
+          "historiales_totales": 21,
+          "citas_totales": 12,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "RESPONDIDA",
+              "SOLICITA_LIBERACION",
+              "None"
+            ]
+          ]
+        }
+      },
+      "respuesta_legacy": {
+        "failure_after_flush": true,
+        "independent_connection_rollback": true,
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 38,
+          "historiales_totales": 22,
+          "citas_totales": 13,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "RESPONDIDA",
+              "SOLICITA_LIBERACION",
+              "None"
+            ]
+          ]
+        },
+        "after": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 38,
+          "historiales_totales": 22,
+          "citas_totales": 13,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "RESPONDIDA",
+              "SOLICITA_LIBERACION",
+              "None"
+            ]
+          ]
+        }
+      },
+      "reasignacion": {
+        "failure_after_flush": true,
+        "independent_connection_rollback": true,
+        "before": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          },
+          "auditorias_totales": 41,
+          "historiales_totales": 24,
+          "citas_totales": 14,
+          "estados_citas": [
+            "LIBERADA"
+          ],
+          "respuestas": []
+        },
+        "after": {
+          "cupos": [
+            "DISPONIBLE"
+          ],
+          "reasignaciones": 0,
+          "candidatos": [
+            "ACTIVO"
+          ],
+          "intervenciones": 0,
+          "historial_final": 1,
+          "audit": {
+            "LIBERAR": 1
+          },
+          "auditorias_totales": 41,
+          "historiales_totales": 24,
+          "citas_totales": 14,
+          "estados_citas": [
+            "LIBERADA"
+          ],
+          "respuestas": []
+        }
+      },
+      "importacion": {
+        "failure_after_flush": true,
+        "independent_connection_rollback": true,
+        "before": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 42,
+          "historiales_totales": 25,
+          "citas_totales": 15,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "ENTREGADA",
+              null,
+              "None"
+            ]
+          ]
+        },
+        "after": {
+          "cupos": [],
+          "reasignaciones": 0,
+          "candidatos": [],
+          "intervenciones": 1,
+          "historial_final": 0,
+          "audit": {},
+          "auditorias_totales": 42,
+          "historiales_totales": 25,
+          "citas_totales": 15,
+          "estados_citas": [
+            "RECIBIDA"
+          ],
+          "respuestas": [
+            [
+              "ENTREGADA",
+              null,
+              "None"
+            ]
+          ]
+        }
+      }
+    },
+    "scope": "Datos QA conservados solo en laboratorio nuevo"
+  }
+}
