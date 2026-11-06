@@ -27,4 +27,13 @@ python -B docs/migracion/fase-04/validar_seed.py publicar --run-id seed-20261106
 python -B docs/migracion/fase-04/validar_seed.py verificar --run-id seed-20261106-01
 ```
 
-Estado: pendiente de ejecución. Fase 5 no iniciada; condicionada a esta validación.
+Estado: **APROBADO**, ejecución `seed-20261106-01`, código de herramientas
+`7d8c35b`. 3 usuarios, 1080 citas (1000 históricas + 80 RECIBIDA), 2080 historiales
+y un evento IMPORT. Fallo tras flush sin commit y rollback completo observado
+independientemente. Reejecución con un commit y todas las filas/contraseñas
+idénticas, sin duplicados. Paquete D sin montar backend, rol app sin env owner.
+Fuentes y protegidos intactos; laboratorio detenido, recursos conservados.
+
+[Resultados sanitizados](evidencia/seed-20261106-01/resumen.json) y
+[manifiesto](evidencia/seed-20261106-01/manifest.json). Fase 5 puede iniciarse
+aislada, sin conectar todavía el backend ni modificar su predictor integrado.
