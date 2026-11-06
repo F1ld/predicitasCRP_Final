@@ -175,7 +175,9 @@ def preparar(raw, run_id, baseline_ref="2f4140e", scope="A"):
             "--label", "predicitas.purpose=fase4-isolated-test", "--env-file", str(private / "postgres.env"),
             "--mount", f"type=volume,source={meta['volume']},target=/var/lib/postgresql/data", "postgres:16"])
     for _ in range(60):
-        ready = subprocess.run(["docker", "exec", meta["db"], "pg_isready", "-U", "predicitas_owner", "-d", DATABASE], capture_output=True)
+        # El servidor temporal de initdb solo escucha socket Unix. Esperar TCP
+        # evita confundirlo con el servidor definitivo durante su reinicio.
+        ready = subprocess.run(["docker", "exec", meta["db"], "pg_isready", "-h", "127.0.0.1", "-U", "predicitas_owner", "-d", DATABASE], capture_output=True)
         if ready.returncode == 0:
             break
         time.sleep(1)

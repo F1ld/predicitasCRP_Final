@@ -43,3 +43,5 @@ Intentos conservados: `bloque-d-20261106-01` interrumpido por timeout del host;
 `bloque-d-20261106-02` detectó un acceso a relación ORM opcional sin `getattr`
 en lectura de intervenciones. Corregido respetando la ausencia histórica de esa
 relación. Ninguno se considera aceptación; ambos laboratorios detenidos.
+`bloque-d-20261106-03` falló al provisionar: pg_isready por socket observó el
+servidor temporal de initdb. El runner espera ahora TCP del servidor definitivo.
