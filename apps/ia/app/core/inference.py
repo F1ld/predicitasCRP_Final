@@ -5,6 +5,7 @@ Preserva con exactitud matemática las probabilidades redondeadas, umbrales y ex
 from __future__ import annotations
 
 from typing import Any, Literal
+import math
 import numpy as np
 from sklearn.pipeline import Pipeline
 
@@ -43,6 +44,8 @@ def explicar_prediccion(
 
     X_trans = prep.transform(X_mat)
     contrib = clf.booster_.predict(X_trans, pred_contrib=True)[0]
+    if not np.isfinite(contrib).all():
+        raise ValueError("Contribuciones no finitas del modelo")
 
     # Mapeo de las 22 columnas transformadas a atributos legibles
     impacto_antelacion = float(contrib[0] + contrib[5])
@@ -101,6 +104,8 @@ def ejecutar_inferencia_individual(
     X_mat = construir_matriz_inferencia([snapshot])
 
     prob_raw = float(pipeline_lgbm.predict_proba(X_mat)[0, 1])
+    if not math.isfinite(prob_raw):
+        raise ValueError("Probabilidad no finita del modelo")
     prob_redondeada = round(max(0.0, min(1.0, prob_raw)), 3)
     nivel = clasificar_nivel_riesgo(prob_redondeada)
     resumen = explicar_prediccion(pipeline_lgbm, snapshot, prob_redondeada)

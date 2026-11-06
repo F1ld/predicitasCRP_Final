@@ -11,10 +11,11 @@ from typing import Any
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.auth import verificar_api_key_interna
-from app.config import MAX_BODY_SIZE_BYTES
+from app.config import require_api_key
+from app.body_limit import MaxBodySizeMiddleware
+from app.metadata import DatasetLegacy, MetricasModelo
 from app.core.inference import ejecutar_inferencia_individual
 from app.core.model_registry import registry
 from app.schemas import (
@@ -36,6 +37,7 @@ logger = logging.getLogger("predicitas.ia.app")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Cargar el modelo en memoria durante el inicio del servicio
+    require_api_key()
     registry.load_model()
     yield
     # Limpieza al apagar si fuera necesario
@@ -46,41 +48,13 @@ app = FastAPI(
     version="1.0.0",
     description="Servicio interno de inferencia y explicabilidad (Fase 5)",
     lifespan=lifespan,
+    responses={code: {"model": ErrorResponse} for code in (401, 409, 413, 422, 503, 500)},
 )
 
 
 # ==============================================================================
 # Middleware de límite de tamaño de payload (256 KiB)
 # ==============================================================================
-
-
-class MaxBodySizeMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        # 1. Verificar cabecera Content-Length si está disponible
-        content_length = request.headers.get("content-length")
-        if content_length and int(content_length) > MAX_BODY_SIZE_BYTES:
-            err = ErrorResponse(
-                error=ErrorDetail(
-                    codigo="SOLICITUD_DEMASIADO_GRANDE",
-                    mensaje="El cuerpo de la solicitud supera el límite máximo de 256 KiB",
-                    campos={"content_length": str(content_length)},
-                )
-            )
-            return JSONResponse(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, content=err.model_dump())
-
-        # 2. Si no viene Content-Length pero se recibe un body en streaming
-        body = await request.body()
-        if len(body) > MAX_BODY_SIZE_BYTES:
-            err = ErrorResponse(
-                error=ErrorDetail(
-                    codigo="SOLICITUD_DEMASIADO_GRANDE",
-                    mensaje="El cuerpo de la solicitud supera el límite máximo de 256 KiB",
-                    campos={"bytes_recibidos": str(len(body))},
-                )
-            )
-            return JSONResponse(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, content=err.model_dump())
-
-        return await call_next(request)
 
 
 app.add_middleware(MaxBodySizeMiddleware)
@@ -134,7 +108,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
-    logger.exception(f"Error no controlado en runtime de IA: {exc}")
+    logger.error("Error no controlado en runtime de IA (%s)", type(exc).__name__)
     err = ErrorResponse(
         error=ErrorDetail(
             codigo="ERROR_INTERNO",
@@ -196,6 +170,7 @@ def get_model_metadata() -> ModelMetadata:
 
 @app.get(
     "/v1/metrics",
+    response_model=MetricasModelo,
     dependencies=[Depends(verificar_api_key_interna)],
     tags=["Metadata"],
 )
@@ -214,6 +189,7 @@ def get_model_metrics() -> dict[str, Any]:
 
 @app.get(
     "/v1/dataset",
+    response_model=DatasetLegacy,
     dependencies=[Depends(verificar_api_key_interna)],
     tags=["Metadata"],
 )

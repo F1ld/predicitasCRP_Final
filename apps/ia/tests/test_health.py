@@ -21,7 +21,7 @@ def test_health_ready_ok(client: TestClient):
 
 def test_health_ready_model_unavailable(client: TestClient, monkeypatch):
     # Simular que el registro no tiene modelo cargado
-    monkeypatch.setattr(registry, "_pipeline", None)
+    monkeypatch.setattr(registry, "_state", None)
     response = client.get("/health/ready")
     assert response.status_code == 503
     data = response.json()

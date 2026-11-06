@@ -31,10 +31,10 @@ class FeaturesPreCita(BaseModel):
     canal_origen: CanalOrigenEnum
     franja_horaria: FranjaHorariaEnum
     dia_semana: DiaSemanaEnum
-    antelacion_dias: int = Field(..., ge=0)
-    inasistencias_previas: int = Field(..., ge=0)
-    asistencias_previas: int = Field(..., ge=0)
-    reprogramaciones_prev: int = Field(..., ge=0)
+    antelacion_dias: int = Field(..., ge=0, strict=True)
+    inasistencias_previas: int = Field(..., ge=0, strict=True)
+    asistencias_previas: int = Field(..., ge=0, strict=True)
+    reprogramaciones_prev: int = Field(..., ge=0, strict=True)
 
 
 class SnapshotFeatures(BaseModel):
@@ -60,8 +60,8 @@ class Umbrales(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    medio: float = 0.3
-    alto: float = 0.45
+    medio: Literal[0.3] = 0.3
+    alto: Literal[0.45] = 0.45
 
 
 # ==============================================================================
@@ -76,10 +76,10 @@ class PredictRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    version_contrato: Literal["1.0"] = "1.0"
+    version_contrato: Literal["1.0"]
     id_solicitud: UUID
     version_modelo: str = Field(..., min_length=1, max_length=100)
-    version_features: Literal["pre-cita-v1"] = "pre-cita-v1"
+    version_features: Literal["pre-cita-v1"]
     features: FeaturesPreCita
 
 
@@ -122,10 +122,10 @@ class BatchRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    version_contrato: Literal["1.0"] = "1.0"
+    version_contrato: Literal["1.0"]
     id_solicitud: UUID
     version_modelo: str = Field(..., min_length=1, max_length=100)
-    version_features: Literal["pre-cita-v1"] = "pre-cita-v1"
+    version_features: Literal["pre-cita-v1"]
     items: list[BatchItemRequest] = Field(..., min_length=1, max_length=100)
 
     @field_validator("items")

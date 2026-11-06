@@ -439,7 +439,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
 | 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
 | 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
-| 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA |
+| 5 | Aplicación IA autónoma probada | 1, 3, 4 | EN CURSO |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
 | 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
@@ -629,16 +629,25 @@ Siguen pendientes contratos/workflows de negocio, routers sin SQL y concurrencia
 
 **Objetivo:** disponer de IA autónoma antes de cambiar sus consumidores.
 
+**Revisión correctiva (06/11/2026): EN CURSO.** La declaración COMPLETADA siguiente
+se conserva como histórica, pero queda suspendida por revisión: readiness aceptaba
+artefactos incompatibles, clave por defecto, validación contractual insuficiente y
+runner sin trazabilidad verificable. Corrección autorizada por el usuario; baseline
+operativo `af13b3b`, retorno de esta entrega `fe4768b`. No se conecta backend/IA.
+No se reduce el alcance original: separación de entrenamiento y migración del
+generador siguen pendientes, no se trasladan a fase 6 por decisión implícita.
+[Criterios correctivos](docs/migracion/fase-05/CORRECCION.md).
+
 **Resultado (06/11/2026): COMPLETADA.** Solicitado y autorizado por el usuario. Baseline `af13b3b`, imagen `sha256:82d2316f5247f5f698e966885b22f2787ece0f40573c38a5c75b831e6e070395` (no-root `predicitas:1000`). **21/21 pruebas aprobadas**, cobertura de código **92.0 %**. Paridad matemática estricta y explicabilidad TreeSHAP verificada al 100 % contra baseline congelado. Siete rutas OpenAPI idénticas a contratos. Backend integrado y frontend intactos. [Evidencia](docs/migracion/fase-05/evidencia/ia-20261106-01/manifest.json) y [bitácora](docs/migracion/fase-05/README.md).
 
 - [x] Crear `apps/ia/` con API, configuración, autenticación interna, tests y dependencias propias.
-- [x] Separar predictor actual en features, inferencia, métricas y datasets, sin rediseñar algoritmo/preprocesado.
+- [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia extraídas; entrenamiento/datasets pendientes de completar y validar.
 - [ ] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada.
 - [x] Eliminar dependencias de FastAPI backend, ORM operativo y `app.modules.citas` de la nueva aplicación IA.
-- [x] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas.
-- [x] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible.
+- [ ] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección implementada, pendiente de nueva validación formal.
+- [ ] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible. Corrección pendiente de aceptación formal.
 - [x] Implementar carga en startup/caché controlada por versión; ningún endpoint entrena ni escribe modelos.
-- [x] Fijar límites de request/lote, validación estricta, timeout y autenticación segura.
+- [ ] Fijar límites de request/lote, validación estricta, timeout y número de workers compatible con memoria disponible; cada worker puede duplicar modelo en RAM. Corrección: recepción 10 s, 1 worker/16 conexiones, hilos nativos acotados; presupuesto de inferencia y memoria requieren medición explícita, no solo autenticación.
 - [x] Crear Dockerfile IA no-root, con librerías nativas necesarias para LightGBM (`libgomp1` si aplica) y TZ/data requeridas.
 - [x] Comparar probabilidades, niveles y explicaciones con baseline congelado; comprobar que una predicción no modifica artefactos.
 

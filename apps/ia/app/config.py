@@ -7,32 +7,14 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-_FILE_PATH = Path(__file__).resolve()
-_PARENTS = _FILE_PATH.parents
-_PROJECT_ROOT = _PARENTS[3] if len(_PARENTS) > 3 else _PARENTS[1] if len(_PARENTS) > 1 else _PARENTS[0]
-
-# Directorio por defecto para el registro de modelos
-_DEFAULT_REGISTRY_CANDIDATES = [
-    _PROJECT_ROOT / "artifacts" / "models" / "legacy-import",
-    _PROJECT_ROOT / "apps" / "backend" / "app" / "modules" / "ia" / "artifacts",
-    Path("/app/artifacts/models/legacy-import"),
-    Path("/app/app/modules/ia/artifacts"),
-]
+IA_API_KEY: str = os.getenv("IA_API_KEY", "")
 
 
-def _resolver_directorio_modelos() -> Path:
-    env_dir = os.getenv("MODEL_REGISTRY_DIR")
-    if env_dir:
-        p = Path(env_dir)
-        if p.exists():
-            return p
-    for candidate in _DEFAULT_REGISTRY_CANDIDATES:
-        if candidate.exists():
-            return candidate
-    return _DEFAULT_REGISTRY_CANDIDATES[0]
-
-
-IA_API_KEY: str = os.getenv("IA_API_KEY", "predicitas-ia-internal-secret-key")
+def require_api_key() -> str:
+    # Sin fallback conocido, tampoco ante una variable vacía o solo espacios.
+    if not IA_API_KEY.strip():
+        raise RuntimeError("IA_API_KEY debe configurarse explícitamente")
+    return IA_API_KEY
 HOST: str = os.getenv("HOST", "0.0.0.0")
 PORT: int = int(os.getenv("PORT", "8100"))
 
@@ -62,6 +44,7 @@ FEATURES_AUTORIZADAS: list[str] = [
     "reprogramaciones_prev",
 ]
 
-MODEL_REGISTRY_DIR: Path = _resolver_directorio_modelos()
+MODEL_REGISTRY_DIR = Path(os.getenv("MODEL_REGISTRY_DIR", "/models"))
 MODEL_FILENAME: str = os.getenv("MODEL_FILENAME", "modelo_predicitas_v1.joblib")
 MODEL_PATH: Path = MODEL_REGISTRY_DIR / MODEL_FILENAME
+MANIFEST_PATH = Path(__file__).resolve().parents[1] / "manifests/legacy-approved.json"

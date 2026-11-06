@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import os
+import secrets
 from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
+
+os.environ.setdefault("IA_API_KEY", secrets.token_urlsafe(32))
 
 from app.config import IA_API_KEY, MODEL_PATH
 from app.core.model_registry import registry
@@ -26,7 +29,10 @@ def client() -> TestClient:
 
 @pytest.fixture
 def auth_headers() -> dict[str, str]:
-    return {"X-IA-API-Key": IA_API_KEY}
+    class Headers(dict):
+        def __repr__(self):
+            return "<cabecera interna protegida>"
+    return Headers({"X-IA-API-Key": IA_API_KEY})
 
 
 @pytest.fixture

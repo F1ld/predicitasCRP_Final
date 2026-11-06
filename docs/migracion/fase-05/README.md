@@ -1,6 +1,12 @@
 # Fase 5 — Extraer y probar la aplicación IA independiente
 
-**Estado: COMPLETADA (06/11/2026).**
+**Estado vigente: EN CURSO — revisión correctiva (06/11/2026).**
+El resultado histórico siguiente **no certifica cierre**: se detectaron fallos en
+readiness, clave predeterminada, contrato y trazabilidad del runner. No se borra
+la evidencia `ia-20261106-01` ni se reparan sus hashes retrospectivamente.
+[Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen intactos.
+
+## Resultado histórico de la primera implementación (supeditado a corrección)
 - **Baseline:** `af13b3b` (Cierre y evidencia sanitizada de la validación del Seed).
 - **Punto de retorno:** `af13b3b`.
 - **Objetivo:** Disponer de una aplicación de IA autónoma, contenerizada y verificada por contrato antes de modificar sus consumidores.

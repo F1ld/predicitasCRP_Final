@@ -1,0 +1,48 @@
+{
+  "sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "version_modelo": "LightGBM_v1.0.0",
+  "version_features": "pre-cita-v1",
+  "python_major_minor": "3.12",
+  "libraries": {
+    "joblib": "1.6.0",
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.4",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1"
+  },
+  "provenance": "Hash legacy preservado en evidencia fase 5 ia-20261106-01 y fase 4. Compatibilidad medida en imagen 82d2316f. generado_en es la creacion de ESTA importacion de metadata, no fecha de generacion del dataset. Conteos reconstruidos de tasas y tamanos declarados en dataset_info; sin raw ni IDs verificables. Control leakage es una declaracion del artefacto, no una nueva comprobacion de particiones.",
+  "dataset": {
+    "version_contrato": "1.0",
+    "version_dataset": "DS_SINTETICO_CRP_v1.0",
+    "version_features": "pre-cita-v1",
+    "proposito": "LEGACY_IMPORT",
+    "fuente": "LEGACY_METADATA_ONLY",
+    "linaje_completo": false,
+    "semilla": 42,
+    "fecha_corte": null,
+    "generado_en": "2026-11-06T23:05:21.366112Z",
+    "sha256_raw": null,
+    "total_historicas": 1000,
+    "distribucion": {"atendidas": 795, "no_show": 205},
+    "particiones": {
+      "train": {"filas": 700, "no_show": 144, "sha256": null, "sha256_ids": null},
+      "val": {"filas": 150, "no_show": 31, "sha256": null, "sha256_ids": null},
+      "test": {"filas": 150, "no_show": 30, "sha256": null, "sha256_ids": null}
+    },
+    "sin_interseccion_ids": true,
+    "control_leakage": {
+      "aprobado": true,
+      "columnas_prohibidas_excluidas": ["estado_actual", "fecha_hora_cita", "fecha_registro_cita", "id_cita", "id_cita_externa", "medico", "paciente_anon_id", "target_no_show"],
+      "interseccion_particiones": 0,
+      "violaciones_temporales": 0,
+      "invariante_paciente_nuevo_ok": true
+    },
+    "es_simulacion": true
+  },
+  "smoke": {
+    "features": {"especialidad": "TRAUMATOLOGIA", "tipo_paciente": "CONTINUADOR", "canal_origen": "CALL_CENTER", "franja_horaria": "TARDE", "dia_semana": "VIERNES", "antelacion_dias": 32, "inasistencias_previas": 3, "asistencias_previas": 1, "reprogramaciones_prev": 2},
+    "probabilidad_no_show": 0.999,
+    "nivel_riesgo": "ALTO",
+    "explicabilidad_resumen": "Factores clave: 1) Inasistencias previas: 3 (+5.94) | 2) Antelación: 32 días (+1.98) | 3) Reprogramaciones: 2 (+1.87) [Simulado]"
+  }
+}
