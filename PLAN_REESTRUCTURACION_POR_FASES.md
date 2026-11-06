@@ -438,7 +438,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
 | 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
-| 4 | Límites internos backend y transacciones | 3 | EN CURSO |
+| 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
@@ -600,18 +600,20 @@ Siguen pendientes contratos/workflows de negocio, routers sin SQL y concurrencia
 
 **C validado (06/11/2026):** código `d7c7f45`, ejecución `bloque-c-20261106-01`, baseline `6da1c49`. Routers sin persistencia directa/commits, casos de uso de ofertas/cierres y exportación REP-02. S-03 corregido sin cambiar el rechazo humano 400 vigente; S-08 con estados/matching/auditoría e historial; alias S-05 reproducido y corregido al delegar reporte. **341/0 diagnóstico** frente a 303/1: único caso previo cambiado es S-03 (failure → passed), 37 nuevos aprobados. **38/38 focalizadas**, cobertura **91,15 %**. Paridad OpenAPI/DDL/modelo/predicciones y rollback tras flush de oferta/cierre/exportación observados desde otra conexión. Suite completa conserva S-02; frontend no reejecutado. Originales intactos y laboratorio nuevo detenido. [Evidencia C](docs/migracion/fase-04/evidencia/bloque-c-20261106-01/manifest.json), [criterios y límites](docs/migracion/fase-04/C.md). **Pendiente D; fase 4 EN CURSO.** No se certificó concurrencia ni build empaquetado final.
 
-- [ ] Añadir contratos públicos por módulo y tests que prohíban imports a routers/repositorios/modelos privados ajenos, con excepciones explícitas de composición/reporting.
+**D validado y fase 4 COMPLETADA (06/11/2026):** responsable: agente, bajo autorización del usuario. Baseline D `2ad167e`; código/tests `500c040`, corrección `a463fdb`, runner `62f04ac`. Ejecución aceptada `bloque-d-20261106-04`: **341/0 → 352/0**, once pruebas nuevas, **91,23 %** cobertura; **211/0** sobre imagen sin fuentes backend montadas. **9/9 carreras HTTP** con sesiones precargadas, espera PostgreSQL observada y un único éxito efectivo; **4/4 rollbacks** tras flush observados independientemente, más identidad/bloqueo. Gates de límites, adaptadores read-only, DAG y composición aprobados. Imagen `sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d`, no-root y sin env owner; OpenAPI/DDL/modelo/predicciones idénticos. Evidencia separada en `f2c5823`, hashes del índice y paquete comprobados desde clon limpio. Intentos 01–03 conservados; los cuatro laboratorios detenidos, originales intactos. S-02 sigue explícito: **no suite completa verde**; frontend no reejecutado. [Criterios, revisión y límites D](docs/migracion/fase-04/D.md), [evidencia](docs/migracion/fase-04/evidencia/bloque-d-20261106-04/manifest.json). Retorno D `2ad167e`, fase `2f4140e`: revertir solo lógica, nunca volúmenes/datos. **Fase 5 no iniciada**. Los estados EN CURSO anteriores y del resumen capturado son históricos, previos a esta revisión final.
+
+- [x] Añadir contratos públicos por módulo y tests que prohíban imports a routers/repositorios/modelos privados ajenos, con excepciones explícitas de composición/reporting. D: lista exhaustiva en `bootstrap/limites.py` y gate de todos los módulos.
 - [x] Llevar reloj/zona horaria técnica a `core`, actualizar dependency overrides de pruebas y retirar dependencia de `intervenciones.router` hacia `citas.router`.
 - [x] Llevar registro global ORM a `bootstrap` y actualizar `main.py`, Alembic, scripts y tests; registrar todos los modelos antes de construir metadata.
 - [x] Definir propiedad de `Usuario` en Usuarios y contratos con Auth; conservar tabla, hashing, tokens, expiración, bloqueo y revocación existentes.
-- [ ] Extraer operaciones públicas de Citas para confirmar/liberar/cambiar estado y de Lista de Espera para crear cupo, ofrecer y reasignar.
-- [ ] Consolidar reglas duplicadas entre Citas e Intervenciones: una transición legal debe generar exactamente un historial y la auditoría requerida.
-- [ ] Introducir workflows para operaciones multímódulo; todos participan en la misma sesión/transacción del caso de uso.
+- [x] Extraer operaciones públicas de Citas para confirmar/liberar/cambiar estado y de Lista de Espera para crear cupo, ofrecer y reasignar. D: entradas componibles por contratos públicos; REPROGRAMADA conserva su caso de uso con fecha obligatoria.
+- [x] Consolidar reglas duplicadas entre Citas e Intervenciones: una transición legal debe generar exactamente un historial y la auditoría requerida. D: `citas/transiciones.py`, contratos y carreras con unicidad persistida.
+- [x] Introducir workflows para operaciones multímódulo; todos participan en la misma sesión/transacción del caso de uso. D: `app/workflows/`, sin commits propios ni imports privados ajenos.
 - [x] Quitar SQL y commits de routers, incluidos endpoints de ofertas/rechazo/desistimiento; mover validaciones/estados a servicios propios. Bloque C; prueba de arquitectura para los siete routers.
-- [ ] Separar operaciones componibles sin commit de casos de uso de nivel superior que sí cierran transacción. Actualizar importador/seed para evitar transacciones anidadas incorrectas.
-- [ ] Mantener auditoría append-only dentro de la transacción de negocio cuando hay éxito. Fallos de login requieren su propia persistencia explícita, sin perder bloqueo/registro al responder 401.
-- [ ] Crear adaptadores de lectura para bandeja/detalle/reportes que hoy consultan varias tablas; no duplicar datos para evitar un JOIN.
-- [ ] Probar concurrencia y rollback completo: cita + historial + intervención + cupo + auditoría, según la operación.
+- [x] Separar operaciones componibles sin commit de casos de uso de nivel superior que sí cierran transacción. Actualizar importador/seed para evitar transacciones anidadas incorrectas. D: importador componible con prueba de reversión; seed hace flush de usuarios y confirma junto con importación, sin begin anidado (revisión de código, no ejecución integral del seed demo).
+- [x] Mantener auditoría append-only dentro de la transacción de negocio cuando hay éxito. Fallos de login requieren su propia persistencia explícita, sin perder bloqueo/registro al responder 401. Gates A/B.1/C conservados; D repite diagnóstico, rol operativo e identidad independiente.
+- [x] Crear adaptadores de lectura para bandeja/detalle/reportes que hoy consultan varias tablas; no duplicar datos para evitar un JOIN. D: `consultas.py`, excepciones read-only y filtros/contratos regresionados.
+- [x] Probar concurrencia y rollback completo: cita + historial + intervención + cupo + auditoría, según la operación. D: nueve carreras y cuatro coordinadores; oferta/cierre/exportación conservan pruebas C.
 
 **Se toca:** organización y lógica interna necesaria para delimitar responsabilidades; actualizar tests y composición.
 

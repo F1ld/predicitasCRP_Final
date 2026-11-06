@@ -1,6 +1,8 @@
 # Fase 4 — Límites internos y transacciones backend
 
-**Estado: EN CURSO.** Inicio: 05/11/2026. Punto de retorno: `2f4140e`.
+**Estado: COMPLETADA (06/11/2026).** Inicio: 05/11/2026. Punto de retorno: `2f4140e`.
+Responsable: agente bajo autorización del usuario. El cierre D al final de esta
+bitácora sustituye los estados históricos EN CURSO. Fase 5 no iniciada.
 
 Se ejecuta por bloques pequeños para no mezclar identidades, flujos transaccionales y concurrencia. Separación estricta de implementación y evidencia.
 
@@ -121,6 +123,42 @@ python -B docs/migracion/fase-04/publicar.py --run-id bloque-c-20261106-01 --ver
 
 ## Bloque D — Concurrencia, rollback y cierre final de Fase 4
 
-1. Pruebas de concurrencia y contención en PostgreSQL (doble reasignación concurrente pesimista).
-2. Pruebas de rollback multimódulo inducido en laboratorio aislado.
-3. Construcción de imagen de Fase 4, freeze de OpenAPI y evidencia formal de cierre.
+**Validado:** `bloque-d-20261106-04`, baseline `2ad167e`, código `500c040` +
+`a463fdb`; runner `62f04ac`. [Criterios y revisión](D.md).
+
+| Verificación D | Resultado |
+|---|---|
+| Diagnóstico baseline / actual | **341/0 → 352/0**, once pruebas nuevas; ningún caso previo cambia |
+| Cobertura | **91,23 %**, umbral 75 % conservado |
+| Regresión runtime empaquetada | **211/211**, `/app` sin montaje de fuentes backend |
+| Carreras HTTP | **9/9**, dos sesiones con filas precargadas, bloqueo observado en PostgreSQL, un éxito y un 409 |
+| Rollback independiente tras flush | **4/4**: cancelación, respuesta legacy, reasignación, importación |
+| Identidad | Login fallido/bloqueo persistidos; rollback de contraseña repetido |
+| Arquitectura | Contratos, excepciones read-only, workflows sin commit, DAG y composición aprobados |
+| OpenAPI / DDL / modelo / predicciones | Paridad exacta |
+| Suite completa | S-02 histórico conservado; **no se declara verde** |
+| Protegidos / originales | Sin cambios; sin puertos host ni volúmenes originales |
+| Laboratorios D 01–04 | Detenidos y conservados; 01–03 no son aceptación |
+| Evidencia | Commit separado `f2c5823`; hashes del índice y paquete verificados en clon limpio |
+
+Imagen final ejecutada por ID:
+`sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d`.
+Usuario 1000, sin `.env`/datos legacy ni DSN owner en runtime empaquetado;
+versiones efectivas de dependencias registradas. No se desplegó al principal.
+
+[Resumen sanitizado](evidencia/bloque-d-20261106-04/resumen.json),
+[JUnit diagnóstico](evidencia/bloque-d-20261106-04/actual_diagnostico.xml),
+[JUnit empaquetado](evidencia/bloque-d-20261106-04/paquete_runtime.xml) y
+[manifiesto](evidencia/bloque-d-20261106-04/manifest.json).
+
+```powershell
+python -B docs/migracion/fase-04/publicar.py --run-id bloque-d-20261106-04 --verify-only
+```
+
+El resumen conserva EN CURSO porque se capturó antes de la revisión final del
+checklist. El clon limpio verifica integridad del paquete, no reejecuta suites ni
+reconstruye el modelo privado. Seed/import se revisaron para confirmar una vez;
+la reversión del importador se probó, pero no se ejecutó el poblado demo integral.
+No se cambió su política legacy de retorno si ya hay datos; esa deuda sigue en
+fase 6. Frontend no reejecutado. S-02 y demás deudas fuera de alcance no se ocultan.
+El cierre se limita a los criterios de fase 4, no a sanidad integral del producto.
