@@ -438,7 +438,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 1 | Contratos y decisiones congelados | 0 | COMPLETADA |
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
 | 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
-| 4 | Límites internos backend y transacciones | 3 | PENDIENTE |
+| 4 | Límites internos backend y transacciones | 3 | EN CURSO |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | PENDIENTE |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
@@ -578,10 +578,28 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 
 **Objetivo:** convertir la división por carpetas en límites reales.
 
+**Inicio (05/11/2026):** autorizado por el usuario con precaución. Punto de retorno
+`2f4140e`, árbol inicialmente limpio. Ejecución incremental: bloque A de reloj,
+bootstrap e identidad, validado por separado antes de abordar workflows de negocio.
+No se cambia esquema/credenciales/modelo ni se interviene el principal. El bloque A
+no equivale a cerrar la fase completa. [Bitácora](docs/migracion/fase-04/README.md).
+
+**Bloque A validado (05/11/2026):** ejecución `bloque-a-20261105-02`, fuentes
+identificadas por SHA-256 sin commit automático. **15/15 pruebas nuevas aprobadas**;
+diagnóstico **276 aprobadas / 1 fallo previo** frente a baseline **261/1**,
+cobertura **87,14 %**. OpenAPI, DDL de metadata, modelo y predicciones idénticos;
+entorno Alembic actualizado probado sobre laboratorio nuevo, sin revisiones nuevas.
+Fallos de login/bloqueo persistidos y rollback de clave tras flush comprobados entre
+conexiones independientes. Suite completa conserva el error previo de colección IA;
+frontend no reejecutado. Ambos laboratorios detenidos; archivos protegidos intactos.
+[Evidencia sanitizada](docs/migracion/fase-04/evidencia/bloque-a-20261105-02/resumen.json).
+Siguen pendientes contratos/workflows de negocio, routers sin SQL y concurrencia;
+**la fase 4 permanece EN CURSO**.
+
 - [ ] Añadir contratos públicos por módulo y tests que prohíban imports a routers/repositorios/modelos privados ajenos, con excepciones explícitas de composición/reporting.
-- [ ] Llevar reloj/zona horaria técnica a `core`, actualizar dependency overrides de pruebas y retirar dependencia de `intervenciones.router` hacia `citas.router`.
-- [ ] Llevar registro global ORM a `bootstrap` y actualizar `main.py`, Alembic, scripts y tests; registrar todos los modelos antes de construir metadata.
-- [ ] Definir propiedad de `Usuario` en Usuarios y contratos con Auth; conservar tabla, hashing, tokens, expiración, bloqueo y revocación existentes.
+- [x] Llevar reloj/zona horaria técnica a `core`, actualizar dependency overrides de pruebas y retirar dependencia de `intervenciones.router` hacia `citas.router`.
+- [x] Llevar registro global ORM a `bootstrap` y actualizar `main.py`, Alembic, scripts y tests; registrar todos los modelos antes de construir metadata.
+- [x] Definir propiedad de `Usuario` en Usuarios y contratos con Auth; conservar tabla, hashing, tokens, expiración, bloqueo y revocación existentes.
 - [ ] Extraer operaciones públicas de Citas para confirmar/liberar/cambiar estado y de Lista de Espera para crear cupo, ofrecer y reasignar.
 - [ ] Consolidar reglas duplicadas entre Citas e Intervenciones: una transición legal debe generar exactamente un historial y la auditoría requerida.
 - [ ] Introducir workflows para operaciones multímódulo; todos participan en la misma sesión/transacción del caso de uso.

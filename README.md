@@ -1,10 +1,10 @@
 # PrediCitas CRP
 
-## Reestructuración — fase 3
+## Reestructuración — fase 4 en curso
 
 Aplicaciones en `apps/backend/` y `apps/frontend/`. La IA **sigue integrada en el backend**: su extracción corresponde a fases posteriores. No se han cambiado reglas de negocio, endpoints, CSV, modelo ni revisiones Alembic por esta mudanza.
 
-**Estado y limitaciones:** [evidencia de fase 3](docs/migracion/fase-03/README.md), [fase 2](docs/migracion/fase-02/README.md) y [plan por fases](PLAN_REESTRUCTURACION_POR_FASES.md). Los informes de fases anteriores describen sus rutas y resultados históricos; no se reescriben sus evidencias.
+**Estado y limitaciones:** fases 0–3 completadas; [fase 4 en curso](docs/migracion/fase-04/README.md), por bloques de backend. El primer bloque aborda reloj, bootstrap e identidad; no implementa todavía todos los workflows/transacciones. Ver [evidencia de fase 3](docs/migracion/fase-03/README.md), [fase 2](docs/migracion/fase-02/README.md) y [plan por fases](PLAN_REESTRUCTURACION_POR_FASES.md). Los informes anteriores describen sus rutas y resultados históricos; no se reescriben sus evidencias.
 
 **Archivos canónicos:** muestras en [`data/samples/importacion/`](data/samples/importacion/), [inventario y exportación segura](data/README.md), [modelo legacy y resultados QA](docs/operacion/ARCHIVOS_Y_RESULTADOS.md). Los CSV antiguos quedan solo como compatibilidad; el modelo activo mantiene su ruta integrada. No se activó retención de uploads/descargas, entrenamiento ni promoción.
 
