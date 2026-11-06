@@ -25,7 +25,8 @@ modelo, CSV ni esquema. No se inicia fase 6/7 ni se conecta el consumidor IA.
    a certificación de carga prolongada ni garantiza interrupción de cómputo nativo.
 7. Todas las pruebas previas pasan, nuevas regresiones aprobadas y cobertura ≥80 %;
    resultados medidos de JUnit/coverage JSON. Paridad de todos los campos contra
-   los 5 casos congelados y 200 adicionales deterministas, usando backend preservado.
+   los casos congelados de fase 0 y los cinco de la suite IA original, más 200
+   adicionales deterministas, usando backend preservado y expectativas congeladas.
 8. Código registrado antes de ejecutar, imagen usada por ID inmutable, fuentes de
    paquete iguales al commit (EOL normalizado), protegidos iguales antes/después,
    resultados exclusivos sin sobrescritura. Evidencia sanitizada separada y
@@ -55,3 +56,7 @@ Intento `ia-correccion-20261106-01` conservado: 83 pruebas empaquetadas aprobada
 pero la sonda externa no encontraba `/app` al ejecutarse desde `/checks`. Corregido
 PYTHONPATH del contenedor de validación; no fue fallo de inferencia. No se cuenta
 ese intento como aceptación; repetir con identidad nueva.
+`ia-correccion-20261106-02` aprobó 83 pruebas, HTTP real y 203 casos diferenciales
+(3 de fase 0 + 200). Se amplió el runner para incluir también todos los casos de
+la suite original en la comparación diferencial, no solo sus pruebas unitarias.
+Se conserva 02 como intermedio aprobado, no como evidencia de la ampliación.

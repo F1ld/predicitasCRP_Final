@@ -4,6 +4,7 @@ No sobrescribe evidencia histórica. verificar solo comprueba integridad del paq
 No requiere ni arranca PostgreSQL. Los secretos efímeros quedan fuera del repo.
 """
 import argparse
+import ast
 from collections import Counter
 from datetime import datetime, timezone
 import hashlib
@@ -13,6 +14,7 @@ from pathlib import Path
 import random
 import re
 import secrets
+import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -51,6 +53,7 @@ def tracked(*folders):
 
 def sources():
     result = tracked("apps/ia", "contracts")
+    result.update(tracked("docs/migracion/fase-00/ia_baseline.json"))
     result.update({p.relative_to(ROOT).as_posix(): sha(p) for p in HERE.glob("*.py")})
     return result
 
@@ -102,7 +105,13 @@ def execute(raw, run_id):
     tag = "predicitas-ia:" + run_id
     if subprocess.run(["docker", "image", "inspect", tag], capture_output=True).returncode == 0:
         raise ValueError("No adoptar ni sobrescribir imagen preexistente")
-    action(raw, "build", ["docker", "build", "--build-context", f"contracts={ROOT / 'contracts'}", "-f",
+    contract_context = raw / "contracts-context"
+    contract_context.mkdir()
+    for name in tracked("contracts"):
+        destination = contract_context / Path(name).relative_to("contracts")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / name, destination)
+    action(raw, "build", ["docker", "build", "--build-context", f"contracts={contract_context}", "-f",
         str(ROOT / "apps/ia/Dockerfile"), "-t", tag, str(ROOT / "apps/ia")])
     image = output(["docker", "image", "inspect", "--format", "{{.Id}}", tag])
     assert re.fullmatch(r"sha256:[a-f0-9]{64}", image)
@@ -141,6 +150,15 @@ print(json.dumps({str(p):hashlib.sha256(p.read_bytes().replace(b'\\r\\n',b'\\n')
     # Paridad diferencial contra el backend preservado, sin red ni conexión real a BD.
     golden = read(ROOT / "docs/migracion/fase-00/ia_baseline.json")["predictions"]
     cases = [x["features"] for x in golden]
+    # Incluir también los cinco casos congelados de la primera suite IA, sin
+    # importar código backend/IA en el host ni perder sus expectativas exactas.
+    tree = ast.parse((ROOT / "apps/ia/tests/test_parity.py").read_text(encoding="utf-8-sig"))
+    frozen_suite = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
+        and any(isinstance(t, ast.Name) and t.id == "CASOS_CONGELADOS" for t in n.targets))
+    for item in frozen_suite:
+        if item["caso"] not in cases:
+            cases.append(item["caso"])
+    frozen_count = len(cases)
     rng = random.Random(42)
     for _ in range(200):
         cases.append({"especialidad": rng.choice(["CARDIOLOGIA", "TRAUMATOLOGIA", "PEDIATRIA"]),
@@ -170,7 +188,13 @@ print(json.dumps(out))"""
         for key in ("probabilidad_no_show", "umbral_aplicado"):
             expected_prediction[key] = float(expected_prediction[key])
         assert new[i] == expected_prediction, "Paridad congelada modificada"
-    write(raw / "parity.json", {"cases": len(cases), "frozen_cases": len(golden), "generated_seed": 42,
+    for item in frozen_suite:
+        prediction = new[cases.index(item["caso"])]
+        for key, value in item["esperado"].items():
+            actual = prediction["features_snapshot"][key] if key in ("tasa_no_show_previa", "es_reserva_lejana") else prediction[key]
+            assert actual == value, "Expectativa congelada de suite modificada"
+    write(raw / "parity.json", {"cases": len(cases), "frozen_cases": frozen_count,
+        "phase0_cases": len(golden), "original_suite_cases": len(frozen_suite), "generated_seed": 42,
         "all_fields_equal": True, "levels_observed": sorted({p["nivel_riesgo"] for p in new}),
         "cases_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(), "backend_image": BACKEND_IMAGE})
     assert sources() == before and protected() == preserved
