@@ -6,6 +6,57 @@ readiness, clave predeterminada, contrato y trazabilidad del runner. No se borra
 la evidencia `ia-20261106-01` ni se reparan sus hashes retrospectivamente.
 [Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen intactos.
 
+## Corrección vigente aceptada
+
+Ejecución `ia-correccion-20261106-03`, código probado `bba0e61`, evidencia
+`8dd4cdd`. **83/83 pruebas, 96,01 % cobertura, 207 casos de paridad diferencial**
+en todos los campos, tres niveles de riesgo. Tres autopruebas stdlib del runner.
+HTTP real: lote de 100 en 0,98 s; artefacto intacto. Imagen:
+`sha256:21c8cd34539de93335c813b13a2bc7e81e254ba2ce293a9df90782c5e09e3bbf`.
+
+- Sin clave predeterminada: `IA_API_KEY` explícita y no vacía, fallo de arranque
+  seguro si falta. No usar secretos del backend ni publicar la clave en comandos.
+- Montar el artefacto legacy confiable RO en `/models`, o configurar explícitamente
+  `MODEL_REGISTRY_DIR`. No buscar silenciosamente dentro del backend.
+- Manifiesto aprobado empaquetado en `manifests/legacy-approved.json`: hash antes
+  de joblib, librerías/clases/features/catálogos/versión/umbrales/smoke. No admite
+  artefactos arbitrarios ni promociones implícitas; un fallo deja readiness 503.
+- `generado_en` del dataset legacy es fecha de creación de la importación de
+  metadata. Los conteos se reconstruyen de tasas/tamaños declarados en el artefacto;
+  no se afirma linaje raw ni se inventan hashes/IDs o una fecha de dataset.
+- Versiones requeridas, enteros sin coerción y schemas congelados comprobados;
+  OpenAPI incluye seguridad, respuestas tipadas y errores. Inferencia no finita
+  falla sin score ficticio. Matemáticas y redondeos finitos conservados.
+- Body ASGI limitado durante recepción, máximo 256 KiB y 10 s para recibirlo.
+  Este plazo **no es** un timeout duro de cómputo nativo.
+- Validación en imagen no-root, RO, sin red externa ni DSN/backend montado,
+  acotada a 2 CPU/1 GiB. Un worker, límite 16 conexiones y un hilo nativo.
+
+Construcción formal y verificación:
+
+```powershell
+python -B docs/migracion/fase-05/validar_ia.py ejecutar --run-id ia-<identidad-nueva>
+python -B docs/migracion/fase-05/validar_ia.py publicar --run-id ia-<identidad-nueva>
+python -B docs/migracion/fase-05/validar_ia.py verificar --run-id ia-correccion-20261106-03
+```
+
+El runner construye con un contexto contractual exclusivo de archivos registrados,
+ejecuta por ID inmutable y obtiene cifras reales de JUnit/coverage. No sobrescribe
+intentos ni publica logs/env. Clon limpio Windows con autocrlf: evidencia correctiva
+y seed verifican; eso comprueba integridad, no reejecuta tests ni aporta el modelo.
+No se modifica la evidencia histórica defectuosa de la primera implementación.
+
+[Resumen vigente](evidencia/ia-correccion-20261106-03/resumen.json),
+[JUnit sanitizado](evidencia/ia-correccion-20261106-03/pytest.xml),
+[OpenAPI comprobado](evidencia/ia-correccion-20261106-03/openapi.json) y
+[manifiesto](evidencia/ia-correccion-20261106-03/manifest.json).
+
+**Pendientes de fase 5:** extracción del entrenamiento y generador/datasets/CSV,
+política de retirada temporal y timeout de cómputo bajo concurrencia. La medición
+local del lote no sustituye esa resolución ni una prueba de carga sostenida.
+No se reducen requisitos para cerrar la fase. Backend sigue integrado; fase 6/7
+no iniciadas por esta corrección. S-02 histórico backend y frontend no revalidados.
+
 ## Resultado histórico de la primera implementación (supeditado a corrección)
 - **Baseline:** `af13b3b` (Cierre y evidencia sanitizada de la validación del Seed).
 - **Punto de retorno:** `af13b3b`.

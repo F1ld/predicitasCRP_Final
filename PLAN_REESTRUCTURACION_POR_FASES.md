@@ -644,12 +644,28 @@ generador siguen pendientes, no se trasladan a fase 6 por decisión implícita.
 - [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia extraídas; entrenamiento/datasets pendientes de completar y validar.
 - [ ] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada.
 - [x] Eliminar dependencias de FastAPI backend, ORM operativo y `app.modules.citas` de la nueva aplicación IA.
-- [ ] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección implementada, pendiente de nueva validación formal.
-- [ ] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible. Corrección pendiente de aceptación formal.
+- [x] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección `ia-correccion-20261106-03`: hash previo a deserialización, validación de compatibilidad y smoke en imagen sin backend.
+- [x] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible. Corrección validada contra schemas congelados, API-key explícita, errores y readiness real.
 - [x] Implementar carga en startup/caché controlada por versión; ningún endpoint entrena ni escribe modelos.
 - [ ] Fijar límites de request/lote, validación estricta, timeout y número de workers compatible con memoria disponible; cada worker puede duplicar modelo en RAM. Corrección: recepción 10 s, 1 worker/16 conexiones, hilos nativos acotados; presupuesto de inferencia y memoria requieren medición explícita, no solo autenticación.
 - [x] Crear Dockerfile IA no-root, con librerías nativas necesarias para LightGBM (`libgomp1` si aplica) y TZ/data requeridas.
 - [x] Comparar probabilidades, niveles y explicaciones con baseline congelado; comprobar que una predicción no modifica artefactos.
+
+**Corrección validada (06/11/2026), sin cierre total de fase:** código `d0ca97f`,
+runner `5c260bf` + `d9c523e` + `bba0e61`; ejecución vigente
+`ia-correccion-20261106-03`. **83/83 pruebas empaquetadas**, cobertura
+**96,00725952813067 %**, tres autopruebas del runner, **207 casos diferenciales
+idénticos en todos los campos** (7 congelados únicos + 200 deterministas), incluidos
+BAJO/MEDIO/ALTO. HTTP real: lote de 100 en **0,98 s** dentro del presupuesto local de
+10 s, red none, filesystem/modelo RO, UID 1000, 2 CPU/1 GiB, sin fuentes/DSN backend.
+Imagen `sha256:21c8cd34539de93335c813b13a2bc7e81e254ba2ce293a9df90782c5e09e3bbf`.
+Backend/frontend/contratos/protegidos iguales al baseline. Evidencia separada en
+`8dd4cdd`, hashes del índice y clon limpio Windows/autocrlf comprobados; seed también
+verifica desde ese clon. Intentos correctivos 01/02 conservados. **Fase 5 EN CURSO**:
+faltan extracción de entrenamiento/generador/datasets/CSV y resolver timeout de
+cómputo bajo concurrencia. No se desplazan implícitamente a otra fase ni se conecta
+el backend. [Detalle y límites](docs/migracion/fase-05/CORRECCION.md),
+[evidencia vigente](docs/migracion/fase-05/evidencia/ia-correccion-20261106-03/manifest.json).
 
 **Se toca:** nueva app IA, contrato interno, ubicación de código matemático y packaging IA.
 
