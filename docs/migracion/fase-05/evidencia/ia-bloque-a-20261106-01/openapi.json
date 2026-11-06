@@ -1,0 +1,1592 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PrediCitas IA — Servicio Autónomo",
+    "description": "Servicio interno de inferencia y explicabilidad (Fase 5)",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Live",
+        "description": "Indica que el proceso del servidor HTTP está activo.",
+        "operationId": "health_live_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveStatus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Ready",
+        "description": "Indica si el modelo predictivo fue cargado correctamente y está listo para inferencia.",
+        "operationId": "health_ready_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyStatus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/model": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Model Metadata",
+        "description": "Retorna los metadatos y configuración del modelo actualmente activo.",
+        "operationId": "get_model_metadata_v1_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "IAApiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/metrics": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Model Metrics",
+        "description": "Retorna las métricas de evaluación del modelo activo (compatible con MetricasModeloOut).",
+        "operationId": "get_model_metrics_v1_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricasModelo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "IAApiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/dataset": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Dataset Metadata",
+        "description": "Retorna el manifiesto de datos de entrenamiento/importación del modelo activo.",
+        "operationId": "get_dataset_metadata_v1_dataset_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetLegacy"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "IAApiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/predict": {
+      "post": {
+        "tags": [
+          "Inference"
+        ],
+        "summary": "Predict Individual",
+        "description": "Ejecuta inferencia individual sobre features pre-cita.",
+        "operationId": "predict_individual_v1_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "IAApiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/predict-batch": {
+      "post": {
+        "tags": [
+          "Inference"
+        ],
+        "summary": "Predict Batch",
+        "description": "Ejecuta inferencia por lote (1..100 elementos) de forma atómica.",
+        "operationId": "predict_batch_v1_predict_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "IAApiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchItemRequest": {
+        "properties": {
+          "id_item": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "title": "Id Item"
+          },
+          "features": {
+            "$ref": "#/components/schemas/FeaturesPreCita"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id_item",
+          "features"
+        ],
+        "title": "BatchItemRequest",
+        "description": "Elemento individual de un lote de inferencia."
+      },
+      "BatchItemResponse": {
+        "properties": {
+          "id_item": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "title": "Id Item"
+          },
+          "resultado": {
+            "$ref": "#/components/schemas/PredictResponse"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id_item",
+          "resultado"
+        ],
+        "title": "BatchItemResponse",
+        "description": "Resultado individual de un ítem dentro de la respuesta en lote."
+      },
+      "BatchRequest": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato"
+          },
+          "id_solicitud": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id Solicitud"
+          },
+          "version_modelo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Modelo"
+          },
+          "version_features": {
+            "type": "string",
+            "const": "pre-cita-v1",
+            "title": "Version Features"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BatchItemRequest"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version_contrato",
+          "id_solicitud",
+          "version_modelo",
+          "version_features",
+          "items"
+        ],
+        "title": "BatchRequest",
+        "description": "Solicitud de inferencia en lote (1..100 elementos)."
+      },
+      "BatchResponse": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato",
+            "default": "1.0"
+          },
+          "id_solicitud": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id Solicitud"
+          },
+          "version_modelo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Modelo"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BatchItemResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id_solicitud",
+          "version_modelo",
+          "items"
+        ],
+        "title": "BatchResponse",
+        "description": "Respuesta completa de inferencia en lote."
+      },
+      "BloqueMetricas": {
+        "properties": {
+          "umbral": {
+            "type": "number",
+            "title": "Umbral"
+          },
+          "f1_score": {
+            "type": "number",
+            "title": "F1 Score"
+          },
+          "precision": {
+            "type": "number",
+            "title": "Precision"
+          },
+          "recall": {
+            "type": "number",
+            "title": "Recall"
+          },
+          "roc_auc": {
+            "type": "number",
+            "title": "Roc Auc"
+          },
+          "pr_auc": {
+            "type": "number",
+            "title": "Pr Auc"
+          },
+          "matriz_confusion": {
+            "$ref": "#/components/schemas/MatrizConfusion"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "umbral",
+          "f1_score",
+          "precision",
+          "recall",
+          "roc_auc",
+          "pr_auc",
+          "matriz_confusion"
+        ],
+        "title": "BloqueMetricas"
+      },
+      "ControlLeakage": {
+        "properties": {
+          "aprobado": {
+            "type": "boolean",
+            "const": true,
+            "title": "Aprobado"
+          },
+          "columnas_prohibidas_excluidas": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 8,
+            "title": "Columnas Prohibidas Excluidas"
+          },
+          "interseccion_particiones": {
+            "type": "integer",
+            "const": 0,
+            "title": "Interseccion Particiones"
+          },
+          "violaciones_temporales": {
+            "type": "integer",
+            "const": 0,
+            "title": "Violaciones Temporales"
+          },
+          "invariante_paciente_nuevo_ok": {
+            "type": "boolean",
+            "const": true,
+            "title": "Invariante Paciente Nuevo Ok"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "aprobado",
+          "columnas_prohibidas_excluidas",
+          "interseccion_particiones",
+          "violaciones_temporales",
+          "invariante_paciente_nuevo_ok"
+        ],
+        "title": "ControlLeakage"
+      },
+      "DatasetLegacy": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato"
+          },
+          "version_dataset": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Dataset"
+          },
+          "version_features": {
+            "type": "string",
+            "const": "pre-cita-v1",
+            "title": "Version Features"
+          },
+          "proposito": {
+            "type": "string",
+            "const": "LEGACY_IMPORT",
+            "title": "Proposito"
+          },
+          "fuente": {
+            "type": "string",
+            "const": "LEGACY_METADATA_ONLY",
+            "title": "Fuente"
+          },
+          "linaje_completo": {
+            "type": "boolean",
+            "const": false,
+            "title": "Linaje Completo"
+          },
+          "semilla": {
+            "type": "integer",
+            "const": 42,
+            "title": "Semilla"
+          },
+          "fecha_corte": {
+            "type": "null",
+            "title": "Fecha Corte"
+          },
+          "generado_en": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generado En"
+          },
+          "sha256_raw": {
+            "type": "null",
+            "title": "Sha256 Raw"
+          },
+          "total_historicas": {
+            "type": "integer",
+            "minimum": 1000.0,
+            "title": "Total Historicas"
+          },
+          "distribucion": {
+            "$ref": "#/components/schemas/Distribucion"
+          },
+          "particiones": {
+            "$ref": "#/components/schemas/ParticionesLegacy"
+          },
+          "sin_interseccion_ids": {
+            "type": "boolean",
+            "const": true,
+            "title": "Sin Interseccion Ids"
+          },
+          "control_leakage": {
+            "$ref": "#/components/schemas/ControlLeakage"
+          },
+          "es_simulacion": {
+            "type": "boolean",
+            "const": true,
+            "title": "Es Simulacion"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version_contrato",
+          "version_dataset",
+          "version_features",
+          "proposito",
+          "fuente",
+          "linaje_completo",
+          "semilla",
+          "fecha_corte",
+          "generado_en",
+          "sha256_raw",
+          "total_historicas",
+          "distribucion",
+          "particiones",
+          "sin_interseccion_ids",
+          "control_leakage",
+          "es_simulacion"
+        ],
+        "title": "DatasetLegacy"
+      },
+      "Distribucion": {
+        "properties": {
+          "atendidas": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Atendidas"
+          },
+          "no_show": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "No Show"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "atendidas",
+          "no_show"
+        ],
+        "title": "Distribucion"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "enum": [
+              "NO_AUTENTICADO",
+              "VALIDACION",
+              "MODELO_NO_DISPONIBLE",
+              "VERSION_MODELO_INCOMPATIBLE",
+              "ERROR_INTERNO",
+              "SOLICITUD_DEMASIADO_GRANDE"
+            ],
+            "title": "Codigo"
+          },
+          "mensaje": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Mensaje"
+          },
+          "campos": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Campos"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensaje"
+        ],
+        "title": "ErrorDetail",
+        "description": "Detalle del error en conformidad con error.v1.schema.json."
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "description": "Cuerpo de respuesta para errores HTTP del servicio IA."
+      },
+      "FeaturesPreCita": {
+        "properties": {
+          "especialidad": {
+            "type": "string",
+            "enum": [
+              "CARDIOLOGIA",
+              "TRAUMATOLOGIA",
+              "PEDIATRIA"
+            ],
+            "title": "Especialidad"
+          },
+          "tipo_paciente": {
+            "type": "string",
+            "enum": [
+              "NUEVO",
+              "CONTINUADOR"
+            ],
+            "title": "Tipo Paciente"
+          },
+          "canal_origen": {
+            "type": "string",
+            "enum": [
+              "WEB",
+              "CALL_CENTER",
+              "PRESENCIAL"
+            ],
+            "title": "Canal Origen"
+          },
+          "franja_horaria": {
+            "type": "string",
+            "enum": [
+              "MANANA",
+              "TARDE"
+            ],
+            "title": "Franja Horaria"
+          },
+          "dia_semana": {
+            "type": "string",
+            "enum": [
+              "LUNES",
+              "MARTES",
+              "MIERCOLES",
+              "JUEVES",
+              "VIERNES",
+              "SABADO"
+            ],
+            "title": "Dia Semana"
+          },
+          "antelacion_dias": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Antelacion Dias"
+          },
+          "inasistencias_previas": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Inasistencias Previas"
+          },
+          "asistencias_previas": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Asistencias Previas"
+          },
+          "reprogramaciones_prev": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Reprogramaciones Prev"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "especialidad",
+          "tipo_paciente",
+          "canal_origen",
+          "franja_horaria",
+          "dia_semana",
+          "antelacion_dias",
+          "inasistencias_previas",
+          "asistencias_previas",
+          "reprogramaciones_prev"
+        ],
+        "title": "FeaturesPreCita",
+        "description": "Features crudas pre-cita según perfil de extracción v1."
+      },
+      "LiveStatus": {
+        "properties": {
+          "estado": {
+            "type": "string",
+            "const": "vivo",
+            "title": "Estado",
+            "default": "vivo"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "LiveStatus"
+      },
+      "MatrizConfusion": {
+        "properties": {
+          "tn": {
+            "type": "integer",
+            "title": "Tn"
+          },
+          "fp": {
+            "type": "integer",
+            "title": "Fp"
+          },
+          "fn": {
+            "type": "integer",
+            "title": "Fn"
+          },
+          "tp": {
+            "type": "integer",
+            "title": "Tp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tn",
+          "fp",
+          "fn",
+          "tp"
+        ],
+        "title": "MatrizConfusion"
+      },
+      "MetricasModelo": {
+        "properties": {
+          "version_modelo": {
+            "type": "string",
+            "title": "Version Modelo"
+          },
+          "algoritmo": {
+            "type": "string",
+            "title": "Algoritmo"
+          },
+          "semilla": {
+            "type": "integer",
+            "title": "Semilla"
+          },
+          "fecha_entrenamiento": {
+            "type": "string",
+            "title": "Fecha Entrenamiento"
+          },
+          "es_simulacion": {
+            "type": "boolean",
+            "const": true,
+            "title": "Es Simulacion"
+          },
+          "rotulo_etico": {
+            "type": "string",
+            "title": "Rotulo Etico"
+          },
+          "umbral_alto": {
+            "type": "number",
+            "const": 0.45,
+            "title": "Umbral Alto"
+          },
+          "umbral_medio": {
+            "type": "number",
+            "const": 0.3,
+            "title": "Umbral Medio"
+          },
+          "cumple_meta_f1_82": {
+            "type": "boolean",
+            "title": "Cumple Meta F1 82"
+          },
+          "metricas_test": {
+            "$ref": "#/components/schemas/BloqueMetricas"
+          },
+          "metricas_val": {
+            "$ref": "#/components/schemas/BloqueMetricas"
+          },
+          "metricas_baseline_test": {
+            "$ref": "#/components/schemas/BloqueMetricas"
+          },
+          "auditoria_equidad": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Auditoria Equidad"
+          },
+          "importancia_global_variables": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Importancia Global Variables"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version_modelo",
+          "algoritmo",
+          "semilla",
+          "fecha_entrenamiento",
+          "es_simulacion",
+          "rotulo_etico",
+          "umbral_alto",
+          "umbral_medio",
+          "cumple_meta_f1_82",
+          "metricas_test",
+          "metricas_val",
+          "metricas_baseline_test",
+          "auditoria_equidad",
+          "importancia_global_variables"
+        ],
+        "title": "MetricasModelo"
+      },
+      "ModelMetadata": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato",
+            "default": "1.0"
+          },
+          "version_modelo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Modelo"
+          },
+          "version_features": {
+            "type": "string",
+            "const": "pre-cita-v1",
+            "title": "Version Features",
+            "default": "pre-cita-v1"
+          },
+          "version_dataset": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Dataset"
+          },
+          "umbrales": {
+            "$ref": "#/components/schemas/Umbrales"
+          },
+          "features_autorizadas": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 9,
+            "minItems": 9,
+            "title": "Features Autorizadas"
+          },
+          "es_simulacion": {
+            "type": "boolean",
+            "const": true,
+            "title": "Es Simulacion",
+            "default": true
+          },
+          "rotulo_etico": {
+            "type": "string",
+            "const": "Resultado simulado — Dataset sintético acreditado (RF-056)",
+            "title": "Rotulo Etico",
+            "default": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version_modelo",
+          "version_dataset",
+          "features_autorizadas"
+        ],
+        "title": "ModelMetadata",
+        "description": "Metadatos del modelo activo expuestos en /v1/model."
+      },
+      "ParticionesLegacy": {
+        "properties": {
+          "train": {
+            "$ref": "#/components/schemas/SplitLegacy"
+          },
+          "val": {
+            "$ref": "#/components/schemas/SplitLegacy"
+          },
+          "test": {
+            "$ref": "#/components/schemas/SplitLegacy"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "train",
+          "val",
+          "test"
+        ],
+        "title": "ParticionesLegacy"
+      },
+      "PredictRequest": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato"
+          },
+          "id_solicitud": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id Solicitud"
+          },
+          "version_modelo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Modelo"
+          },
+          "version_features": {
+            "type": "string",
+            "const": "pre-cita-v1",
+            "title": "Version Features"
+          },
+          "features": {
+            "$ref": "#/components/schemas/FeaturesPreCita"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version_contrato",
+          "id_solicitud",
+          "version_modelo",
+          "version_features",
+          "features"
+        ],
+        "title": "PredictRequest",
+        "description": "Solicitud de inferencia individual."
+      },
+      "PredictResponse": {
+        "properties": {
+          "version_contrato": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Version Contrato",
+            "default": "1.0"
+          },
+          "id_solicitud": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id Solicitud"
+          },
+          "version_modelo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Version Modelo"
+          },
+          "version_features": {
+            "type": "string",
+            "const": "pre-cita-v1",
+            "title": "Version Features",
+            "default": "pre-cita-v1"
+          },
+          "probabilidad_no_show": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Probabilidad No Show"
+          },
+          "nivel_riesgo": {
+            "type": "string",
+            "enum": [
+              "BAJO",
+              "MEDIO",
+              "ALTO"
+            ],
+            "title": "Nivel Riesgo"
+          },
+          "umbrales": {
+            "$ref": "#/components/schemas/Umbrales"
+          },
+          "features_snapshot": {
+            "$ref": "#/components/schemas/SnapshotFeatures"
+          },
+          "explicabilidad_resumen": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Explicabilidad Resumen"
+          },
+          "es_simulacion": {
+            "type": "boolean",
+            "const": true,
+            "title": "Es Simulacion",
+            "default": true
+          },
+          "rotulo_etico": {
+            "type": "string",
+            "const": "Resultado simulado — Dataset sintético acreditado (RF-056)",
+            "title": "Rotulo Etico",
+            "default": "Resultado simulado — Dataset sintético acreditado (RF-056)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id_solicitud",
+          "version_modelo",
+          "probabilidad_no_show",
+          "nivel_riesgo",
+          "features_snapshot",
+          "explicabilidad_resumen"
+        ],
+        "title": "PredictResponse",
+        "description": "Respuesta de inferencia individual con score, nivel, snapshot y explicabilidad."
+      },
+      "ReadyStatus": {
+        "properties": {
+          "estado": {
+            "type": "string",
+            "const": "listo",
+            "title": "Estado",
+            "default": "listo"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ReadyStatus"
+      },
+      "SnapshotFeatures": {
+        "properties": {
+          "especialidad": {
+            "type": "string",
+            "enum": [
+              "CARDIOLOGIA",
+              "TRAUMATOLOGIA",
+              "PEDIATRIA"
+            ],
+            "title": "Especialidad"
+          },
+          "tipo_paciente": {
+            "type": "string",
+            "enum": [
+              "NUEVO",
+              "CONTINUADOR"
+            ],
+            "title": "Tipo Paciente"
+          },
+          "canal_origen": {
+            "type": "string",
+            "enum": [
+              "WEB",
+              "CALL_CENTER",
+              "PRESENCIAL"
+            ],
+            "title": "Canal Origen"
+          },
+          "franja_horaria": {
+            "type": "string",
+            "enum": [
+              "MANANA",
+              "TARDE"
+            ],
+            "title": "Franja Horaria"
+          },
+          "dia_semana": {
+            "type": "string",
+            "enum": [
+              "LUNES",
+              "MARTES",
+              "MIERCOLES",
+              "JUEVES",
+              "VIERNES",
+              "SABADO"
+            ],
+            "title": "Dia Semana"
+          },
+          "antelacion_dias": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Antelacion Dias"
+          },
+          "inasistencias_previas": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Inasistencias Previas"
+          },
+          "asistencias_previas": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Asistencias Previas"
+          },
+          "reprogramaciones_prev": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Reprogramaciones Prev"
+          },
+          "tasa_no_show_previa": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Tasa No Show Previa"
+          },
+          "es_reserva_lejana": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Es Reserva Lejana"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "especialidad",
+          "tipo_paciente",
+          "canal_origen",
+          "franja_horaria",
+          "dia_semana",
+          "antelacion_dias",
+          "inasistencias_previas",
+          "asistencias_previas",
+          "reprogramaciones_prev",
+          "tasa_no_show_previa",
+          "es_reserva_lejana"
+        ],
+        "title": "SnapshotFeatures",
+        "description": "Features efectivas conocidas y derivadas (contracts/data/snapshot-features.v1.schema.json)."
+      },
+      "SplitLegacy": {
+        "properties": {
+          "filas": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Filas"
+          },
+          "no_show": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "No Show"
+          },
+          "sha256": {
+            "type": "null",
+            "title": "Sha256"
+          },
+          "sha256_ids": {
+            "type": "null",
+            "title": "Sha256 Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "filas",
+          "no_show",
+          "sha256",
+          "sha256_ids"
+        ],
+        "title": "SplitLegacy"
+      },
+      "Umbrales": {
+        "properties": {
+          "medio": {
+            "type": "number",
+            "const": 0.3,
+            "title": "Medio",
+            "default": 0.3
+          },
+          "alto": {
+            "type": "number",
+            "const": 0.45,
+            "title": "Alto",
+            "default": 0.45
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Umbrales",
+        "description": "Umbrales operativos congelados para clasificación de riesgo."
+      }
+    },
+    "securitySchemes": {
+      "IAApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-IA-API-Key"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "run_id": "ia-bloque-a-20261106-01",
+  "files": [
+    {
+      "name": "openapi.json",
+      "sha256": "863f29593a45b2676c99642284105ce276d16a9a941bcb846ffddf218fd27c83"
+    },
+    {
+      "name": "pytest.xml",
+      "sha256": "dc39f2e8c1c88667ad7f4ea93a1e1f9c8bc2b641833ad5442fbe0527b7f1f0c6"
+    },
+    {
+      "name": "resumen.json",
+      "sha256": "14c6749131fa15cbfc6c8b621cf110a2e46601429b5520d4bedc5cbbb966a252"
+    }
+  ]
+}
