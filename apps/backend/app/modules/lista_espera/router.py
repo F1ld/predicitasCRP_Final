@@ -1,13 +1,10 @@
-from datetime import datetime
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.errores import NoEncontrado
 from app.core.http import ip_cliente
 from app.modules.auth.public import Principal as Usuario, requiere_roles
-from app.modules.lista_espera import repository, service
-from app.modules.lista_espera.models import CupoLiberado, ListaEspera
+from app.modules.lista_espera import service
 from app.modules.lista_espera.schemas import (
     CandidatoCreateIn,
     CandidatoOut,
@@ -40,25 +37,9 @@ def listar_espera(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
 ):
-    candidatos = repository.listar_candidatos(
-        db,
-        especialidad_req=especialidad_req,
-        franja_preferida=franja_preferida,
-        estado_candidato=estado_candidato,
-    )
-    if q:
-        q_norm = q.strip().upper()
-        candidatos = [c for c in candidatos if q_norm in c.paciente_anon_id.upper()]
-
-    total = len(candidatos)
-    paginados = candidatos[desplazamiento : desplazamiento + limite]
-
-    return PaginaCandidatoOut(
-        total=total,
-        limite=limite,
-        desplazamiento=desplazamiento,
-        items=[CandidatoOut.model_validate(c) for c in paginados],
-    )
+    return service.listar_espera(db, q=q, especialidad_req=especialidad_req,
+        franja_preferida=franja_preferida, estado_candidato=estado_candidato,
+        limite=limite, desplazamiento=desplazamiento)
 
 
 @router.post("/lista-espera", response_model=CandidatoOut)
@@ -95,28 +76,8 @@ def _procesar_listado_cupos(
     limite: int,
     desplazamiento: int,
 ) -> PaginaCupoOut:
-    cupos = service.listar_cupos(db, estado_cupo=estado_cupo, especialidad=especialidad)
-    if desde:
-        try:
-            d_dt = datetime.fromisoformat(desde)
-            cupos = [c for c in cupos if c.fecha_hora_cupo >= d_dt]
-        except ValueError:
-            pass
-    if hasta:
-        try:
-            h_dt = datetime.fromisoformat(f"{hasta}T23:59:59")
-            cupos = [c for c in cupos if c.fecha_hora_cupo <= h_dt]
-        except ValueError:
-            pass
-
-    total = len(cupos)
-    paginados = cupos[desplazamiento : desplazamiento + limite]
-    return PaginaCupoOut(
-        total=total,
-        limite=limite,
-        desplazamiento=desplazamiento,
-        items=paginados,
-    )
+    return service.listar_cupos_paginados(db, estado_cupo=estado_cupo, especialidad=especialidad,
+        desde=desde, hasta=hasta, limite=limite, desplazamiento=desplazamiento)
 
 
 @router.get("/cupos", response_model=PaginaCupoOut)
@@ -214,18 +175,7 @@ def registrar_oferta(
     usuario: Usuario = Depends(requiere_roles(*ROLES_OPERACION)),
     db: Session = Depends(get_db),
 ):
-    cupo = db.get(CupoLiberado, id_cupo)
-    if not cupo:
-        raise NoEncontrado(f"No existe el cupo {id_cupo}")
-    candidato = db.get(ListaEspera, datos.id_candidato)
-    if not candidato:
-        raise NoEncontrado(f"No existe el candidato {datos.id_candidato}")
-
-    cupo.estado_cupo = "EN_OFERTA"
-    candidato.estado_candidato = "CONTACTADO"
-    db.commit()
-    db.refresh(cupo)
-    return service.obtener_detalle_cupo(db, id_cupo)
+    return service.registrar_oferta(db, id_cupo, datos.id_candidato, usuario=usuario, ip=ip_cliente(request))
 
 
 @router.post("/cupos/{id_cupo}/ofertas/rechazo", response_model=CupoDetalleOut)
@@ -235,13 +185,7 @@ def rechazo_oferta(
     usuario: Usuario = Depends(requiere_roles(*ROLES_OPERACION)),
     db: Session = Depends(get_db),
 ):
-    cupo = db.get(CupoLiberado, id_cupo)
-    if not cupo:
-        raise NoEncontrado(f"No existe el cupo {id_cupo}")
-    cupo.estado_cupo = "DISPONIBLE"
-    db.commit()
-    db.refresh(cupo)
-    return service.obtener_detalle_cupo(db, id_cupo)
+    return service.cerrar_oferta(db, id_cupo, cierre="RECHAZA", usuario=usuario, ip=ip_cliente(request))
 
 
 @router.post("/cupos/{id_cupo}/ofertas/desistimiento", response_model=CupoDetalleOut)
@@ -251,10 +195,4 @@ def desistimiento_oferta(
     usuario: Usuario = Depends(requiere_roles(*ROLES_OPERACION)),
     db: Session = Depends(get_db),
 ):
-    cupo = db.get(CupoLiberado, id_cupo)
-    if not cupo:
-        raise NoEncontrado(f"No existe el cupo {id_cupo}")
-    cupo.estado_cupo = "DISPONIBLE"
-    db.commit()
-    db.refresh(cupo)
-    return service.obtener_detalle_cupo(db, id_cupo)
+    return service.cerrar_oferta(db, id_cupo, cierre="SIN_RESPUESTA", usuario=usuario, ip=ip_cliente(request))

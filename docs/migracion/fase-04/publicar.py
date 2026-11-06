@@ -6,7 +6,7 @@ un árbol de trabajo posterior equivalga a las fuentes probadas.
 import argparse
 import xml.etree.ElementTree as ET
 
-from validar import HERE, ROOT, escribir, fuentes, leer, sha
+from validar import CAMBIO_S03, HERE, ROOT, escribir, fuentes, leer, sha
 
 
 def main():
@@ -32,16 +32,21 @@ def main():
     assert summary["laboratory_state"] == "exited"
     assert summary["source_files"] == fuentes(ROOT)
     assert all(summary["parity"].values()) and summary["protected_unchanged"]
-    assert not summary["changed_old_cases"] and set(summary["new_cases"].values()) == {"passed"}
+    assert summary["changed_old_cases"] == (CAMBIO_S03 if summary.get("block") == "C" else {})
+    assert set(summary["new_cases"].values()) == {"passed"}
     assert summary["coverage_percent"] >= 75 and summary["complete_collection_unchanged"]
     assert len(set(summary["complete_exit_codes"].values())) == 1
     if "b1_rollback" in summary:
         assert summary["b1_rollback"]["rollback_visible_from_independent_connection"]
+    if "c_rollback" in summary:
+        assert all(v["independent_connection_rollback"] for v in summary["c_rollback"]["checks"].values())
     target.mkdir(parents=True, exist_ok=False)
     escribir(target / "resumen.json", summary)
     names = ["baseline_diagnostico", "actual_diagnostico", "baseline_completo", "actual_completo"]
     if "b1_rollback" in summary:
         names.append("b1_focalizadas")
+    if "c_rollback" in summary:
+        names.append("c_focalizadas")
     for name in names:
         original = raw / f"{name}.xml"
         root = ET.Element("testsuite")

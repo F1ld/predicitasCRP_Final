@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 IMAGE = "sha256:99b2976a7f143fce8c0d9813556612b4babe7b8f6612e7964674c5b5e6684cd3"
 DATABASE = "predicitas_fase4_test"
+S03 = "tests.test_reasignacion::test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_humana"
+CAMBIO_S03 = {S03: ["failure", "passed"]}
 
 
 def escribir(path, data):
@@ -120,11 +122,12 @@ def preparar(raw, run_id, baseline_ref="2f4140e", scope="A"):
     commit = salida(["git", "rev-parse", "--verify", baseline_ref + "^{commit}"], cwd=ROOT)
     if scope == "A" and not commit_tested.startswith("2f4140e"):
         raise ValueError("Revisar nuevo punto de retorno antes de preparar otro laboratorio")
-    if scope == "B1":
-        if not commit.startswith("2f95273"):
-            raise ValueError("B.1 exige baseline explícito del bloque B: 2f95273")
+    if scope in ("B1", "C"):
+        expected = {"B1": "2f95273", "C": "6da1c49"}[scope]
+        if not commit.startswith(expected):
+            raise ValueError(f"Bloque {scope} exige baseline explícito: {expected}")
         if salida(["git", "status", "--porcelain"], cwd=ROOT):
-            raise ValueError("Registrar implementación antes de validar B.1")
+            raise ValueError("Registrar implementación antes de validar")
         if subprocess.run(["git", "merge-base", "--is-ancestor", commit, commit_tested], cwd=ROOT).returncode:
             raise ValueError("Baseline no es ancestro del código probado")
     backup = ROOT / "backups" / f"fase4-{run_id}"
@@ -202,6 +205,7 @@ def resumen(raw, meta):
     added = {name: state for name, state in new.items() if name not in old}
     complete_before, complete_after = casos(raw / "baseline_completo.xml"), casos(raw / "actual_completo.xml")
     public = {"run_id": meta["run_id"], "commit_base": meta["commit_base"], "image_id": IMAGE,
+               "block": meta.get("scope", "A"),
                "commit_tested": meta.get("commit_tested"),
                "scope": f"Fase 4 bloque {meta.get('scope', 'A')}; fase completa EN CURSO", "parity": parity,
               "baseline": {state: list(old.values()).count(state) for state in set(old.values())},
@@ -221,8 +225,18 @@ def resumen(raw, meta):
         assert public["b1_rollback"]["rollback_visible_from_independent_connection"]
         assert leer(raw / "b1_focalizadas.accion.json")["exit_code"] == 0
         assert leer(raw / "b1_rollback.accion.json")["exit_code"] == 0
+    if meta.get("scope") == "C":
+        public["c_rollback"] = leer(raw / "c_rollback.json")
+        public["baseline_c_contracts"] = leer(raw / "baseline_c_contratos.json")
+        assert all(v["independent_connection_rollback"] for v in public["c_rollback"]["checks"].values())
+        assert public["baseline_c_contracts"]["s05_typeerror_reproduced"]
+        assert leer(raw / "c_focalizadas.accion.json")["exit_code"] == 0
+        assert leer(raw / "c_rollback.accion.json")["exit_code"] == 0
+        assert leer(raw / "actual_diagnostico.accion.json")["exit_code"] == 0
+        assert changed == CAMBIO_S03, "Solo se permite corregir S-03, no ocultar otros cambios"
     escribir(raw / "resumen.json", public)
-    assert all(parity.values()) and not changed and set(added.values()) == {"passed"}
+    assert all(parity.values()) and set(added.values()) == {"passed"}
+    assert changed == (CAMBIO_S03 if meta.get("scope") == "C" else {})
     assert public["protected_unchanged"] and public["coverage_percent"] >= 75
     assert public["complete_collection_unchanged"]
     assert public["complete_exit_codes"]["baseline"] == public["complete_exit_codes"]["actual"]
@@ -234,8 +248,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("accion", choices=("preparar", "baseline", "actual", "detener", "resumen"))
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--baseline-ref", default="2f4140e", help="B.1: fijar explícitamente 2f95273")
-    parser.add_argument("--scope", choices=("A", "B1"), default="A")
+    parser.add_argument("--baseline-ref", default="2f4140e", help="B.1: 2f95273; C: 6da1c49; fijar explícitamente")
+    parser.add_argument("--scope", choices=("A", "B1", "C"), default="A")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,40}", args.run_id):
         raise ValueError("run-id inválido")
@@ -260,6 +274,9 @@ def main():
     before = fuentes(source)
     escribir(raw / f"{mode}_sources.json", before)
     base = contenedor(meta, raw, source)
+    if mode == "baseline" and meta.get("scope") == "C":
+        if accion(raw, "baseline_c_contratos", [*base, "python", "/fase4/caracterizar_baseline_c.py", "/results/baseline_c_contratos.json"]):
+            raise RuntimeError("Baseline C no coincide con los contratos caracterizados")
     if mode == "actual":
         if accion(raw, "alembic_actual", [*base, "alembic", "upgrade", "head"]):
             raise RuntimeError("Falló el entorno Alembic actualizado en laboratorio")
@@ -269,6 +286,14 @@ def main():
     accion(raw, f"{mode}_diagnostico", [*base, "python", "-m", "pytest", "--ignore=tests/ia",
            f"--junitxml=/results/{mode}_diagnostico.xml", f"--cov-report=json:/results/{mode}_coverage.json"])
     if mode == "actual":
+        if meta.get("scope") == "C":
+            if accion(raw, "c_focalizadas", [*base, "python", "-m", "pytest", "--no-cov",
+                    "tests/sistema/test_routers_c_fase4.py", "tests/lista_espera/test_ofertas_c_fase4.py",
+                    "tests/intervenciones/test_lecturas_reportes_c_fase4.py", "tests/test_reasignacion.py",
+                    "--junitxml=/results/c_focalizadas.xml"]):
+                raise RuntimeError("Fallaron pruebas focalizadas C")
+            if accion(raw, "c_rollback", [*base, "python", "/fase4/probar_rollback_c.py", "/results/c_rollback.json"]):
+                raise RuntimeError("Falló rollback C entre conexiones independientes")
         if meta.get("scope") == "B1":
             if accion(raw, "b1_focalizadas", [*base, "python", "-m", "pytest", "--no-cov",
                     "tests/sistema/test_limites_flujos_fase4.py", "tests/sistema/test_contratos_b1_fase4.py",

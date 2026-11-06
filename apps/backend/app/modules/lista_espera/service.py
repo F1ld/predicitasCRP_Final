@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.core.errores import ConflictoDeNegocio, NoEncontrado, ReglaDeNegocioInvalida
@@ -5,13 +6,16 @@ from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
 from app.core.reloj import LIMA
 from app.modules.citas import public as citas_public
-from app.modules.lista_espera import repository
+from app.modules.lista_espera import ofertas, repository
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from sqlalchemy import select
 from app.modules.lista_espera.schemas import (
     CandidatoCreateIn,
     CandidatoOut,
     CandidatoUpdateIn,
+    OfertaOut,
+    PaginaCandidatoOut,
+    PaginaCupoOut,
     CupoDetalleOut,
     CupoLiberadoOut,
     PropuestaCandidatosOut,
@@ -47,6 +51,14 @@ def obtener_detalle_cupo(db: Session, id_cupo: int) -> CupoDetalleOut:
         raise NoEncontrado(f"No existe el cupo liberado {id_cupo}")
 
     cupo_out = _cupo_a_out(db, cupo)
+    proyeccion = ofertas.consultar(db, id_cupo)
+    if cupo.estado_cupo == "EN_OFERTA" and proyeccion.vigente is not None:
+        event = proyeccion.vigente
+        candidato = db.get(ListaEspera, event.datos_after["id_candidato"])
+        if candidato is not None:
+            cupo_out.oferta_vigente = OfertaOut(id_candidato=candidato.id_candidato,
+                paciente_anon_id=candidato.paciente_anon_id, id_operador=event.id_usuario,
+                fecha_hora_oferta=event.creado_en)
     reasig = db.execute(
         select(Reasignacion).where(Reasignacion.id_cupo_liberado == id_cupo)
     ).scalar_one_or_none()
@@ -69,8 +81,110 @@ def obtener_detalle_cupo(db: Session, id_cupo: int) -> CupoDetalleOut:
     return CupoDetalleOut(
         **cupo_out.model_dump(),
         reasignacion=reasig_out,
-        historial_ofertas=[],
+        historial_ofertas=list(proyeccion.historial),
     )
+
+
+def listar_espera(db: Session, *, q=None, especialidad_req=None, franja_preferida=None,
+                  estado_candidato=None, limite=50, desplazamiento=0) -> PaginaCandidatoOut:
+    candidatos = repository.listar_candidatos(db, especialidad_req=especialidad_req,
+        franja_preferida=franja_preferida, estado_candidato=estado_candidato)
+    if q:
+        q_norm = q.strip().upper()
+        candidatos = [c for c in candidatos if q_norm in c.paciente_anon_id.upper()]
+    return PaginaCandidatoOut(total=len(candidatos), limite=limite, desplazamiento=desplazamiento,
+        items=[CandidatoOut.model_validate(c) for c in candidatos[desplazamiento:desplazamiento + limite]])
+
+
+def listar_cupos_paginados(db: Session, *, estado_cupo=None, especialidad=None, desde=None, hasta=None,
+                          limite=50, desplazamiento=0) -> PaginaCupoOut:
+    cupos = listar_cupos(db, estado_cupo=estado_cupo, especialidad=especialidad)
+    if desde:
+        try:
+            fecha = datetime.fromisoformat(desde)
+            cupos = [c for c in cupos if c.fecha_hora_cupo >= fecha]
+        except ValueError:
+            pass
+    if hasta:
+        try:
+            fecha = datetime.fromisoformat(f"{hasta}T23:59:59")
+            cupos = [c for c in cupos if c.fecha_hora_cupo <= fecha]
+        except ValueError:
+            pass
+    return PaginaCupoOut(total=len(cupos), limite=limite, desplazamiento=desplazamiento,
+        items=cupos[desplazamiento:desplazamiento + limite])
+
+
+def _validar_compatibilidad(db: Session, cupo: CupoLiberado, candidato: ListaEspera) -> None:
+    franja_cupo = _franja_de_cupo(db, cupo)
+    if candidato.especialidad_req != cupo.especialidad:
+        raise ConflictoDeNegocio(
+            f"Incompatibilidad de especialidad: el cupo es de '{cupo.especialidad}' "
+            f"y el candidato requiere '{candidato.especialidad_req}'")
+    if candidato.franja_preferida not in (franja_cupo, "INDIFERENTE"):
+        raise ConflictoDeNegocio(
+            f"Incompatibilidad de franja horaria: el cupo es en turno '{franja_cupo}' "
+            f"y el candidato prefiere '{candidato.franja_preferida}'")
+
+
+def _cupo_bloqueado(db: Session, id_cupo: int) -> CupoLiberado:
+    cupo = db.get(CupoLiberado, id_cupo, with_for_update=True)
+    if cupo is None:
+        raise NoEncontrado(f"No existe el cupo {id_cupo}")
+    return cupo
+
+
+def registrar_oferta(db: Session, id_cupo: int, id_candidato: int, *, usuario: Usuario, ip: str) -> CupoDetalleOut:
+    cupo = _cupo_bloqueado(db, id_cupo)
+    if cupo.estado_cupo != "DISPONIBLE":
+        raise ConflictoDeNegocio("El cupo no admite una nueva oferta", codigo="CUPO_NO_DISPONIBLE")
+    candidato = db.get(ListaEspera, id_candidato, with_for_update=True)
+    if candidato is None:
+        raise NoEncontrado(f"No existe el candidato {id_candidato}")
+    if candidato.estado_candidato not in ("ACTIVO", "CONTACTADO"):
+        raise ConflictoDeNegocio("El candidato no está disponible", codigo="CANDIDATO_NO_DISPONIBLE")
+    _validar_compatibilidad(db, cupo, candidato)
+    if repository.candidato_tiene_oferta_ajena(db, id_candidato, id_cupo):
+        raise ConflictoDeNegocio("El candidato ya tiene otra oferta vigente", codigo="CANDIDATO_EN_OFERTA")
+    antes = {"estado_cupo": cupo.estado_cupo, "estado_candidato": candidato.estado_candidato}
+    cupo.estado_cupo, candidato.estado_candidato = "EN_OFERTA", "CONTACTADO"
+    registrar_evento(db, modulo="REASIGNACION", accion="OFERTAR", entidad_afectada="cupos_liberados",
+        direccion_ip=ip, id_usuario=usuario.id_usuario, id_entidad=id_cupo, datos_before=antes,
+        datos_after={"id_cupo_liberado": id_cupo, "id_candidato": id_candidato,
+                     "estado_cupo": "EN_OFERTA", "estado_candidato": "CONTACTADO"})
+    db.commit()
+    return obtener_detalle_cupo(db, id_cupo)
+
+
+def _registrar_cierre(db: Session, cupo: CupoLiberado, oferta, candidato: ListaEspera,
+                     cierre: str, antes: dict, *, usuario: Usuario, ip: str) -> None:
+    accion = {"RECHAZA": "RECHAZAR", "SIN_RESPUESTA": "DESISTIR", "REASIGNADO": "CERRAR_OFERTA"}[cierre]
+    registrar_evento(db, modulo="REASIGNACION", accion=accion, entidad_afectada="cupos_liberados",
+        direccion_ip=ip, id_usuario=usuario.id_usuario, id_entidad=cupo.id_cupo_liberado, datos_before=antes,
+        datos_after={"id_oferta": oferta.id_log, "id_candidato": candidato.id_candidato,
+                     "cierre": cierre, "estado_cupo": cupo.estado_cupo,
+                     "estado_candidato": candidato.estado_candidato})
+
+
+def cerrar_oferta(db: Session, id_cupo: int, *, cierre: str, usuario: Usuario, ip: str) -> CupoDetalleOut:
+    if cierre not in ("RECHAZA", "SIN_RESPUESTA"):
+        raise ReglaDeNegocioInvalida("Cierre de oferta no admitido")
+    cupo = _cupo_bloqueado(db, id_cupo)
+    if cupo.estado_cupo != "EN_OFERTA":
+        raise ConflictoDeNegocio("No hay oferta vigente para cerrar", codigo="SIN_OFERTA_VIGENTE")
+    oferta = ofertas.consultar(db, id_cupo).vigente
+    if oferta is None:
+        raise ConflictoDeNegocio("Oferta legacy sin candidato registrado; requiere revisión", codigo="OFERTA_NO_REGISTRADA")
+    candidato = db.get(ListaEspera, oferta.datos_after["id_candidato"], with_for_update=True)
+    if candidato is None:
+        raise NoEncontrado("No existe el candidato de la oferta")
+    antes = {"estado_cupo": cupo.estado_cupo, "estado_candidato": candidato.estado_candidato}
+    cupo.estado_cupo = "DISPONIBLE"
+    if candidato.estado_candidato == "CONTACTADO":
+        candidato.estado_candidato = "ACTIVO"  # no reactivar ASIGNADO/DESISTIDO
+    _registrar_cierre(db, cupo, oferta, candidato, cierre, antes, usuario=usuario, ip=ip)
+    db.commit()
+    return obtener_detalle_cupo(db, id_cupo)
 
 
 def crear_candidato(
@@ -230,17 +344,11 @@ def reasignar_cupo(
         )
 
     # Validación de compatibilidad de especialidad y franja (RF-074, RF-075)
-    franja_cupo = _franja_de_cupo(db, cupo)
-    if candidato.especialidad_req != cupo.especialidad:
-        raise ConflictoDeNegocio(
-            f"Incompatibilidad de especialidad: el cupo es de '{cupo.especialidad}' "
-            f"y el candidato requiere '{candidato.especialidad_req}'"
-        )
-    if candidato.franja_preferida not in (franja_cupo, "INDIFERENTE"):
-        raise ConflictoDeNegocio(
-            f"Incompatibilidad de franja horaria: el cupo es en turno '{franja_cupo}' "
-            f"y el candidato prefiere '{candidato.franja_preferida}'"
-        )
+    _validar_compatibilidad(db, cupo, candidato)
+
+    oferta = ofertas.consultar(db, id_cupo).vigente if cupo.estado_cupo == "EN_OFERTA" else None
+    if oferta is not None and oferta.datos_after["id_candidato"] != candidato.id_candidato:
+        raise ConflictoDeNegocio("La oferta vigente pertenece a otro candidato", codigo="CANDIDATO_NO_OFERTADO")
 
     estado_cupo_antes = cupo.estado_cupo
     estado_candidato_antes = candidato.estado_candidato
@@ -283,6 +391,9 @@ def reasignar_cupo(
             "estado_candidato": "ASIGNADO",
         },
     )
+    if oferta is not None:
+        _registrar_cierre(db, cupo, oferta, candidato, "REASIGNADO",
+            {"estado_cupo": estado_cupo_antes, "estado_candidato": estado_candidato_antes}, usuario=usuario, ip=ip)
     db.commit()
     db.refresh(reasignacion)
 
@@ -298,4 +409,3 @@ def reasignar_cupo(
         estado_cupo_final=cupo.estado_cupo,
         estado_candidato_final=candidato.estado_candidato,
     )
-

@@ -5,12 +5,11 @@ from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.database import get_db
-from app.core.errores import NoEncontrado, Validacion
+from app.core.errores import Validacion
 from app.core.http import ip_cliente
-from app.core.reloj import LIMA, reloj
+from app.core.reloj import reloj
 from app.modules.auth.public import Principal as Usuario, requiere_roles
-from app.modules.intervenciones import reglas, repository, service
-from app.modules.intervenciones.models import Intervencion
+from app.modules.intervenciones import reglas, service
 from app.modules.intervenciones.schemas import (
     BandejaIntervencionesOut,
     IntervencionCreateIn,
@@ -87,48 +86,10 @@ def listar_intervenciones(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
 ):
-    bandeja = service.listar_bandeja_intervenciones(
-        db,
-        nivel_riesgo=nivel_riesgo,
-        especialidad=especialidad,
-        estado_intervencion=estado_intervencion,
-        canal_contacto=canal_contacto,
-    )
-    historial = [service._enriquecer_out(i, db=db) for i in repository.listar_historial(db, estado_intervencion=estado_intervencion, canal_contacto=canal_contacto, limite=1000)]
-    if id_cita:
-        historial = [h for h in historial if h.id_cita == id_cita]
-    if respuesta_paciente:
-        historial = [h for h in historial if h.respuesta_paciente == respuesta_paciente.upper()]
-    if desde:
-        try:
-            d_dt = datetime.fromisoformat(desde)
-            if d_dt.tzinfo is None:
-                d_dt = d_dt.replace(tzinfo=LIMA)
-            historial = [h for h in historial if h.fecha_hora_envio >= d_dt]
-        except ValueError:
-            pass
-    if hasta:
-        try:
-            h_dt = datetime.fromisoformat(f"{hasta}T23:59:59")
-            if h_dt.tzinfo is None:
-                h_dt = h_dt.replace(tzinfo=LIMA)
-            historial = [h for h in historial if h.fecha_hora_envio <= h_dt]
-        except ValueError:
-            pass
-
-    total = len(historial)
-    items_paginados = historial[desplazamiento : desplazamiento + limite]
-
-    return PaginaIntervencionesOut(
-        total=total,
-        limite=limite,
-        desplazamiento=desplazamiento,
-        items=items_paginados,
-        total_sugeridas=bandeja.total_sugeridas,
-        total_intervenciones=total,
-        citas_sugeridas=bandeja.citas_sugeridas,
-        historial_intervenciones=items_paginados,
-    )
+    return service.listar_intervenciones_paginadas(db, nivel_riesgo=nivel_riesgo, especialidad=especialidad,
+        estado_intervencion=estado_intervencion, canal_contacto=canal_contacto,
+        respuesta_paciente=respuesta_paciente, desde=desde, hasta=hasta, id_cita=id_cita,
+        limite=limite, desplazamiento=desplazamiento)
 
 
 @router.post("/intervenciones", response_model=IntervencionOut, status_code=201)
@@ -241,10 +202,7 @@ def obtener_intervencion(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
 ):
-    intervencion = db.get(Intervencion, id_intervencion)
-    if intervencion is None:
-        raise NoEncontrado(f"No existe la intervención {id_intervencion}")
-    return service._enriquecer_out(intervencion, db=db)
+    return service.obtener_intervencion(db, id_intervencion)
 
 
 @router.patch("/intervenciones/{id_intervencion}", response_model=IntervencionOut)
@@ -273,7 +231,7 @@ def listar_intervenciones_de_cita(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
 ):
-    return [service._enriquecer_out(i) for i in repository.listar_por_cita(db, id_cita)]
+    return service.listar_intervenciones_de_cita(db, id_cita)
 
 
 @router.post("/citas/{id_cita}/intervenciones", response_model=IntervencionOut)

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.http import ip_cliente
 from app.modules.auth.public import Principal as Usuario, requiere_roles
-from app.modules.ia import repository, service
+from app.modules.ia import service
 from app.modules.ia.schemas import (
     DatasetResumenOut,
     MetricasModeloOut,
@@ -44,7 +44,7 @@ def listar_predicciones_cita(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
 ):
-    return [PrediccionIAOut.model_validate(p) for p in repository.listar_por_cita(db, id_cita)]
+    return service.listar_predicciones_cita(db, id_cita)
 
 
 @router.get("/metricas", response_model=MetricasModeloOut)

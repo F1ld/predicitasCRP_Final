@@ -1,10 +1,24 @@
+from datetime import datetime
+
+import pytest
 from sqlalchemy import select
+
+from app.main import app
+from app.core.reloj import LIMA, reloj
 
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from tests.conftest import cabecera
+
+
+@pytest.fixture
+def reloj_reasignacion():
+    # La prueba usa citas sintéticas fijas; no depende del día del equipo.
+    app.dependency_overrides[reloj] = lambda: datetime(2026, 11, 5, 8, tzinfo=LIMA)
+    yield
+    app.dependency_overrides.pop(reloj, None)
 
 
 def _liberar_cita_y_obtener_cupo(client, db, id_usuario: int, headers: dict) -> int:
@@ -42,14 +56,17 @@ def _liberar_cita_y_obtener_cupo(client, db, id_usuario: int, headers: dict) -> 
     return resp["id_cupo_liberado_generado"]
 
 
-def test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_humana(client, usuarios, db):
+def test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_humana(client, usuarios, db, reloj_reasignacion):
     h = cabecera(client, usuarios["RECEPCION"])
     id_cupo = _liberar_cita_y_obtener_cupo(client, db, usuarios["ADMINISTRADOR"].id_usuario, h)
 
     # 1. Verificar que el cupo figure como DISPONIBLE en GET /cupos-liberados
     r_cupos = client.get("/cupos-liberados", headers=h)
     assert r_cupos.status_code == 200
-    assert any(c["id_cupo_liberado"] == id_cupo for c in r_cupos.json())
+    pagina = r_cupos.json()
+    assert set(pagina) == {"total", "limite", "desplazamiento", "items"}
+    assert pagina["total"] >= 1
+    assert any(c["id_cupo_liberado"] == id_cupo for c in pagina["items"])
 
     # 2. Registrar candidatos en lista de espera (distintas prioridades, franjas y especialidades)
     c_incomp_esp = client.post(
@@ -94,7 +111,8 @@ def test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_hu
         c_prio2["id_candidato"],
     ]
 
-    # 4. Rechaza reasignación si confirmacion_humana == False (HTTP 422 — RN11 / RF-079)
+    # 4. El contrato vigente rechaza confirmacion_humana=False con 400
+    # SOLICITUD_INVALIDA (guardia de negocio, no validación estructural 422).
     r_sin_humano = client.post(
         f"/cupos-liberados/{id_cupo}/reasignar",
         headers=h,
@@ -104,7 +122,12 @@ def test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_hu
             "medio_confirmacion": "LLAMADA_CONFIRMADA",
         },
     )
-    assert r_sin_humano.status_code == 422
+    assert r_sin_humano.status_code == 400
+    assert r_sin_humano.json()["error"]["codigo"] == "SOLICITUD_INVALIDA"
+    db.expire_all()
+    assert db.get(CupoLiberado, id_cupo).estado_cupo == "DISPONIBLE"
+    assert db.get(ListaEspera, c_prio1_exacto["id_candidato"]).estado_candidato == "ACTIVO"
+    assert db.scalar(select(Reasignacion).where(Reasignacion.id_cupo_liberado == id_cupo)) is None
 
     # 5. Ejecuta reasignación asistida con confirmacion_humana == True
     r_reasig = client.post(

@@ -28,6 +28,54 @@ MAX_RECORDATORIOS_ADICIONALES_POR_CITA = 1
 ESTADOS_CITA_INTERVENIBLES = {"RECIBIDA", "CONFIRMADA", "REPROGRAMADA"}
 
 
+def obtener_intervencion(db: Session, id_intervencion: int) -> IntervencionOut:
+    intervencion = db.get(Intervencion, id_intervencion)
+    if intervencion is None:
+        raise NoEncontrado(f"No existe la intervención {id_intervencion}")
+    return _enriquecer_out(intervencion, db=db)
+
+
+def listar_intervenciones_de_cita(db: Session, id_cita: int) -> list[IntervencionOut]:
+    return [_enriquecer_out(i) for i in repository.listar_por_cita(db, id_cita)]
+
+
+def listar_intervenciones_paginadas(
+    db: Session, *, nivel_riesgo=None, especialidad=None, estado_intervencion=None,
+    canal_contacto=None, respuesta_paciente=None, desde=None, hasta=None, id_cita=None,
+    limite=50, desplazamiento=0,
+) -> PaginaIntervencionesOut:
+    # Se conserva filtrado/paginación históricos; no endurecer fechas en C (S-12).
+    bandeja = listar_bandeja_intervenciones(db, nivel_riesgo=nivel_riesgo, especialidad=especialidad,
+        estado_intervencion=estado_intervencion, canal_contacto=canal_contacto)
+    historial = [_enriquecer_out(i, db=db) for i in repository.listar_historial(
+        db, estado_intervencion=estado_intervencion, canal_contacto=canal_contacto, limite=1000)]
+    if id_cita:
+        historial = [h for h in historial if h.id_cita == id_cita]
+    if respuesta_paciente:
+        historial = [h for h in historial if h.respuesta_paciente == respuesta_paciente.upper()]
+    if desde:
+        try:
+            fecha = datetime.fromisoformat(desde)
+            if fecha.tzinfo is None:
+                fecha = fecha.replace(tzinfo=LIMA)
+            historial = [h for h in historial if h.fecha_hora_envio >= fecha]
+        except ValueError:
+            pass
+    if hasta:
+        try:
+            fecha = datetime.fromisoformat(f"{hasta}T23:59:59")
+            if fecha.tzinfo is None:
+                fecha = fecha.replace(tzinfo=LIMA)
+            historial = [h for h in historial if h.fecha_hora_envio <= fecha]
+        except ValueError:
+            pass
+    total = len(historial)
+    items = historial[desplazamiento:desplazamiento + limite]
+    return PaginaIntervencionesOut(total=total, limite=limite, desplazamiento=desplazamiento,
+        items=items, total_sugeridas=bandeja.total_sugeridas, total_intervenciones=total,
+        citas_sugeridas=bandeja.citas_sugeridas, historial_intervenciones=items)
+
+
 def _enriquecer_out(
     intervencion: Intervencion,
     *,

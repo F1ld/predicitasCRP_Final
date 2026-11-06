@@ -78,6 +78,8 @@ El commit de resultados solo publica documentación/evidencia; no cambia las fue
 
 ## Siguiente entrega: Bloque C — Routers y pendientes S-03 / S-08
 
+**C EN CURSO (06/11/2026):** [alcance y criterios congelados](C.md). Incluye la corrección de forwarding S-05 al extraer REP-02. No declara fase 4 completa ni adelanta concurrencia/build final del D.
+
 1. Retirar acceso directo a persistencia y llamadas `db.commit()` de routers:
    - `apps/backend/app/modules/lista_espera/router.py`: líneas 226 (`registrar_oferta`), 242 (`rechazo_oferta`), 258 (`desistimiento_oferta`).
    - `apps/backend/app/modules/reportes/router.py`: línea 67 (`exportar_intervenciones`).

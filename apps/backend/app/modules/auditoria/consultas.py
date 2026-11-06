@@ -1,10 +1,31 @@
 """Consultas de sesión sobre la bitácora propia, sin writes ni commit."""
 from datetime import datetime
+from copy import deepcopy
+from dataclasses import dataclass
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.modules.auditoria.models import AuditoriaEvento
+
+
+@dataclass(frozen=True)
+class EventoEntidad:
+    id_log: int
+    accion: str
+    id_usuario: int | None
+    creado_en: datetime
+    datos_after: dict
+
+
+def eventos_entidad(db: Session, *, modulo: str, entidad: str, id_entidad: int,
+                    acciones: tuple[str, ...]) -> list[EventoEntidad]:
+    """Proyección de bitácora: orden causal por ID, sin entregar ORM mutable."""
+    rows = db.scalars(select(AuditoriaEvento).where(
+        AuditoriaEvento.modulo == modulo, AuditoriaEvento.entidad_afectada == entidad,
+        AuditoriaEvento.id_entidad == id_entidad, AuditoriaEvento.accion.in_(acciones),
+    ).order_by(AuditoriaEvento.id_log))
+    return [EventoEntidad(r.id_log, r.accion, r.id_usuario, r.creado_en, deepcopy(r.datos_after or {})) for r in rows]
 
 
 def _logins(id_usuario: int):

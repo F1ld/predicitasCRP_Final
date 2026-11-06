@@ -1,7 +1,8 @@
-from sqlalchemy import case, select
+from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
 
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
+from app.modules.auditoria.models import AuditoriaEvento
 
 
 def listar_candidatos(
@@ -80,3 +81,17 @@ def listar_reasignaciones(db: Session) -> list[Reasignacion]:
 def obtener_cupo_por_cita_origen(db: Session, id_cita_origen: int) -> CupoLiberado | None:
     stmt = select(CupoLiberado).where(CupoLiberado.id_cita_origen == id_cita_origen)
     return db.scalar(stmt)
+
+
+def candidato_tiene_oferta_ajena(db: Session, id_candidato: int, id_cupo: int) -> bool:
+    """JOIN de lectura autorizado: cupos propios + último OFERTAR de auditoría."""
+    ultima = select(func.max(AuditoriaEvento.id_log)).where(
+        AuditoriaEvento.modulo == "REASIGNACION", AuditoriaEvento.accion == "OFERTAR",
+        AuditoriaEvento.entidad_afectada == "cupos_liberados",
+        AuditoriaEvento.id_entidad == CupoLiberado.id_cupo_liberado,
+    ).correlate(CupoLiberado).scalar_subquery()
+    stmt = select(CupoLiberado.id_cupo_liberado).join(AuditoriaEvento, AuditoriaEvento.id_log == ultima).where(
+        CupoLiberado.estado_cupo == "EN_OFERTA", CupoLiberado.id_cupo_liberado != id_cupo,
+        AuditoriaEvento.datos_after["id_candidato"].astext == str(id_candidato),
+    ).limit(1)
+    return db.scalar(stmt) is not None

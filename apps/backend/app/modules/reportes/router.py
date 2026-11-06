@@ -2,10 +2,8 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.errores import Validacion
 from app.core.exportacion import responder
 from app.core.http import ip_cliente
-from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.reportes import service
 from app.modules.reportes.schemas import Rep02Out, Rep03Out
@@ -27,15 +25,11 @@ def obtener_rep02(
     usuario: Usuario = Depends(requiere_roles(*ROLES_REPORTE)),
     db: Session = Depends(get_db),
 ):
-    formato_norm = (formato or "json").lower()
-    if formato_norm not in ("json", "csv", "xlsx"):
-        raise Validacion("Formato no disponible", codigo="FORMATO_NO_DISPONIBLE", campos={"formato": "Formato no disponible"})
-
-    if canal_contacto and canal_contacto.upper() not in ("WHATSAPP", "SMS", "LLAMADA_TELEFONICA"):
-        raise Validacion("Canal de contacto no admitido", campos={"canal_contacto": "Canal no admitido"})
-
-    reporte = service.generar_rep02(
+    reporte, formato_norm = service.preparar_rep02(
         db,
+        usuario=usuario,
+        ip=ip_cliente(request),
+        formato=formato,
         desde=desde,
         hasta=hasta,
         canal_contacto=canal_contacto,
@@ -43,29 +37,6 @@ def obtener_rep02(
         especialidad=especialidad,
     )
     if formato_norm in ("csv", "xlsx"):
-        filtros = {}
-        if desde:
-            filtros["desde"] = desde
-        if hasta:
-            filtros["hasta"] = hasta
-        if especialidad:
-            filtros["especialidad"] = especialidad.upper()
-        if canal_contacto:
-            filtros["canal_contacto"] = canal_contacto.upper()
-        if nivel_riesgo:
-            filtros["nivel_riesgo"] = nivel_riesgo.upper()
-
-        registrar_evento(
-            db,
-            modulo="REPORTES",
-            accion="EXPORT",
-            entidad_afectada="rep-02",
-            direccion_ip=ip_cliente(request),
-            id_usuario=usuario.id_usuario,
-            datos_after={"formato": formato_norm, "filtros": filtros},
-        )
-        db.commit()
-
         COLUMNAS_REP02 = [
             "id_intervencion",
             "id_cita_externa",
@@ -112,6 +83,7 @@ def obtener_rep03(
 # Alias directos para las rutas intuitivas
 @router.get("/intervenciones", response_model=Rep02Out)
 def alias_reporte_intervenciones(
+    request: Request,
     desde: str | None = None,
     hasta: str | None = None,
     canal_contacto: str | None = None,
@@ -122,13 +94,14 @@ def alias_reporte_intervenciones(
     db: Session = Depends(get_db),
 ):
     return obtener_rep02(
+        request=request,
         desde=desde,
         hasta=hasta,
         canal_contacto=canal_contacto,
         nivel_riesgo=nivel_riesgo,
         especialidad=especialidad,
         formato=formato,
-        _=usuario,
+        usuario=usuario,
         db=db,
     )
 

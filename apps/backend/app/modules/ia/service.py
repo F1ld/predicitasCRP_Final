@@ -20,6 +20,10 @@ from app.modules.ia.schemas import (
 ESTADOS_ELEGIBLES_PREDICCION = {"RECIBIDA", "CONFIRMADA", "REPROGRAMADA"}
 
 
+def listar_predicciones_cita(db: Session, id_cita: int) -> list[PrediccionIAOut]:
+    return [PrediccionIAOut.model_validate(p) for p in repository.listar_por_cita(db, id_cita)]
+
+
 def _cita_a_dict_features(cita: Cita) -> dict:
     return {
         "especialidad": cita.especialidad,
