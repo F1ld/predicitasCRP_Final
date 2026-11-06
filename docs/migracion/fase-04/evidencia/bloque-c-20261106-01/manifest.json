@@ -1,0 +1,30 @@
+{
+  "run_id": "bloque-c-20261106-01",
+  "note": "Resultados del árbol con hashes; sin commit automático",
+  "files": [
+    {
+      "name": "actual_completo.xml",
+      "sha256": "037e4d9d09e86d2b519de2e0d6bd0f315d01c7512a54d8d19f104af0284f730b"
+    },
+    {
+      "name": "actual_diagnostico.xml",
+      "sha256": "5ba2b3fc78f6cb2f0c4529dbd5fc19b61c5d2dec5389df435263738017c8c8f9"
+    },
+    {
+      "name": "baseline_completo.xml",
+      "sha256": "037e4d9d09e86d2b519de2e0d6bd0f315d01c7512a54d8d19f104af0284f730b"
+    },
+    {
+      "name": "baseline_diagnostico.xml",
+      "sha256": "d45bb8f038ded82404a9d05e13703c8b545789f083b38102856a0619a8116829"
+    },
+    {
+      "name": "c_focalizadas.xml",
+      "sha256": "a87188df61c8e15a1b9da2599939a959e9f2ca6e6d6300f2456fbff50db614e5"
+    },
+    {
+      "name": "resumen.json",
+      "sha256": "5bbe329cf58f13ccbb2217670f8575b1ecf480cd2056cbde2893931185e4afc0"
+    }
+  ]
+}

@@ -76,9 +76,11 @@ El commit de resultados solo publica documentación/evidencia; no cambia las fue
 
 ---
 
-## Siguiente entrega: Bloque C — Routers y pendientes S-03 / S-08
+## Bloque C — Routers y pendientes S-03 / S-08
 
-**C EN CURSO (06/11/2026):** [alcance y criterios congelados](C.md). Incluye la corrección de forwarding S-05 al extraer REP-02. No declara fase 4 completa ni adelanta concurrencia/build final del D.
+**C implementado y validado (06/11/2026):** commit de código `d7c7f45`, ejecución `bloque-c-20261106-01`, baseline B.1 `6da1c49`. [Alcance y criterios congelados](C.md). Incluye corrección de forwarding S-05 al extraer REP-02. **Fase 4 sigue EN CURSO**, pendiente D.
+
+Alcance ejecutado, conservado para trazabilidad:
 
 1. Retirar acceso directo a persistencia y llamadas `db.commit()` de routers:
    - `apps/backend/app/modules/lista_espera/router.py`: líneas 226 (`registrar_oferta`), 242 (`rechazo_oferta`), 258 (`desistimiento_oferta`).
@@ -86,6 +88,34 @@ El commit de resultados solo publica documentación/evidencia; no cambia las fue
 2. Mover lógica de ofertas, rechazo y desistimiento (S-08) a casos de uso/servicios propios en `lista_espera`.
 3. Corregir prueba histórica S-03 (`tests/test_reasignacion.py:52`) para consumir el objeto paginado `PaginaCuposLiberadosOut` sin debilitar aserciones.
 4. Cobertura con pruebas específicas para cada operación de router desacoplada.
+
+### Resultado C
+
+- Todos los routers quedan sin imports de modelos/repositorios, SQL, lecturas ORM directas ni commits. Los servicios conservan los filtros/paginación históricos (no se endureció S-12).
+- S-08: oferta/rechazo/sin respuesta/asignación auditables en la bitácora existente, con locks cupo → candidato, matching y un commit por caso de uso. Detalle y oferta vigente/historial se proyectan de eventos con referencia al ID de oferta; no se creó tabla ni se repararon datos legacy.
+- S-03: el recorrido completo de reasignación pasa usando `items`, reloj fijo y rechazo 400 `SOLICITUD_INVALIDA` de confirmación falsa (caracterizado en baseline). Se conservan y amplían las comprobaciones de no escrituras, matching, prioridades, confirmación humana y doble asignación secuencial.
+- S-05: TypeError del alias reproducido sin BD en baseline y corregido por forwarding de Request/usuario. JSON/CSV/OOXML de REP-02 y roles verificados. REP-03 xlsx (S-06) no se cambió.
+
+| Verificación C | Resultado |
+|---|---|
+| Diagnóstico backend baseline / actual | **303 aprobadas + 1 fallo → 341 aprobadas, 0 fallos** |
+| Casos anteriores | Único cambio permitido: S-03 failure → passed; ningún otro caso retirado/cambiado de estado |
+| Nuevas pruebas | **37 aprobadas** |
+| Focalizadas C + recorrido S-03 | **38/38 aprobadas** |
+| Cobertura aplicación | **91,15 %**, umbral 75 % conservado |
+| Suite completa | Mismo error previo de colección S-02; **no es suite verde** |
+| OpenAPI / DDL / modelo / predicciones | Idénticos |
+| Rollback con fallo tras flush | Oferta, cierre y exportación observados desde conexiones independientes |
+| Archivos protegidos / laboratorio | `.env`, modelos, CSV, revisiones intactos; laboratorio nuevo detenido y preservado |
+| Frontend / concurrencia real / imagen final fase 4 | No reejecutado / pendientes del D |
+
+[Resumen y fuentes ejecutadas](evidencia/bloque-c-20261106-01/resumen.json), [JUnit focalizado](evidencia/bloque-c-20261106-01/c_focalizadas.xml) y [manifiesto sanitizado](evidencia/bloque-c-20261106-01/manifest.json). El commit de resultados no modifica las fuentes probadas. Verificación de paquete, sin repetir pruebas ni certificar un árbol posterior:
+
+```powershell
+python -B docs/migracion/fase-04/publicar.py --run-id bloque-c-20261106-01 --verify-only
+```
+
+**Límites operativos:** EN_OFERTA legacy sin candidato en bitácora no se cierra adivinando identidad (409 `OFERTA_NO_REGISTRADA`); no se modifica masivamente. El endpoint histórico de desistimiento cierra por SIN_RESPUESTA, no da de baja global al candidato. La baja global sigue por PATCH de lista de espera. No se añadieron rutas ni ajustes frontend para ocultar divergencias previas.
 
 ---
 

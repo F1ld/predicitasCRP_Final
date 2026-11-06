@@ -1,27 +1,27 @@
-# Siguiente bloque de fase 4 — no implementado todavía
+# Siguiente bloque de fase 4 — D, todavía no implementado
 
-Orden propuesto a partir del árbol tras el bloque A:
+A, B, B.1 y C están registrados. La ejecución vigente de C es
+`bloque-c-20261106-01`: diagnóstico 341/0, S-03 corregido y S-08 backend HTTP
+implementado. Esto **no cierra fase 4** ni certifica carreras concurrentes.
 
-1. Caracterizar por separado POST y PATCH legacy de Intervenciones: respuesta
-   sin transición frente a respuesta con confirmación/liberación. Preservar
-   consentimiento, opt-out y las diferencias documentadas; no endurecerlas
-   silenciosamente durante la extracción de workflows.
-2. Definir snapshots/operaciones públicas de Citas e Intervenciones y creación
-   componible de cupo en Lista de Espera. No exportar repositorios completos.
-3. Sacar la coordinación multímódulo de `citas/service.py` e
-   `intervenciones/service.py` a workflows. Una transición efectiva produce
-   un solo historial; cita, respuesta, cupo y auditoría comparten transacción.
-4. Establecer orden de locks consistente (incluida recarga de estado al esperar
-   un lock); probar solicitudes simultáneas, no solo sesiones secuenciales.
-5. Extraer oferta/rechazo/desistimiento de `lista_espera/router.py`, con
-   estados, compatibilidad, eventos e historial (S-08). El diagnóstico conserva
-   S-03: la prueba antigua de reasignación trata una página como si fuera lista.
-6. Mover lecturas de repositorio y `db.get` fuera de routers de Intervenciones,
-   Lista de Espera e IA, y el commit de exportación de Reportes a su caso de uso.
-7. Separar consultas compuestas de lectura, documentar excepciones autorizadas
-   y ampliar los tests de arquitectura sin habilitar escrituras ajenas.
+Pendiente D:
 
-Los tests nuevos del bloque A no se presentan como prueba de estas tareas. No
-es suficiente añadir `public.py` que reexporte modelos privados y dejar intactas
-las escrituras cruzadas. El cierre completo exige PostgreSQL real, rollback tras
-flush y ausencia de doble liberación/reasignación bajo concurrencia.
+1. Auditar orden global de locks y recarga de estado después de esperar locks;
+   no basta haber añadido `with_for_update` ni ejecutar dos llamadas secuenciales.
+2. Probar solicitudes concurrentes reales de liberación/reasignación/ofertas en
+   PostgreSQL aislado: una única asignación efectiva, sin historiales/eventos
+   duplicados ni transacciones parcialmente persistidas.
+3. Ampliar rollback y límites de composición a todos los workflows multímódulo,
+   con observaciones independientes. Conservar las pruebas de identidad y B.1/C.
+4. Revisar las tareas restantes del plan: adaptadores de lectura compuesta,
+   excepciones de composición/reporting explícitas, ausencia de ciclos y APIs
+   internas permitidas. No confundir routers limpios con encapsulación total.
+5. Construir la imagen final de fase 4, comprobar el contenido empaquetado sin
+   bind de fuentes y repetir paridad OpenAPI/DDL/predicciones, regresión y cobertura.
+6. Registrar código y evidencia por separado, detener laboratorio conservando
+   recursos y verificar el paquete desde un clon limpio antes del cierre formal.
+
+S-02 de colección IA conserva su gate de fase 7; no declarar suite completa
+verde por aprobar el diagnóstico. Frontend/E2E visual y S-06 no fueron certificados
+en C. No iniciar fase 5 ni tocar esquema/modelo/credenciales/principal sin el alcance
+y las aprobaciones correspondientes.

@@ -17,6 +17,10 @@ Baseline explícito: `6da1c49` (entrega B.1). Implementación y pruebas registra
 
 ## Ejecución
 
+### Resultado registrado (06/11/2026)
+
+Código probado `d7c7f45d75ace4385a08cb2815a4533a06d757e7`, ejecución `bloque-c-20261106-01`, baseline `6da1c49`. **341 aprobadas/0 fallos** en diagnóstico frente a 303/1; **37 casos nuevos** y S-03 corregido, sin otros cambios de estado. **38/38 focalizadas**, cobertura **91,15 %**. Suite completa conserva S-02 de colección y no se declara verde. Paridad exacta API/DDL/modelo/predicciones; rollback de oferta/cierre/exportación observado desde otra conexión. Archivos protegidos intactos y laboratorio detenido. [Manifiesto público](evidencia/bloque-c-20261106-01/manifest.json). Falta D para cierre de fase 4.
+
 La imagen de dependencias de fase 3 se usa por su ID inmutable con fuentes RO. No equivale al nuevo build empaquetado final de fase 4 (D).
 
 ```powershell
