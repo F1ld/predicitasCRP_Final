@@ -22,6 +22,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 BASELINE = "af13b3b"
+A_BASELINE = "3e561b2"
 BACKEND_IMAGE = "sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d"
 
 
@@ -94,9 +95,12 @@ def verify(target, run_id):
     print("Integridad comprobada; no es una nueva ejecución de pruebas")
 
 
-def execute(raw, run_id):
+def execute(raw, run_id, scope="correccion"):
     assert not output(["git", "status", "--porcelain"]), "Registrar implementación antes de validar"
     assert not output(["git", "diff", BASELINE, "--", "apps/backend", "apps/frontend", "contracts"]), "Baseline operativo alterado"
+    if scope == "A":
+        assert not output(["git", "diff", A_BASELINE, "--", "apps/ia/app", "apps/ia/manifests",
+            "apps/ia/Dockerfile", "apps/ia/requirements.txt"]), "Bloque A no autoriza alterar serving, modelo aprobado o dependencias"
     commit = output(["git", "rev-parse", "HEAD"])
     before, preserved = sources(), protected()
     raw.mkdir(parents=True, exist_ok=False)
@@ -130,7 +134,7 @@ def execute(raw, run_id):
         "--mount", f"type=bind,source={HERE},target=/checks,readonly", image]
     # Comprobar fuentes del paquete, incluyendo contratos, sin montar el backend.
     code = """import hashlib,json; from pathlib import Path
-paths=[p for folder in ('/app/app','/app/tests','/app/manifests','/contracts') for p in Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p)]
+paths=[p for folder in ('/app/app','/app/tests','/app/manifests','/app/training','/contracts') for p in Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p)]
 paths += [Path('/app/requirements.txt'),Path('/app/Dockerfile'),Path('/app/.dockerignore')]
 print(json.dumps({str(p):hashlib.sha256(p.read_bytes().replace(b'\\r\\n',b'\\n')).hexdigest() for p in paths}))"""
     packaged = json.loads(output([*base, "python", "-c", code]))
@@ -144,8 +148,9 @@ print(json.dumps({str(p):hashlib.sha256(p.read_bytes().replace(b'\\r\\n',b'\\n')
             continue
         expected[key] = hashlib.sha256((ROOT / name).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     assert packaged == expected, "El paquete no coincide con las fuentes registradas"
+    coverage_args = ["--cov=app", *(["--cov=training"] if scope == "A" else [])]
     action(raw, "pytest", [*base, "python", "-m", "pytest", "tests", "-q", "--junitxml=/results/pytest.xml",
-        "--cov=app", "--cov-fail-under=80", "--cov-report=json:/results/coverage.json"])
+        *coverage_args, "--cov-fail-under=80", "--cov-report=json:/results/coverage.json"])
     action(raw, "runtime", [*base, "python", "/checks/probar_runtime.py", "/results/runtime.json"])
     # Paridad diferencial contra el backend preservado, sin red ni conexión real a BD.
     golden = read(ROOT / "docs/migracion/fase-00/ia_baseline.json")["predictions"]
@@ -197,22 +202,35 @@ print(json.dumps(out))"""
         "phase0_cases": len(golden), "original_suite_cases": len(frozen_suite), "generated_seed": 42,
         "all_fields_equal": True, "levels_observed": sorted({p["nivel_riesgo"] for p in new}),
         "cases_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(), "backend_image": BACKEND_IMAGE})
+    training = None
+    if scope == "A":
+        from entrenamiento_a import validate
+        training = validate(raw, base)
     assert sources() == before and protected() == preserved
     assert not output(["git", "status", "--porcelain"])
     tests = junit(raw / "pytest.xml")
     assert set(tests) == {"passed"}
     coverage = read(raw / "coverage.json")["totals"]["percent_covered"]
     assert coverage >= 80
+    training_coverage = None
+    if scope == "A":
+        summaries = [value["summary"] for name, value in read(raw / "coverage.json")["files"].items()
+            if name.replace("\\", "/").startswith("training/")]
+        assert summaries
+        training_coverage = 100 * sum(s["covered_lines"] for s in summaries) / sum(s["num_statements"] for s in summaries)
+        assert training_coverage >= 80
     runtime = read(raw / "runtime.json")
     openapi = runtime.pop("openapi")
     write(raw / "openapi.json", openapi)
     freeze = output([*base, "python", "-m", "pip", "freeze", "--all"]).splitlines()
     write(raw / "resumen.json", {"run_id": run_id, "timestamp": datetime.now(timezone.utc).isoformat(),
-        "commit_tested": commit, "baseline": BASELINE, "image_id": image,
+        "commit_tested": commit, "baseline": BASELINE, "image_id": image, "block": scope,
         "tests": dict(tests), "coverage_percent": coverage, "parity": read(raw / "parity.json"),
         "runtime": runtime, "packaged_sources_match": True, "source_files": before,
         "backend_frontend_contracts_unchanged": True, "protected_unchanged": True,
-        "pip_freeze": freeze, "phase_status": "EN CURSO; correccion validada no equivale a cerrar checklist original"})
+        "pip_freeze": freeze, "training_a": training, "training_coverage_percent": training_coverage,
+        "serving_baseline_unchanged": A_BASELINE if scope == "A" else None,
+        "phase_status": "EN CURSO; validacion de bloque no equivale a cerrar checklist original"})
     print(f"Corrección validada: {tests['passed']} pruebas, cobertura {coverage:.2f}%, {len(cases)} casos diferenciales")
 
 
@@ -224,6 +242,10 @@ def publish(raw, target, run_id):
     assert summary["parity"]["all_fields_equal"] and summary["runtime"]["real_http"]
     for name in ("runner_tests", "build", "pytest", "runtime"):
         assert read(raw / f"{name}.action.json")["exit_code"] == 0
+    if summary.get("block") == "A":
+        assert summary["training_coverage_percent"] >= 80 and summary["training_a"]["same_raw_probabilities_all_1000_both_models"]
+        for name in ("training_reference", "training_candidate"):
+            assert read(raw / f"{name}.action.json")["exit_code"] == 0
     target.mkdir(parents=True, exist_ok=False)
     with (target / ".gitattributes").open("x", encoding="utf-8", newline="\n") as stream:
         stream.write("*.json text eol=lf\n*.xml text eol=lf\n")
@@ -244,6 +266,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("ejecutar", "publicar", "verificar"))
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--scope", choices=("correccion", "A"), default="correccion")
     args = parser.parse_args()
     if not re.fullmatch(r"ia-[a-z0-9-]{3,36}", args.run_id):
         raise ValueError("run-id inválido")
@@ -252,7 +275,7 @@ def main():
     if args.action == "verificar":
         verify(target, args.run_id)
     elif args.action == "ejecutar":
-        execute(raw, args.run_id)
+        execute(raw, args.run_id, args.scope)
     else:
         publish(raw, target, args.run_id)
 
