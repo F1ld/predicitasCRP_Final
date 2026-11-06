@@ -10,11 +10,10 @@ from app.core.database import get_db
 from app.core.dominio import ESPECIALIDADES, ESTADOS_CITA, NIVELES_RIESGO
 from app.core.errores import ArchivoInvalido
 from app.core.http import ip_cliente
-from app.modules.auth.dependencies import requiere_roles
-from app.modules.auth.models import Usuario
+from app.core.reloj import reloj
+from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.citas import service
 from app.modules.citas.importer import importar_citas
-from app.modules.citas.reglas import ahora_lima
 from app.modules.citas.schemas import (CambioEstadoIn, CatalogosOut, CheckInIn, CheckInOut,
                                        CitaDetalleOut, CitaRegistroIn, PaginaCitasOut,
                                        ResultadoImportacionOut)
@@ -25,11 +24,6 @@ LECTORES = ("ADMINISTRADOR", "RECEPCION", "TECNICO_IA")
 ESCRITORES = ("ADMINISTRADOR", "RECEPCION")
 MAX_BYTES = 2 * 1024 * 1024
 MAX_FILAS = 5000
-
-
-def reloj() -> datetime:
-    """«Ahora» en Lima. Inyectable: las pruebas lo sustituyen con dependency_overrides."""
-    return ahora_lima()
 
 
 @router.get("", response_model=PaginaCitasOut)

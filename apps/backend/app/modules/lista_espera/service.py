@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.core.errores import ConflictoDeNegocio, NoEncontrado, ReglaDeNegocioInvalida
-from app.modules.auditoria.service import registrar_evento
-from app.modules.auth.models import Usuario
+from app.modules.auditoria.public import registrar_evento
+from app.modules.auth.public import Principal as Usuario
 from app.modules.citas.models import Cita
 from app.modules.citas.reglas import LIMA
 from app.modules.lista_espera import repository

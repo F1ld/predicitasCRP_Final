@@ -3,8 +3,8 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 
 from app.core.errores import Conflicto, NoEncontrado, TransicionInvalida, Validacion
-from app.modules.auditoria.service import registrar_evento
-from app.modules.auth.models import Usuario
+from app.modules.auditoria.public import registrar_evento
+from app.modules.auth.public import Principal as Usuario
 from app.modules.citas.models import Cita, HistorialEstadoCita
 from app.modules.citas.reglas import (
     LIMA,

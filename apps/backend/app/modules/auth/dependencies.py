@@ -11,17 +11,17 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.errores import SinPermiso
 from app.modules.auth import service
-from app.modules.auth.models import Usuario
+from app.modules.usuarios.public import Identidad as Principal
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
-def usuario_actual(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Usuario:
+def usuario_actual(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Principal:
     return service.usuario_de_token(db, token)
 
 
 def requiere_roles(*roles: str):
-    def _dependencia(usuario: Usuario = Depends(usuario_actual)) -> Usuario:
+    def _dependencia(usuario: Principal = Depends(usuario_actual)) -> Principal:
         if usuario.rol not in roles:
             raise SinPermiso("No tiene permisos para esta operación")
         return usuario

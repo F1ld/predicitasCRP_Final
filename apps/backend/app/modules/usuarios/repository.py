@@ -1,8 +1,16 @@
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.modules.auth.models import Usuario
+from app.modules.usuarios.models import Usuario
 from app.modules.usuarios.schemas import FiltrosUsuarios
+
+
+def por_correo(db: Session, correo: str) -> Usuario | None:
+    return db.scalar(select(Usuario).where(func.lower(Usuario.correo_institucional) == correo.strip().lower()))
+
+
+def por_id(db: Session, id_usuario: int) -> Usuario | None:
+    return db.get(Usuario, id_usuario)
 
 
 def listar(db: Session, f: FiltrosUsuarios) -> tuple[int, list[Usuario]]:

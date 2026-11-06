@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.errores import NoEncontrado
 from app.core.http import ip_cliente
-from app.modules.auth.dependencies import requiere_roles
-from app.modules.auth.models import Usuario
+from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.lista_espera import repository, service
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera
 from app.modules.lista_espera.schemas import (

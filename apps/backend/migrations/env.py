@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import app.core.models  # noqa: F401  (registra todos los modelos)
+import app.bootstrap.models  # noqa: F401  (registra todos los modelos)
 from app.core.config import get_settings
 from app.core.database import Base
 

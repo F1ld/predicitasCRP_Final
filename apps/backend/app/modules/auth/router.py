@@ -6,8 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.http import ip_cliente
 from app.modules.auth import service
-from app.modules.auth.dependencies import usuario_actual
-from app.modules.auth.models import Usuario
+from app.modules.auth.public import Principal, usuario_actual
 from app.modules.auth.schemas import CambioClaveIn, TokenOut, UsuarioOut
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
@@ -25,20 +24,20 @@ def login(
 
 
 @router.get("/me", response_model=UsuarioOut)
-def me(usuario: Usuario = Depends(usuario_actual)):
+def me(usuario: Principal = Depends(usuario_actual)):
     """M01-E02."""
     return usuario
 
 
 @router.post("/logout", status_code=204)
-def logout(request: Request, usuario: Usuario = Depends(usuario_actual), db: Session = Depends(get_db)):
+def logout(request: Request, usuario: Principal = Depends(usuario_actual), db: Session = Depends(get_db)):
     """M01-E03 · RF-002, RNF-004: los tokens emitidos antes dejan de valer."""
     service.cerrar_sesion(db, usuario, ip_cliente(request))
     return Response(status_code=204)
 
 
 @router.post("/renovar", response_model=TokenOut)
-def renovar(usuario: Usuario = Depends(usuario_actual)):
+def renovar(usuario: Principal = Depends(usuario_actual)):
     """M01-E04 · RNF-004: token nuevo; el anterior vale hasta su exp."""
     token, segundos = service.renovar(usuario)
     return TokenOut(access_token=token, expires_in=segundos)
@@ -48,7 +47,7 @@ def renovar(usuario: Usuario = Depends(usuario_actual)):
 def cambiar_clave(
     datos: CambioClaveIn,
     request: Request,
-    usuario: Usuario = Depends(usuario_actual),
+    usuario: Principal = Depends(usuario_actual),
     db: Session = Depends(get_db),
 ):
     """M01-E05 · RF-008: invalida los tokens anteriores y entrega uno nuevo."""

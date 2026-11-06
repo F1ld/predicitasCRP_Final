@@ -7,10 +7,8 @@ from app.core.config import get_settings
 from app.core.database import get_db
 from app.core.errores import NoEncontrado, Validacion
 from app.core.http import ip_cliente
-from app.modules.auth.dependencies import requiere_roles
-from app.modules.auth.models import Usuario
-from app.modules.citas.reglas import LIMA
-from app.modules.citas.router import reloj
+from app.core.reloj import LIMA, reloj
+from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.intervenciones import reglas, repository, service
 from app.modules.intervenciones.models import Intervencion
 from app.modules.intervenciones.schemas import (

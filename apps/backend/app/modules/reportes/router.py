@@ -5,9 +5,8 @@ from app.core.database import get_db
 from app.core.errores import Validacion
 from app.core.exportacion import responder
 from app.core.http import ip_cliente
-from app.modules.auditoria.service import registrar_evento
-from app.modules.auth.dependencies import requiere_roles
-from app.modules.auth.models import Usuario
+from app.modules.auditoria.public import registrar_evento
+from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.reportes import service
 from app.modules.reportes.schemas import Rep02Out, Rep03Out
 

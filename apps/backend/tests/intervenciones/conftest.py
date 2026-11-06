@@ -8,7 +8,7 @@ from app.main import app
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
 from app.modules.citas.reglas import LIMA
-from app.modules.citas.router import reloj
+from app.core.reloj import reloj
 from app.modules.ia.models import PrediccionIA
 from app.modules.intervenciones.models import Intervencion
 from app.modules.intervenciones.router import modo_sombra

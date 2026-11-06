@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.core.database import engine, get_db
 from app.core.security import hash_password
 from app.main import app
-from app.modules.auth.models import Usuario
+from app.modules.usuarios.models import Usuario
 
 CLAVE = "ClaveDePrueba123"
 

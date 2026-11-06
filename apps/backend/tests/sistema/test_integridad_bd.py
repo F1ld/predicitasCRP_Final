@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from sqlalchemy.exc import DBAPIError, IntegrityError
 
-import app.core.models  # noqa: F401
+import app.bootstrap.models  # noqa: F401
 from app.core.database import SessionLocal
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas.models import Cita

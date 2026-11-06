@@ -1,4 +1,4 @@
-import app.core.models  # noqa: F401
+import app.bootstrap.models  # noqa: F401
 from app.core.database import Base
 
 TABLAS_ESPERADAS = {

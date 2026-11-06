@@ -3,7 +3,7 @@ from datetime import timedelta
 
 import pytest
 
-from app.modules.auth import reloj as reloj_mod
+from app.core import reloj as reloj_mod
 
 
 class RelojDePrueba:

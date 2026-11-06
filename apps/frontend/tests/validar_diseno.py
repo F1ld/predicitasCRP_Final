@@ -78,7 +78,7 @@ def main():
     from app.core.database import engine, get_db
     from app.core.security import hash_password
     from app.main import app
-    from app.modules.auth.models import Usuario
+    from app.modules.usuarios.models import Usuario
     from app.modules.citas.importer import importar_citas
     from app.modules.citas.models import Cita
     from app.modules.citas.synthetic import generar_citas

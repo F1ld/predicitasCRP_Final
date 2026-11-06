@@ -4,12 +4,11 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.http import ip_cliente
-from app.modules.auth.dependencies import requiere_roles
-from app.modules.auth.models import Usuario
-from app.modules.auth.schemas import UsuarioOut
+from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.usuarios import service
 from app.modules.usuarios.schemas import (
     ClaveTemporalOut, EstadoIn, FiltrosUsuarios, PaginaUsuariosOut, Rol, UsuarioCrearIn, UsuarioEditarIn,
+    UsuarioOut,
 )
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])

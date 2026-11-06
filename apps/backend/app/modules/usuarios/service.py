@@ -12,12 +12,12 @@ from sqlalchemy.orm import Session
 
 from app.core.errores import Conflicto, NoEncontrado
 from app.core.security import hash_password
-from app.modules.auth import reloj
-from app.modules.auth import repository as auth_repo
-from app.modules.auth.models import Usuario
-from app.modules.auth.schemas import validar_clave
-from app.modules.auth.service import auditar
+from app.core import reloj
+from app.modules.auditoria.public import auditar
 from app.modules.usuarios import repository
+from app.modules.usuarios.contratos import Identidad
+from app.modules.usuarios.models import Usuario
+from app.modules.usuarios.politicas import validar_clave
 from app.modules.usuarios.schemas import (
     EstadoIn, FiltrosUsuarios, UsuarioCrearIn, UsuarioEditarIn,
 )
@@ -34,7 +34,7 @@ def foto(u: Usuario) -> dict:
     }
 
 
-def _auditar(db, actor: Usuario, ip: str, accion: str, objetivo: Usuario, momento,
+def _auditar(db, actor: Identidad, ip: str, accion: str, objetivo: Usuario, momento,
              antes: dict | None = None, despues: dict | None = None) -> None:
     auditar(db, momento, modulo="USUARIOS", accion=accion, entidad_afectada="usuarios",
             direccion_ip=ip, id_usuario=actor.id_usuario, id_entidad=objetivo.id_usuario,
@@ -43,7 +43,7 @@ def _auditar(db, actor: Usuario, ip: str, accion: str, objetivo: Usuario, moment
 
 def _obtener(db: Session, id_usuario: int, *, bloquear: bool = False) -> Usuario:
     usuario = (repository.por_id_para_actualizar(db, id_usuario) if bloquear
-               else auth_repo.por_id(db, id_usuario))
+               else repository.por_id(db, id_usuario))
     if usuario is None:
         raise NoEncontrado(f"No existe el usuario {id_usuario}")
     return usuario
@@ -64,10 +64,10 @@ def obtener(db: Session, id_usuario: int) -> Usuario:
     return _obtener(db, id_usuario)
 
 
-def crear(db: Session, datos: UsuarioCrearIn, actor: Usuario, ip: str) -> Usuario:
+def crear(db: Session, datos: UsuarioCrearIn, actor: Identidad, ip: str) -> Usuario:
     """RF-004: queda activo; correo en minúsculas y único sin distinguir mayúsculas."""
     duplicado = Conflicto("Ya existe un usuario con ese correo institucional", codigo="CORREO_DUPLICADO")
-    if auth_repo.por_correo(db, datos.correo_institucional) is not None:
+    if repository.por_correo(db, datos.correo_institucional) is not None:
         raise duplicado
     momento = reloj.ahora()
     usuario = Usuario(nombre_completo=datos.nombre_completo, correo_institucional=datos.correo_institucional,
@@ -84,7 +84,7 @@ def crear(db: Session, datos: UsuarioCrearIn, actor: Usuario, ip: str) -> Usuari
     return usuario
 
 
-def editar(db: Session, id_usuario: int, datos: UsuarioEditarIn, actor: Usuario, ip: str) -> Usuario:
+def editar(db: Session, id_usuario: int, datos: UsuarioEditarIn, actor: Identidad, ip: str) -> Usuario:
     """RF-005: nombre y rol. Cambiar el rol invalida las sesiones del usuario."""
     usuario = _obtener(db, id_usuario, bloquear=True)
     antes = foto(usuario)
@@ -107,7 +107,7 @@ def editar(db: Session, id_usuario: int, datos: UsuarioEditarIn, actor: Usuario,
     return usuario
 
 
-def cambiar_estado(db: Session, id_usuario: int, datos: EstadoIn, actor: Usuario, ip: str) -> Usuario:
+def cambiar_estado(db: Session, id_usuario: int, datos: EstadoIn, actor: Identidad, ip: str) -> Usuario:
     """RF-006: baja lógica. Nunca uno mismo ni el último ADMINISTRADOR activo."""
     usuario = _obtener(db, id_usuario, bloquear=True)
     if usuario.activo == datos.activo:
@@ -137,7 +137,7 @@ def generar_clave_temporal() -> str:
             continue
 
 
-def restablecer_acceso(db: Session, id_usuario: int, actor: Usuario, ip: str) -> dict:
+def restablecer_acceso(db: Session, id_usuario: int, actor: Identidad, ip: str) -> dict:
     """RF-008: la clave temporal se devuelve una sola vez; se guarda solo su hash."""
     usuario = _obtener(db, id_usuario, bloquear=True)
     clave = generar_clave_temporal()

@@ -6,7 +6,7 @@ from sqlalchemy import select, update
 
 from app.core.errores import Conflicto
 from app.modules.auditoria.models import AuditoriaEvento
-from app.modules.auth.models import Usuario
+from app.modules.usuarios.models import Usuario
 from app.modules.usuarios import service
 from app.modules.usuarios.schemas import EstadoIn, UsuarioEditarIn
 from tests.conftest import CLAVE, cabecera

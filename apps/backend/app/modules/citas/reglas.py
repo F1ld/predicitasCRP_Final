@@ -1,9 +1,7 @@
 ﻿from datetime import datetime
-from zoneinfo import ZoneInfo
 
 from app.core.dominio import DIAS_SEMANA
-
-LIMA = ZoneInfo("America/Lima")
+from app.core.reloj import LIMA, ahora_lima, fecha_lima  # reexport histórico
 
 # Estados con los que puede ingresar una cita al piloto. LIBERADA queda fuera:
 # exige un cupo liberado formal (flujo de Intervención).
@@ -48,15 +46,6 @@ class FechasInconsistentes(ValueError):
 
 class FechaEnDomingo(ValueError):
     """La cita cae en domingo, fuera de los días del piloto."""
-
-
-def ahora_lima() -> datetime:
-    """Reloj de la aplicación en hora de Lima. Las pruebas lo sustituyen (router.reloj)."""
-    return datetime.now(LIMA)
-
-
-def fecha_lima(momento: datetime):
-    return momento.astimezone(LIMA).date()
 
 
 def derivar_variables(fecha_hora_cita: datetime, fecha_registro_cita: datetime) -> dict:

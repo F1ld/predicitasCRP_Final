@@ -70,7 +70,7 @@ def test_token_sin_iat_o_de_usuario_inexistente_es_sesion_invalida(client, usuar
                          s.secret_key, algorithm=s.jwt_algorithm)
     r = client.get("/auth/me", headers={"Authorization": f"Bearer {sin_iat}"})
     assert _codigo(r) == "SESION_INVALIDA"
-    from app.modules.auth import reloj as reloj_mod
+    from app.core import reloj as reloj_mod
     fantasma, _ = tokens.crear_token(999999999, reloj_mod.ahora())
     r = client.get("/auth/me", headers={"Authorization": f"Bearer {fantasma}"})
     assert r.status_code == 401 and _codigo(r) == "SESION_INVALIDA"

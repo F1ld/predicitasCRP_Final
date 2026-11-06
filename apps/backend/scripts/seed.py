@@ -13,10 +13,10 @@ from datetime import date
 
 from sqlalchemy import func, select
 
-import app.core.models  # noqa: F401
+import app.bootstrap.models  # noqa: F401
 from app.core.database import SessionLocal
 from app.core.security import hash_password
-from app.modules.auth.models import Usuario
+from app.modules.usuarios.models import Usuario
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
 from app.modules.citas.synthetic import generar_citas

@@ -12,8 +12,8 @@ from app.core.dominio import (CANALES_ORIGEN, ESPECIALIDADES, ESTADOS_CITA, NIVE
                               TIPOS_PACIENTE)
 from app.core.errores import (Conflicto, FueraDePerimetro, NoEncontrado, TransicionInvalida,
                               Validacion)
-from app.modules.auditoria.service import registrar_evento
-from app.modules.auth.models import Usuario
+from app.modules.auditoria.public import registrar_evento
+from app.modules.auth.public import Principal as Usuario
 from app.modules.citas import repository
 from app.modules.citas.importer import completar_contadores, nueva_cita, validar_fila
 from app.modules.citas.models import Cita, HistorialEstadoCita

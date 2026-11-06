@@ -1,9 +1,23 @@
 """Esquemas de gestión de usuarios (contratos/modulo-01.json → M01-E06 a M01-E11, validaciones)."""
+from datetime import datetime
 from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, Field, StringConstraints
 
-from app.modules.auth.schemas import Clave, UsuarioOut
+from app.modules.usuarios.politicas import Clave
+
+
+class UsuarioOut(BaseModel):
+    """Nunca incluye password_hash (RNF-002)."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id_usuario: int
+    nombre_completo: str
+    correo_institucional: str
+    rol: str
+    activo: bool
+    creado_en: datetime
+    actualizado_en: datetime | None
 
 Rol = Literal["ADMINISTRADOR", "RECEPCION", "TECNICO_IA"]
 

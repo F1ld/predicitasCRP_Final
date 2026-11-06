@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from app.modules.auditoria.service import registrar_evento
+from app.modules.auditoria.public import registrar_evento
 from app.modules.citas import repository
 from app.modules.citas.models import Cita, HistorialEstadoCita
 from app.modules.citas.reglas import (ESTADOS_DESENLACE, ahora_lima, contar_previos,
