@@ -1,0 +1,30 @@
+{
+  "run_id": "bloque-b1-20261105-02",
+  "note": "Resultados del árbol con hashes; sin commit automático",
+  "files": [
+    {
+      "name": "actual_completo.xml",
+      "sha256": "037e4d9d09e86d2b519de2e0d6bd0f315d01c7512a54d8d19f104af0284f730b"
+    },
+    {
+      "name": "actual_diagnostico.xml",
+      "sha256": "d45bb8f038ded82404a9d05e13703c8b545789f083b38102856a0619a8116829"
+    },
+    {
+      "name": "b1_focalizadas.xml",
+      "sha256": "bcd666de5e0314094e972b5f9f95cad93bc2114f5fee25dfd1ab6b60858e4faf"
+    },
+    {
+      "name": "baseline_completo.xml",
+      "sha256": "037e4d9d09e86d2b519de2e0d6bd0f315d01c7512a54d8d19f104af0284f730b"
+    },
+    {
+      "name": "baseline_diagnostico.xml",
+      "sha256": "dcd51f14978bac8e4255df18714a52afc4d6d67488a90be9fa53de091bd018c2"
+    },
+    {
+      "name": "resumen.json",
+      "sha256": "4c4f4bbbbdc35cd72b089122ad0ab7ac2f00414d52b3ff1cea5e797da17fd47c"
+    }
+  ]
+}

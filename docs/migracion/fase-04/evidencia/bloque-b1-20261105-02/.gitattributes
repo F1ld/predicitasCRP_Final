@@ -1,0 +1,3 @@
+# Keep manifest hashes identical on Windows/Linux checkouts.
+*.json text eol=lf
+*.xml text eol=lf

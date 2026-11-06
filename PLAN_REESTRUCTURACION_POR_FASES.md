@@ -596,6 +596,8 @@ frontend no reejecutado. Ambos laboratorios detenidos; archivos protegidos intac
 Siguen pendientes contratos/workflows de negocio, routers sin SQL y concurrencia;
 **la fase 4 permanece EN CURSO**.
 
+**B.1 validado (05/11/2026), antes de C:** implementación `d59d290` y ajuste de fixture `6e7787c`; ejecución `bloque-b1-20261105-02`, baseline explícito del bloque B `2f95273`. Auditoría de liberación restaurada, reprogramación interna sin fecha rechazada, contratos por IDs/snapshots y sin fábrica ORM inyectable. **27/27 focalizadas**, diagnóstico **303/1** frente a **284/1**, mismos casos previos y 19 nuevos aprobados; cobertura **87,42 %**. API/DDL/predicciones/modelo idénticos; rollback tras flush de cupo comprobado desde otra conexión. S-02/S-03 siguen históricos. Archivos protegidos intactos, laboratorios nuevos detenidos y frontend no reejecutado. [Evidencia B.1](docs/migracion/fase-04/evidencia/bloque-b1-20261105-02/manifest.json), [alcance y límites](docs/migracion/fase-04/B1.md). Pendientes C/D; no iniciar fase 5.
+
 - [ ] Añadir contratos públicos por módulo y tests que prohíban imports a routers/repositorios/modelos privados ajenos, con excepciones explícitas de composición/reporting.
 - [x] Llevar reloj/zona horaria técnica a `core`, actualizar dependency overrides de pruebas y retirar dependencia de `intervenciones.router` hacia `citas.router`.
 - [x] Llevar registro global ORM a `bootstrap` y actualizar `main.py`, Alembic, scripts y tests; registrar todos los modelos antes de construir metadata.

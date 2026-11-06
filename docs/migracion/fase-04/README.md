@@ -22,7 +22,7 @@ revocación, timestamps y persistencia explícita de intentos fallidos.
 
 **Bloque B implementado y validado el 05/11/2026**, commit `fed8d2f`.
 
-**Revisión B.1 EN CURSO:** se detectaron cambios no deseados en auditoría, una brecha en `REPROGRAMADA` y contratos que devolvían ORM. Las cifras siguientes son las declaradas por la entrega original B, no evidencia nueva de B.1. [Alcance, criterios y procedimiento B.1](B1.md). No iniciar C hasta registrar la corrección y su validación.
+**B.1 corregido y validado:** código en `d59d290`, ajuste de fixture en `6e7787c`; ejecución vigente `bloque-b1-20261105-02`. Las cifras y descripciones del apartado B original se conservan como históricas y quedan complementadas por la corrección B.1 siguiente. [Alcance, criterios y procedimiento B.1](B1.md).
 
 ### Alcance ejecutado:
 1. **Contratos públicos formales creados:**
@@ -41,6 +41,38 @@ revocación, timestamps y persistencia explícita de intentos fallidos.
    - Diagnóstico backend: **284 aprobadas / 1 fallo previo conocido (S-03)**.
    - Cobertura global de backend: **87.08 %** (umbral de 75 % holgadamente cumplido).
    - Zero regresiones sobre endpoints HTTP y contratos existentes.
+
+---
+
+## B.1 — Correcciones de auditoría y contratos antes de C
+
+**Estado: validado; fase 4 completa sigue EN CURSO.** Baseline explícito `2f95273`, implementación probada `6e7787c0bce47bfd2d2e216b0de8c6b42cdda149`, imagen de dependencias por ID (fuentes montadas RO, no un build de entrega fase 4).
+
+- Restaurados los payloads de liberación del bloque A: ID real, evento también con cupo existente, campos de liberación explícita y orden de auditoría de cancelación.
+- `transicionar_cita_interno` rechaza `REPROGRAMADA` sin fecha antes de escribir. La reprogramación completa conserva su endpoint.
+- Los contratos de Citas, Cupos e Intervenciones retornan snapshots inmutables; las operaciones de transición reciben ID. Se retiraron `fabrica_cupo`, la autoimportación y los imports de ORM/reglas privados ajenos en los tres servicios.
+- Sin cambiar permisos, consentimiento, diferencias POST/PATCH, esquema, modelo ni S-02/S-03. Persisten las composiciones de lectura y tareas de C/D expresamente documentadas en [B1.md](B1.md).
+
+| Verificación B.1 | Resultado |
+|---|---|
+| Pruebas focalizadas (B + B.1) | **27/27 aprobadas**: 8 existentes + 19 nuevas |
+| Diagnóstico baseline B / actual B.1 | **284/1 → 303/1**, todos los casos/estados anteriores conservados |
+| Cobertura aplicación | **87,42 %**, sin rebajar umbral de 75 % |
+| Suite completa | Mismo error histórico de colección IA; no se declara verde |
+| API / DDL / modelo / predicciones | Paridad exacta con baseline |
+| Rollback tras flush de cupo | Cita, respuesta, cupo, historial y auditoría intactos desde otra conexión |
+| Identidad / login / bloqueo / contraseña | Comprobaciones independientes del bloque A repetidas y aprobadas |
+| Archivos protegidos | `.env`, modelos, CSV y revisiones existentes idénticos |
+| Laboratorios B.1 01 y 02 | Detenidos, recursos conservados; sin volúmenes originales |
+| Frontend / concurrencia | No reejecutado / pendiente del bloque D |
+
+[Resumen y fuentes probadas](evidencia/bloque-b1-20261105-02/resumen.json), [JUnit focalizado sanitizado](evidencia/bloque-b1-20261105-02/b1_focalizadas.xml) y [manifiesto](evidencia/bloque-b1-20261105-02/manifest.json). El intento 01 se conserva como fallido por la nueva prueba de ciclo de sesión; no se reutilizan sus resultados. Los crudos permanecen privados en runtime. Comprobar el paquete sin Docker ni secretos:
+
+```powershell
+python -B docs/migracion/fase-04/publicar.py --run-id bloque-b1-20261105-02 --verify-only
+```
+
+El commit de resultados solo publica documentación/evidencia; no cambia las fuentes probadas. `--verify-only` comprueba integridad del paquete, no reejecuta suites ni demuestra identidad de un árbol posterior.
 
 ---
 
