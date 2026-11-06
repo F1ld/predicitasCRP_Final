@@ -2,7 +2,7 @@
 
 Sin acceso a base de datos: se prueban solas y las usan el servicio y el repositorio.
 """
-from app.modules.citas.reglas import ESTADOS_ACTIVOS
+from app.modules.citas.public import ESTADOS_ACTIVOS
 
 # Riesgo que habilita el acompañamiento (RF-057). Nunca prioriza ni restringe la atención (RN12).
 NIVELES_ELEGIBLES = ("ALTO", "MEDIO")

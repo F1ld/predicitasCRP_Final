@@ -35,9 +35,14 @@ def main():
     assert not summary["changed_old_cases"] and set(summary["new_cases"].values()) == {"passed"}
     assert summary["coverage_percent"] >= 75 and summary["complete_collection_unchanged"]
     assert len(set(summary["complete_exit_codes"].values())) == 1
+    if "b1_rollback" in summary:
+        assert summary["b1_rollback"]["rollback_visible_from_independent_connection"]
     target.mkdir(parents=True, exist_ok=False)
     escribir(target / "resumen.json", summary)
-    for name in ("baseline_diagnostico", "actual_diagnostico", "baseline_completo", "actual_completo"):
+    names = ["baseline_diagnostico", "actual_diagnostico", "baseline_completo", "actual_completo"]
+    if "b1_rollback" in summary:
+        names.append("b1_focalizadas")
+    for name in names:
         original = raw / f"{name}.xml"
         root = ET.Element("testsuite")
         for case in ET.parse(original).iter("testcase"):

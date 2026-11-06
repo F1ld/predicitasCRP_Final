@@ -9,9 +9,10 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.core.errores import NoEncontrado
+from app.core.errores import NoEncontrado, TransicionInvalida
 from app.modules.auth.public import Principal as Usuario
 from app.modules.citas.models import Cita
+from app.modules.citas.reglas import ESTADOS_ACTIVOS, TRANSICIONES, puede_transicionar_a_liberada
 
 
 @dataclass(frozen=True)
@@ -26,21 +27,24 @@ class CitaConsulta:
     franja_horaria: str
 
 
-def obtener_cita_consulta(db: Session, id_cita: int) -> CitaConsulta | None:
+def _snapshot(cita: Cita) -> CitaConsulta:
+    return CitaConsulta(**{campo: getattr(cita, campo) for campo in CitaConsulta.__dataclass_fields__})
+
+
+def obtener_cita_consulta(db: Session, id_cita: int, *, bloquear: bool = False) -> CitaConsulta | None:
     """Consulta de lectura de una cita sin exponer la fila ORM mutada."""
-    cita = db.get(Cita, id_cita)
+    cita = db.get(Cita, id_cita, with_for_update=True) if bloquear else db.get(Cita, id_cita)
     if cita is None:
         return None
-    return CitaConsulta(
-        id_cita=cita.id_cita,
-        id_cita_externa=cita.id_cita_externa,
-        paciente_anon_id=cita.paciente_anon_id,
-        especialidad=cita.especialidad,
-        medico=cita.medico,
-        fecha_hora_cita=cita.fecha_hora_cita,
-        estado_actual=cita.estado_actual,
-        franja_horaria=cita.franja_horaria,
-    )
+    return _snapshot(cita)
+
+
+def permite_confirmacion_por_intervencion(estado: str) -> bool:
+    return "CONFIRMADA" in TRANSICIONES.get(estado, set())
+
+
+def permite_liberacion_por_intervencion(estado: str) -> bool:
+    return puede_transicionar_a_liberada(estado)
 
 
 def obtener_metadatos_cita_para_cupo(db: Session, id_cita: int) -> tuple[str, str] | None:
@@ -53,7 +57,7 @@ def obtener_metadatos_cita_para_cupo(db: Session, id_cita: int) -> tuple[str, st
 
 def transicionar_cita_interno(
     db: Session,
-    cita_o_id: Cita | int,
+    id_cita: int,
     estado_nuevo: str,
     *,
     usuario: Usuario,
@@ -61,19 +65,19 @@ def transicionar_cita_interno(
     motivo: str | None = None,
     extra_despues: dict | None = None,
     registrar_auditoria: bool = True,
-    with_for_update: bool = True,
-) -> Cita:
+) -> CitaConsulta:
     """Aplica una transición legal sobre la cita, agrega historial y audita.
 
     NO hace commit (RNF-014). El caso de uso coordinador es responsable de
     cerrar la transacción.
     """
-    if isinstance(cita_o_id, int):
-        cita = db.get(Cita, cita_o_id, with_for_update=with_for_update)
-        if cita is None:
-            raise NoEncontrado(f"No existe la cita {cita_o_id}")
-    else:
-        cita = cita_o_id
+    # Igual que el contrato histórico: reprogramar necesita fecha y variables
+    # derivadas; solo el caso de uso M02-E05 puede hacerlo.
+    if estado_nuevo == "REPROGRAMADA":
+        raise TransicionInvalida("REPROGRAMADA exige nueva_fecha_hora_cita: use POST /citas/{id_cita}/estado")
+    cita = db.get(Cita, id_cita, with_for_update=True)
+    if cita is None:
+        raise NoEncontrado(f"No existe la cita {id_cita}")
 
     from app.modules.citas.service import _aplicar_transicion, _foto
     _aplicar_transicion(
@@ -87,18 +91,17 @@ def transicionar_cita_interno(
         extra_despues=extra_despues,
         registrar_auditoria=registrar_auditoria,
     )
-    return cita
+    return _snapshot(cita)
 
 
 def transicionar(
     db: Session,
-    cita: Cita,
+    id_cita: int,
     estado_nuevo: str,
     *,
     usuario: Usuario,
     ip: str,
     motivo: str | None = None,
 ) -> None:
-    """Shim de compatibilidad con el servicio interno histórico (contratos/comun.json)."""
-    from app.modules.citas.service import transicionar as _transicionar
-    _transicionar(db, cita, estado_nuevo, usuario=usuario, ip=ip, motivo=motivo)
+    """Entrada pública por ID; el servicio interno conserva su contrato ORM histórico."""
+    transicionar_cita_interno(db, id_cita, estado_nuevo, usuario=usuario, ip=ip, motivo=motivo)

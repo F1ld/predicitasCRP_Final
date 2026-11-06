@@ -113,16 +113,24 @@ def verificar(meta):
     return info["State"]["Status"]
 
 
-def preparar(raw, run_id):
+def preparar(raw, run_id, baseline_ref="2f4140e", scope="A"):
     # Reservar primero identidad exclusiva; ante fallo se conserva todo para diagnóstico.
     raw.mkdir(parents=True, exist_ok=False)
-    commit = salida(["git", "rev-parse", "HEAD"], cwd=ROOT)
-    if commit != "2f4140e" and not commit.startswith("2f4140e"):
+    commit_tested = salida(["git", "rev-parse", "HEAD"], cwd=ROOT)
+    commit = salida(["git", "rev-parse", "--verify", baseline_ref + "^{commit}"], cwd=ROOT)
+    if scope == "A" and not commit_tested.startswith("2f4140e"):
         raise ValueError("Revisar nuevo punto de retorno antes de preparar otro laboratorio")
+    if scope == "B1":
+        if not commit.startswith("2f95273"):
+            raise ValueError("B.1 exige baseline explícito del bloque B: 2f95273")
+        if salida(["git", "status", "--porcelain"], cwd=ROOT):
+            raise ValueError("Registrar implementación antes de validar B.1")
+        if subprocess.run(["git", "merge-base", "--is-ancestor", commit, commit_tested], cwd=ROOT).returncode:
+            raise ValueError("Baseline no es ancestro del código probado")
     backup = ROOT / "backups" / f"fase4-{run_id}"
     backup.mkdir(parents=True, exist_ok=False)
     archive = backup / "codigo-previo.zip"
-    salida(["git", "archive", "--format=zip", f"--output={archive}", "HEAD"], cwd=ROOT)
+    salida(["git", "archive", "--format=zip", f"--output={archive}", commit], cwd=ROOT)
     source = backup / "baseline"
     with zipfile.ZipFile(archive) as bundle:
         for name in bundle.namelist():
@@ -140,6 +148,7 @@ def preparar(raw, run_id):
     salida(["icacls", str(private), "/inheritance:r", "/grant:r", f"{user}:(OI)(CI)F"])
     prefix = f"predicitas-fase4-{run_id}"
     meta = {"run_id": run_id, "commit_base": commit, "image_id": IMAGE, "db": prefix + "-db",
+            "commit_tested": commit_tested, "scope": scope,
             "database": DATABASE, "network": prefix + "-net", "volume": prefix + "-test-pgdata",
             "private_env": str(private / "backend.env"), "baseline_source": str(source),
             "archive_sha256": sha(archive), "protected_files": protegidos(),
@@ -193,7 +202,8 @@ def resumen(raw, meta):
     added = {name: state for name, state in new.items() if name not in old}
     complete_before, complete_after = casos(raw / "baseline_completo.xml"), casos(raw / "actual_completo.xml")
     public = {"run_id": meta["run_id"], "commit_base": meta["commit_base"], "image_id": IMAGE,
-              "scope": "Fase 4 bloque A; fase completa EN CURSO", "parity": parity,
+               "commit_tested": meta.get("commit_tested"),
+               "scope": f"Fase 4 bloque {meta.get('scope', 'A')}; fase completa EN CURSO", "parity": parity,
               "baseline": {state: list(old.values()).count(state) for state in set(old.values())},
               "actual": {state: list(new.values()).count(state) for state in set(new.values())},
               "changed_old_cases": changed, "new_cases": added,
@@ -205,7 +215,12 @@ def resumen(raw, meta):
                                       for mode in ("baseline", "actual")},
               "transactions": leer(raw / "transacciones_identidad.json"),
               "full_suite": "Se conserva resultado explícito de colección; no se declara suite verde",
-              "frontend": "No reejecutado", "laboratory_state": verificar(meta)}
+               "frontend": "No reejecutado", "laboratory_state": verificar(meta)}
+    if meta.get("scope") == "B1":
+        public["b1_rollback"] = leer(raw / "b1_rollback.json")
+        assert public["b1_rollback"]["rollback_visible_from_independent_connection"]
+        assert leer(raw / "b1_focalizadas.accion.json")["exit_code"] == 0
+        assert leer(raw / "b1_rollback.accion.json")["exit_code"] == 0
     escribir(raw / "resumen.json", public)
     assert all(parity.values()) and not changed and set(added.values()) == {"passed"}
     assert public["protected_unchanged"] and public["coverage_percent"] >= 75
@@ -219,12 +234,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("accion", choices=("preparar", "baseline", "actual", "detener", "resumen"))
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--baseline-ref", default="2f4140e", help="B.1: fijar explícitamente 2f95273")
+    parser.add_argument("--scope", choices=("A", "B1"), default="A")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,40}", args.run_id):
         raise ValueError("run-id inválido")
     raw = ROOT / "runtime/test-results/fase-04" / args.run_id
     if args.accion == "preparar":
-        preparar(raw, args.run_id)
+        preparar(raw, args.run_id, args.baseline_ref, args.scope)
         return
     meta = leer(raw / "laboratorio.json")
     state = verificar(meta)
@@ -252,6 +269,13 @@ def main():
     accion(raw, f"{mode}_diagnostico", [*base, "python", "-m", "pytest", "--ignore=tests/ia",
            f"--junitxml=/results/{mode}_diagnostico.xml", f"--cov-report=json:/results/{mode}_coverage.json"])
     if mode == "actual":
+        if meta.get("scope") == "B1":
+            if accion(raw, "b1_focalizadas", [*base, "python", "-m", "pytest", "--no-cov",
+                    "tests/sistema/test_limites_flujos_fase4.py", "tests/sistema/test_contratos_b1_fase4.py",
+                    "tests/intervenciones/test_auditoria_b1_fase4.py", "--junitxml=/results/b1_focalizadas.xml"]):
+                raise RuntimeError("Fallaron pruebas focalizadas B.1")
+            if accion(raw, "b1_rollback", [*base, "python", "/fase4/probar_rollback_b1.py", "/results/b1_rollback.json"]):
+                raise RuntimeError("Falló rollback B.1 entre conexiones independientes")
         if accion(raw, "transacciones_identidad", [*base, "python", "/fase4/probar_transacciones_identidad.py",
                                                   "/results/transacciones_identidad.json"]):
             raise RuntimeError("Falló comprobación entre conexiones independientes")

@@ -22,6 +22,8 @@ revocación, timestamps y persistencia explícita de intentos fallidos.
 
 **Bloque B implementado y validado el 05/11/2026**, commit `fed8d2f`.
 
+**Revisión B.1 EN CURSO:** se detectaron cambios no deseados en auditoría, una brecha en `REPROGRAMADA` y contratos que devolvían ORM. Las cifras siguientes son las declaradas por la entrega original B, no evidencia nueva de B.1. [Alcance, criterios y procedimiento B.1](B1.md). No iniciar C hasta registrar la corrección y su validación.
+
 ### Alcance ejecutado:
 1. **Contratos públicos formales creados:**
    - `apps/backend/app/modules/citas/public.py`: operaciones de consulta `obtener_cita_consulta`, `obtener_metadatos_cita_para_cupo`, y operación componible `transicionar_cita_interno` sin commit.

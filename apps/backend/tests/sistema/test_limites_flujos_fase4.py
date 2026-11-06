@@ -158,7 +158,7 @@ def test_transicionar_cita_interno_no_hace_commit_y_agrega_un_solo_historial():
     
     resultado = citas_public.transicionar_cita_interno(
         mock_db,
-        cita_mock,
+        cita_mock.id_cita,
         "CONFIRMADA",
         usuario=usuario,
         ip="127.0.0.1",

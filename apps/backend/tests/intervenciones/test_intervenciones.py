@@ -374,9 +374,9 @@ def test_liberar_cupo_si_falla_el_cupo_la_cita_no_queda_liberada(client, h, db, 
 
     from app.modules.intervenciones import service
 
-    def cupo_roto(**kwargs):
+    def cupo_roto(db, **kwargs):
         raise RuntimeError("fallo simulado al crear el cupo")
-    monkeypatch.setattr(service, "CupoLiberado", cupo_roto)
+    monkeypatch.setattr(service.lista_espera_public, "crear_cupo_liberado_interno", cupo_roto)
     try:
         r = client.post(f"/intervenciones/{inter.id_intervencion}/liberar-cupo", headers=h)
         assert r.status_code == 500 and _codigo(r) == "ERROR_INTERNO"

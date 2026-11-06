@@ -7,11 +7,6 @@ from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
 from app.core.reloj import LIMA
 from app.modules.citas import public as citas_public
-from app.modules.citas.models import Cita
-from app.modules.citas.reglas import (
-    TRANSICIONES,
-    puede_transicionar_a_liberada,
-)
 from app.modules.intervenciones import reglas, repository
 from app.modules.intervenciones.models import Intervencion
 from app.modules.intervenciones.schemas import (
@@ -26,7 +21,6 @@ from app.modules.intervenciones.schemas import (
     RiesgoResumen,
 )
 from app.modules.lista_espera import public as lista_espera_public
-from app.modules.lista_espera.models import CupoLiberado
 from app.modules.lista_espera.schemas import CupoLiberadoOut
 
 # Regla normativa RN07 / RF-066 / RNF-032: máximo 1 recordatorio adicional preventivo por cita.
@@ -49,7 +43,7 @@ def _enriquecer_out(
     if id_cita_externa is not None:
         base.id_cita_externa = id_cita_externa
     elif db is not None:
-        cita = db.get(Cita, intervencion.id_cita)
+        cita = citas_public.obtener_cita_consulta(db, intervencion.id_cita)
         if cita:
             base.id_cita_externa = cita.id_cita_externa
             if not estado_cita_actual:
@@ -291,7 +285,7 @@ def crear_intervencion(
                 campos={"consentimiento_confirmado": "Debe ser verdadero"},
             )
 
-    cita = db.get(Cita, id_cita, with_for_update=True)
+    cita = citas_public.obtener_cita_consulta(db, id_cita, bloquear=True)
     if cita is None:
         raise NoEncontrado(f"No existe la cita {id_cita}")
 
@@ -424,7 +418,7 @@ def registrar_respuesta_intervencion(
             codigo="TRANSICION_INVALIDA",
         )
 
-    cita = db.get(Cita, intervencion.id_cita, with_for_update=True)
+    cita = citas_public.obtener_cita_consulta(db, intervencion.id_cita, bloquear=True)
     if cita is None:
         raise NoEncontrado(f"No existe la cita asociada {intervencion.id_cita}")
 
@@ -453,11 +447,10 @@ def registrar_respuesta_intervencion(
         estado_cita_anterior = cita.estado_actual
         if datos.respuesta_paciente == "CONFIRMA":
             if cita.estado_actual != "CONFIRMADA":
-                permitidos = TRANSICIONES.get(cita.estado_actual, set())
-                if "CONFIRMADA" in permitidos:
-                    citas_public.transicionar_cita_interno(
+                if citas_public.permite_confirmacion_por_intervencion(cita.estado_actual):
+                    cita = citas_public.transicionar_cita_interno(
                         db,
-                        cita,
+                        cita.id_cita,
                         "CONFIRMADA",
                         usuario=usuario,
                         ip=ip,
@@ -465,10 +458,10 @@ def registrar_respuesta_intervencion(
                         registrar_auditoria=False,
                     )
         elif datos.respuesta_paciente == "SOLICITA_LIBERACION":
-            if puede_transicionar_a_liberada(cita.estado_actual):
-                citas_public.transicionar_cita_interno(
+            if citas_public.permite_liberacion_por_intervencion(cita.estado_actual):
+                cita = citas_public.transicionar_cita_interno(
                     db,
-                    cita,
+                    cita.id_cita,
                     "LIBERADA",
                     usuario=usuario,
                     ip=ip,
@@ -477,8 +470,6 @@ def registrar_respuesta_intervencion(
                 )
                 cupo_existente = repository.obtener_cupo_por_cita_origen(db, cita.id_cita)
                 if cupo_existente is None:
-                    from app.modules.intervenciones import service as _self_mod
-                    fabrica = getattr(_self_mod, "CupoLiberado", CupoLiberado)
                     nuevo_cupo = lista_espera_public.crear_cupo_liberado_interno(
                         db,
                         id_cita_origen=cita.id_cita,
@@ -488,18 +479,21 @@ def registrar_respuesta_intervencion(
                         origen_liberacion="INTERVENCION_VOLUNTARIA",
                         usuario=usuario,
                         ip=ip,
-                        modulo_auditoria="INTERVENCION",
-                        datos_before={"estado_cita": estado_cita_anterior},
-                        datos_after_extra={
-                            "id_intervencion": intervencion.id_intervencion,
-                            "id_cupo_liberado": None,
-                            "estado_cita": "LIBERADA",
-                        },
-                        fabrica_cupo=fabrica,
+                        registrar_auditoria=False,
                     )
                     id_cupo_generado = nuevo_cupo.id_cupo_liberado
                 else:
                     id_cupo_generado = cupo_existente.id_cupo_liberado
+
+                # Payload histórico del PATCH, también si el cupo ya existía.
+                registrar_evento(
+                    db, modulo="INTERVENCION", accion="LIBERAR", entidad_afectada="cupos_liberados",
+                    direccion_ip=ip, id_usuario=usuario.id_usuario, id_entidad=id_cupo_generado,
+                    datos_before={"estado_cita": estado_cita_anterior},
+                    datos_after={"id_cita_origen": cita.id_cita, "id_intervencion": intervencion.id_intervencion,
+                                 "id_cupo_liberado": id_cupo_generado, "estado_cita": "LIBERADA",
+                                 "estado_cupo": "DISPONIBLE", "origen_liberacion": "INTERVENCION_VOLUNTARIA"},
+                )
 
     registrar_evento(
         db,
@@ -569,7 +563,7 @@ def liberar_cupo_desde_intervencion(
     if intervencion.respuesta_paciente != "SOLICITA_LIBERACION":
         raise Conflicto("El paciente no ha solicitado la liberación de su cupo", codigo="SIN_SOLICITUD_LIBERACION")
 
-    cita = db.get(Cita, intervencion.id_cita, with_for_update=True)
+    cita = citas_public.obtener_cita_consulta(db, intervencion.id_cita, bloquear=True)
     if cita is None:
         raise NoEncontrado(f"No existe la cita asociada {intervencion.id_cita}")
 
@@ -581,15 +575,15 @@ def liberar_cupo_desde_intervencion(
     if cita.fecha_hora_cita <= ahora_ref:
         raise Conflicto("No se puede liberar una cita cuya fecha u hora ya pasó", codigo="CITA_PASADA")
 
-    if not puede_transicionar_a_liberada(cita.estado_actual):
+    if not citas_public.permite_liberacion_por_intervencion(cita.estado_actual):
         raise Conflicto(f"La cita en estado '{cita.estado_actual}' no admite transición a LIBERADA", codigo="TRANSICION_INVALIDA")
 
     estado_anterior = cita.estado_actual
     motivo_final = motivo or "Paciente cede su cupo voluntariamente mediante intervención preventiva"
 
-    citas_public.transicionar_cita_interno(
+    cita = citas_public.transicionar_cita_interno(
         db,
-        cita,
+        cita.id_cita,
         "LIBERADA",
         usuario=usuario,
         ip=ip,
@@ -597,8 +591,6 @@ def liberar_cupo_desde_intervencion(
         registrar_auditoria=False,
     )
 
-    from app.modules.intervenciones import service as _self_mod
-    fabrica = getattr(_self_mod, "CupoLiberado", CupoLiberado)
     nuevo_cupo = lista_espera_public.crear_cupo_liberado_interno(
         db,
         id_cita_origen=cita.id_cita,
@@ -608,15 +600,17 @@ def liberar_cupo_desde_intervencion(
         origen_liberacion="INTERVENCION_VOLUNTARIA",
         usuario=usuario,
         ip=ip,
-        modulo_auditoria="INTERVENCION",
+        registrar_auditoria=False,
+    )
+    registrar_evento(
+        db, modulo="INTERVENCION", accion="LIBERAR", entidad_afectada="cupos_liberados",
+        direccion_ip=ip, id_usuario=usuario.id_usuario, id_entidad=nuevo_cupo.id_cupo_liberado,
         datos_before={"estado_cita": estado_anterior},
-        datos_after_extra={
-            "motivo": motivo_final,
-        },
-        fabrica_cupo=fabrica,
+        datos_after={"id_cupo_liberado": nuevo_cupo.id_cupo_liberado, "id_cita_origen": cita.id_cita,
+                     "estado_cupo": "DISPONIBLE", "origen_liberacion": "INTERVENCION_VOLUNTARIA",
+                     "motivo": motivo_final},
     )
     db.commit()
-    db.refresh(nuevo_cupo)
 
     out = CupoLiberadoOut.model_validate(nuevo_cupo)
     out.id_cita_externa_origen = cita.id_cita_externa

@@ -22,8 +22,15 @@ class IntervencionSnapshot:
 
 def validar_intervencion_de_cita(db: Session, id_intervencion: int, id_cita: int) -> bool:
     """Valida si la intervención existe y pertenece a la cita especificada."""
-    inter = db.get(Intervencion, id_intervencion)
+    inter = obtener_intervencion_snapshot(db, id_intervencion)
     return inter is not None and inter.id_cita == id_cita
+
+
+def obtener_intervencion_snapshot(db: Session, id_intervencion: int) -> IntervencionSnapshot | None:
+    inter = db.get(Intervencion, id_intervencion)
+    if inter is None:
+        return None
+    return IntervencionSnapshot(**{campo: getattr(inter, campo) for campo in IntervencionSnapshot.__dataclass_fields__})
 
 
 def acciones_disponibles_intervencion(

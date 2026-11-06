@@ -100,5 +100,5 @@ def obtener_prediccion_reciente(db: Session, id_cita: int) -> PrediccionIA | Non
     return db.scalar(stmt)
 
 
-def obtener_cupo_por_cita_origen(db: Session, id_cita: int):
+def obtener_cupo_por_cita_origen(db: Session, id_cita: int) -> lista_espera_public.CupoLiberadoSnapshot | None:
     return lista_espera_public.obtener_cupo_por_cita_origen(db, id_cita)

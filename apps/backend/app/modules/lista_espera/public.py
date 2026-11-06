@@ -6,7 +6,6 @@ atómica en una sola transacción.
 """
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
 
 from sqlalchemy.orm import Session
 
@@ -27,6 +26,10 @@ class CupoLiberadoSnapshot:
     liberado_en: datetime | None
 
 
+def _snapshot(cupo: CupoLiberado) -> CupoLiberadoSnapshot:
+    return CupoLiberadoSnapshot(**{campo: getattr(cupo, campo) for campo in CupoLiberadoSnapshot.__dataclass_fields__})
+
+
 def crear_cupo_liberado_interno(
     db: Session,
     *,
@@ -40,14 +43,13 @@ def crear_cupo_liberado_interno(
     modulo_auditoria: str = "REASIGNACION",
     datos_after_extra: dict | None = None,
     datos_before: dict | None = None,
-    fabrica_cupo: Any = None,
-) -> CupoLiberado:
+    registrar_auditoria: bool = True,
+) -> CupoLiberadoSnapshot:
     """Crea y registra un cupo liberado en la sesión activa.
 
     NO hace commit (RNF-014). El workflow coordinador cierra la transacción.
     """
-    fabrica = fabrica_cupo or CupoLiberado
-    cupo = fabrica(
+    cupo = CupoLiberado(
         id_cita_origen=id_cita_origen,
         especialidad=especialidad,
         medico=medico,
@@ -65,21 +67,25 @@ def crear_cupo_liberado_interno(
         "fecha_hora_cupo": cupo.fecha_hora_cupo.isoformat(),
         **(datos_after_extra or {}),
     }
-    registrar_evento(
-        db,
-        modulo=modulo_auditoria,
-        accion="LIBERAR",
-        entidad_afectada="cupos_liberados",
-        direccion_ip=ip,
-        id_usuario=usuario.id_usuario,
-        id_entidad=cupo.id_cupo_liberado,
-        datos_before=datos_before,
-        datos_after=datos_after,
-    )
-    return cupo
+    if "id_cupo_liberado" in datos_after:
+        datos_after["id_cupo_liberado"] = cupo.id_cupo_liberado
+    if registrar_auditoria:
+        registrar_evento(
+            db,
+            modulo=modulo_auditoria,
+            accion="LIBERAR",
+            entidad_afectada="cupos_liberados",
+            direccion_ip=ip,
+            id_usuario=usuario.id_usuario,
+            id_entidad=cupo.id_cupo_liberado,
+            datos_before=datos_before,
+            datos_after=datos_after,
+        )
+    return _snapshot(cupo)
 
 
-def obtener_cupo_por_cita_origen(db: Session, id_cita_origen: int) -> CupoLiberado | None:
+def obtener_cupo_por_cita_origen(db: Session, id_cita_origen: int) -> CupoLiberadoSnapshot | None:
     """Obtiene el cupo liberado correspondiente a una cita de origen."""
     from app.modules.lista_espera import repository
-    return repository.obtener_cupo_por_cita_origen(db, id_cita_origen)
+    cupo = repository.obtener_cupo_por_cita_origen(db, id_cita_origen)
+    return _snapshot(cupo) if cupo is not None else None

@@ -288,10 +288,11 @@ def cambiar_estado(
         extra = {c: getattr(cita, c) for c in campos_fecha}
         extra["fecha_hora_cita"] = nueva.isoformat()
 
+    cupo = None
     if estado == "CANCELADA" and cambio.liberar_cupo:
         if cita.fecha_hora_cita <= ahora:
             raise Conflicto("Solo se libera el cupo de una cita futura", codigo="CITA_PASADA")
-        lista_espera_public.crear_cupo_liberado_interno(
+        cupo = lista_espera_public.crear_cupo_liberado_interno(
             db,
             id_cita_origen=cita.id_cita,
             especialidad=cita.especialidad,
@@ -300,11 +301,19 @@ def cambiar_estado(
             origen_liberacion="CANCELACION_EXTERNA",
             usuario=usuario,
             ip=ip,
-            modulo_auditoria="REASIGNACION",
+            registrar_auditoria=False,
         )
 
     _aplicar_transicion(db, cita, estado, usuario=usuario, ip=ip, motivo=cambio.motivo, antes=antes,
                         extra_despues=extra)
+    if cupo is not None:
+        registrar_evento(
+            db, modulo="REASIGNACION", accion="LIBERAR", entidad_afectada="cupos_liberados", direccion_ip=ip,
+            id_usuario=usuario.id_usuario, id_entidad=cupo.id_cupo_liberado,
+            datos_after={"id_cita_origen": cita.id_cita, "estado_cupo": cupo.estado_cupo,
+                         "origen_liberacion": cupo.origen_liberacion,
+                         "fecha_hora_cupo": cupo.fecha_hora_cupo.isoformat()},
+        )
     db.commit()  # cita + historial + cupo + auditoría: todo o nada (RNF-014)
     return detalle_cita(db, id_cita)
 
