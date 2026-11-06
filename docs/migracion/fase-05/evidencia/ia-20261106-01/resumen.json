@@ -1,0 +1,28 @@
+{
+  "run_id": "ia-20261106-01",
+  "timestamp": "2026-11-06T22:03:21.416594+00:00",
+  "image_id": "sha256:82d2316f5247f5f698e966885b22f2787ece0f40573c38a5c75b831e6e070395",
+  "tests_total": 21,
+  "tests_passed": 21,
+  "tests_failed": 0,
+  "code_coverage_pct": 92.0,
+  "parity_verified": true,
+  "openapi_paths": [
+    "/health/live",
+    "/health/ready",
+    "/v1/dataset",
+    "/v1/metrics",
+    "/v1/model",
+    "/v1/predict",
+    "/v1/predict-batch"
+  ],
+  "backend_untouched": true,
+  "protected_hashes": {
+    "PLAN_REESTRUCTURACION_POR_FASES.md": "ce1f276495ef98bcf5fa231e658e906e860da871e02d1ed814b607d5ad65de61",
+    "apps/backend/requirements.txt": "b1c2b94d9d303937bc1e62f781efba189f6c5b31034996c385b655219315831d",
+    "apps/backend/Dockerfile": "b87761adbe96aa0feed62820f0404489d2b665e0b93b9d6ef6c4bf740faf3ebf",
+    "apps/backend/app/main.py": "740982bf4c5da2a0b6713594fa99b02163a6d44e829041041ceecce2bf5d1dd8",
+    "apps/backend/app/modules/ia/predictor.py": "822a66424c4d0b383126cccc28abab52ba955317e90f7458fcd11483f5279f5f",
+    "artifacts/models/legacy-import/modelo_predicitas_v1.joblib": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074"
+  }
+}
