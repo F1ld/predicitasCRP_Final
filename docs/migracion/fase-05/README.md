@@ -6,6 +6,32 @@ readiness, clave predeterminada, contrato y trazabilidad del runner. No se borra
 la evidencia `ia-20261106-01` ni se reparan sus hashes retrospectivamente.
 [Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen intactos.
 
+## Última entrega — bloque A validado
+
+**Extracción offline de entrenamiento/evaluación/métricas aprobada**, ejecución
+`ia-bloque-a-20261106-01`. Código `83a96a6`, runner `22c6788`, evidencia `9f6636b`.
+Módulos en `apps/ia/training/`, datos/versiones/fecha explícitos y escritura
+opcional exclusiva a candidato nuevo; sin BD, generador automático, promoción,
+escritura o caché desde serving. Backend y serving IA permanecen sin cambios.
+
+**105/105 pruebas**, cobertura conjunta **96,89 %**, offline **100 %**. Comparación
+de dos entrenamientos reales con los mismos 1000 registros: splits 700/150/150,
+preprocesadores, hiperparámetros, probabilidades crudas de ambos modelos, métricas,
+equidad e importancias idénticos. F1 de prueba **0,8621**; candidatos solo en scratch,
+artefacto activo/registry intactos. También pasan los 207 casos de inferencia y
+HTTP real (100 elementos en 0,947 s). Sin nuevos algoritmos ni pipeline fase 6.
+
+Imagen de la entrega:
+`sha256:93b75b1f7d095dbdeb3c5d478cdf209026fb7ea6faf4822f834a0612fe329892`.
+[Alcance, entradas y límites A](BLOQUE_A.md),
+[evidencia](evidencia/ia-bloque-a-20261106-01/manifest.json). Hashes del índice y clon
+limpio Windows/autocrlf aprobados. Ningún contenedor de prueba quedó activo.
+
+**Estado global EN CURSO:** quedan B (generador/datasets/CSV) y C
+(timeout/concurrencia); no se iniciaron en A. Los pendientes de entrenamiento
+mencionados en el resultado histórico de corrección siguiente quedan resueltos
+por A, sin marcar completo el ítem combinado de datasets ni cerrar la fase.
+
 ## Corrección vigente aceptada
 
 Ejecución `ia-correccion-20261106-03`, código probado `bba0e61`, evidencia

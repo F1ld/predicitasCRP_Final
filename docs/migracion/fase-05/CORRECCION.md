@@ -41,6 +41,11 @@ afirma haber terminado esas extracciones ni las desplaza a fase 6 sin aprobació
 El presupuesto/timeout de inferencia bajo concurrencia también requiere resolución
 antes de marcar ese ítem completo. Fase 5 permanece EN CURSO aunque estos gates pasen.
 
+**Actualización posterior:** entrenamiento/evaluación/métricas extraídos y validados
+en [bloque A](BLOQUE_A.md), ejecución `ia-bloque-a-20261106-01`. Quedan generador/
+datasets/CSV (B) y timeout/concurrencia (C). Los pendientes anteriores describen
+el estado al cerrar la corrección, no invalidan la extracción A posterior.
+
 ## Ejecución
 
 ```powershell

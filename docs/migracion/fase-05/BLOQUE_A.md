@@ -63,4 +63,51 @@ python -B docs/migracion/fase-05/validar_ia.py publicar --run-id ia-bloque-a-202
 python -B docs/migracion/fase-05/validar_ia.py verificar --run-id ia-bloque-a-20261106-01
 ```
 
-Estado: implementación en revisión, sin aceptación formal todavía. Fase 5 EN CURSO.
+## Resultado aceptado
+
+**Bloque A VALIDADO**, ejecución `ia-bloque-a-20261106-01` (06/11/2026).
+Implementación `83a96a6`, runner probado `22c6788`, evidencia separada `9f6636b`.
+
+- **105/105 pruebas**: 83 previas conservadas y 22 nuevas; cobertura conjunta
+  **96,88826025459689 %**, offline **100 %** (líneas, no certificación universal).
+  Tres autopruebas stdlib del runner también aprobadas.
+- Entrenamiento real de referencia y extraído: **700/150/150** con mismos índices,
+  mismas estadísticas/preprocesado, hiperparámetros y probabilidades crudas de
+  ambos estimadores sobre las **1000 filas**. Metadata, métricas, auditoría de
+  equidad e importancias iguales salvo las identidades QA previstas.
+- F1 LightGBM **0,8621**, baseline **0,7451**, iguales a la referencia. No se
+  reentrenó ni promocionó el artefacto activo: ambos candidatos existieron solo
+  en scratch, con roundtrip de serialización aprobado y registry intacto.
+- Regresión serving: **207 casos diferenciales** idénticos, HTTP real con lote
+  máximo de 100 en **0,947 s**, sin cargar entrenamiento desde el servicio.
+- Nueva imagen ejecutada por ID:
+  `sha256:93b75b1f7d095dbdeb3c5d478cdf209026fb7ea6faf4822f834a0612fe329892`.
+  Red none, 2 CPU/1 GiB, UID 1000, filesystem/modelo RO; no BD ni fuentes backend.
+- Código serving, manifiesto aprobado, dependencias, backend/frontend/contratos,
+  modelos y CSV intactos. Fuentes empaquetadas comprobadas y hashes del índice Git
+  verificados. Paquete A y corrección anterior verifican desde clon limpio Windows
+  con autocrlf de `9f6636b`; eso no reejecuta tests ni incorpora modelos privados.
+- Ningún contenedor de validación queda ejecutándose; recursos/evidencias previas
+  conservados, servicio ajeno intacto. No hubo despliegue al principal.
+
+[Resumen sanitizado](evidencia/ia-bloque-a-20261106-01/resumen.json),
+[JUnit](evidencia/ia-bloque-a-20261106-01/pytest.xml) y
+[manifiesto](evidencia/ia-bloque-a-20261106-01/manifest.json).
+
+Entradas offline disponibles (no son un pipeline productivo):
+
+```python
+from training.trainer import entrenar
+from training.serialization import guardar_candidato
+
+# Registros, identidades y fecha con zona deben ser proporcionados explícitamente.
+resultado = entrenar(registros, version_modelo=version_candidato,
+                    version_dataset=version_dataset, fecha_entrenamiento=fecha)
+# Opcional; el padre ya existe y el destino debe ser NUEVO y fuera del registry.
+ruta = guardar_candidato(resultado, directorio_nuevo=destino_nuevo)
+```
+
+**Fase 5 sigue EN CURSO**: faltan B (generador/datasets/CSV/retirada temporal) y C
+(timeout/concurrencia de inferencia). No se iniciaron por esta entrega ni se
+marcó completo el ítem combinado de entrenamiento/datasets del plan. S-02 backend
+y frontend no revalidados; el alcance probado es IA aislada y extracción A.

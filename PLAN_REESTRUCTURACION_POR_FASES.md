@@ -641,7 +641,7 @@ generador siguen pendientes, no se trasladan a fase 6 por decisión implícita.
 **Resultado (06/11/2026): COMPLETADA.** Solicitado y autorizado por el usuario. Baseline `af13b3b`, imagen `sha256:82d2316f5247f5f698e966885b22f2787ece0f40573c38a5c75b831e6e070395` (no-root `predicitas:1000`). **21/21 pruebas aprobadas**, cobertura de código **92.0 %**. Paridad matemática estricta y explicabilidad TreeSHAP verificada al 100 % contra baseline congelado. Siete rutas OpenAPI idénticas a contratos. Backend integrado y frontend intactos. [Evidencia](docs/migracion/fase-05/evidencia/ia-20261106-01/manifest.json) y [bitácora](docs/migracion/fase-05/README.md).
 
 - [x] Crear `apps/ia/` con API, configuración, autenticación interna, tests y dependencias propias.
-- [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia extraídas; entrenamiento/datasets pendientes de completar y validar.
+- [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia extraídas; entrenamiento/evaluación/métricas offline validados en A (`ia-bloque-a-20261106-01`). Datasets/generador siguen pendientes de B; no se marca completo el ítem combinado.
 - [ ] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada.
 - [x] Eliminar dependencias de FastAPI backend, ORM operativo y `app.modules.citas` de la nueva aplicación IA.
 - [x] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección `ia-correccion-20261106-03`: hash previo a deserialización, validación de compatibilidad y smoke en imagen sin backend.
@@ -666,6 +666,25 @@ faltan extracción de entrenamiento/generador/datasets/CSV y resolver timeout de
 cómputo bajo concurrencia. No se desplazan implícitamente a otra fase ni se conecta
 el backend. [Detalle y límites](docs/migracion/fase-05/CORRECCION.md),
 [evidencia vigente](docs/migracion/fase-05/evidencia/ia-correccion-20261106-03/manifest.json).
+
+**Bloque A validado (06/11/2026), fase 5 EN CURSO:** implementación `83a96a6`,
+runner probado `22c6788`, evidencia separada `9f6636b`; ejecución
+`ia-bloque-a-20261106-01`. **105/105 pruebas** (83 previas + 22 nuevas), cobertura
+conjunta **96,89 %**, offline **100 %**. Entrenamiento extraído en memoria con
+registros/versiones/fecha explícitos; serialización exclusiva de candidato nuevo,
+sin dependencias operativas, caché ni promoción. Dos entrenamientos reales en
+contenedores independientes reprodujeron splits 700/150/150, preprocesadores,
+parámetros, probabilidades crudas de ambos estimadores sobre 1000 filas, métricas,
+equidad e importancias. F1 de prueba **0,8621** en ambos. Modelos de prueba solo
+en scratch; activo y registry intactos. Serving no importa ni ejecuta entrenamiento,
+207 casos de inferencia idénticos y HTTP real aprobado. Imagen ejecutada por ID
+`sha256:93b75b1f7d095dbdeb3c5d478cdf209026fb7ea6faf4822f834a0612fe329892`,
+sin red externa ni BD; código serving, dependencias, manifiesto aprobado,
+backend/frontend/contratos/modelos/CSV sin cambios. Evidencia y corrección previa
+verificadas en clon limpio Windows/autocrlf; sin contenedores de prueba activos.
+Retorno A `3e561b2`. **No se iniciaron B/C ni fase 6/7**; pendientes generador/
+datasets/CSV/retirada temporal y timeout/concurrencia. [Criterios y resultados A](docs/migracion/fase-05/BLOQUE_A.md),
+[manifiesto A](docs/migracion/fase-05/evidencia/ia-bloque-a-20261106-01/manifest.json).
 
 **Se toca:** nueva app IA, contrato interno, ubicación de código matemático y packaging IA.
 
