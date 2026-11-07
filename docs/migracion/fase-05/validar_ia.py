@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 BASELINE = "af13b3b"
 A_BASELINE = "3e561b2"
+B_BASELINE = "bfcad63"
 BACKEND_IMAGE = "sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d"
 
 
@@ -101,6 +102,9 @@ def execute(raw, run_id, scope="correccion"):
     if scope == "A":
         assert not output(["git", "diff", A_BASELINE, "--", "apps/ia/app", "apps/ia/manifests",
             "apps/ia/Dockerfile", "apps/ia/requirements.txt"]), "Bloque A no autoriza alterar serving, modelo aprobado o dependencias"
+    if scope == "B":
+        assert not output(["git", "diff", B_BASELINE, "--", "apps/ia/app", "apps/ia/manifests", "apps/ia/training",
+            "apps/ia/Dockerfile", "apps/ia/requirements.txt"]), "Bloque B no autoriza alterar serving, entrenamiento, modelo aprobado o dependencias"
     commit = output(["git", "rev-parse", "HEAD"])
     before, preserved = sources(), protected()
     raw.mkdir(parents=True, exist_ok=False)
@@ -134,7 +138,7 @@ def execute(raw, run_id, scope="correccion"):
         "--mount", f"type=bind,source={HERE},target=/checks,readonly", image]
     # Comprobar fuentes del paquete, incluyendo contratos, sin montar el backend.
     code = """import hashlib,json; from pathlib import Path
-paths=[p for folder in ('/app/app','/app/tests','/app/manifests','/app/training','/contracts') for p in Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p)]
+paths=[p for folder in ('/app/app','/app/tests','/app/manifests','/app/training','/app/datasets','/contracts') for p in Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p)]
 paths += [Path('/app/requirements.txt'),Path('/app/Dockerfile'),Path('/app/.dockerignore')]
 print(json.dumps({str(p):hashlib.sha256(p.read_bytes().replace(b'\\r\\n',b'\\n')).hexdigest() for p in paths}))"""
     packaged = json.loads(output([*base, "python", "-c", code]))
@@ -148,7 +152,7 @@ print(json.dumps({str(p):hashlib.sha256(p.read_bytes().replace(b'\\r\\n',b'\\n')
             continue
         expected[key] = hashlib.sha256((ROOT / name).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     assert packaged == expected, "El paquete no coincide con las fuentes registradas"
-    coverage_args = ["--cov=app", *(["--cov=training"] if scope == "A" else [])]
+    coverage_args = ["--cov=app", *(["--cov=training"] if scope in ("A", "B") else []), *(["--cov=datasets"] if scope == "B" else [])]
     action(raw, "pytest", [*base, "python", "-m", "pytest", "tests", "-q", "--junitxml=/results/pytest.xml",
         *coverage_args, "--cov-fail-under=80", "--cov-report=json:/results/coverage.json"])
     action(raw, "runtime", [*base, "python", "/checks/probar_runtime.py", "/results/runtime.json"])
@@ -203,9 +207,13 @@ print(json.dumps(out))"""
         "all_fields_equal": True, "levels_observed": sorted({p["nivel_riesgo"] for p in new}),
         "cases_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(), "backend_image": BACKEND_IMAGE})
     training = None
-    if scope == "A":
+    if scope in ("A", "B"):
         from entrenamiento_a import validate
         training = validate(raw, base)
+    datasets = None
+    if scope == "B":
+        from datasets_b import validate
+        datasets = validate(raw, base, run_id)
     assert sources() == before and protected() == preserved
     assert not output(["git", "status", "--porcelain"])
     tests = junit(raw / "pytest.xml")
@@ -213,12 +221,19 @@ print(json.dumps(out))"""
     coverage = read(raw / "coverage.json")["totals"]["percent_covered"]
     assert coverage >= 80
     training_coverage = None
-    if scope == "A":
+    if scope in ("A", "B"):
         summaries = [value["summary"] for name, value in read(raw / "coverage.json")["files"].items()
             if name.replace("\\", "/").startswith("training/")]
         assert summaries
         training_coverage = 100 * sum(s["covered_lines"] for s in summaries) / sum(s["num_statements"] for s in summaries)
         assert training_coverage >= 80
+    datasets_coverage = None
+    if scope == "B":
+        summaries = [value["summary"] for name, value in read(raw / "coverage.json")["files"].items()
+            if name.replace("\\", "/").startswith("datasets/")]
+        assert summaries
+        datasets_coverage = 100 * sum(s["covered_lines"] for s in summaries) / sum(s["num_statements"] for s in summaries)
+        assert datasets_coverage >= 80
     runtime = read(raw / "runtime.json")
     openapi = runtime.pop("openapi")
     write(raw / "openapi.json", openapi)
@@ -229,7 +244,8 @@ print(json.dumps(out))"""
         "runtime": runtime, "packaged_sources_match": True, "source_files": before,
         "backend_frontend_contracts_unchanged": True, "protected_unchanged": True,
         "pip_freeze": freeze, "training_a": training, "training_coverage_percent": training_coverage,
-        "serving_baseline_unchanged": A_BASELINE if scope == "A" else None,
+        "serving_baseline_unchanged": A_BASELINE if scope == "A" else B_BASELINE if scope == "B" else None,
+        "datasets_b": datasets, "datasets_coverage_percent": datasets_coverage,
         "phase_status": "EN CURSO; validacion de bloque no equivale a cerrar checklist original"})
     print(f"Corrección validada: {tests['passed']} pruebas, cobertura {coverage:.2f}%, {len(cases)} casos diferenciales")
 
@@ -242,9 +258,14 @@ def publish(raw, target, run_id):
     assert summary["parity"]["all_fields_equal"] and summary["runtime"]["real_http"]
     for name in ("runner_tests", "build", "pytest", "runtime"):
         assert read(raw / f"{name}.action.json")["exit_code"] == 0
-    if summary.get("block") == "A":
+    if summary.get("block") in ("A", "B"):
         assert summary["training_coverage_percent"] >= 80 and summary["training_a"]["same_raw_probabilities_all_1000_both_models"]
         for name in ("training_reference", "training_candidate"):
+            assert read(raw / f"{name}.action.json")["exit_code"] == 0
+    if summary.get("block") == "B":
+        assert summary["datasets_coverage_percent"] >= 80 and summary["datasets_b"]["laboratory_state"] == "exited"
+        assert summary["datasets_b"]["generator"]["all_fields_and_row_order_equal"]
+        for name in ("datasets_reference", "datasets_candidate", "csv_http_postgres"):
             assert read(raw / f"{name}.action.json")["exit_code"] == 0
     target.mkdir(parents=True, exist_ok=False)
     with (target / ".gitattributes").open("x", encoding="utf-8", newline="\n") as stream:
@@ -266,7 +287,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("ejecutar", "publicar", "verificar"))
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--scope", choices=("correccion", "A"), default="correccion")
+    parser.add_argument("--scope", choices=("correccion", "A", "B"), default="correccion")
     args = parser.parse_args()
     if not re.fullmatch(r"ia-[a-z0-9-]{3,36}", args.run_id):
         raise ValueError("run-id inválido")
