@@ -1,12 +1,40 @@
 # Fase 5 — Extraer y probar la aplicación IA independiente
 
-**Estado vigente: EN CURSO — A y B validados, C pendiente (07/11/2026).**
-El resultado histórico siguiente **no certifica cierre**: se detectaron fallos en
-readiness, clave predeterminada, contrato y trazabilidad del runner. No se borra
-la evidencia `ia-20261106-01` ni se reparan sus hashes retrospectivamente.
-[Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen intactos.
+**Estado vigente: COMPLETADA — A, B y C validados (07/11/2026).**
+El resultado histórico de la primera implementación **no certifica el cierre por sí
+mismo**: se detectaron fallos en readiness, clave predeterminada, contrato y
+trazabilidad del runner. No se borra la evidencia `ia-20261106-01` ni se reparan
+sus hashes retrospectivamente. La corrección y los bloques A/B/C se registran por
+separado. [Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen
+intactos y la conexión del consumidor IA sigue reservada a fase 7.
 
-## Última entrega — bloque B validado
+## Última entrega — bloque C validado
+
+Plazo duro de cómputo, cupo único y worker persistente aislado en
+`apps/ia/app/execution.py` y `apps/ia/app/inference_worker.py`. Ejecución
+`ia-bloque-c-20261107-02`, código `4d00f07`, pruebas `3294380`, evidencia `bc1af92`.
+
+- **184/184 pruebas**, cobertura conjunta **94,37 %**; worker privado **97,87 %** y
+  ejecutor **92,41 %**. Se conservan las 135 previas y se añaden 49 de ejecución.
+- **207 casos de paridad** intactos; probabilidades, niveles, umbrales,
+  explicaciones, metadata y modelo sin cambios.
+- Plazo total duro de **10 s**; worker que no responde interrumpido y recogido en
+  **0,302 s**, con cupo liberado y reinicio automático. Sin cola ni retry.
+- Concurrencia real: **1×200 + 1×503 `CAPACIDAD_OCUPADA`** con recuperación;
+  lote de 100 en **0,929 s**.
+- Memoria pico **303 MB** (~289 MiB) bajo 1 GiB, medida por `procfs-vmrss+cgroup`;
+  UID 1000, red `none`, filesystem/modelo RO, sin DSN ni fuentes backend.
+- Entrenamiento, datasets, manifiestos, Dockerfile, dependencias, backend,
+  frontend, contratos, modelo y CSV intactos respecto de `96d809d`.
+
+Imagen:
+`sha256:b1a1f3b30300ff2537f5ea689e1cf3e3d3e4c822c9ffbf2d3743abc1b438140c`.
+[Resultados, diseño y límites C](BLOQUE_C.md) y
+[evidencia](evidencia/ia-bloque-c-20261107-02/manifest.json).
+El run `ia-bloque-c-20261107-01` se conserva como intento intermedio, no como
+evidencia aceptada.
+
+## Entrega anterior — bloque B validado
 
 Generador autónomo, CSV operacional futuro y mapping de entrenamiento en
 `apps/ia/datasets/`. Ejecución `ia-bloque-b-20261106-01`, código `58c9288`, runner
@@ -36,10 +64,11 @@ comprobados; paquetes B/A/seed verifican desde clon limpio Windows/autocrlf.
 Docker no estaba disponible y no se volvió a ejecutar la suite ni el laboratorio.
 Se conserva la ejecución formal previa sin alterar evidencia ni afirmar una nueva.
 
-**Pendiente actual para cerrar fase 5: bloque C**, timeout/cómputo bajo concurrencia.
-No se inicia por esta entrega. JSONL/manifiestos/pipeline/consumo del seed quedan
-en fase 6; sustitución del backend integrado en fase 7. S-02 y E2E frontend no se
-consideran resueltos por las pruebas IA aisladas.
+**Fase 5 completada por A, B y C.** El timeout/cómputo bajo concurrencia quedó
+resuelto y medido en C; el ítem de límites, workers y memoria se marca completo.
+JSONL/manifiestos/pipeline/consumo del seed quedan en fase 6; sustitución del
+backend integrado en fase 7. S-02 y E2E frontend no se consideran resueltos por
+las pruebas IA aisladas.
 
 ## Entrega anterior — bloque A validado
 

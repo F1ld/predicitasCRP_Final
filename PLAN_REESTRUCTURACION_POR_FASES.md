@@ -439,7 +439,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 2 | Mudanza mecánica a monorepositorio operativo | 1 | COMPLETADA |
 | 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
 | 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
-| 5 | Aplicación IA autónoma probada | 1, 3, 4 | EN CURSO |
+| 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA (07/11/2026) |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
 | 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
@@ -629,14 +629,15 @@ Siguen pendientes contratos/workflows de negocio, routers sin SQL y concurrencia
 
 **Objetivo:** disponer de IA autónoma antes de cambiar sus consumidores.
 
-**Revisión correctiva (06/11/2026): EN CURSO.** La declaración COMPLETADA siguiente
-se conserva como histórica, pero queda suspendida por revisión: readiness aceptaba
-artefactos incompatibles, clave por defecto, validación contractual insuficiente y
-runner sin trazabilidad verificable. Corrección autorizada por el usuario; baseline
-operativo `af13b3b`, retorno de esta entrega `fe4768b`. No se conecta backend/IA.
+**Revisión correctiva (06/11/2026): RESUELTA por A/B/C (07/11/2026).** La
+declaración COMPLETADA siguiente se conserva como histórica; la revisión la había
+suspendido porque readiness aceptaba artefactos incompatibles, había clave por
+defecto, validación contractual insuficiente y el runner carecía de trazabilidad
+verificable. Corrección autorizada por el usuario; baseline operativo `af13b3b`,
+retorno de esta entrega `fe4768b`. No se conecta backend/IA.
 No se reduce el alcance original: separación de entrenamiento y migración del
-generador estaban pendientes al iniciar la revisión; A/B posteriores las validan.
-El estado vigente se recoge en el checklist y resultados siguientes, sin trasladar
+generador se validaron después en A/B; timeout y concurrencia en C. El estado
+vigente se recoge en el checklist y resultados siguientes, sin trasladar
 requisitos a fase 6 por decisión implícita.
 [Criterios correctivos](docs/migracion/fase-05/CORRECCION.md).
 
@@ -649,7 +650,7 @@ requisitos a fase 6 por decisión implícita.
 - [x] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección `ia-correccion-20261106-03`: hash previo a deserialización, validación de compatibilidad y smoke en imagen sin backend.
 - [x] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible. Corrección validada contra schemas congelados, API-key explícita, errores y readiness real.
 - [x] Implementar carga en startup/caché controlada por versión; ningún endpoint entrena ni escribe modelos.
-- [ ] Fijar límites de request/lote, validación estricta, timeout y número de workers compatible con memoria disponible; cada worker puede duplicar modelo en RAM. Corrección: recepción 10 s, 1 worker/16 conexiones, hilos nativos acotados; presupuesto de inferencia y memoria requieren medición explícita, no solo autenticación.
+- [x] Fijar límites de request/lote, validación estricta, timeout y número de workers compatible con memoria disponible; cada worker puede duplicar modelo en RAM. Corrección: recepción 10 s, 1 worker/16 conexiones, hilos nativos acotados. C: un worker persistente aislado, cupo único sin cola, plazo total duro de 10 s, interrupción y reinicio comprobados, memoria pico medida bajo 1 GiB; ver [bloque C](docs/migracion/fase-05/BLOQUE_C.md).
 - [x] Crear Dockerfile IA no-root, con librerías nativas necesarias para LightGBM (`libgomp1` si aplica) y TZ/data requeridas.
 - [x] Comparar probabilidades, niveles y explicaciones con baseline congelado; comprobar que una predicción no modifica artefactos.
 
@@ -706,9 +707,29 @@ legacy. Parada del laboratorio archivada con salida 0. Al reanudar se comprobaro
 fuentes/protegidos, JUnit/cobertura/logs/hash CSV y paridad archivada; paquetes
 B/A/seed verifican desde clon limpio Windows/autocrlf. Docker no disponible en
 esa reanudación: **no se presenta como nueva ejecución ni consulta actual de
-recursos**. Retorno B `bfcad63`. **Solo C queda pendiente para fase 5**; no iniciado,
-sin pipeline/promoción fase 6 ni conexión fase 7. [Detalle B](docs/migracion/fase-05/BLOQUE_B.md),
+recursos**. Retorno B `bfcad63`. En ese cierre, **solo C quedaba pendiente para
+fase 5**; no iniciado entonces, sin pipeline/promoción fase 6 ni conexión fase 7.
+[Detalle B](docs/migracion/fase-05/BLOQUE_B.md),
 [manifiesto B](docs/migracion/fase-05/evidencia/ia-bloque-b-20261106-01/manifest.json).
+
+**Bloque C validado; fase 5 COMPLETADA (07/11/2026):** implementación `4d00f07`,
+pruebas/ramas límite `3294380`, evidencia separada `bc1af92`; ejecución
+`ia-bloque-c-20261107-02`, commit probado
+`3294380e0ff10421058c165179fa22fcdfa281e8`. **184/184 pruebas** (135 previas + 49
+de ejecución), cobertura **94,37 %**, paridad **207 casos** en todos los campos y
+tres niveles. Worker persistente aislado con cupo único sin cola; plazo total duro
+de 10 s, interrupción/recogida en **0,302 s** y reinicio automático; concurrencia
+**1×200 + 1×503 `CAPACIDAD_OCUPADA`** con recuperación; lote de 100 en **0,929 s**;
+memoria pico **303 251 456 bytes** bajo 1 GiB (`procfs-vmrss+cgroup`). UID 1000,
+red none, filesystem/modelo RO, sin DSN ni fuentes backend. Imagen por ID
+`sha256:b1a1f3b30300ff2537f5ea689e1cf3e3d3e4c822c9ffbf2d3743abc1b438140c`.
+Entrenamiento, datasets, manifiestos, Dockerfile, dependencias, backend, frontend,
+contratos, modelo y CSV intactos respecto de `96d809d`; sin promoción ni conexión
+fase 7. El run `ia-bloque-c-20261107-01` se conserva como intermedio, no publicado.
+Evidencia y paquete verificados desde clon limpio; los hashes de fuentes solo
+difieren por CRLF del árbol de trabajo, con contenido normalizado idéntico.
+[Detalle C](docs/migracion/fase-05/BLOQUE_C.md),
+[manifiesto C](docs/migracion/fase-05/evidencia/ia-bloque-c-20261107-02/manifest.json).
 
 **Se toca:** nueva app IA, contrato interno, ubicación de código matemático y packaging IA.
 

@@ -38,15 +38,18 @@ Se restauran sin reducir los ítems originales de fase 5: separación autónoma 
 entrenamiento y migración del generador/datasets/CSV con retirada temporal definida.
 Esta entrega corrige seguridad/contrato/evidencia del servicio de inferencia; no
 afirma haber terminado esas extracciones ni las desplaza a fase 6 sin aprobación.
-El presupuesto/timeout de inferencia bajo concurrencia también requiere resolución
-antes de marcar ese ítem completo. Fase 5 permanece EN CURSO aunque estos gates pasen.
+El presupuesto/timeout de inferencia bajo concurrencia también requería resolución
+antes de marcar ese ítem completo; quedó resuelto y medido en C (07/11/2026). Fase
+5 permaneció EN CURSO hasta que A, B y C fueron aceptados.
 
 **Actualización posterior:** entrenamiento/evaluación/métricas extraídos y validados
 en [bloque A](BLOQUE_A.md), ejecución `ia-bloque-a-20261106-01`. Generador/datasets/
 CSV validados en [bloque B](BLOQUE_B.md), ejecución `ia-bloque-b-20261106-01`, con
-cierre documental reanudado el 07/11/2026. Queda timeout/concurrencia (C). Los
-pendientes anteriores describen el estado al cerrar la corrección, no invalidan
-las extracciones posteriores. Backend/seed siguen integrados sin cambiar consumidores.
+cierre documental reanudado el 07/11/2026. Timeout duro, cupo único y worker aislado
+validados en [bloque C](BLOQUE_C.md), ejecución `ia-bloque-c-20261107-02`. Con A, B
+y C aceptados, **fase 5 queda COMPLETADA**; los pendientes anteriores describen el
+estado al cerrar la corrección, no invalidan las extracciones posteriores.
+Backend/seed siguen integrados sin cambiar consumidores.
 
 ## Ejecución
 
