@@ -664,13 +664,13 @@ BAJO/MEDIO/ALTO. HTTP real: lote de 100 en **0,98 s** dentro del presupuesto loc
 Imagen `sha256:21c8cd34539de93335c813b13a2bc7e81e254ba2ce293a9df90782c5e09e3bbf`.
 Backend/frontend/contratos/protegidos iguales al baseline. Evidencia separada en
 `8dd4cdd`, hashes del índice y clon limpio Windows/autocrlf comprobados; seed también
-verifica desde ese clon. Intentos correctivos 01/02 conservados. **Fase 5 EN CURSO**:
-faltan extracción de entrenamiento/generador/datasets/CSV y resolver timeout de
-cómputo bajo concurrencia. No se desplazan implícitamente a otra fase ni se conecta
-el backend. [Detalle y límites](docs/migracion/fase-05/CORRECCION.md),
+verifica desde ese clon. Intentos correctivos 01/02 conservados. **La fase 5 seguía
+EN CURSO**: faltaban extracción de entrenamiento/generador/datasets/CSV y resolver
+timeout de cómputo bajo concurrencia. No se desplazan implícitamente a otra fase ni
+se conecta el backend. [Detalle y límites](docs/migracion/fase-05/CORRECCION.md),
 [evidencia vigente](docs/migracion/fase-05/evidencia/ia-correccion-20261106-03/manifest.json).
 
-**Bloque A validado (06/11/2026), fase 5 EN CURSO:** implementación `83a96a6`,
+**Bloque A validado (06/11/2026); la fase 5 seguía EN CURSO:** implementación `83a96a6`,
 runner probado `22c6788`, evidencia separada `9f6636b`; ejecución
 `ia-bloque-a-20261106-01`. **105/105 pruebas** (83 previas + 22 nuevas), cobertura
 conjunta **96,89 %**, offline **100 %**. Entrenamiento extraído en memoria con
@@ -689,7 +689,7 @@ Retorno A `3e561b2`. **No se iniciaron B/C ni fase 6/7**; pendientes generador/
 datasets/CSV/retirada temporal y timeout/concurrencia. [Criterios y resultados A](docs/migracion/fase-05/BLOQUE_A.md),
 [manifiesto A](docs/migracion/fase-05/evidencia/ia-bloque-a-20261106-01/manifest.json).
 
-**Bloque B validado; cierre documental reanudado (07/11/2026), fase 5 EN CURSO:**
+**Bloque B validado; cierre documental reanudado (07/11/2026); la fase 5 seguía EN CURSO:**
 implementación `58c9288`, runner probado `30f576b`, evidencia separada `16d663c`;
 ejecución `ia-bloque-b-20261106-01` capturada el 07/11 a las 01:16 UTC (06/11 Lima).
 **135/135 pruebas** (105 previas + 30 nuevas), cobertura conjunta **97,18 %**,

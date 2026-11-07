@@ -125,7 +125,8 @@ ruta = guardar_csv_operacional(filas, ruta_nueva=destino_csv_absoluto_nuevo)
 filas_csv = leer_csv_operacional(ruta)
 ```
 
-**Fase 5 continúa EN CURSO:** queda C (timeout/cómputo y concurrencia). La retirada
-efectiva de la copia legacy y el consumo del CSV por el seed requieren los gates
-de fases 6/7 del registro temporal; no se ejecutan por cerrar B. S-02 backend y
-frontend no revalidados por esta entrega.
+**Estado en ese cierre: la fase 5 continuaba EN CURSO**, con C pendiente
+(timeout/cómputo y concurrencia); C se validó después en [BLOQUE_C.md](BLOQUE_C.md).
+La retirada efectiva de la copia legacy y el consumo del CSV por el seed requieren
+los gates de fases 6/7 del registro temporal; no se ejecutan por cerrar B. S-02
+backend y frontend no revalidados por esta entrega.
