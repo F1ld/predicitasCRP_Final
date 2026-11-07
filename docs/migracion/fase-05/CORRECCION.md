@@ -42,9 +42,11 @@ El presupuesto/timeout de inferencia bajo concurrencia también requiere resoluc
 antes de marcar ese ítem completo. Fase 5 permanece EN CURSO aunque estos gates pasen.
 
 **Actualización posterior:** entrenamiento/evaluación/métricas extraídos y validados
-en [bloque A](BLOQUE_A.md), ejecución `ia-bloque-a-20261106-01`. Quedan generador/
-datasets/CSV (B) y timeout/concurrencia (C). Los pendientes anteriores describen
-el estado al cerrar la corrección, no invalidan la extracción A posterior.
+en [bloque A](BLOQUE_A.md), ejecución `ia-bloque-a-20261106-01`. Generador/datasets/
+CSV validados en [bloque B](BLOQUE_B.md), ejecución `ia-bloque-b-20261106-01`, con
+cierre documental reanudado el 07/11/2026. Queda timeout/concurrencia (C). Los
+pendientes anteriores describen el estado al cerrar la corrección, no invalidan
+las extracciones posteriores. Backend/seed siguen integrados sin cambiar consumidores.
 
 ## Ejecución
 

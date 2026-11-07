@@ -11,8 +11,8 @@ contratos, seed ni CSV existentes. No se inicia C ni pipeline/promoción fase 6/
   Defaults legacy se preservan para paridad; para un seed válido indicar fecha,
   cantidades, semilla y **con_invalidas=False** explícitamente.
 - CSV canónico UTF-8 sin BOM, LF, coma y 13 columnas del contrato. Lectura acepta
-  BOM. Escritura exclusiva en ruta absoluta nueva, fuera del código IA, sin
-  seguir enlaces simbólicos; no crea directorios ni sobreescribe archivos.
+  BOM. Escritura exclusiva en ruta absoluta nueva; rechaza destino simbólico y
+  rutas resueltas dentro del código IA. No crea directorios ni sobreescribe archivos.
 - None -> celda vacía -> omitido al leer; backend calcula defaults/contadores.
   Target y tres variables derivadas no se exportan como autoridad: backend los
   deriva de estado/fechas. No cambiar esta política para lograr roundtrip textual.
@@ -61,4 +61,71 @@ python -B docs/migracion/fase-05/validar_ia.py publicar --run-id ia-bloque-b-202
 python -B docs/migracion/fase-05/validar_ia.py verificar --run-id ia-bloque-b-20261106-01
 ```
 
-Estado: implementación en revisión, todavía no validada formalmente. Fase 5 EN CURSO.
+## Resultado aceptado y reanudación
+
+**Bloque B VALIDADO**, ejecución `ia-bloque-b-20261106-01`. Implementación
+`58c9288`, runner probado `30f576b`, evidencia separada `16d663c`. Captura formal
+del 07/11/2026 a las 01:16 UTC (06/11 en Lima); cierre documental del 07/11/2026.
+
+| Gate | Resultado de la ejecución archivada |
+|---|---|
+| Regresión IA | **135/135** pruebas: 105 previas + 30 nuevas; tres autopruebas del runner aprobadas |
+| Cobertura conjunta / entrenamiento / datasets | **97,18004338394793 % / 100 % / 98,13953488372093 %** |
+| Generador preservado vs nuevo | **9 escenarios, 3450 filas**; todos los campos y orden iguales, también hashes de JSON completos |
+| CSV operacional | 13 columnas, roundtrip físico y semántico mediante backend; 1000 filas lógicas de entrenamiento conformes al contrato |
+| Importación CSV/ASGI + PostgreSQL nuevo | **1080 aceptadas / 0 rechazadas**, todos los campos generados, historial y auditoría comprobados |
+| Repetición del mismo CSV | **0 aceptadas / 1080 duplicadas**, sin modificar citas/historial; evento IMPORT conservado según contrato actual |
+| Nulos/BOM/Unicode/comillas/newline/zonas | **4 aceptadas**, defaults y contadores previos correctos, target derivado del estado |
+| Rollback tras flush | Sin cambios persistidos, observado desde conexiones nuevas independientes |
+| Regresión entrenamiento A / inferencia | Entrenamientos equivalentes conservados; **207 casos de inferencia idénticos**, HTTP IA real, lote de 100 en **1,032 s** |
+| Aislamiento y parada | Rol app, volumen nuevo, red interna sin puertos host, backend empaquetado sin montar fuentes; parada archivada con salida 0 |
+
+Imagen IA ejecutada por ID:
+`sha256:ecbe5845ec10f4832b3a86cd0a095fd5068c57ed5b8b830bf4fcee90ee05134d`.
+Serving, entrenamiento A, dependencias, modelo aprobado, backend/frontend,
+contratos, credenciales y CSV existentes permanecen intactos. El seed actual
+**no consume todavía** el CSV nuevo; no hubo promoción ni despliegue al principal.
+
+El CSV se probó contra el endpoint existente mediante ASGI/TestClient con sesiones
+de producción y PostgreSQL TCP. La sonda HTTP IA sí levantó un servidor dentro
+del contenedor. No se presenta como E2E frontend ni prueba de carga sostenida.
+Las celdas se vuelven strings/omitidos al leer; no se promete identidad de tipos
+crudos antes de la normalización del backend ni recuperar target del CSV.
+
+### Comprobaciones al reanudar (07/11/2026)
+
+La interrupción ocurrió después de publicar evidencia, no a mitad del código.
+Se revisó la implementación y se comprobó que las fuentes actuales coinciden
+exactamente con las probadas, protegidos intactos, JUnit/cobertura y hashes de
+logs de las acciones aprobadas, paridad de generadores y entrenamiento, hash del
+CSV y registro de parada. Se repitieron las tres autopruebas stdlib del runner.
+
+Paquetes B, A y seed verificados desde clon limpio Windows/autocrlf de `16d663c`.
+Esto comprueba integridad, **no reejecuta** las 135 pruebas ni PostgreSQL. Docker
+no estaba disponible durante esta reanudación; no se arrancó el daemon, se reusó
+el laboratorio ni se alteraron recursos anteriores. Su estado detenido corresponde
+a la ejecución archivada, no a una nueva consulta al daemon.
+
+[Resumen sanitizado](evidencia/ia-bloque-b-20261106-01/resumen.json),
+[JUnit](evidencia/ia-bloque-b-20261106-01/pytest.xml) y
+[manifiesto](evidencia/ia-bloque-b-20261106-01/manifest.json).
+Crudos/CSV/filas QA y volumen del laboratorio se conservan fuera del paquete público.
+
+Entradas disponibles, sin CLI productivo ni escrituras por import:
+
+```python
+from datetime import date
+from datasets.synthetic import generar_citas
+from datasets.operational_csv import guardar_csv_operacional, leer_csv_operacional
+
+# Ejemplo QA reproducible, no ejecución contra datos existentes.
+filas = generar_citas(historicas=1000, proximas=80, semilla=42,
+                     desde=date(2026, 11, 6), tasa_no_show=0.20, con_invalidas=False)
+ruta = guardar_csv_operacional(filas, ruta_nueva=destino_csv_absoluto_nuevo)
+filas_csv = leer_csv_operacional(ruta)
+```
+
+**Fase 5 continúa EN CURSO:** queda C (timeout/cómputo y concurrencia). La retirada
+efectiva de la copia legacy y el consumo del CSV por el seed requieren los gates
+de fases 6/7 del registro temporal; no se ejecutan por cerrar B. S-02 backend y
+frontend no revalidados por esta entrega.

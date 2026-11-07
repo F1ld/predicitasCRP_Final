@@ -1,12 +1,47 @@
 # Fase 5 — Extraer y probar la aplicación IA independiente
 
-**Estado vigente: EN CURSO — revisión correctiva (06/11/2026).**
+**Estado vigente: EN CURSO — A y B validados, C pendiente (07/11/2026).**
 El resultado histórico siguiente **no certifica cierre**: se detectaron fallos en
 readiness, clave predeterminada, contrato y trazabilidad del runner. No se borra
 la evidencia `ia-20261106-01` ni se reparan sus hashes retrospectivamente.
 [Alcance y gates correctivos](CORRECCION.md). Backend/frontend permanecen intactos.
 
-## Última entrega — bloque A validado
+## Última entrega — bloque B validado
+
+Generador autónomo, CSV operacional futuro y mapping de entrenamiento en
+`apps/ia/datasets/`. Ejecución `ia-bloque-b-20261106-01`, código `58c9288`, runner
+`30f576b`, evidencia `16d663c`. **No se cambió el seed ni sus consumidores.**
+
+- **135/135 pruebas**, cobertura conjunta **97,18 %**, datasets **98,14 %** y
+  entrenamiento **100 %**; 105 casos previos conservados + 30 nuevos.
+- **9 escenarios / 3450 filas** con todos los campos y orden idénticos al generador
+  preservado; CSV de 13 columnas, nulos/fechas/Unicode y mapping de 1000 históricos.
+- En PostgreSQL nuevo, CSV/ASGI aceptó **1080 filas**; su repetición rechazó las
+  1080 como duplicadas sin cambiar citas/historial. Cuatro filas suplementarias
+  comprobaron defaults/contadores/zonas y un fallo tras flush revirtió íntegramente.
+- Regresión A e inferencia conservadas, **207 casos de paridad** y HTTP IA real.
+- Backend/frontend, serving, entrenamiento A, dependencias, modelo y CSV existentes
+  intactos; laboratorio detenido según registro archivado. Sin despliegue.
+
+Imagen:
+`sha256:ecbe5845ec10f4832b3a86cd0a095fd5068c57ed5b8b830bf4fcee90ee05134d`.
+[Resultados, reanudación y límites B](BLOQUE_B.md),
+[evidencia](evidencia/ia-bloque-b-20261106-01/manifest.json) y
+[registro de copia temporal](LEGACY_GENERADOR.md). Fecha objetivo provisional de
+retirada/revisión 20/11/2026, condicionada a consumidores/gates de fases 6/7;
+**no hay eliminación automática** ni se retira código en esta entrega.
+
+Cierre documental reanudado el 07/11/2026: fuentes/protegidos y resultados crudos
+comprobados; paquetes B/A/seed verifican desde clon limpio Windows/autocrlf.
+Docker no estaba disponible y no se volvió a ejecutar la suite ni el laboratorio.
+Se conserva la ejecución formal previa sin alterar evidencia ni afirmar una nueva.
+
+**Pendiente actual para cerrar fase 5: bloque C**, timeout/cómputo bajo concurrencia.
+No se inicia por esta entrega. JSONL/manifiestos/pipeline/consumo del seed quedan
+en fase 6; sustitución del backend integrado en fase 7. S-02 y E2E frontend no se
+consideran resueltos por las pruebas IA aisladas.
+
+## Entrega anterior — bloque A validado
 
 **Extracción offline de entrenamiento/evaluación/métricas aprobada**, ejecución
 `ia-bloque-a-20261106-01`. Código `83a96a6`, runner `22c6788`, evidencia `9f6636b`.
@@ -27,7 +62,7 @@ Imagen de la entrega:
 [evidencia](evidencia/ia-bloque-a-20261106-01/manifest.json). Hashes del índice y clon
 limpio Windows/autocrlf aprobados. Ningún contenedor de prueba quedó activo.
 
-**Estado global EN CURSO:** quedan B (generador/datasets/CSV) y C
+**Estado al cerrar A (histórico):** quedaban B (generador/datasets/CSV) y C
 (timeout/concurrencia); no se iniciaron en A. Los pendientes de entrenamiento
 mencionados en el resultado histórico de corrección siguiente quedan resueltos
 por A, sin marcar completo el ítem combinado de datasets ni cerrar la fase.
@@ -77,7 +112,7 @@ No se modifica la evidencia histórica defectuosa de la primera implementación.
 [OpenAPI comprobado](evidencia/ia-correccion-20261106-03/openapi.json) y
 [manifiesto](evidencia/ia-correccion-20261106-03/manifest.json).
 
-**Pendientes de fase 5:** extracción del entrenamiento y generador/datasets/CSV,
+**Pendientes al cerrar la corrección (histórico):** extracción del entrenamiento y generador/datasets/CSV,
 política de retirada temporal y timeout de cómputo bajo concurrencia. La medición
 local del lote no sustituye esa resolución ni una prueba de carga sostenida.
 No se reducen requisitos para cerrar la fase. Backend sigue integrado; fase 6/7

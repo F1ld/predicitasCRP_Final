@@ -635,14 +635,16 @@ artefactos incompatibles, clave por defecto, validación contractual insuficient
 runner sin trazabilidad verificable. Corrección autorizada por el usuario; baseline
 operativo `af13b3b`, retorno de esta entrega `fe4768b`. No se conecta backend/IA.
 No se reduce el alcance original: separación de entrenamiento y migración del
-generador siguen pendientes, no se trasladan a fase 6 por decisión implícita.
+generador estaban pendientes al iniciar la revisión; A/B posteriores las validan.
+El estado vigente se recoge en el checklist y resultados siguientes, sin trasladar
+requisitos a fase 6 por decisión implícita.
 [Criterios correctivos](docs/migracion/fase-05/CORRECCION.md).
 
 **Resultado (06/11/2026): COMPLETADA.** Solicitado y autorizado por el usuario. Baseline `af13b3b`, imagen `sha256:82d2316f5247f5f698e966885b22f2787ece0f40573c38a5c75b831e6e070395` (no-root `predicitas:1000`). **21/21 pruebas aprobadas**, cobertura de código **92.0 %**. Paridad matemática estricta y explicabilidad TreeSHAP verificada al 100 % contra baseline congelado. Siete rutas OpenAPI idénticas a contratos. Backend integrado y frontend intactos. [Evidencia](docs/migracion/fase-05/evidencia/ia-20261106-01/manifest.json) y [bitácora](docs/migracion/fase-05/README.md).
 
 - [x] Crear `apps/ia/` con API, configuración, autenticación interna, tests y dependencias propias.
-- [ ] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia extraídas; entrenamiento/evaluación/métricas offline validados en A (`ia-bloque-a-20261106-01`). Datasets/generador siguen pendientes de B; no se marca completo el ítem combinado.
-- [ ] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada.
+- [x] Separar predictor actual en features, inferencia, entrenamiento, métricas y datasets, sin rediseñar algoritmo/preprocesado. Features/inferencia corregidas; entrenamiento/evaluación/métricas offline validados en A; generador/datasets/mapping validados en B. Copia integrada preservada hasta retirar consumidores.
+- [x] Migrar el generador sintético a datasets IA y producir CSV explícito para el futuro seed; mientras dura transición, marcar copia antigua como temporal con fecha de retirada. B: `apps/ia/datasets/`, CSV canónico probado en PostgreSQL nuevo, [registro temporal](docs/migracion/fase-05/LEGACY_GENERADOR.md) con objetivo provisional 20/11/2026 y gates de retirada; seed sin cambios.
 - [x] Eliminar dependencias de FastAPI backend, ORM operativo y `app.modules.citas` de la nueva aplicación IA.
 - [x] Cargar el artefacto legado confiable solo tras verificar compatibilidad de librerías/clases serializadas; comprobar que no depende de rutas Python antiguas antes de retirarlas. Corrección `ia-correccion-20261106-03`: hash previo a deserialización, validación de compatibilidad y smoke en imagen sin backend.
 - [x] Implementar API interna de sección 6, healthchecks y manejo de modelo ausente/corrupto/incompatible. Corrección validada contra schemas congelados, API-key explícita, errores y readiness real.
@@ -685,6 +687,28 @@ verificadas en clon limpio Windows/autocrlf; sin contenedores de prueba activos.
 Retorno A `3e561b2`. **No se iniciaron B/C ni fase 6/7**; pendientes generador/
 datasets/CSV/retirada temporal y timeout/concurrencia. [Criterios y resultados A](docs/migracion/fase-05/BLOQUE_A.md),
 [manifiesto A](docs/migracion/fase-05/evidencia/ia-bloque-a-20261106-01/manifest.json).
+
+**Bloque B validado; cierre documental reanudado (07/11/2026), fase 5 EN CURSO:**
+implementación `58c9288`, runner probado `30f576b`, evidencia separada `16d663c`;
+ejecución `ia-bloque-b-20261106-01` capturada el 07/11 a las 01:16 UTC (06/11 Lima).
+**135/135 pruebas** (105 previas + 30 nuevas), cobertura conjunta **97,18 %**,
+datasets **98,14 %**, entrenamiento **100 %**. Nueve escenarios/3450 filas con
+todos los campos y orden iguales al generador preservado. CSV canónico de 13
+columnas: 1080 aceptadas en endpoint ASGI/backend empaquetado y PostgreSQL nuevo,
+repetición 0 aceptadas/1080 duplicadas sin cambiar citas/historial; cuatro filas
+suplementarias de nulos/BOM/Unicode/zonas y rollback tras flush comprobados desde
+conexiones independientes. Regresión A, 207 casos de inferencia y HTTP IA real
+aprobados. Imagen por ID
+`sha256:ecbe5845ec10f4832b3a86cd0a095fd5068c57ed5b8b830bf4fcee90ee05134d`.
+Serving, entrenamiento, dependencias, backend/frontend/contratos/modelos/CSV y
+credenciales intactos; seed y consumidores siguen usando su compatibilidad
+legacy. Parada del laboratorio archivada con salida 0. Al reanudar se comprobaron
+fuentes/protegidos, JUnit/cobertura/logs/hash CSV y paridad archivada; paquetes
+B/A/seed verifican desde clon limpio Windows/autocrlf. Docker no disponible en
+esa reanudación: **no se presenta como nueva ejecución ni consulta actual de
+recursos**. Retorno B `bfcad63`. **Solo C queda pendiente para fase 5**; no iniciado,
+sin pipeline/promoción fase 6 ni conexión fase 7. [Detalle B](docs/migracion/fase-05/BLOQUE_B.md),
+[manifiesto B](docs/migracion/fase-05/evidencia/ia-bloque-b-20261106-01/manifest.json).
 
 **Se toca:** nueva app IA, contrato interno, ubicación de código matemático y packaging IA.
 
