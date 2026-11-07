@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 import logging
+import threading
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
@@ -13,10 +14,10 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.auth import verificar_api_key_interna
-from app.config import require_api_key
+from app.config import COMPUTE_TIMEOUT_SECONDS, require_api_key
 from app.body_limit import MaxBodySizeMiddleware
 from app.metadata import DatasetLegacy, MetricasModelo
-from app.core.inference import ejecutar_inferencia_individual
+from app.execution import IsolatedExecutor, CapacityUnavailable, ComputationExpired, WorkerFailed
 from app.core.model_registry import registry
 from app.schemas import (
     BatchItemResponse,
@@ -32,15 +33,66 @@ from app.schemas import (
 )
 
 logger = logging.getLogger("predicitas.ia.app")
+_executor: IsolatedExecutor | None = None
+_executor_lock = threading.Lock()
+
+
+def get_executor() -> IsolatedExecutor:
+    """Crea el ejecutor de forma diferida y segura entre hilos."""
+    global _executor
+    with _executor_lock:
+        if _executor is None:
+            _executor = IsolatedExecutor(timeout=COMPUTE_TIMEOUT_SECONDS)
+        return _executor
+
+
+def close_executor() -> None:
+    global _executor
+    with _executor_lock:
+        current, _executor = _executor, None
+    if current is not None:
+        current.close()
+
+
+def ejecutar_aislado(version: str, features: list) -> list[dict]:
+    try:
+        result = get_executor().run({
+            "action": "predict",
+            "version_modelo": version,
+            "features": [f.model_dump(mode="json") for f in features],
+        })
+    except (CapacityUnavailable, ComputationExpired, WorkerFailed) as exc:
+        # Contrato 503 existente; el motivo distingue saturación, plazo o worker.
+        reason = {
+            CapacityUnavailable: "CAPACIDAD_OCUPADA",
+            ComputationExpired: "PLAZO_AGOTADO",
+            WorkerFailed: "WORKER_FALLIDO",
+        }[type(exc)]
+        raise HTTPException(status_code=503, detail=ErrorDetail(codigo="MODELO_NO_DISPONIBLE",
+            mensaje="Inferencia temporalmente no disponible", campos={"motivo": reason}).model_dump()) from None
+    items = result.get("items") if isinstance(result, dict) else None
+    if not isinstance(items, list) or len(items) != len(features):
+        raise HTTPException(status_code=503, detail=ErrorDetail(codigo="MODELO_NO_DISPONIBLE",
+            mensaje="Respuesta del proceso de inferencia incompatible").model_dump())
+    return items
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Cargar el modelo en memoria durante el inicio del servicio
     require_api_key()
-    registry.load_model()
-    yield
-    # Limpieza al apagar si fuera necesario
+    ready = registry.load_model()
+    if ready:
+        try:
+            get_executor().warm()
+        except Exception as exc:
+            close_executor()
+            logger.error("Aislamiento de inferencia no disponible (%s)", type(exc).__name__)
+            raise RuntimeError("Aislamiento de inferencia no disponible") from None
+    try:
+        yield
+    finally:
+        close_executor()
 
 
 app = FastAPI(
@@ -236,17 +288,14 @@ def predict_individual(solicitud: PredictRequest) -> PredictResponse:
             ).model_dump(),
         )
 
-    prob, nivel, snapshot, resumen = ejecutar_inferencia_individual(registry.pipeline, solicitud.features)
+    result = ejecutar_aislado(solicitud.version_modelo, [solicitud.features])[0]
 
     return PredictResponse(
         version_contrato="1.0",
         id_solicitud=solicitud.id_solicitud,
         version_modelo=str(registry.version_modelo),
         version_features=solicitud.version_features,
-        probabilidad_no_show=prob,
-        nivel_riesgo=nivel,
-        features_snapshot=snapshot,
-        explicabilidad_resumen=resumen,
+        **result,
     )
 
 
@@ -281,17 +330,14 @@ def predict_batch(solicitud: BatchRequest) -> BatchResponse:
         )
 
     resultados: list[BatchItemResponse] = []
-    for item in solicitud.items:
-        prob, nivel, snapshot, resumen = ejecutar_inferencia_individual(registry.pipeline, item.features)
+    computed = ejecutar_aislado(solicitud.version_modelo, [item.features for item in solicitud.items])
+    for item, result in zip(solicitud.items, computed):
         pred = PredictResponse(
             version_contrato="1.0",
             id_solicitud=solicitud.id_solicitud,
             version_modelo=str(registry.version_modelo),
             version_features=solicitud.version_features,
-            probabilidad_no_show=prob,
-            nivel_riesgo=nivel,
-            features_snapshot=snapshot,
-            explicabilidad_resumen=resumen,
+            **result,
         )
         resultados.append(BatchItemResponse(id_item=item.id_item, resultado=pred))
 

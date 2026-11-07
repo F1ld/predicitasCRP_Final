@@ -24,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 BASELINE = "af13b3b"
 A_BASELINE = "3e561b2"
 B_BASELINE = "bfcad63"
+C_BASELINE = "96d809d"
 BACKEND_IMAGE = "sha256:b1225267a59311a2fadce32ea139cabaa948b0b6ff2d344eb083a48e6421666d"
 
 
@@ -105,6 +106,9 @@ def execute(raw, run_id, scope="correccion"):
     if scope == "B":
         assert not output(["git", "diff", B_BASELINE, "--", "apps/ia/app", "apps/ia/manifests", "apps/ia/training",
             "apps/ia/Dockerfile", "apps/ia/requirements.txt"]), "Bloque B no autoriza alterar serving, entrenamiento, modelo aprobado o dependencias"
+    if scope == "C":
+        assert not output(["git", "diff", C_BASELINE, "--", "apps/ia/training", "apps/ia/datasets", "apps/ia/manifests",
+            "apps/ia/Dockerfile", "apps/ia/requirements.txt"]), "Bloque C no autoriza alterar entrenamiento, datasets, modelo aprobado, imagen base o dependencias"
     commit = output(["git", "rev-parse", "HEAD"])
     before, preserved = sources(), protected()
     raw.mkdir(parents=True, exist_ok=False)
@@ -235,6 +239,12 @@ print(json.dumps(out))"""
         datasets_coverage = 100 * sum(s["covered_lines"] for s in summaries) / sum(s["num_statements"] for s in summaries)
         assert datasets_coverage >= 80
     runtime = read(raw / "runtime.json")
+    if scope == "C":
+        assert runtime["timeout_enforced"] and runtime["timeout_kill_seconds"] < 5
+        assert runtime["concurrency"] == {"simultaneous": 2, "ok": 1, "busy": 1,
+            "busy_error": "CAPACIDAD_OCUPADA", "recovered": True}
+        assert runtime["memory"]["under_limit"] and runtime["memory"]["method"].startswith("procfs")
+        assert runtime["compute_timeout_seconds"] == 10
     openapi = runtime.pop("openapi")
     write(raw / "openapi.json", openapi)
     freeze = output([*base, "python", "-m", "pip", "freeze", "--all"]).splitlines()
@@ -245,6 +255,8 @@ print(json.dumps(out))"""
         "backend_frontend_contracts_unchanged": True, "protected_unchanged": True,
         "pip_freeze": freeze, "training_a": training, "training_coverage_percent": training_coverage,
         "serving_baseline_unchanged": A_BASELINE if scope == "A" else B_BASELINE if scope == "B" else None,
+        "scope_baseline": C_BASELINE if scope == "C" else None,
+        "training_datasets_unchanged": scope == "C",
         "datasets_b": datasets, "datasets_coverage_percent": datasets_coverage,
         "phase_status": "EN CURSO; validacion de bloque no equivale a cerrar checklist original"})
     print(f"Corrección validada: {tests['passed']} pruebas, cobertura {coverage:.2f}%, {len(cases)} casos diferenciales")
@@ -267,6 +279,14 @@ def publish(raw, target, run_id):
         assert summary["datasets_b"]["generator"]["all_fields_and_row_order_equal"]
         for name in ("datasets_reference", "datasets_candidate", "csv_http_postgres"):
             assert read(raw / f"{name}.action.json")["exit_code"] == 0
+    if summary.get("block") == "C":
+        runtime = summary["runtime"]
+        assert summary["training_datasets_unchanged"] and summary["scope_baseline"] == C_BASELINE
+        assert runtime["timeout_enforced"] and runtime["timeout_kill_seconds"] < 5
+        assert runtime["concurrency"]["busy_error"] == "CAPACIDAD_OCUPADA" and runtime["concurrency"]["recovered"]
+        assert runtime["memory"]["under_limit"] and runtime["memory"]["method"].startswith("procfs")
+        for name in ("build", "pytest", "runtime"):
+            assert read(raw / f"{name}.action.json")["exit_code"] == 0
     target.mkdir(parents=True, exist_ok=False)
     with (target / ".gitattributes").open("x", encoding="utf-8", newline="\n") as stream:
         stream.write("*.json text eol=lf\n*.xml text eol=lf\n")
@@ -287,7 +307,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("ejecutar", "publicar", "verificar"))
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--scope", choices=("correccion", "A", "B"), default="correccion")
+    parser.add_argument("--scope", choices=("correccion", "A", "B", "C"), default="correccion")
     args = parser.parse_args()
     if not re.fullmatch(r"ia-[a-z0-9-]{3,36}", args.run_id):
         raise ValueError("run-id inválido")

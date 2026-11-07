@@ -4,6 +4,7 @@ No depende de base de datos relacional, JWT de negocio ni modelos backend.
 """
 from __future__ import annotations
 
+import math
 import os
 from pathlib import Path
 
@@ -22,6 +23,15 @@ PORT: int = int(os.getenv("PORT", "8100"))
 MAX_BODY_SIZE_BYTES: int = 256 * 1024  # 256 KiB
 MAX_BATCH_SIZE: int = 100
 MIN_BATCH_SIZE: int = 1
+
+# Presupuesto total de una inferencia aislada: arranque/validación del modelo,
+# cómputo, explicabilidad y serialización. Se aplica por lote completo.
+try:
+    COMPUTE_TIMEOUT_SECONDS: float = float(os.getenv("IA_COMPUTE_TIMEOUT_SECONDS", "10"))
+except ValueError:
+    raise RuntimeError("IA_COMPUTE_TIMEOUT_SECONDS debe ser numérico") from None
+if not math.isfinite(COMPUTE_TIMEOUT_SECONDS) or COMPUTE_TIMEOUT_SECONDS <= 0:
+    raise RuntimeError("IA_COMPUTE_TIMEOUT_SECONDS debe ser positivo y finito")
 
 # Versiones de contrato y perfil
 VERSION_CONTRATO: str = "1.0"
