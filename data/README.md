@@ -24,26 +24,32 @@ Ver [inventario](manifests/inventario-fase-03.v1.json) y [contrato operacional](
 
 ## Generar otra muestra sin modificar las existentes
 
-Desde `apps/backend/`, con su entorno Python 3.12 preparado:
+Desde `apps/ia/`, con su entorno Python 3.12 exclusivo preparado (migración D de
+fase 6; no importar el generador IA desde backend):
 
 ```powershell
 $salida = [IO.Path]::GetFullPath((Join-Path $PWD '../../runtime/exports/demo-ref-2026-11-05-seed-7.csv'))
-python -m scripts.exportar_csv --salida "$salida" --fecha-referencia 2026-11-05 --filas 20 --semilla 7
+python -m datasets.exportar_csv --salida "$salida" --fecha-referencia 2026-11-05 --filas 20 --semilla 7
 ```
 
 El nombre/ruta deben ser nuevos. Salida y fecha son obligatorias; rutas relativas y sobrescritura se rechazan. Dentro del repositorio solo se permiten `runtime/exports`, `runtime/tmp`, `runtime/test-results`, nunca código, muestras, artefactos o backups. Una ruta absoluta externa permite almacenamiento fuera de OneDrive. Se imprimen fecha, semilla y hash; cambiar la fecha produce otra muestra, no una actualización silenciosa de la anterior.
 
-El exportador mantiene el generador existente y sus cuatro rechazos intencionales, pero proyecta **solo las 13 columnas operacionales** (sin target ni features calculadas). No es seed, snapshot BD ni pipeline de entrenamiento. La validación de importación sigue siendo responsabilidad de la API.
+El exportador usa el generador canónico IA y mantiene los cuatro rechazos intencionales,
+proyectando **solo las 13 columnas operacionales** (sin target ni features calculadas).
+No es seed, snapshot BD ni pipeline de entrenamiento. La validación de importación
+sigue siendo responsabilidad de la API. El antiguo comando backend solo copia
+muestras de un bundle explícito con `--fuente` y manifiesto verificado; ya no genera
+ni hace fallback. Ver [migración e invocaciones](../docs/migracion/fase-06/MIGRACIONES_D.md).
 
 ### Docker, sin BD ni montajes de código escribibles
 
 Construir primero la imagen desde el contexto actual. Desde la raíz:
 
 ```powershell
-docker compose -f compose.yaml --env-file .env build backend
+docker build --build-context contracts=./contracts -t predicitas-ia:muestras ./apps/ia
 $exports = [IO.Path]::GetFullPath((Join-Path $PWD 'runtime/exports'))
 New-Item -ItemType Directory -Force -Path $exports | Out-Null
-docker run --rm --network none --mount "type=bind,source=$exports,target=/runtime/exports" predicitas-crp-backend python -m scripts.exportar_csv --salida /runtime/exports/demo-ref-2026-11-05-seed-7.csv --fecha-referencia 2026-11-05 --filas 20 --semilla 7
+docker run --rm --network none --read-only --tmpfs /tmp:rw,size=128m --mount "type=bind,source=$exports,target=/runtime/exports" predicitas-ia:muestras python -m datasets.exportar_csv --salida /runtime/exports/demo-ref-2026-11-05-seed-7.csv --fecha-referencia 2026-11-05 --filas 20 --semilla 7
 ```
 
 Solo el destino de exportación es escribible. No montar PostgreSQL, backups, CSV completos ni `.env`; este comando no necesita credenciales de negocio. Las muestras se suben desde el navegador y no requieren montajes permanentes en el backend. Los contextos Docker no incluyen `data/` raíz; la copia legacy de `apps/backend/data/` también se excluye.

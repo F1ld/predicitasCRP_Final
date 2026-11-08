@@ -1,0 +1,28 @@
+{
+  "fase": 6,
+  "bloque": "A",
+  "estado_fase": "EN CURSO",
+  "retorno": "d6e9b1c",
+  "fuentes_sin_commit_automatico": true,
+  "image_id": "sha256:8df350a96e09df6cd3767897334eaa3f2027989e01d953eba4838b593dcfab36",
+  "suite": {"tests": 204, "failures": 0, "errors": 0, "skipped": 0, "nuevas": 20},
+  "coverage": {"covered_lines": 1244, "num_statements": 1335, "percent_covered": 93.18352059925094},
+  "aislamiento": {"red": "none", "filesystem": "read-only", "modelo": "read-only", "cpu": 2, "memoria": "1g", "tmpfs": "512m", "bd": false},
+  "modelo_legacy_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "fuentes_sha256": {
+    "apps/ia/training/pipeline.py": "14011016e579352b0debaf5331bfe1f831d0f73bfdf44ed598dbcf9f2f4796e2",
+    "apps/ia/training/cli.py": "90df489d6e97f1a0e9059b426b2e35978a52acb43e08ee447521585a0e598682",
+    "apps/ia/tests/test_pipeline_f6.py": "bd1980bbcf6c6b90a150b87ef1ea0815a58a995057a5ba2a1b985f17a0396e06"
+  },
+  "resultados_locales_sha256": {
+    "runtime/test-results/fase-06/bloque-a-20261107-01/pytest.xml": "3ad9fce664de0f9792523e9c5fbb7c8c674bc6a7a3c4635832e1142ddd06b12b",
+    "runtime/test-results/fase-06/bloque-a-20261107-01/coverage.json": "56ab310de5f02351b636b457a6ac43cbf5674263cdd96ed7eec4feec857abfce"
+  },
+  "limitaciones": [
+    "No promoción ni rollback implementados en este bloque",
+    "Seed y backend/frontend sin cambios y sin nueva regresión",
+    "CLI probado por subprocess; su cobertura no está incluida por medición multiproceso",
+    "No validación de clon limpio ni paquete completo portable de evidencias",
+    "No ejecución del camino limpio completo ni cierre de fase 6"
+  ]
+}

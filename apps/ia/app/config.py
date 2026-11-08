@@ -58,3 +58,15 @@ MODEL_REGISTRY_DIR = Path(os.getenv("MODEL_REGISTRY_DIR", "/models"))
 MODEL_FILENAME: str = os.getenv("MODEL_FILENAME", "modelo_predicitas_v1.joblib")
 MODEL_PATH: Path = MODEL_REGISTRY_DIR / MODEL_FILENAME
 MANIFEST_PATH = Path(__file__).resolve().parents[1] / "manifests/legacy-approved.json"
+
+# Opt-in: versión inmutable y hash fijados al reiniciar, nunca reload automático.
+# Sin estas variables se conserva exactamente el camino legacy.
+RELEASE_VERSION = os.getenv("IA_RELEASE_VERSION", "")
+APPROVAL_SHA256 = os.getenv("IA_APPROVAL_SHA256", "")
+if RELEASE_VERSION or APPROVAL_SHA256:
+    import re
+    if (not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,99}", RELEASE_VERSION)
+            or not re.fullmatch(r"[a-f0-9]{64}", APPROVAL_SHA256)):
+        raise RuntimeError("Release y hash de aprobación explícitos requeridos")
+    MODEL_PATH = MODEL_REGISTRY_DIR / "releases" / RELEASE_VERSION / "model.joblib"
+    MANIFEST_PATH = MODEL_PATH.parent / "approval.json"

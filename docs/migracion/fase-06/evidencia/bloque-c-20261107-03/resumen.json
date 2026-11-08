@@ -1,0 +1,57 @@
+{
+  "fase": 6,
+  "bloque": "C",
+  "estado_bloque": "VALIDADO_EN_AISLAMIENTO",
+  "estado_fase": "EN CURSO",
+  "baseline_git": "d6e9b1c",
+  "cambios_a_b_sin_commit_preservados": true,
+  "backend_image": "sha256:421227ed06dabde3f18c67692a97aa573283731aa51204ecd74a80b795871bd8",
+  "ia_image_generador": "sha256:41ca225ddcb1a930e5232e747d6e5e2527f605f3f8154c1611e201dff03ead73",
+  "focales": {"tests": 21, "failures": 0, "errors": 0, "skipped": 0},
+  "regresion_empaquetada": {"tests": 330, "failures": 0, "errors": 0, "skipped": 0, "incluye_las_21_nuevas": true},
+  "coverage": {"covered_lines": 3163, "num_statements": 3473, "percent_covered": 91.073999424129},
+  "seed_coverage": {"covered_lines": 155, "num_statements": 176, "percent_covered": 88.06818181818181},
+  "integracion": {
+    "csv_sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "primera_carga": {"citas": 1080, "usuarios": 3, "historiales": 2080},
+    "repeticion_sin_cambios_en_todas_las_tablas": true,
+    "credenciales_existentes_sin_rotacion": true,
+    "parcial_sin_flag_rechazado": true,
+    "reconciliacion_explicita": {"existentes": 1, "insertadas": 2},
+    "conflicto_sin_sobrescritura": true,
+    "rollback_tras_flush_observado_independientemente": true,
+    "segundo_seed_concurrente_rechazado": true,
+    "final": {"citas": 1083, "usuarios": 3, "historiales": 2086, "auditorias": 6},
+    "rol": "predicitas_app",
+    "transporte": "CLI subprocess + PostgreSQL TCP"
+  },
+  "aislamiento": {"red": "interna", "puertos_host": false, "volumen": "nuevo exclusivo", "bd_principal": false, "fuentes_backend_montadas": false, "csv": "read-only", "rootfs_backend": "read-only", "owner_solo_migraciones": true, "laboratorio_detenido": true},
+  "modelos_preservados_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "compose_config_quiet": "exit 0",
+  "sources_sha256": {
+    "apps/backend/scripts/seed.py": "f56814727526e1d4b985c13161ed8c1b95738015e81f877f974a32df1fdbd381",
+    "apps/backend/tests/test_seed_f6c.py": "5147a743e58bee186b39ad1cf3e321242c240d8428ea18eea7cd0d6e39e93e0d",
+    "compose.yaml": "263d3340086ff785821105b128a585a83bc77b158b85bedd61dcd509d4702fa6",
+    ".env.example": "bcccc71abc746f19d2871b6c4555a9aa81911de5bebc6ba496f08d34271d65b3",
+    "docs/migracion/fase-06/validar_seed_c.py": "4ecef0757ef97626db43d60e129c741bfb6deaa4240d896e92f30bc2c2682d6e",
+    "docs/migracion/fase-06/probar_seed_c.py": "6e3c0efe2c40e49074160db53f6a34fce282d31bfe34fb8a6a872df9deec93a7"
+  },
+  "resultados_locales_sha256": {
+    "focal.xml": "9949bff0bf58aa12305a62f45f1029c3996e4502836b6f40b9f0ec3900944f8f",
+    "diagnostico.xml": "591d9fc43e561cb6f5e79bf5cb0345bdbc01daef177c9ef4524b5c13b41a0613",
+    "coverage.json": "1e2af93bd4c208b9277c980382433e4ef250337f977392299a67ac2ff38a4faa",
+    "integracion.json": "4c48bfe3512e56695049802eb0d571538e82921a0bbdfc0e583b26ffad6e9aa6",
+    "laboratorio.json": "a92ac34523c9717f241c31f13a542fddc499fccd0ab17ea97d657fb85358f064",
+    "parada.json": "ae17d756aa744be669296fa50315cd177a39156cce556a46c14801f53fa3496c",
+    "coleccion.log": "d6a7f813b0d8f469df9aef0ea9b3d17d22377cd99de6a661920e5b0fe8b4c41b",
+    "coleccion.json": "d26b0745a1a2f3d452def2624b3b0bcc425124b18690dbf694f4de0ff91cb07e"
+  },
+  "limites": [
+    "Coleccion completa bloqueada por S-02 y dependencia de arbol monorepo del verificador de evidencia fase 3",
+    "Diagnostico excluye tests/ia y dos archivos dependientes del monorepo; no suite completa verde",
+    "Resultados completos locales en runtime/test-results/fase-06/bloque-c-20261107-03; sin paquete portable ni verificacion de clon limpio",
+    "Cobertura no agrega subprocess de la sonda CLI",
+    "Sin regresion frontend nueva, despliegue, datos operativos ni cambio de modelo",
+    "Fase 6 no cerrada; bloque D/E y fase 7 no iniciados"
+  ]
+}

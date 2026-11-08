@@ -6,6 +6,8 @@ Salidas nuevas: runtime/test-results/diseno/<id>/; no modifica evidencia histór
 PREDICITAS_TEST_RESULTS_DIR permite otra base absoluta explícita.
 Usar solo una DATABASE_URL de pruebas aislada, nunca la BD principal.
 PREDICITAS_QA_DATABASE_NAME debe coincidir exactamente con esa BD test/qa.
+Datos: fixtures/generados-v1, preparados explícitamente por IA; no genera citas.
+PREDICITAS_QA_FIXTURES_DIR permite seleccionar otro bundle absoluto aprobado.
 Expone la API en 8001 para pruebas de navegador. Todas las escrituras quedan
 dentro de una transacción externa con rollback. No elimina archivos existentes.
 Los endpoints /__qa solo existen en este proceso de prueba, nunca en producción.
@@ -63,6 +65,21 @@ def csv_bytes(registros):
     return salida.getvalue().encode("utf-8")
 
 
+def cargar_qa(nombre, prefijo):
+    # Import diferido: importar este runner no cambia sys.path/CWD ni lee datos.
+    from scripts.csv_preparado import leer_preparado
+    folder = Path(os.environ.get("PREDICITAS_QA_FIXTURES_DIR", str(Path(__file__).resolve().parent / "fixtures/generados-v1")))
+    rows, _, params = leer_preparado(folder, nombre)
+    original = params["prefijo"]
+    for row in rows:
+        for key, start in (("id_cita_externa", "CIT"), ("paciente_anon_id", "PAC")):
+            expected = f"{start}-{original}-"
+            if not row[key].startswith(expected):
+                raise ValueError("Identificador QA no canónico")
+            row[key] = f"{start}-{prefijo}-" + row[key][len(expected):]
+    return rows
+
+
 def main():
     APPS = Path(__file__).resolve().parents[2]
     backend_path = str(APPS / "backend")
@@ -81,15 +98,17 @@ def main():
     from app.modules.usuarios.models import Usuario
     from app.modules.citas.importer import importar_citas
     from app.modules.citas.models import Cita
-    from app.modules.citas.synthetic import generar_citas
 
     # 1. Validar la base de datos ANTES de crear directorios o cambiar CWD
     validar_base_pruebas(engine.url.database, os.environ.get("PREDICITAS_QA_DATABASE_NAME"))
 
     # 2. Solo tras superar la guarda, crear directorio de resultados y marca
     marca = uuid.uuid4().hex[:8]
-    salida_resultados = crear_directorio_resultados(marca)
     prefijo = f"UX-{marca}"
+    registros = cargar_qa("ux45", prefijo)
+    registros_api = cargar_qa("uxapi20", f"UXAPI-{marca}")
+    registros_web = cargar_qa("uxweb20", f"UXWEB-{marca}")
+    salida_resultados = crear_directorio_resultados(marca)
 
     # 3. Cambiar CWD a backend para ejecuciones relativas esperadas
     os.chdir(APPS / "backend")
@@ -122,7 +141,6 @@ def main():
             sesion.add(usuario)
             usuarios[rol] = usuario
         sesion.commit()
-        registros = generar_citas(historicas=0, proximas=45, prefijo=prefijo)
         # Citas controladas para ensayar transiciones sin tocar las citas demo existentes.
         for registro in registros[:3]:
             registro["estado_actual"] = "RECIBIDA"
@@ -165,7 +183,7 @@ def main():
             otra = sesion.scalar(select(Cita).where(Cita.id_cita_externa == registros[1]["id_cita_externa"]))
             no_show = cliente.post(f"/citas/{otra.id_cita}/estado", json={"estado_nuevo": "NO_SHOW"}, headers=recepcion)
             comprobar("NO_SHOW: target 1", no_show.status_code == 200 and no_show.json()["target_no_show"] == 1)
-            datos_csv = csv_bytes(generar_citas(historicas=0, proximas=20, prefijo=f"UXAPI-{marca}"))
+            datos_csv = csv_bytes(registros_api)
             archivo = {"archivo": ("citas.csv", datos_csv, "text/csv")}
             comprobar("Técnico no importa: 403", cliente.post("/citas/importar", headers=tecnico, files=archivo).status_code == 403)
             carga = cliente.post("/citas/importar", headers=recepcion, files=archivo).json()
@@ -180,7 +198,7 @@ def main():
         carpeta.mkdir(exist_ok=True)
         fixture = carpeta / f"citas-diseno-{marca}.csv"
         with fixture.open("xb") as archivo_fixture:
-            archivo_fixture.write(csv_bytes(generar_citas(historicas=0, proximas=20, prefijo=f"UXWEB-{marca}")))
+            archivo_fixture.write(csv_bytes(registros_web))
         manifiesto = {"marca": marca, "prefijo": f"CIT-{prefijo}-", "usuarios": {rol: u.correo_institucional for rol, u in usuarios.items()}, "csv": str(fixture), "pruebas_api": resultados}
         with (salida_resultados / "manifest.json").open("x", encoding="utf-8") as archivo_manifest:
             json.dump(manifiesto, archivo_manifest, indent=2, ensure_ascii=False)

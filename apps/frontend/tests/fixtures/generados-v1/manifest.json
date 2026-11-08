@@ -1,0 +1,43 @@
+{
+  "es_simulacion": true,
+  "files": {
+    "ux45": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-10-29",
+        "historicas": 0,
+        "prefijo": "UX",
+        "proximas": 45,
+        "semilla": 42
+      },
+      "rows": 49,
+      "sha256": "8656e0f9a5382d2193c2ccca695fa1be2c3f46b45d368f80189e58f285391e79"
+    },
+    "uxapi20": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-10-29",
+        "historicas": 0,
+        "prefijo": "UXAPI",
+        "proximas": 20,
+        "semilla": 42
+      },
+      "rows": 24,
+      "sha256": "e7fb05163d2c27bdbfd3c1e9920a1afb9b9be8690c6963b581e8f157c62f6a04"
+    },
+    "uxweb20": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-10-29",
+        "historicas": 0,
+        "prefijo": "UXWEB",
+        "proximas": 20,
+        "semilla": 42
+      },
+      "rows": 24,
+      "sha256": "fd069b3a9f079d27f08edd957365d7220bf25c0c983df5498248fd6608895f29"
+    }
+  },
+  "origen": "apps/ia/datasets/synthetic.py",
+  "version": 1
+}

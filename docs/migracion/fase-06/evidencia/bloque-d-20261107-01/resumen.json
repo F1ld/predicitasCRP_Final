@@ -1,0 +1,49 @@
+{
+  "run_id": "bloque-d-20261107-01",
+  "estado_bloque": "BLOQUEADA_PARA_RETIRO_TOTAL",
+  "estado_fase": "EN CURSO",
+  "tests": {"run": 16, "failures": 0, "errors": 0},
+  "inventory_exit": 0,
+  "retirement_exit": 2,
+  "retirement_exit_2_expected": true,
+  "legacy_dependencies": 7,
+  "namespaces_informational": 9,
+  "inventory_valid": true,
+  "retirement_allowed": false,
+  "previous_source_checks": 18,
+  "protected_unchanged": true,
+  "backend_image": "sha256:421227ed06dabde3f18c67692a97aa573283731aa51204ecd74a80b795871bd8",
+  "ia_image": "sha256:41ca225ddcb1a930e5232e747d6e5e2527f605f3f8154c1611e201dff03ead73",
+  "smoke_exporter": {
+    "rows": 7,
+    "columns": 13,
+    "same_content_after_lf_normalization": true,
+    "sha256_lf": "030259575c89a141f4ab57c6cd4c25e4cb5227a34b4827a2fe2adb7995f1e1f4"
+  },
+  "sources_sha256": {
+    "docs/migracion/fase-06/inventariar_legacy_d.py": "84840eb0d68f2f06887bc938ca0c2628ee48b89ac55b40a0a37bc0cba497ed54",
+    "docs/migracion/fase-06/legacy-d.policy.json": "169f3ec6e2d81d8dfe37555b1f8584cd4d4ca8877d2f06c34d12149b8fa2e2cd",
+    "docs/migracion/fase-06/test_inventario_d.py": "b70105e3c3718fbc826aa53c233ea4011b83f832b3605b83e9236a9fcb0ae2f5",
+    "docs/migracion/fase-06/validar_legacy_d.py": "1bf38511a827b17256e947a4046adf931894dc1dd979c05f71b1a6bf5485eb96"
+  },
+  "resultados_locales_sha256": {
+    "backend.log": "04f143562461e7494f566e1d4c1820798d7b5887ac0a603c820078becc8f1117",
+    "ia.log": "04f143562461e7494f566e1d4c1820798d7b5887ac0a603c820078becc8f1117",
+    "inventario.json": "2c01d476ee569cae05d2fc55b2015cf532d7ca7d73fd623d4948d970fe9a0f4b",
+    "resumen.json": "d84983ed5740842cb395d15e727237f0cf33e7fc44c0ca23e1688157f9325af0",
+    "tests.log": "c63698b1af4a78eb86df1ab02d318455b2d657d039c1de89877daaedb55ecb11"
+  },
+  "error_corregido": "5 errores en fixture de pruebas por directorios temporales padre ausentes; corregidos antes de la ejecucion vigente",
+  "bloqueos_abiertos": [
+    "Predictor integrado y reexport dependen del generador hasta su sustitucion validada en fase 7",
+    "Exportador de muestras y cuatro consumidores QA directos aun sin migrar",
+    "Acordar criterio de cierre de D: retirada programada en fase 6 o secuencia revisada para retiro fisico total"
+  ],
+  "limites": [
+    "Solo inventario/gate manual; no intercepta borrados ni configura CI",
+    "Analisis estatico acotado, no prueba exhaustiva de dependencias dinamicas",
+    "No se retiro generador, reexport, CSV legacy, modelos o fixtures",
+    "Sin nueva regresion completa backend/frontend, BD o cobertura de aplicaciones",
+    "Sin paquete portable ni comprobacion de clon limpio; E y fase 7 no iniciados"
+  ]
+}

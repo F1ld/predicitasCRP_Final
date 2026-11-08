@@ -16,7 +16,7 @@ from fastapi.responses import JSONResponse
 from app.auth import verificar_api_key_interna
 from app.config import COMPUTE_TIMEOUT_SECONDS, require_api_key
 from app.body_limit import MaxBodySizeMiddleware
-from app.metadata import DatasetLegacy, MetricasModelo
+from app.metadata import DatasetManifest, MetricasModelo
 from app.execution import IsolatedExecutor, CapacityUnavailable, ComputationExpired, WorkerFailed
 from app.core.model_registry import registry
 from app.schemas import (
@@ -241,7 +241,7 @@ def get_model_metrics() -> dict[str, Any]:
 
 @app.get(
     "/v1/dataset",
-    response_model=DatasetLegacy,
+    response_model=DatasetManifest,
     dependencies=[Depends(verificar_api_key_interna)],
     tags=["Metadata"],
 )

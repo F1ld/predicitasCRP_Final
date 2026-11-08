@@ -2,7 +2,7 @@
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 
 class ClosedModel(BaseModel):
@@ -86,3 +86,27 @@ class DatasetLegacy(ClosedModel):
     sin_interseccion_ids: Literal[True]
     control_leakage: ControlLeakage
     es_simulacion: Literal[True]
+
+
+class SplitTraining(SplitLegacy):
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    sha256_ids: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+class ParticionesTraining(ClosedModel):
+    train: SplitTraining
+    val: SplitTraining
+    test: SplitTraining
+
+
+class DatasetTraining(DatasetLegacy):
+    proposito: Literal["TRAINING_RUN"]
+    fuente: Literal["SINTETICO_GENERADO", "SNAPSHOT_SINTETICO_BACKEND"]
+    linaje_completo: Literal[True]
+    fecha_corte: date
+    sha256_raw: str = Field(pattern=r"^[a-f0-9]{64}$")
+    particiones: ParticionesTraining
+
+
+class DatasetManifest(RootModel[DatasetLegacy | DatasetTraining]):
+    """Respuesta v1: conserva legacy y admite linaje completo del contrato."""

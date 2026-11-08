@@ -1,0 +1,79 @@
+{
+  "es_simulacion": true,
+  "files": {
+    "citas": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-10-29",
+        "historicas": 30,
+        "prefijo": "TST",
+        "proximas": 10,
+        "semilla": 7
+      },
+      "rows": 44,
+      "sha256": "5199740a874ad887fe9ce5bc85b2239efd2fc2d04891a22a0a9217ba97e27e95"
+    },
+    "muestra2": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-11-05",
+        "historicas": 0,
+        "prefijo": "DEMO",
+        "proximas": 2,
+        "semilla": 7
+      },
+      "rows": 6,
+      "sha256": "c7931bfb33a1cc713a9f92a3a0e0f92ae499402f1da97f5532d881b564481390"
+    },
+    "muestra3": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-11-05",
+        "historicas": 0,
+        "prefijo": "DEMO",
+        "proximas": 3,
+        "semilla": 7
+      },
+      "rows": 7,
+      "sha256": "ab6de62685c0784329b0aed2dbcdd08c71bfb66debb230887e03966dedef337d"
+    },
+    "muestra3-dia2": {
+      "params": {
+        "con_invalidas": true,
+        "desde": "2026-11-06",
+        "historicas": 0,
+        "prefijo": "DEMO",
+        "proximas": 3,
+        "semilla": 7
+      },
+      "rows": 7,
+      "sha256": "beb75f3e592b31295a0e818971a3ffc098bd17e074b1cb32f4693bc43aebcc09"
+    },
+    "predictor": {
+      "params": {
+        "con_invalidas": false,
+        "desde": "2026-10-29",
+        "historicas": 1000,
+        "prefijo": "SIM",
+        "proximas": 80,
+        "semilla": 42
+      },
+      "rows": 1080,
+      "sha256": "df3b5c66ef60630b21d40b5d538260545d8fb7c485ca88c0fa4edb2efd65d03c"
+    },
+    "rendimiento": {
+      "params": {
+        "con_invalidas": false,
+        "desde": "2026-10-29",
+        "historicas": 5000,
+        "prefijo": "PRF",
+        "proximas": 0,
+        "semilla": 11
+      },
+      "rows": 5000,
+      "sha256": "dc312eb63cd2af194f3e136c9b846fdc688ce9d8c4066c92e8c78e77fa390fa0"
+    }
+  },
+  "origen": "apps/ia/datasets/synthetic.py",
+  "version": 1
+}

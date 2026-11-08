@@ -1,0 +1,19 @@
+{
+  "catalogos": [
+    "canales_origen",
+    "especialidades",
+    "estados",
+    "medicos",
+    "niveles_riesgo",
+    "tipos_paciente"
+  ],
+  "citas_total": 1080,
+  "health": "ok",
+  "ia_configurada": false,
+  "login": "admin@predicitas.crp",
+  "modelo_empaquetado": false,
+  "rep_02": 200,
+  "rep_03": 200,
+  "transporte": "uvicorn real + HTTP TCP",
+  "usuarios_total": 3
+}

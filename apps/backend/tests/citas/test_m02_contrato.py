@@ -15,7 +15,7 @@ from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita, HistorialEstadoCita
 from app.modules.citas.reglas import LIMA, contar_previos
 from app.modules.citas.service import transicionar
-from app.modules.citas.synthetic import generar_citas
+from tests.datos_preparados import cargar
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from tests.citas.conftest import BASE, HOY, crear_cita, crear_intervencion, crear_prediccion
 from tests.conftest import cabecera
@@ -102,7 +102,7 @@ def test_listado_valida_parametros_y_ordena(client, usuarios, db):
 
 def test_rendimiento_listado_con_5000_citas(client, usuarios, db):
     """RNF-011: GET /citas responde en ≤ 3 s con 5 000 citas."""
-    registros = generar_citas(historicas=5000, proximas=0, semilla=11, prefijo="PRF", con_invalidas=False)
+    registros = cargar("rendimiento")
     assert importar_citas(db, registros, id_usuario=None, ip="127.0.0.1", origen="rendimiento").aceptadas == 5000
     h = cabecera(client, usuarios["RECEPCION"])
     for params in ({}, {"q": "PRF-0049", "nivel_riesgo": "SIN_PREDICCION"}, {"desplazamiento": 4900}):

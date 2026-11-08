@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from app.modules.citas.synthetic import generar_citas
+from tests.datos_preparados import cargar
 from app.modules.ia.predictor import (
     RUTA_ARTEFACTO,
     entrenar_y_serializar_modelo,
@@ -9,8 +9,8 @@ from app.modules.ia.predictor import (
 )
 
 
-def test_generador_1000_historicas_y_80_proximas_coherentes():
-    citas = generar_citas(historicas=1000, proximas=80, semilla=42, con_invalidas=False)
+def test_fixture_1000_historicas_y_80_proximas_coherentes():
+    citas = cargar("predictor", normalizar=True)
     assert len(citas) == 1080
 
     historicas = [c for c in citas if c["target_no_show"] is not None]

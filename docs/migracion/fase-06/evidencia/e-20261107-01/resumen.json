@@ -1,0 +1,114 @@
+{
+  "backend": {
+    "catalogos": [
+      "canales_origen",
+      "especialidades",
+      "estados",
+      "medicos",
+      "niveles_riesgo",
+      "tipos_paciente"
+    ],
+    "citas_total": 1080,
+    "health": "ok",
+    "ia_configurada": false,
+    "login": "admin@predicitas.crp",
+    "modelo_empaquetado": false,
+    "rep_02": 200,
+    "rep_03": 200,
+    "transporte": "uvicorn real + HTTP TCP",
+    "usuarios_total": 3
+  },
+  "images": {
+    "backend_image": "sha256:5e797c24b24b0f4056eb4cbf79184225eaebf14db7c2078e9ad28d0b288eba54",
+    "backend_tag": "predicitas-backend:e-e-20261107-01",
+    "backend_without_model": true,
+    "ia_image": "sha256:6d1ee8581301819845e0d324fe3864fc2f48cb1fe35b68529fddd8e2e29a2853",
+    "ia_tag": "predicitas-ia:e-e-20261107-01",
+    "ia_without_database_dependencies": true
+  },
+  "lab": {
+    "container_stopped": true,
+    "database": "predicitas_f6e_test",
+    "db": "predicitas-f6e-e-20261107-01-db",
+    "network": "predicitas-f6e-e-20261107-01-net",
+    "resources_preserved": true,
+    "volume": "predicitas-f6e-e-20261107-01-pgdata"
+  },
+  "legacy_gate": {
+    "references": 2,
+    "retirement_allowed": false,
+    "scheduled_closure_ready": true
+  },
+  "package": {
+    "archive_sha256": "ba8384b3781b4a102c887dbc9fb04070a4f8ce2cfec8bb3fa63eb55d3c266320",
+    "files": 243,
+    "index_sha256": "76a2ea1ce526999938af139f40d547ede7aab2e5507180a4436989d76a7273c3",
+    "no_artifacts": true,
+    "no_joblib": true,
+    "no_secrets": true,
+    "reconstructed_equal": true
+  },
+  "pipeline": {
+    "approval_sha256": "a9c449ad77eeb33ff759e53d56385a977856e59c5c9477129bb9166ba3ee2c69",
+    "artifact_bytes_equal": false,
+    "dataset_manifest_sha256": "0d73d775bdad7a31a9ff0dc3f78baaac9c546d0704790e00ed298c85d0476bc5",
+    "final_active": "e-model-b",
+    "metrics_equal": true,
+    "predictions_equal": true,
+    "seed_rows": 1080,
+    "seed_sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "tamper_rejected": true
+  },
+  "protected_unchanged": true,
+  "run_id": "e-20261107-01",
+  "running_containers_unchanged": true,
+  "scope": "Bloque E: recorrido limpio aislado; sin tocar BD/compose/modelo activos; fase 7 no iniciada.",
+  "seed": {
+    "auditorias": 4,
+    "citas": 1080,
+    "csv_sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "historiales": 2080,
+    "primera_carga": {
+      "existentes": 0,
+      "insertadas": 1080,
+      "recibidas": 1080,
+      "reconciliada": false,
+      "sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+      "usuarios_creados": 3
+    },
+    "repeticion": {
+      "existentes": 1080,
+      "insertadas": 0,
+      "recibidas": 1080,
+      "reconciliada": false,
+      "sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+      "usuarios_creados": 0
+    },
+    "rerun_sin_cambios_en_todas_las_tablas": true,
+    "rol": "predicitas_app",
+    "transporte": "CLI en subprocess + PostgreSQL TCP",
+    "usuarios": 3
+  },
+  "serving": {
+    "batch_cases": 60,
+    "http_tcp": true,
+    "prediction_digest": "57f3a780dad79a0ea0135b7853c2fe5238754e2a5d59d275b4b9a316120f3098",
+    "ready": true,
+    "registry_unchanged": true,
+    "sin_modelo_http_tcp": true,
+    "sin_modelo_ready": false,
+    "worker_guardado": true
+  },
+  "sources": {
+    "apps/backend/scripts/seed.py": "f56814727526e1d4b985c13161ed8c1b95738015e81f877f974a32df1fdbd381",
+    "apps/ia/management/releases.py": "0a0971363fa98a4595104878daae8467867ee5727993039f4362ee7e52d7eab7",
+    "apps/ia/training/pipeline.py": "14011016e579352b0debaf5331bfe1f831d0f73bfdf44ed598dbcf9f2f4796e2",
+    "docs/migracion/fase-06/probar_backend_e.py": "b5e6cd29d609ffc35cc08312ef3f8291ebd6276ba9400f67d4d701072a9980de",
+    "docs/migracion/fase-06/probar_pipeline_e.py": "b5bc6f1602b27bfc0c77705db3a4bcd939246ef23b41ec6f5b95f953d7333d6f",
+    "docs/migracion/fase-06/probar_seed_e.py": "fbd34be1c4cdc6a3b7dcc24cea2c8d97e96d03bbfafbb676b7608176b19314dd",
+    "docs/migracion/fase-06/probar_serving_e.py": "fbf93fab345b21402e5b5ad10d9b316074be31adc768a8908f04151ce2e65a95",
+    "docs/migracion/fase-06/servidor_guardado_e.py": "5209511fe3dd8cb7439effe5adf26eebcf86e206f269d4069088fc10d29cf18c",
+    "docs/migracion/fase-06/soporte_e.py": "a11db2608f5343ca4d070fda95c3b9e5a4dbc0a0c4df39e961939a7b64d4c83d",
+    "docs/migracion/fase-06/validar_bloque_e.py": "d277ba2f641e0c28d79426c113e755f7519930aefcbace05d3af304f884f831e"
+  }
+}

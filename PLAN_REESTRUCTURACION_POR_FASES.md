@@ -440,7 +440,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 3 | Datos, CSV y archivos centralizados | 2 | COMPLETADA |
 | 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA (07/11/2026) |
-| 6 | Preparación, entrenamiento y promoción explícitos | 5 | PENDIENTE |
+| 6 | Preparación, entrenamiento y promoción explícitos | 5 | COMPLETADA (07/11/2026) |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
 | 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
@@ -741,20 +741,115 @@ difieren por CRLF del árbol de trabajo, con contenido normalizado idéntico.
 
 **Retorno:** desactivar servicio nuevo sin afectar backend actual; preservar artefactos y evidencia de comparación.
 
-#### Fase 6 — Pipeline de datos, entrenamiento y promoción
+#### Fase 6 — Pipeline de datos, entrenamiento y promoción (COMPLETADA)
 
 **Objetivo:** poder preparar un equipo limpio sin depender de un `.joblib` oculto o entrenamiento automático.
 
-- [ ] Implementar comandos documentados para generar dataset/seed, validar, particionar, entrenar baseline/LightGBM y producir candidato/manifiestos.
-- [ ] Establecer flags explícitos para versión, semilla, fecha de corte, fuente y directorios. Nunca sobrescribir una versión distinta con el mismo nombre.
-- [ ] Si se entrena con snapshot BD, implementar exportación backend autorizada con trazabilidad y sin acceso IA a PostgreSQL.
-- [ ] Crear manifest de split y controles anti-leakage/calidad/equidad; conservar dataset sintético rotulado.
-- [ ] Implementar promoción de candidato aprobado y rollback a versión anterior; verificar hash y dependencias antes de cargar.
-- [ ] Ajustar seed backend para consumir CSV operacional explícito y crear usuarios demo sin imports a generador IA. Respetar tratamiento de nulos, desenlaces y fechas.
-- [ ] Usar `SEED_PASSWORD` local/no registrada en logs, no contraseña fija en YAML. No modificar credenciales de usuarios existentes en un rerun silencioso.
-- [ ] Hacer seed repetible sin duplicar citas/usuarios; detectar carga parcial y reportar/reconciliar, no dar éxito simplemente porque existe alguna `CIT-SIM-*`.
-- [ ] Mantener normalización/importación por servicios backend, no SQL directo que omita historial/auditoría.
-- [ ] Definir camino limpio: generar sintéticos explícitos, entrenar/promover, importar seed; camino existente: preservar datos/modelo y no sembrar por defecto.
+**Inicio (07/11/2026):** autorizado por el usuario con precaución; retorno
+`d6e9b1c`, árbol inicialmente limpio. Primer bloque: CLI offline explícito de
+generación/validación/entrenamiento y manifiestos de candidato. Sin promoción,
+conexión backend/IA, cambios del seed ni intervención en BD/modelo activo.
+Fase **COMPLETADA** el 07/11/2026 tras validar el camino limpio E; la conexión
+backend/IA y el retiro del predictor siguen en fase 7, no iniciada.
+[Bitácora y comandos](docs/migracion/fase-06/README.md).
+
+**Primer bloque offline probado (07/11/2026):** 20 pruebas nuevas; suite IA
+**204/204**, cobertura **93,18 %** en imagen empaquetada, sin red y modelo RO.
+Generación reproducible, hashes/particiones y candidato real con manifiesto
+validados. Modelo legacy conserva SHA-256 histórico. Pendientes promoción/
+rollback, seed explícito/reconciliación y camino limpio integral; no se cierra
+ningún ítem combinado por esta entrega ni se inicia fase 7.
+
+**Bloque B validado en aislamiento (07/11/2026):** promoción con aprobación
+explícita por hash/versión, releases inmutables, puntero atómico, rollback previo
+o dirigido (incluido legacy), lock y control de activo esperado. Serving opt-in
+con versión/hash fijados al reiniciar; arranque legacy por defecto conservado.
+**228/228 pruebas**, 24 nuevas, cobertura **92,85 %**, imagen empaquetada sin red,
+modelo host RO y registries efímeros. Sin despliegue, BD ni cambios backend/UI;
+fuentes A preservadas. Pendientes seed, consumidores y camino limpio integral.
+[Criterios/resultados B](docs/migracion/fase-06/BLOQUE_B.md).
+
+**Bloque C iniciado (07/11/2026):** seed desde CSV/hash/BD explícitos, sin
+generación ni resets; usuarios existentes preservados, carga parcial solo con
+reconciliación autorizada y conflictos sin sobrescritura. Transacción única por
+servicios backend y auditoría sin claves. Pruebas exclusivamente en PostgreSQL
+nuevo aislado, sin tocar principal/modelos; A/B preservados sin commits.
+[Alcance, comandos y resultados C](docs/migracion/fase-06/BLOQUE_C.md).
+
+**Bloque C validado (07/11/2026):** ejecución `bloque-c-20261107-03`, **21/21
+focales y 330/330 regresión empaquetada** (21 incluidas), cobertura app+seed
+**91,07 %**, seed **88,07 %**. CSV canónico IA explícito: CLI backend carga
+1080 citas/2080 historiales/3 usuarios en PostgreSQL nuevo con rol app; rerun
+idéntico en todas las tablas, reconciliación explícita, conflictos/segundo seed
+rechazados y rollback tras flush observado desde otra conexión. Imagen nueva
+por ID, sin montajes fuente backend; tres laboratorios detenidos y originales/
+modelos intactos. Colección completa conserva S-02 y error de árbol del
+verificador histórico; dos archivos monorepo y tests/ia excluidos del diagnóstico
+empaquetado, **no suite completa verde**. D/E/7 no iniciados; fase 6 EN CURSO.
+
+**Bloque D iniciado; retiro total BLOQUEADO (07/11/2026):** inventario AST y
+política cerrada de consumidores con hashes, gate manual previo al retiro y
+**16/16 autopruebas** aprobados. Siete dependencias directas (incluido QA frontend
+antes omitido), nueve namespaces informativos. Código 2 esperado impide retirar
+la copia mientras predictor/reexport, exportador y fixtures sigan usándola.
+Smoke de muestra backend/IA equivalente tras normalizar saltos; fuentes A/B/C y
+protegidos intactos. Un error inicial de fixture temporal fue corregido; sin
+errores actuales en las autopruebas. No se elimina código/datos ni se adelanta
+fase 7. Acordar si D cierra como retirada programada o revisar la secuencia para
+retiro físico, dado que el predictor se sustituye en 7 y 7 depende de 6.
+**D no completada**, fase 6 EN CURSO; E/7 no iniciados.
+[Alcance, errores y bloqueos D](docs/migracion/fase-06/BLOQUE_D.md).
+
+**Decisión D aprobada por el usuario (07/11/2026):** cierre como **retirada
+programada**, conservando temporalmente solo predictor integrado y su reexport
+hasta su sustitución validada en fase 7. Resuelve la dependencia circular de
+criterio, no las migraciones: exportador y cuatro consumidores QA siguen
+pendientes. D **EN CURSO**, no completada. Guarda de cierre programado añadida:
+19/19 autopruebas, inventario válido; cierre programado/retiro físico devuelven 2
+esperado. No se elimina código ni se toca el entorno operativo.
+[Decisión y secuencia obligatoria](docs/migracion/fase-06/DECISION_D_RETIRADA_PROGRAMADA.md).
+**Antes de iniciar 7:** migrar/validar esos cinco consumidores, cerrar D como
+programado, ejecutar E y cerrar la fase 6. E/7 no iniciados por esta actualización.
+
+**Migraciones D completadas y validadas (07/11/2026 Lima):** ejecución
+`migraciones-d-20261107-02`. Exportación generativa en IA; adaptador backend solo
+consume muestras explícitas verificadas. Cuatro consumidores QA migrados a CSV
+con manifiestos y hashes, sin quitar asserts ni el caso de 5000 citas/≤3 s.
+**241/241 IA, 339/339 backend empaquetado y 33/33 archivos/CLI/guardas QA**;
+cobertura IA 90,12 %, app backend+seed 88,40 %. Nueve escenarios CSV idénticos a
+la proyección legacy, QA 45/4 y dos 20/4, repetición 0/24 y rollback independiente.
+Solo quedan las dos excepciones aprobadas, cierre programado código 0 y retiro
+físico no permitido. Error inicial de montaje QA corregido; dos laboratorios
+nuevos detenidos, fuentes A/B/C/modelos/privados intactos, sin despliegue.
+**D COMPLETADA COMO RETIRADA PROGRAMADA**, no eliminación física. Falta E; fase 6
+EN CURSO y fase 7 PENDIENTE. Colección completa conserva bloqueos conocidos;
+sin validación visual de navegador ni clon limpio.
+[Detalle, límites y evidencia de migraciones D](docs/migracion/fase-06/MIGRACIONES_D.md).
+
+**Bloque E validado y fase 6 cerrada (07/11/2026):** ejecución
+`e-20261107-01`. Paquete de **243 fuentes** reconstruido sin artefactos,
+`.joblib`, secretos ni `runtime`; imágenes IA/backend construidas solo desde ese
+árbol (backend sin modelo, IA sin SQLAlchemy). En PostgreSQL nuevo y aislado:
+dataset de 1000 históricas/1080 filas de seed, dos entrenamientos con métricas y
+predicciones iguales, promoción, rechazo de corrupción y rollback; serving con
+release/hash explícitos (lote de 60) y escenario sin modelo 503; seed
+1080/2080/3 con repetición idempotente; backend real con health, login,
+`/citas` 1080, `/usuarios` 3, catálogos y reportes 02/03. Gate D en 2
+excepciones aprobadas, cierre programado 0 y retiro físico no permitido. Archivos
+protegidos y contenedores en ejecución sin cambios. No se conectó backend/IA, no
+se desplegó Compose ni se ejecutó navegador. **FASE 6 COMPLETADA**; fase 7
+PENDIENTE y no iniciada. [Detalle y límites E](docs/migracion/fase-06/BLOQUE_E.md).
+
+- [x] Implementar comandos documentados para generar dataset/seed, validar, particionar, entrenar baseline/LightGBM y producir candidato/manifiestos. A/E: CLI offline y camino limpio validados; seed.csv generado por el pipeline.
+- [x] Establecer flags explícitos para versión, semilla, fecha de corte, fuente y directorios. Nunca sobrescribir una versión distinta con el mismo nombre. A: fechas/versiones nuevas obligatorias y rechazo de sobrescritura.
+- [ ] Si se entrena con snapshot BD, implementar exportación backend autorizada con trazabilidad y sin acceso IA a PostgreSQL. **No soportado**: la CLI rechaza esa fuente y no consulta BD; no se implementó por esta vía.
+- [x] Crear manifest de split y controles anti-leakage/calidad/equidad; conservar dataset sintético rotulado. A: manifiestos/hashes, 700/150/150, leakage y rotulado validados.
+- [x] Implementar promoción de candidato aprobado y rollback a versión anterior; verificar hash y dependencias antes de cargar. Bloque B validado en registry temporal; sin cambiar el modelo activo del entorno.
+- [x] Ajustar seed backend para consumir CSV operacional explícito y crear usuarios demo sin imports a generador IA. C: nulos/RN17, desenlaces y fechas validados; sin regenerar datos existentes.
+- [x] Usar `SEED_PASSWORD` local/no registrada en logs, no contraseña fija en YAML. C: clave solo para usuarios nuevos, rerun conserva hashes/usuarios y no recibe passwords por argv.
+- [x] Hacer seed repetible sin duplicar citas/usuarios; detectar carga parcial y reportar/reconciliar, no dar éxito simplemente porque existe alguna `CIT-SIM-*`. C: falta parcial exige flag; conflictos/contadores previos incompletos se rechazan sin sobrescribir.
+- [x] Mantener normalización/importación por servicios backend, no SQL directo que omita historial/auditoría. C: transacción única, historial/auditoría y rollback tras flush comprobados desde observador independiente.
+- [x] Definir camino limpio: generar sintéticos explícitos, entrenar/promover, importar seed; camino existente: preservar datos/modelo y no sembrar por defecto. E: recorrido completo en aislamiento; el camino existente no se modificó.
 
 **Se toca:** procesos puntuales, manifiestos, scripts seed/export y retirada programada del generador duplicado.
 
@@ -769,6 +864,11 @@ difieren por CRLF del árbol de trabajo, con contenido normalizado idéntico.
 #### Fase 7 — Conectar backend con IA y retirar predictor integrado
 
 **Objetivo:** completar la separación real manteniendo API pública y persistencia.
+
+**Gate previo cumplido (07/11/2026):** fase 6 **COMPLETADA** con migraciones D y
+evidencia integrada E. Fase 7 sigue **PENDIENTE** y no se inicia por esta
+entrega. La excepción temporal aprobada en D no permite omitir los gates de 7 ni
+conservar el generador integrado después de la sustitución validada.
 
 - [ ] Crear puerto/contrato de motor predictivo en módulo IA backend y adaptador HTTP con `httpx`, lifecycle y timeouts explícitos.
 - [ ] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.

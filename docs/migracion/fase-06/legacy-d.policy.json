@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-11-07",
+  "scheduled_retirement_approved": true,
+  "approval_basis": "Usuario aprobo cerrar D como retirada programada, sin eliminar el generador antes de sustituir el predictor en fase 7",
+  "scheduled_exceptions": [
+    {"path": "apps/backend/app/modules/citas/public.py", "module": "app.modules.citas.synthetic", "symbol": "generar_citas", "kind": "from"},
+    {"path": "apps/backend/app/modules/ia/predictor.py", "module": "app.modules.citas.public", "symbol": "generar_citas", "kind": "from"}
+  ],
+  "retirement_review_approved": false,
+  "producer_sha256_lf": {
+    "apps/backend/app/modules/citas/synthetic.py": "bae90a1698535685d8fce88b91f836344e5e62229c571a86b051cfd2eebdcf38",
+    "apps/ia/datasets/synthetic.py": "edf4720d83aed3c0fa6e75755d84a1cb3b66a18ada2f9f872b48705e1ecc7761"
+  },
+  "allowed_references": [
+    {"path": "apps/backend/app/modules/citas/public.py", "module": "app.modules.citas.synthetic", "symbol": "generar_citas", "kind": "from", "reason": "Puente usado por predictor integrado; retirar junto con el consumidor de fase 7"},
+    {"path": "apps/backend/app/modules/ia/predictor.py", "module": "app.modules.citas.public", "symbol": "generar_citas", "kind": "from", "reason": "Fallback integrado vigente hasta conectar IA por contrato y validar fase 7"}
+  ]
+}

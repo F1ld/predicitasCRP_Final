@@ -1,0 +1,50 @@
+{
+  "fase": 6,
+  "bloque": "B",
+  "estado_bloque": "VALIDADO_EN_AISLAMIENTO",
+  "estado_fase": "EN CURSO",
+  "baseline_git": "d6e9b1c",
+  "bloque_a_sin_commit_preservado": true,
+  "fuentes_sin_commit_automatico": true,
+  "image_id": "sha256:41ca225ddcb1a930e5232e747d6e5e2527f605f3f8154c1611e201dff03ead73",
+  "suite": {"tests": 228, "failures": 0, "errors": 0, "skipped": 0, "nuevas_b": 24},
+  "coverage": {"covered_lines": 1467, "num_statements": 1580, "percent_covered": 92.84810126582279},
+  "aislamiento": {"red": "none", "filesystem": "read-only", "modelo_host": "read-only", "registries_qa": "tmpfs efimero", "cpu": 2, "memoria": "1g", "usuario": "predicitas", "bd": false},
+  "modelo_legacy_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+  "fuentes_sha256": {
+    "apps/ia/app/config.py": "56b5a374f436cc5c8fb6d098e1764a21c296789a7813005ed08487de84f01261",
+    "apps/ia/app/core/model_registry.py": "803e8d4dfd393c39a306f95e7f41d5c9fd59454298f58a54b3ffab0a4ad866d1",
+    "apps/ia/app/execution.py": "96394e67afdd5d9506141995252d7249edaf2d5b7611bf297d5b6ac3e38c6b6f",
+    "apps/ia/app/main.py": "9ae3ed2ecf57de843fa85ff523573e832c21e3fac0e876a38611aed918f0f09f",
+    "apps/ia/app/metadata.py": "e6f1bb1ddb703b070130ba1a98fdaeffbc391f8c05c856e8ce41205d6fb5779c",
+    "apps/ia/management/__init__.py": "9859932e562c653551b675c55e3741edf624bd840705a29b35a023ad911c5af1",
+    "apps/ia/management/cli.py": "18f299ae6bf51e7686ce1ac29cf36e709433475f9d82cfeedf803a7b2ce4f5d4",
+    "apps/ia/management/releases.py": "0a0971363fa98a4595104878daae8467867ee5727993039f4362ee7e52d7eab7",
+    "apps/ia/tests/test_releases_f6b.py": "e91c3a5d2eade40e9206637356f662b9e9ecceb204c5a29a0bb7fceaa8bdaf36"
+  },
+  "resultados_locales_sha256": {
+    "runtime/test-results/fase-06/bloque-b-20261107-03/pytest.xml": "94569494ff459ec30b0cf6511776ba61c11a8a0f185356d3a7d65281fb644ded",
+    "runtime/test-results/fase-06/bloque-b-20261107-03/coverage.json": "475eb1eed9ec78c19081918146f671ae242e3a2281cad03a08b781c2990209b1"
+  },
+  "gates": [
+    "Candidato real aprobado por hash, instalado y cargado sin cambiar su matematica en 25 casos",
+    "Rollback a anterior y seleccion explicita legacy verificada",
+    "Hash y dependencias rechazados antes de deserializar",
+    "Features, umbrales, metricas e identidad incompatibles no cambian el activo",
+    "Lock de escritor, activo esperado y no sobrescritura comprobados",
+    "Fallo de replace y rollback a modelo corrupto preservan el estado anterior",
+    "ASGI con worker real, dataset TRAINING_RUN y metricas aprobados",
+    "Reinicio del worker conserva version/hash pese a cambio del puntero",
+    "Hash de aprobacion incorrecto sin fallback legacy",
+    "Fuentes A y areas protegidas sin cambios"
+  ],
+  "limitaciones": [
+    "No despliegue ni promocion en el registry del entorno existente",
+    "No nueva regresion backend/frontend, ni cambios de seed",
+    "Resultados completos locales; no paquete portable ni validacion desde clon limpio",
+    "Cobertura no agrega las lineas ejecutadas por subprocess",
+    "Atomicidad local; sin garantia universal frente a corte electrico o filesystem remoto",
+    "SHA256 no es firma: solo modelos internos y registry bajo control administrativo",
+    "No cierre de fase 6 ni inicio de fase 7"
+  ]
+}

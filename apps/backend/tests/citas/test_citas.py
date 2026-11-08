@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
-from app.modules.citas.synthetic import generar_citas
+from tests.datos_preparados import cargar
 from tests.conftest import cabecera
 
 REGISTRO = {
@@ -25,7 +25,7 @@ def test_importador_deriva_variables_en_el_servidor(db):
 
 
 def test_importador_acepta_validas_y_rechaza_invalidas_con_motivo(db):
-    registros = generar_citas(historicas=30, proximas=10, semilla=7, prefijo="TST")
+    registros = cargar("citas")
     r = _importar(db, registros)
     assert (r.aceptadas, r.rechazadas) == (40, 4)
     texto = " ".join(m for rechazo in r.detalle_rechazos for m in rechazo.motivos)

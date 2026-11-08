@@ -1,0 +1,84 @@
+{
+  "candidates": {
+    "a": {
+      "artifact_sha256": "39da76bb0ad543d8db109bc66329c21f3ed0aedeb6f09c0575f3c518fa289b3f",
+      "manifest_sha256": "1a4b8c97c027ec16fc3162ec76272087a7d21eeb2df9d5e7ca6cbc252a073aab",
+      "metrics_sha256": "666af032bbae31cf39d54e2ecc77b242cdc7704acdc5ff4b11b9df177868a51b"
+    },
+    "artifact_bytes_equal": false,
+    "b": {
+      "artifact_sha256": "98a46a6b87d82ed773f9aa6ae914d9eefc9ff807feac6d91fb20cc98ef5a86ec",
+      "manifest_sha256": "1407d9260a86d8f63bd14302a48fa4b33b755761a1f63a7c699c260c32e74245",
+      "metrics_sha256": "666af032bbae31cf39d54e2ecc77b242cdc7704acdc5ff4b11b9df177868a51b"
+    },
+    "metrics_equal": true,
+    "predictions_equal": true
+  },
+  "dataset": {
+    "manifest_sha256": "0d73d775bdad7a31a9ff0dc3f78baaac9c546d0704790e00ed298c85d0476bc5",
+    "particiones": {
+      "test": 150,
+      "train": 700,
+      "val": 150
+    },
+    "raw_sha256": "c419d35bac60a3f6230dfd48b7a586601d67023b52020464de67e0c739a8f17e",
+    "seed_rows": 1080,
+    "seed_sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "total_historicas": 1000,
+    "version": "e-dataset"
+  },
+  "promotion": {
+    "after_a": {
+      "active": {
+        "approval_sha256": "6ff5c230106c0cac91d55e16a54e6740f9210377ac3d889f4c5256c6082a65ff",
+        "release": "e-model-a"
+      },
+      "previous": null
+    },
+    "after_b": {
+      "active": {
+        "approval_sha256": "a9c449ad77eeb33ff759e53d56385a977856e59c5c9477129bb9166ba3ee2c69",
+        "release": "e-model-b"
+      },
+      "previous": {
+        "approval_sha256": "6ff5c230106c0cac91d55e16a54e6740f9210377ac3d889f4c5256c6082a65ff",
+        "release": "e-model-a"
+      }
+    },
+    "after_rollback_a": {
+      "active": {
+        "approval_sha256": "6ff5c230106c0cac91d55e16a54e6740f9210377ac3d889f4c5256c6082a65ff",
+        "release": "e-model-a"
+      },
+      "previous": {
+        "approval_sha256": "a9c449ad77eeb33ff759e53d56385a977856e59c5c9477129bb9166ba3ee2c69",
+        "release": "e-model-b"
+      }
+    },
+    "after_rollback_b": {
+      "active": {
+        "approval_sha256": "a9c449ad77eeb33ff759e53d56385a977856e59c5c9477129bb9166ba3ee2c69",
+        "release": "e-model-b"
+      },
+      "previous": {
+        "approval_sha256": "6ff5c230106c0cac91d55e16a54e6740f9210377ac3d889f4c5256c6082a65ff",
+        "release": "e-model-a"
+      }
+    },
+    "state_unchanged_after_tamper": true,
+    "tamper_rejected": true
+  },
+  "registry": {
+    "approval_sha256": "a9c449ad77eeb33ff759e53d56385a977856e59c5c9477129bb9166ba3ee2c69",
+    "final_active": "e-model-b",
+    "release_files": [
+      "approval.json",
+      "candidate-manifest.json",
+      "dataset-manifest.json",
+      "manifest.json",
+      "metrics.json",
+      "model.joblib"
+    ]
+  },
+  "scope": "Pipeline limpio sin BD, sin modelo legacy y sin escritura en el registry de serving"
+}

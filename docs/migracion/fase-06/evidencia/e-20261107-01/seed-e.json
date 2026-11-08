@@ -1,0 +1,26 @@
+{
+  "auditorias": 4,
+  "citas": 1080,
+  "csv_sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+  "historiales": 2080,
+  "primera_carga": {
+    "existentes": 0,
+    "insertadas": 1080,
+    "recibidas": 1080,
+    "reconciliada": false,
+    "sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "usuarios_creados": 3
+  },
+  "repeticion": {
+    "existentes": 1080,
+    "insertadas": 0,
+    "recibidas": 1080,
+    "reconciliada": false,
+    "sha256": "389e0276a837e6e9ad333463fa2759764f09aeea07419feeb428ef71fba26626",
+    "usuarios_creados": 0
+  },
+  "rerun_sin_cambios_en_todas_las_tablas": true,
+  "rol": "predicitas_app",
+  "transporte": "CLI en subprocess + PostgreSQL TCP",
+  "usuarios": 3
+}

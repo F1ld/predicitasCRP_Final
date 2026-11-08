@@ -29,3 +29,28 @@ Fase 3 prueba los helpers de rutas/guarda y no certifica ese E2E visual.
 directorios vacíos. Sus responsabilidades están documentadas; la preparación automática
 de un equipo limpio corresponde al bootstrap de fase 9. No añadir datasets ficticios para
 rellenar carpetas ni `.gitkeep` en `Skills/`.
+
+## Actualización QA — migraciones D de fase 6
+
+El runner de diseño ya no genera citas dentro del backend: lee tres CSV
+sintéticos versionados de `apps/frontend/tests/fixtures/generados-v1/`, o un
+bundle absoluto mediante `PREDICITAS_QA_FIXTURES_DIR`, verificando sus hashes.
+Reasigna únicamente prefijos para aislar ejecuciones. Los payloads son del
+contrato operacional de 13 columnas, sin features/target extra; se conservan
+45/4 y 20/4 aceptadas/rechazadas como casos de QA, no como garantía para una BD
+con duplicados. Antes de escribir se exige la misma guarda de BD test/qa.
+
+La generación de muestras arbitrarias ahora vive en IA (`datasets.exportar_csv`).
+Los fixtures históricos y capturas anteriores no se sobrescriben. La validación
+ASGI de payloads no equivale a haber validado visualmente el navegador.
+[Invocaciones, datos y resultados D](../migracion/fase-06/MIGRACIONES_D.md).
+
+## Actualización E — camino limpio de fase 6
+
+La ejecución `e-20261107-01` validó el paquete limpio y las imágenes en un
+laboratorio PostgreSQL nuevo; no se modificaron los archivos de datos ni el
+modelo activo. La evidencia portátil está en
+[`evidencia/e-20261107-01/resumen.json`](../migracion/fase-06/evidencia/e-20261107-01/resumen.json)
+y el detalle en [BLOQUE_E.md](../migracion/fase-06/BLOQUE_E.md). El laboratorio
+propio quedó detenido; su volumen y red se preservan para diagnóstico y no
+forman parte de la BD operativa.

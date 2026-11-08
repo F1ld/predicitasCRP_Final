@@ -1,7 +1,8 @@
-"""Carga exclusivamente un artefacto legacy confiable por hash aprobado.
+"""Carga un artefacto interno confiable por hash y compatibilidad aprobados.
 
 Joblib permite ejecutar código: el manifiesto versionado es parte del software
-de confianza, no un archivo suministrado por una solicitud o por el modelo.
+de confianza (legacy incluido o release fijada por hash administrativo), no un
+archivo suministrado por una solicitud o por el modelo.
 """
 from dataclasses import dataclass
 import hashlib
@@ -18,13 +19,13 @@ from pydantic import Field
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
-from app.config import FEATURES_AUTORIZADAS, MANIFEST_PATH, MODEL_PATH, ROTULO_ETICO
+from app.config import FEATURES_AUTORIZADAS, MANIFEST_PATH, MODEL_PATH, ROTULO_ETICO, APPROVAL_SHA256
 from app.core.features import (
     FEATURES_ENTRADA_MODELO, CATEGORIAS_ESPECIALIDADES, CATEGORIAS_TIPOS_PACIENTE,
     CATEGORIAS_CANALES_ORIGEN, CATEGORIAS_FRANJAS_CITA, CATEGORIAS_DIAS_SEMANA,
 )
 from app.core.inference import ejecutar_inferencia_individual
-from app.metadata import ClosedModel, DatasetLegacy, MetricasModelo
+from app.metadata import ClosedModel, DatasetLegacy, DatasetTraining, MetricasModelo
 from app.schemas import FeaturesPreCita, ModelMetadata, Umbrales
 
 logger = logging.getLogger("predicitas.ia.registry")
@@ -44,7 +45,7 @@ class Approval(ClosedModel):
     python_major_minor: str
     libraries: dict[str, str]
     provenance: str
-    dataset: DatasetLegacy
+    dataset: DatasetLegacy | DatasetTraining
     smoke: Smoke
 
 
@@ -53,7 +54,7 @@ class LoadedModel:
     pipeline: Pipeline
     metadata: ModelMetadata
     metrics: MetricasModelo
-    dataset: DatasetLegacy
+    dataset: DatasetLegacy | DatasetTraining
 
 
 class ModelRegistry:
@@ -72,11 +73,15 @@ class ModelRegistry:
     def pipeline(self):
         return self._state.pipeline if self._state else None
 
-    def load_model(self, path: Path | None = None, *, manifest_path: Path = MANIFEST_PATH) -> bool:
+    def load_model(self, path: Path | None = None, *, manifest_path: Path = MANIFEST_PATH,
+                   approval_sha256: str = APPROVAL_SHA256) -> bool:
         # Solo startup; sin endpoint de reload. Fallo -> no ready, nunca estado parcial.
         self._state = None
         try:
-            approval = Approval.model_validate_json(manifest_path.read_bytes())
+            approval_bytes = manifest_path.read_bytes()
+            if approval_sha256 and hashlib.sha256(approval_bytes).hexdigest() != approval_sha256:
+                raise ValueError("Aprobación no confiable")
+            approval = Approval.model_validate_json(approval_bytes)
             if approval.python_major_minor != f"{sys.version_info.major}.{sys.version_info.minor}":
                 raise ValueError("Python incompatible")
             if set(approval.libraries) != {"joblib", "lightgbm", "numpy", "scikit-learn", "scipy"}:

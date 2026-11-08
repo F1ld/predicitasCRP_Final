@@ -1,0 +1,12 @@
+{
+  "batch_cases": 60,
+  "http_tcp": true,
+  "legacy_joblib_in_image": false,
+  "no_dsn": true,
+  "prediction_digest": "57f3a780dad79a0ea0135b7853c2fe5238754e2a5d59d275b4b9a316120f3098",
+  "ready": true,
+  "registry_unchanged": true,
+  "single_cases": 3,
+  "version": "e-model-b",
+  "worker_guardado": true
+}

@@ -54,10 +54,20 @@ services:
     command:
       - sh
       - -ec
-      - 'exec python -m scripts.seed --password "$${SEED_PASSWORD:?Definir SEED_PASSWORD explícitamente; no usar sobre BD existente}"'
+      - 'exec python -m scripts.seed --csv /seed/input.csv --sha256 "$${SEED_CSV_SHA256:?Definir hash del CSV explícito}" --confirmar-bd "$${SEED_CONFIRMAR_BD:?Confirmar nombre de BD destino}"'
     environment:
-      <<: *admin-env
+      <<: *backend-env
       SEED_PASSWORD: ${SEED_PASSWORD:-}
+      SEED_CSV_SHA256: ${SEED_CSV_SHA256:-}
+      SEED_CONFIRMAR_BD: ${SEED_CONFIRMAR_BD:-}
+    volumes:
+      # Sin CSV generado por defecto: solo se utiliza al invocar el perfil manual.
+      - type: bind
+        source: ${SEED_CSV_PATH:-./runtime/imports/seed-no-configurado.csv}
+        target: /seed/input.csv
+        read_only: true
+        bind:
+          create_host_path: false
     depends_on:
       migraciones:
         condition: service_completed_successfully

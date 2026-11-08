@@ -1,0 +1,55 @@
+{
+  "run_id": "migraciones-d-20261107-02",
+  "estado_d": "COMPLETADA_COMO_RETIRADA_PROGRAMADA",
+  "fase_6": "EN CURSO",
+  "bloque_e": "PENDIENTE",
+  "fase_7": "PENDIENTE",
+  "ia_image": "sha256:758c037a41c7b09e462244c0a3763b2860f13e9c717581993b47b4d9d9881504",
+  "backend_image": "sha256:e86f96ad2844531222bd865b749860bd47400f009e28076122bb9cc649f8bffa",
+  "tests": {
+    "ia": {"passed": 241, "failures": 0, "errors": 0, "skipped": 0},
+    "backend_empaquetado": {"passed": 339, "failures": 0, "errors": 0, "skipped": 0},
+    "archivos_cli_y_guardas_qa": {"passed": 33, "failures": 0, "errors": 0, "skipped": 0},
+    "seed_focales_incluidas_en_backend": 21,
+    "autopruebas_gate_stdlib": 19
+  },
+  "coverage": {
+    "ia_app_training_datasets_management": {"covered_lines": 1505, "num_statements": 1670, "percent": 90.11976047904191},
+    "backend_app_y_seed": {"covered_lines": 3070, "num_statements": 3473, "percent": 88.39619925136769}
+  },
+  "fixtures": {"csv": 9, "rows_total_qa": 6241, "bytes_csv": 941885, "all_nine_byte_equal_to_legacy_projection": true, "performance_case_5000_preserved": true},
+  "qa_payloads": {"initial_accepted": 45, "initial_rejected": 4, "api_web_each_accepted": 20, "api_web_each_rejected": 4, "repeat_rejected": 24, "rollback_independent_observer": true, "browser_visual_validation": false},
+  "seed_c_revalidation": "1080 iniciales; rerun sin cambios; parcial y reconciliacion; rollback y lock aprobados en laboratorio nuevo",
+  "inventory": {"legacy_references": 2, "remaining_migrations": 0, "scheduled_closure_ready": true, "physical_retirement_allowed": false},
+  "sources_index": "fuentes.json",
+  "previous_source_checks": 18,
+  "protected_unchanged": true,
+  "laboratories_stopped": ["predicitas-f6c-migraciones-d-20261107-01-lab-db", "predicitas-f6c-migraciones-d-20261107-02-lab-db"],
+  "runtime_root": "runtime/test-results/fase-06/",
+  "resultados_locales_sha256": {
+    "migraciones-d-20261107-02/ia.xml": "f56838c7cda204c8b546bc083d5582ea030e2277ad20c63115ddb0c6ad24a294",
+    "migraciones-d-20261107-02/archivos.xml": "7c4b670eb1d7869f8f2d776d6482016fbb6edcd280eada458fbf17ea7dccbf4e",
+    "migraciones-d-20261107-02-lab/diagnostico.xml": "c5fbeb0fa20173a3e7b18c0ca2e1b758c0f77547b0935370162824a9ef9ae720",
+    "migraciones-d-20261107-02-lab/focal.xml": "ffcbabec5336bd55f005677e3ab330102365bb0b8c0db643090417beea34e8ac",
+    "migraciones-d-20261107-02/fuentes.json": "6ae0591bcf8fbe1fccb9539d20954c014071a0b593ef9e8424b50585fd727a25",
+    "migraciones-d-20261107-02/resumen.json": "8c1772a0b6d33e25c7ecb998fe16c17344ee7869c426840fe6bed6ac38f01b7d",
+    "migraciones-d-20261107-02/qa-migrado.json": "9ce1c6798c45c26ff7ef109f9cb0d92bc57bc24ad2464b4fd2922c1a06a7ec76",
+    "migraciones-d-20261107-02/paridad-legacy.json": "ab4b76471c1cfa9cceec99089ae59d989979db7f0d839a2717cb993880bc5f2e",
+    "migraciones-d-20261107-02/paridad-canonical.json": "ab4b76471c1cfa9cceec99089ae59d989979db7f0d839a2717cb993880bc5f2e",
+    "migraciones-d-20261107-02/inventario.json": "1c2bb10317402d5285aea1afa10f11852709c9dd0357f1b5b115d0e7d36c7b16",
+    "migraciones-d-20261107-02/ia-coverage.json": "62ffeb4410dea24e6efac553e7db01e8cd496f2f3d6ad40f731b53f791b7210b",
+    "migraciones-d-20261107-02-lab/coverage.json": "bb9d20a647bba00ae3fa2d941fe34e058ab78f5a52afba23d2349f2dc8fbdb1b",
+    "migraciones-d-20261107-02-lab/integracion.json": "4c48bfe3512e56695049802eb0d571538e82921a0bbdfc0e583b26ffad6e9aa6",
+    "migraciones-d-20261107-02/parada.log": "3f03651b392561d24801c40439b2c44e5bb76d2badd7ef0b093e79e596af4a47"
+  },
+  "error_corregido": "Intento 01: IndexError en helper QA por montaje demasiado superficial; corregida la geometria del runner, sin cambiar reglas de negocio",
+  "limites": [
+    "D cerrada solo como retirada programada aprobada: predictor y reexport se conservan hasta fase 7",
+    "Coleccion completa backend conserva S-02 y verificador de evidencia dependiente de monorepo; no suite completa verde",
+    "Test de invariantes historicos de datos no reejecutado en el contenedor reconstruido",
+    "No validacion visual de navegador ni nueva suite completa frontend",
+    "Cobertura no agrega subprocess; coverage backend no incluye los nuevos scripts de lectura/exportacion",
+    "No clon limpio ni paquete portable completo de evidencia; no commits automaticos",
+    "BD principal, modelos y rutas publicas sin cambios; sin despliegue ni inicio de E/7"
+  ]
+}

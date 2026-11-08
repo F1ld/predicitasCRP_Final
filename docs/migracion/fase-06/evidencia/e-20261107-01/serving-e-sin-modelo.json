@@ -1,0 +1,12 @@
+{
+  "batch_cases": 0,
+  "http_tcp": true,
+  "legacy_joblib_in_image": false,
+  "no_dsn": true,
+  "prediction_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "ready": false,
+  "registry_unchanged": true,
+  "single_cases": 0,
+  "version": "ninguno",
+  "worker_guardado": true
+}

@@ -10,6 +10,7 @@ import sys
 import pytest
 
 from scripts import exportar_csv as exportador
+from tests.datos_preparados import DIRECTORIO
 
 BACKEND = Path(__file__).resolve().parents[2]
 ROOT = BACKEND.parent.parent
@@ -17,7 +18,7 @@ ROOT = BACKEND.parent.parent
 
 def exportar(path, **kwargs):
     return exportador.exportar_csv(path, filas=kwargs.get("filas", 3), semilla=7,
-                                   fecha_referencia=kwargs.get("fecha", date(2026, 11, 5)))
+                                   fecha_referencia=kwargs.get("fecha", date(2026, 11, 5)), fuente=DIRECTORIO)
 
 
 def test_exportador_crea_directorio_y_trece_columnas_sin_etiqueta(tmp_path):
@@ -82,7 +83,7 @@ def test_exportador_no_escribe_en_codigo_muestras_artefactos(directory):
 def test_cli_desde_otro_cwd_con_pythonpath_explicito(tmp_path):
     output = tmp_path / "externo/muestra.csv"
     result = subprocess.run([sys.executable, "-m", "scripts.exportar_csv", "--salida", str(output),
-                             "--fecha-referencia", "2026-11-05", "--filas", "2"],
+                             "--fecha-referencia", "2026-11-05", "--filas", "2", "--fuente", str(DIRECTORIO)],
                             cwd=tmp_path, env={**os.environ, "PYTHONPATH": str(BACKEND)}, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert output.is_file() and "SHA-256=" in result.stdout

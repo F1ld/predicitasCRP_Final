@@ -1,12 +1,25 @@
 # PrediCitas CRP
 
-## Reestructuración — fase 4 en curso
+## Reestructuración — fase 6 completada
 
-Aplicaciones en `apps/backend/` y `apps/frontend/`. La IA **sigue integrada en el backend**: su extracción corresponde a fases posteriores. No se han cambiado reglas de negocio, endpoints, CSV, modelo ni revisiones Alembic por esta mudanza.
+Aplicaciones en `apps/backend/`, `apps/frontend/` y `apps/ia/`. La aplicación IA
+autónoma fue validada y el camino limpio de fase 6 está cerrado en aislamiento,
+pero el backend **todavía usa el predictor integrado**; su conexión HTTP y
+retirada corresponden a fase 7, aún pendiente.
 
-**Estado y limitaciones:** fases 0–3 completadas; [fase 4 en curso](docs/migracion/fase-04/README.md), por bloques de backend. El primer bloque aborda reloj, bootstrap e identidad; no implementa todavía todos los workflows/transacciones. Ver [evidencia de fase 3](docs/migracion/fase-03/README.md), [fase 2](docs/migracion/fase-02/README.md) y [plan por fases](PLAN_REESTRUCTURACION_POR_FASES.md). Los informes anteriores describen sus rutas y resultados históricos; no se reescriben sus evidencias.
+**Estado y limitaciones:** fases 0–6 completadas según el
+[plan vigente](PLAN_REESTRUCTURACION_POR_FASES.md); [fase 6 COMPLETADA](docs/migracion/fase-06/README.md).
+Pipeline, promoción/rollback, seed explícito y camino limpio E tienen validación
+aislada. La [retirada programada D fue aprobada](docs/migracion/fase-06/DECISION_D_RETIRADA_PROGRAMADA.md)
+y sus [cinco migraciones están validadas](docs/migracion/fase-06/MIGRACIONES_D.md).
+El [bloque E](docs/migracion/fase-06/BLOQUE_E.md) generó, entrenó, promovió, sirvió,
+sembró y verificó el backend en un laboratorio nuevo sin tocar la BD ni el modelo
+activos. El predictor y su reexport conservan temporalmente el generador legacy
+hasta fase 7. No se certifica suite completa verde; permanecen los límites
+documentados en cada evidencia. Los informes previos son históricos y no se
+reescriben para aparentar una ejecución nueva.
 
-**Archivos canónicos:** muestras en [`data/samples/importacion/`](data/samples/importacion/), [inventario y exportación segura](data/README.md), [modelo legacy y resultados QA](docs/operacion/ARCHIVOS_Y_RESULTADOS.md). Los CSV antiguos quedan solo como compatibilidad; el modelo activo mantiene su ruta integrada. No se activó retención de uploads/descargas, entrenamiento ni promoción.
+**Archivos canónicos:** muestras en [`data/samples/importacion/`](data/samples/importacion/), [inventario y exportación segura](data/README.md), [modelo legacy y resultados QA](docs/operacion/ARCHIVOS_Y_RESULTADOS.md). Los CSV antiguos quedan solo como compatibilidad; el modelo activo mantiene su ruta integrada. Entrenamiento y promoción nuevos son procesos offline explícitos: no se activan al arrancar el entorno existente. No se habilitó retención de uploads/descargas.
 
 ## Arranque local con los datos existentes
 
@@ -24,6 +37,12 @@ docker compose -f compose.yaml --env-file .env ps -a
 ```
 
 `migraciones` ejecuta el historial existente; no hay revisiones nuevas en fase 2. No ejecutar sobre datos sin respaldo o con revisiones pendientes no aprobadas. La tarea `seed` queda fuera del arranque normal, tras un perfil explícito; **no ejecutarla sobre la base existente durante esta fase**. No se entrena ni se regenera el modelo al mover aplicaciones; conservar el `.joblib` confiable respaldado en `apps/backend/app/modules/ia/artifacts/`.
+
+**Seed manual actualizado en fase 6 C:** requiere CSV sintético explícito, SHA-256
+y nombre real de una BD nueva autorizada. No genera datos internamente ni admite
+recarga destructiva; las cargas parciales requieren revisión y `--reconciliar`.
+Ver [uso, pruebas y límites del bloque C](docs/migracion/fase-06/BLOQUE_C.md).
+Esta actualización no autoriza sembrar el volumen existente.
 
 - Interfaz: http://localhost:5173
 - API: http://localhost:8000/docs
@@ -45,4 +64,8 @@ No usar `down -v`, reinicializar volúmenes, sembrar o reentrenar para resolver 
 - `pytest` solo con `DATABASE_URL` y URL de migraciones explícitas hacia **PostgreSQL de pruebas aislado**, configuradas antes de importar la aplicación. No ejecutar las fixtures sobre demo/principal.
 - Se conservan `Skills/` vacías dentro de ambas aplicaciones. Git no guarda carpetas vacías: recrearlas si se clona el repositorio.
 
-El bootstrap, servicio IA autónomo, pipeline de entrenamiento y smoke final del plan todavía no están implementados. No ejecutar sus comandos objetivo como si ya existieran.
+El bootstrap local único y smoke final corresponden a fases posteriores; no se
+presentan como implementados. La IA autónoma y el camino limpio de fase 6 tienen
+comandos y límites en su bitácora: no implican que el backend ya consuma IA por
+HTTP ni que fase 7 esté iniciada. La fase 6 se cerró con E validado en
+aislamiento; la conexión backend/IA sigue pendiente.

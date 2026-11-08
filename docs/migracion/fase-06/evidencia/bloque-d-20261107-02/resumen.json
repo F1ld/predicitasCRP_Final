@@ -1,0 +1,43 @@
+{
+  "run_id": "bloque-d-20261107-02",
+  "estado_bloque": "EN_CURSO_RETIRADA_PROGRAMADA_APROBADA",
+  "estado_fase": "EN CURSO",
+  "fase_7": "PENDIENTE",
+  "tests": {"run": 19, "failures": 0, "errors": 0},
+  "inventory_exit": 0,
+  "scheduled_closure_exit": 2,
+  "retirement_exit": 2,
+  "exit_2_expected": true,
+  "scheduled_retirement_approved": true,
+  "scheduled_closure_ready": false,
+  "retirement_allowed": false,
+  "remaining_migrations": [
+    "apps/backend/scripts/exportar_csv.py",
+    "apps/backend/tests/citas/test_citas.py",
+    "apps/backend/tests/citas/test_m02_contrato.py",
+    "apps/backend/tests/test_ia_predictor.py",
+    "apps/frontend/tests/validar_diseno.py"
+  ],
+  "previous_source_checks": 18,
+  "protected_unchanged": true,
+  "sources_sha256": {
+    "docs/migracion/fase-06/inventariar_legacy_d.py": "c9363db765e004230c71f4b7dfa4e085a248239b8ee737a23464e46853e4ceb9",
+    "docs/migracion/fase-06/legacy-d.policy.json": "0f52e31656b4166929a0ff86c0fcc74b50b252cfa9b24feb5cbd9e9f5aa00d35",
+    "docs/migracion/fase-06/test_inventario_d.py": "9b3992a96fd1c7cef3ad5c3bddbc445007f1d73d8df66c785ce8486cd16eaa60",
+    "docs/migracion/fase-06/validar_legacy_d.py": "beceffde734ab00fabe844babf90fc566a52a8c6795c7861b2c43c74ecd2d165"
+  },
+  "resultados_locales_sha256": {
+    "backend.log": "04f143562461e7494f566e1d4c1820798d7b5887ac0a603c820078becc8f1117",
+    "ia.log": "04f143562461e7494f566e1d4c1820798d7b5887ac0a603c820078becc8f1117",
+    "inventario.json": "17b3561477268a44378496876230a8b71c4d0d348b01f5fcecc2a05082ef2540",
+    "resumen.json": "a250b8b13cfad5e4096853504953c76879af8e6edff14ac5603e5ea0a47c4323",
+    "tests.log": "96c4536266f3e01d58b731679c7a9e6554dcf9a585a1d21c5ac60d6fd79aeeb7"
+  },
+  "limites": [
+    "Actualizacion del criterio y sus guardas; no implementa las cinco migraciones pendientes",
+    "D y fase 6 no completadas; E y fase 7 no iniciados",
+    "Sin eliminacion fisica, BD, despliegue ni modificacion de aplicaciones",
+    "No nueva regresion completa backend/frontend ni validacion de clon limpio",
+    "Detalles completos locales; no paquete portable de evidencia"
+  ]
+}

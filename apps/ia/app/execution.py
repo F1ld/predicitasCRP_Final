@@ -64,6 +64,10 @@ class IsolatedExecutor:
             NUMEXPR_NUM_THREADS="1",
             PYTHONDONTWRITEBYTECODE="1",
         )
+        from app.config import RELEASE_VERSION, APPROVAL_SHA256, MODEL_REGISTRY_DIR
+        if RELEASE_VERSION:
+            env.update(IA_RELEASE_VERSION=RELEASE_VERSION, IA_APPROVAL_SHA256=APPROVAL_SHA256,
+                       MODEL_REGISTRY_DIR=str(MODEL_REGISTRY_DIR))
         return env
 
     def _terminate(self, child: subprocess.Popen) -> None:
