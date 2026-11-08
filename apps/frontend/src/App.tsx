@@ -7,7 +7,10 @@ import type { Rol } from "./nucleo/api/tipos";
 
 // T-012, RF-003: un módulo nuevo solo publica rutas.tsx y menu.ts.
 const modulos = import.meta.glob<ModuloRutas>("./modulos/*/rutas.tsx", { eager: true });
-const rutas: RutaModulo[] = Object.values(modulos).flatMap((modulo) => modulo.default);
+const fixtures = import.meta.env.MODE === "test"
+  ? import.meta.glob<ModuloRutas>("./pruebas/modulos/*/rutas.tsx", { eager: true })
+  : {};
+const rutas: RutaModulo[] = Object.values({ ...modulos, ...fixtures }).flatMap((modulo) => modulo.default);
 const ROLES: Rol[] = ["ADMINISTRADOR", "RECEPCION", "TECNICO_IA"];
 
 function Inicio() {
@@ -24,6 +27,7 @@ export default function App() {
         {rutas.filter((ruta) => !ruta.roles.includes("publico")).map((ruta) => <Route key={ruta.ruta} element={<RutaProtegida roles={ruta.roles.filter((rol): rol is Rol => rol !== "publico")} />}>
           <Route path={ruta.ruta} element={ruta.elemento} />
         </Route>)}
+        <Route path="/reasignacion" element={<Navigate to="/cupos" replace />} />
         <Route path="/importar" element={<Navigate to="/citas/importar" replace />} />
       </Route>
     </Route>

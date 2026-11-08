@@ -442,7 +442,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA (07/11/2026) |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | COMPLETADA (07/11/2026) |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | COMPLETADA (08/11/2026) |
-| 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
+| 8 | Frontend consolidado y resiliente | 2, 7 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
 | 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
 | 11 | Corte final, documentación y cierre | 10 | PENDIENTE |
@@ -931,18 +931,28 @@ conservar el generador integrado después de la sustitución validada.
 
 #### Fase 8 — Consolidar frontend sin perder funcionalidad
 
+**Cierre (08/11/2026):** el usuario validó la navegación con los tres roles y
+la importación CSV en el candidato. La imagen validada se promovió al servicio
+frontend oficial. Se difieren la revisión del botón de cálculo por lote (permanece
+visible), los 56 fallos históricos de Citas y la incidencia de asignación de cupos.
+[Acta y retorno](docs/migracion/fase-08/README.md).
+
 **Objetivo:** una única organización activa de UI y consumidores consistentes.
 
-- [ ] Mapear imports reales de `pages/`, `auth/`, `components/`, `lib/` y equivalentes en `nucleo/`/`modulos/`; revisar también tests y entradas alternativas.
-- [ ] Comparar pantallas antiguas con nuevas antes de migrar. En particular, verificar si `pages/ModeloIA.jsx` contiene funcionalidad no expuesta por los módulos actuales.
-- [ ] Consolidar features en `modulos/` y utilidades compartidas en `nucleo/`; mantener tests/cambios pequeños por funcionalidad.
+- [x] Mapear imports reales de `pages/`, `auth/`, `components/`, `lib/` y equivalentes en `nucleo/`/`modulos/`; revisar también tests y entradas alternativas.
+- [x] Comparar pantallas antiguas con nuevas antes de migrar. En particular, verificar si `pages/ModeloIA.jsx` contiene funcionalidad no expuesta por los módulos actuales.
+- [x] Consolidar features en `modulos/` y utilidades compartidas en `nucleo/`; mantener tests/cambios pequeños por funcionalidad.
 - [ ] Mantener rutas públicas, redirects, deep links, permisos, menú por rol y descubrimiento `rutas.tsx`/`menu.ts`.
-- [ ] Tratar `prueba-ranura` como soporte de pruebas: preservar la prueba de descubrimiento sin exponer un módulo de demostración al usuario final; hacerlo mediante fixture/configuración de test explícita.
-- [ ] Centralizar URL y transporte HTTP, incluidos `descargas.ts` y `lista-espera/exportar.ts`; preservar descargas binarias, nombres y MIME, no forzarlas por un cliente exclusivamente JSON.
+- [x] Tratar `prueba-ranura` como soporte de pruebas: preservar la prueba de descubrimiento sin exponer un módulo de demostración al usuario final; hacerlo mediante fixture/configuración de test explícita.
+- [x] Centralizar URL y transporte HTTP, incluidos `descargas.ts` y `lista-espera/exportar.ts`; preservar descargas binarias, nombres y MIME, no forzarlas por un cliente exclusivamente JSON.
 - [ ] Conservar `sessionStorage`, manejo de 401 tardío, expiración, cancelación de fetch y protección de sesión nueva.
 - [ ] Mostrar IA no disponible sin bloquear bandeja, confirmación o atención. Distinguir sin predicción, fallo técnico y riesgo BAJO.
 - [ ] Mantener estados de carga/error/vacío, validaciones de formulario, rótulo sintético y accesibilidad básica.
-- [ ] Actualizar imports y tests antes de retirar archivos antiguos. Evitar conversión masiva JS→TS o rediseño visual no solicitado.
+- [x] Actualizar imports y tests antes de retirar archivos antiguos. Evitar conversión masiva JS→TS o rediseño visual no solicitado.
+
+**Consolidación validada en imagen candidata (08/11/2026):** build, lint y
+71 focales aprobadas. La regresión conserva los fallos históricos de Citas.
+[Inventario, evidencia y pendientes](docs/migracion/fase-08/README.md).
 
 **Se toca:** organización/frontend, cliente compartido, UI necesaria para errores de integración y tests.
 

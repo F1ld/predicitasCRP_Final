@@ -1,9 +1,33 @@
-import Cargando from "../components/Cargando";
-import Icono from "../components/Icono";
-import Mensaje from "../components/Mensaje";
-import { useConsulta } from "../lib/useConsulta";
+import Cargando from "../../nucleo/componentes/Cargando";
+import Icono from "../../nucleo/componentes/Icono";
+import Mensaje from "../../nucleo/componentes/Mensaje";
+import { useConsulta } from "../../nucleo/api/useConsulta";
 
-const ETIQUETAS_VARIABLES = {
+import RotuloSimulado from "../../nucleo/componentes/RotuloSimulado";
+
+interface Metricas {
+  version_modelo: string;
+  metricas_test: {
+    f1_score: number; umbral: number; precision: number; recall: number; roc_auc: number;
+    matriz_confusion: { tn: number; fp: number; fn: number; tp: number };
+  };
+  metricas_baseline_test: { f1_score: number };
+  importancia_global_variables: { variable: string; importancia: number }[];
+}
+
+interface Dataset {
+  total_historicas: number;
+  atendidas_historicas: number;
+  no_show_historicas: number;
+  tasa_no_show_global: number;
+  train_size: number;
+  val_size: number;
+  test_size: number;
+  proximas_operativas_bd: number;
+  control_leakage: { aprobado: boolean };
+}
+
+const ETIQUETAS_VARIABLES: Record<string, string> = {
   "inasistencias_previas / tasa_previa": "Historial de inasistencias previas del paciente",
   "antelacion_dias": "Días de anticipación con que se reservó la cita",
   "reprogramaciones_prev": "Reprogramaciones previas acumuladas",
@@ -16,11 +40,15 @@ const ETIQUETAS_VARIABLES = {
 };
 
 export default function ModeloIA() {
-  const { datos: metricas, cargando: c1, error: e1 } = useConsulta("/ia/metricas");
-  const { datos: dataset, cargando: c2, error: e2 } = useConsulta("/ia/dataset-resumen");
+  const { datos: metricas, cargando: c1, error: e1, reintentar: reintentarMetricas } = useConsulta<Metricas>("/ia/metricas");
+  const { datos: dataset, cargando: c2, error: e2, reintentar: reintentarDataset } = useConsulta<Dataset>("/ia/dataset-resumen");
 
   if (c1 || c2) return <Cargando texto="Cargando indicadores de desempeño del modelo predictivo…" />;
-  if (e1 || e2) return <Mensaje>{e1 || e2}</Mensaje>;
+  if (e1 || e2 || !metricas || !dataset) return <>
+    <h1>Desempeño del Modelo Predictivo y Calidad de Datos</h1>
+    <Mensaje>{e1 || e2 || "El servidor no devolvió los datos del modelo."}</Mensaje>
+    <button className="boton-secundario" onClick={() => { reintentarMetricas(); reintentarDataset(); }}>Reintentar</button>
+  </>;
 
   const mt = metricas.metricas_test;
   const mb = metricas.metricas_baseline_test;
@@ -29,6 +57,7 @@ export default function ModeloIA() {
 
   return (
     <>
+      <RotuloSimulado />
       <div className="pagina-titulo">
         <div>
           <p className="sobretitulo">MÓDULO DE ANÁLISIS PREDICTIVO Y MÉTRICAS DEL MODELO</p>
@@ -36,7 +65,7 @@ export default function ModeloIA() {
           <p>Herramienta de asistencia predictiva para apoyo a la recepción médica · Las decisiones de contacto y reasignación cuentan siempre con supervisión del personal.</p>
         </div>
         <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-900 border border-emerald-300">
-          {versionLimpia} · Exactitud F1: {(mt.f1_score * 100).toFixed(2)}%
+          {versionLimpia} · F1: {(mt.f1_score * 100).toFixed(2)}%
         </span>
       </div>
 
@@ -45,7 +74,7 @@ export default function ModeloIA() {
           <p className="text-xs font-bold uppercase text-slate-500">Exactitud Equilibrada (F1-Score)</p>
           <p className="mt-2 text-3xl font-extrabold text-teal-900">{(mt.f1_score * 100).toFixed(2)}%</p>
           <p className="mt-1 text-xs text-emerald-700 font-semibold">
-            Supera al modelo base tradicional ({(mb.f1_score * 100).toFixed(2)}%)
+            Modelo base tradicional ({(mb.f1_score * 100).toFixed(2)}%)
           </p>
         </div>
         <div className="tarjeta">

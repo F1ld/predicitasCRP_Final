@@ -335,3 +335,32 @@ describe("M05-V01: vista principal de intervenciones", () => {
   });
 });
 
+
+it("mantiene las citas elegibles disponibles si falla la predicción por lote", async () => {
+  fetchSimulado.mockImplementation(async (entrada, init) => {
+    if (new URL(String(entrada)).pathname === "/ia/predecir-lote") {
+      expect(init?.method).toBe("POST");
+      return respuesta({ error: { codigo: "MOTOR_IA_NO_DISPONIBLE", mensaje: "IA no disponible" } }, 503);
+    }
+    return respuesta(pagina([elegible]));
+  });
+  montar();
+  expect(await screen.findByText(elegible.id_cita_externa)).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Calcular riesgo por lote" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent("Motor de IA no disponible");
+  expect(screen.getByText(elegible.id_cita_externa)).toBeInTheDocument();
+});
+
+it("actualiza las citas elegibles tras un lote exitoso", async () => {
+  let lecturas = 0;
+  fetchSimulado.mockImplementation(async (entrada) => {
+    if (new URL(String(entrada)).pathname === "/ia/predecir-lote") return respuesta({ evaluadas: 1 });
+    lecturas += 1;
+    return respuesta(pagina([elegible]));
+  });
+  montar();
+  expect(await screen.findByText(elegible.id_cita_externa)).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Calcular riesgo por lote" }));
+  expect(await screen.findByText("Citas evaluadas: 1.")).toBeInTheDocument();
+  await waitFor(() => expect(lecturas).toBe(2));
+});

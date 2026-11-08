@@ -9,6 +9,7 @@ import RotuloSimulado from "../../nucleo/componentes/RotuloSimulado";
 import EstadoBadge from "../../nucleo/componentes/EstadoBadge";
 import { etiqueta, formatearFechaHora } from "../../nucleo/formato/formato";
 import NuevaIntervencion from "./NuevaIntervencion";
+import PredecirLote from "./PredecirLote";
 import { idPositivo, rotulo } from "./presentacion";
 import { CANALES, ESTADOS, ESPECIALIDADES, RESPUESTAS, type ElegibleOut, type IntervencionOut } from "./tipos";
 import "./intervenciones.css";
@@ -83,6 +84,7 @@ function Listado({ elegibles, intervenir }: { elegibles: boolean; intervenir: (c
   }
   function pagina(desplazamientoNuevo: number) { const nuevos = new URLSearchParams(busqueda); nuevos.set("desplazamiento", String(desplazamientoNuevo)); setBusqueda(nuevos); }
   return <>
+    {elegibles && <PredecirLote alCompletar={reintentar} />}
     <form key={`${elegibles}:${busqueda}`} className="tarjeta m05-filtros" onSubmit={aplicar}>
       <h2>{elegibles ? "Buscar citas elegibles" : "Buscar intervenciones registradas"}</h2>
       <div className="m05-grid">

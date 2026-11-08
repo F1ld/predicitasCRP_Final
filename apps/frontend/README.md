@@ -153,7 +153,7 @@ docker run --rm -p 5173:5173 -e VITE_API_URL=http://localhost:8000 predicitas-we
 └── package.json
 ```
 
-Las pruebas viven **junto al código** (`*.test.ts` o `*.test.tsx`). `src/modulos/prueba-ranura/` es un módulo técnico que solo existe en modo de pruebas, para comprobar el descubrimiento de rutas.
+Las pruebas viven **junto al código** (`*.test.ts` o `*.test.tsx`). `src/pruebas/modulos/prueba-ranura/` es un módulo técnico que solo existe en modo de pruebas, para comprobar el descubrimiento de rutas.
 
 ## 8. Cómo agregar un módulo
 

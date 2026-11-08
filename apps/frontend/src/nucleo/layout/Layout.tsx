@@ -8,6 +8,9 @@ import { menuPorRol, type ModuloMenu } from "./ranuras";
 import GestorSesion from "../sesion/GestorSesion";
 
 const modulosMenu = import.meta.glob<ModuloMenu>("../../modulos/*/menu.ts", { eager: true });
+const fixturesMenu = import.meta.env.MODE === "test"
+  ? import.meta.glob<ModuloMenu>("../../pruebas/modulos/*/menu.ts", { eager: true })
+  : {};
 
 // RF-003, RNF-007: menú por rol y aviso visible del entorno de demostración.
 export default function Layout() {
@@ -15,7 +18,7 @@ export default function Layout() {
   const [saliendo, setSaliendo] = useState(false);
   const { pathname } = useLocation();
   if (!usuario) return null;
-  const entradas = menuPorRol(modulosMenu, usuario.rol);
+  const entradas = menuPorRol({ ...modulosMenu, ...fixturesMenu }, usuario.rol);
   const estiloEnlace = ({ isActive }: { isActive: boolean }) => `nav-enlace ${isActive ? "activo" : ""}`;
   async function salir() {
     if (saliendo) return;

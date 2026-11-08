@@ -1,0 +1,20 @@
+{
+  "baseline_commit": "8bc3cf3",
+  "candidate_image": "predicitas-frontend-fase8:20261108-02",
+  "runs": {
+    "base": {
+      "passed": 451,
+      "failed": 56
+    },
+    "final": {
+      "passed": 455,
+      "failed": 56
+    }
+  },
+  "new_failures": [],
+  "fixed_failures": [],
+  "focused_passed": 71,
+  "lint_typecheck_build_passed": true,
+  "fixture_absent_from_bundle": true,
+  "deployed": false
+}

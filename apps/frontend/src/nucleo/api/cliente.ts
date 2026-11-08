@@ -52,7 +52,7 @@ export interface OpcionesApi {
 
 // D-017 y RNF-004: formato único de errores y protección de sesiones nuevas
 // frente a respuestas 401 atrasadas de una credencial anterior.
-export async function api<T = unknown>(ruta: string, { metodo = "GET", params, json, form, archivo, signal }: OpcionesApi = {}): Promise<T | null> {
+async function solicitar(ruta: string, { metodo = "GET", params, json, form, archivo, signal }: OpcionesApi = {}): Promise<Response> {
   const url = new URL(API_URL + ruta);
   Object.entries(params || {}).forEach(([clave, valor]) => {
     if (valor !== "" && valor !== null && valor !== undefined) url.searchParams.set(clave, String(valor));
@@ -86,5 +86,15 @@ export async function api<T = unknown>(ruta: string, { metodo = "GET", params, j
     }
     throw new ApiError(respuesta.status, detalle?.codigo ?? "ERROR_DESCONOCIDO", detalle?.mensaje ?? MENSAJE_GENERICO, detalle?.campos);
   }
+  return respuesta;
+}
+
+export async function api<T = unknown>(ruta: string, opciones?: OpcionesApi): Promise<T | null> {
+  const respuesta = await solicitar(ruta, opciones);
   return respuesta.status === 204 ? null : respuesta.json() as Promise<T>;
+}
+
+export async function apiArchivo(ruta: string, opciones?: OpcionesApi) {
+  const respuesta = await solicitar(ruta, opciones);
+  return { archivo: await respuesta.blob(), cabeceras: respuesta.headers };
 }
