@@ -4,7 +4,9 @@ Toda la configuración sale del entorno o del archivo .env; el código nunca lle
 Los valores por defecto son los del contrato. DATABASE_URL y SECRET_KEY son obligatorias.
 """
 from functools import lru_cache
+from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,6 +32,13 @@ class Settings(BaseSettings):
     ia_api_key: str | None = None
     ia_timeout_segundos: float = 5
     ia_corte_medio: float = 0.30
+    # Opt-in 7B: no activa HTTP en entornos existentes.
+    ia_motor: Literal["integrado", "http"] = "integrado"
+    ia_connect_segundos: float = Field(default=2, gt=0, allow_inf_nan=False)
+    ia_read_segundos: float = Field(default=15, gt=0, allow_inf_nan=False)
+    ia_write_segundos: float = Field(default=5, gt=0, allow_inf_nan=False)
+    ia_pool_segundos: float = Field(default=2, gt=0, allow_inf_nan=False)
+    ia_presupuesto_segundos: float = Field(default=60, gt=0, allow_inf_nan=False)
 
     intervencion_modo_sombra: bool = False
 

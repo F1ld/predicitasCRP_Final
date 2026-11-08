@@ -5,6 +5,8 @@ from app.core.database import get_db
 from app.core.http import ip_cliente
 from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.ia import service
+from app.modules.ia.dependencias import obtener_motor
+from app.modules.ia.puerto import MotorPredictivo
 from app.modules.ia.schemas import (
     DatasetResumenOut,
     MetricasModeloOut,
@@ -24,8 +26,9 @@ def predecir_cita(
     request: Request,
     usuario: Usuario = Depends(requiere_roles(*ROLES_INFERENCIA)),
     db: Session = Depends(get_db),
+    motor: MotorPredictivo = Depends(obtener_motor),
 ):
-    return service.predecir_cita(db, id_cita, usuario=usuario, ip=ip_cliente(request))
+    return service.predecir_cita(db, id_cita, usuario=usuario, ip=ip_cliente(request), motor=motor)
 
 
 @router.post("/predecir-lote", response_model=ResultadoPrediccionLoteOut)
@@ -34,8 +37,9 @@ def predecir_lote(
     forzar: bool = Query(default=False, description="Si es True, recalcula también las citas que ya tienen predicción"),
     usuario: Usuario = Depends(requiere_roles(*ROLES_INFERENCIA)),
     db: Session = Depends(get_db),
+    motor: MotorPredictivo = Depends(obtener_motor),
 ):
-    return service.predecir_lote(db, forzar=forzar, usuario=usuario, ip=ip_cliente(request))
+    return service.predecir_lote(db, forzar=forzar, usuario=usuario, ip=ip_cliente(request), motor=motor)
 
 
 @router.get("/predicciones/{id_cita}", response_model=list[PrediccionIAOut])
@@ -50,14 +54,17 @@ def listar_predicciones_cita(
 @router.get("/metricas", response_model=MetricasModeloOut)
 def obtener_metricas(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
+    db: Session = Depends(get_db),
+    motor: MotorPredictivo = Depends(obtener_motor),
 ):
-    return service.obtener_metricas_modelo()
+    return service.obtener_metricas_modelo(motor=motor, db=db)
 
 
 @router.get("/dataset-resumen", response_model=DatasetResumenOut)
 def obtener_dataset_resumen(
     _: Usuario = Depends(requiere_roles(*ROLES_LECTURA)),
     db: Session = Depends(get_db),
+    motor: MotorPredictivo = Depends(obtener_motor),
 ):
-    return service.obtener_dataset_resumen(db)
+    return service.obtener_dataset_resumen(db, motor=motor)
 

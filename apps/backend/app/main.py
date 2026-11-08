@@ -4,6 +4,7 @@
 - Todos los errores salen con la forma {"error": {"codigo", "mensaje", "campos"}} (D-017).
 - Cabeceras de seguridad en cada respuesta (app/core/manejadores.py).
 """
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,8 +18,20 @@ from app.modules.intervenciones.router import router as intervenciones_router
 from app.modules.lista_espera.router import router as lista_espera_router
 from app.modules.reportes.router import router as reportes_router
 from app.modules.usuarios.router import router as usuarios_router
+from app.modules.ia.dependencias import crear_motor
 
-app = FastAPI(title="PrediCitas CRP API", version="0.5.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    motor = crear_motor()
+    app.state.motor_ia = motor
+    try:
+        yield
+    finally:
+        motor.close()
+        del app.state.motor_ia
+
+
+app = FastAPI(title="PrediCitas CRP API", version="0.5.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

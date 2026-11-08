@@ -1,0 +1,43 @@
+{
+  "baseline": "3700c5f",
+  "containers": [
+    "predicitas-f7a-7a-20261107-05-unit",
+    "predicitas-f7a-7a-20261107-05-http"
+  ],
+  "containers_stopped": true,
+  "database_used": false,
+  "http": {
+    "bd_utilizada": false,
+    "clave_invalida": true,
+    "fragmentos": [
+      100,
+      5
+    ],
+    "ia_caida": true,
+    "individual": 1,
+    "lote": 105,
+    "modelo_ausente": true,
+    "modelo_sha256": "89297942f603dc040c9954d534ae6dae97590203f0345925c12fc4e0a90e9074",
+    "modelos_sin_cambios": true,
+    "paridad_integrado": true,
+    "respuesta_malformada_tcp": true,
+    "timeout_tcp": true,
+    "transporte": "HTTP TCP y uvicorn reales, sin red externa",
+    "version": "LightGBM_v1.0.0",
+    "version_incompatible": true
+  },
+  "image": "sha256:5e797c24b24b0f4056eb4cbf79184225eaebf14db7c2078e9ad28d0b288eba54",
+  "limits": "Sin cableado de rutas ni regresi\u00f3n BD; im\u00e1genes con fuentes RO, no build limpio nuevo.",
+  "protected_unchanged": true,
+  "run_id": "7a-20261107-05",
+  "running_containers_unchanged": true,
+  "sources": {
+    "apps/backend/app/modules/ia/motor_http.py": "9b4a2505d6b4bdfaa94e6bc2200b78fcdf50ff8c4c05460143223724f4527335",
+    "apps/backend/app/modules/ia/motor_integrado.py": "43221d4574134f3bd4ee667174e6249a06091c02d48e5a46311284bdf74fe12c",
+    "apps/backend/app/modules/ia/puerto.py": "e36c764b10682badb8307c6b70311ef5cdc42f9263756069b2819b25b6ffac81",
+    "docs/migracion/fase-07/probar_http_7a.py": "dd592cb233ca25a26a77d7d4afac8b69b3b780d450d40f8f43416472ebc45041",
+    "docs/migracion/fase-07/test_motor_7a.py": "aa782bfd9c25075679b161c837a5ecfcd28f4a5bc5e8db5668afb5d204a7be12",
+    "docs/migracion/fase-07/validar_7a.py": "28cdbe61bec081a3ee2ad6bda6c8435aed58f0163f0258b81c39892b969a973d"
+  },
+  "tests_unitarios": 19
+}

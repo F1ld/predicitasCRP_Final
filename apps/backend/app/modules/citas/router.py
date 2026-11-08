@@ -14,6 +14,7 @@ from app.core.reloj import reloj
 from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.citas import service
 from app.modules.citas.importer import importar_citas
+from app.modules.ia.public import MotorPredictivo, obtener_motor
 from app.modules.citas.schemas import (CambioEstadoIn, CatalogosOut, CheckInIn, CheckInOut,
                                        CitaDetalleOut, CitaRegistroIn, PaginaCitasOut,
                                        ResultadoImportacionOut)
@@ -138,7 +139,8 @@ def calcular_prediccion_cita(
     request: Request,
     usuario: Usuario = Depends(requiere_roles(*ESCRITORES)),
     db: Session = Depends(get_db),
+    motor: MotorPredictivo = Depends(obtener_motor),
 ):
     """Calcula la predicción IA en demanda para la cita (RF-041 a RF-056)."""
     from app.modules.ia.public import predecir_cita
-    return predecir_cita(db, id_cita, usuario=usuario, ip=ip_cliente(request))
+    return predecir_cita(db, id_cita, usuario=usuario, ip=ip_cliente(request), motor=motor)

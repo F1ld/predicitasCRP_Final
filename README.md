@@ -1,11 +1,15 @@
 # PrediCitas CRP
 
-## Reestructuración — fase 6 completada
+## Reestructuración — fase 7 en curso (7A/7B)
 
 Aplicaciones en `apps/backend/`, `apps/frontend/` y `apps/ia/`. La aplicación IA
 autónoma fue validada y el camino limpio de fase 6 está cerrado en aislamiento,
 pero el backend **todavía usa el predictor integrado**; su conexión HTTP y
-retirada corresponden a fase 7, aún pendiente.
+retirada corresponden a fase 7, ahora en curso por las subentregas 7A/7B.
+
+**7A/7B:** puerto/adaptador y cableado conservador en servicios/metadata. El
+integrado sigue por defecto; HTTP requiere activación explícita y no se ha
+desplegado. [Alcance y límites](docs/migracion/fase-07/README.md).
 
 **Estado y limitaciones:** fases 0–6 completadas según el
 [plan vigente](PLAN_REESTRUCTURACION_POR_FASES.md); [fase 6 COMPLETADA](docs/migracion/fase-06/README.md).
@@ -67,5 +71,6 @@ No usar `down -v`, reinicializar volúmenes, sembrar o reentrenar para resolver 
 El bootstrap local único y smoke final corresponden a fases posteriores; no se
 presentan como implementados. La IA autónoma y el camino limpio de fase 6 tienen
 comandos y límites en su bitácora: no implican que el backend ya consuma IA por
-HTTP ni que fase 7 esté iniciada. La fase 6 se cerró con E validado en
-aislamiento; la conexión backend/IA sigue pendiente.
+HTTP. La fase 6 se cerró con E validado en aislamiento; fase 7 empieza por el
+puerto/adaptador 7A y cableado 7B opt-in. La activación HTTP del entorno
+existente y la retirada del predictor siguen pendientes.

@@ -32,6 +32,12 @@ def cita_para_inferencia(db: Session, id_cita: int):
     return _snapshot(cita) if cita is not None else None
 
 
+def bloquear_para_inferencia(db: Session, ids: list[int]):
+    # Locks cortos, siempre por PK; serializan también el upsert por cita/versión.
+    stmt = select(Cita).where(Cita.id_cita.in_(ids)).order_by(Cita.id_cita).with_for_update()
+    return {c.id_cita: _snapshot(c) for c in db.scalars(stmt.execution_options(populate_existing=True))}
+
+
 def citas_operativas_sin_prediccion(db: Session, version_modelo: str, forzar: bool = False):
     stmt = select(Cita).where(Cita.estado_actual == "RECIBIDA", Cita.target_no_show.is_(None)).order_by(
         Cita.fecha_hora_cita.asc(), Cita.id_cita.asc())

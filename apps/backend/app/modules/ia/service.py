@@ -1,15 +1,16 @@
+from functools import wraps
+from decimal import Decimal
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from app.core.errores import Conflicto, NoEncontrado
+from app.core.errores import Conflicto, NoEncontrado, MotorIANoDisponible
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
-from app.modules.ia.consultas import CitaInferencia, cita_para_inferencia
+from app.modules.ia.consultas import CitaInferencia, cita_para_inferencia, bloquear_para_inferencia
 from app.modules.ia import repository
-from app.modules.ia.predictor import (
-    FEATURES_ENTRADA_MODELO,
-    obtener_artefacto_modelo,
-    predecir_cita_dict,
-)
+from app.modules.ia.metadata_motor import FEATURES_MODELO
+from app.modules.ia.motor_integrado import MotorIntegrado
+from app.modules.ia.puerto import FeaturesMotor, MotorPredictivo, ResultadoMotor
 from app.modules.ia.schemas import (
     DatasetResumenOut,
     MetricasModeloOut,
@@ -18,6 +19,51 @@ from app.modules.ia.schemas import (
 )
 
 ESTADOS_ELEGIBLES_PREDICCION = {"RECIBIDA", "CONFIRMADA", "REPROGRAMADA"}
+
+
+def _rollback_en_error(func):
+    @wraps(func)
+    def wrapped(db, *args, **kwargs):
+        if db.new or db.dirty or db.deleted:
+            raise Conflicto("Inferencia requiere una sesión sin cambios pendientes")
+        try:
+            return func(db, *args, **kwargs)
+        except Exception:
+            db.rollback()
+            raise
+    return wrapped
+
+
+def _cerrar_lectura(db):
+    # Casos de uso top-level: jamás confirmar escrituras ajenas para hacer HTTP.
+    if db.new or db.dirty or db.deleted:
+        raise Conflicto("Inferencia requiere una sesión sin cambios pendientes")
+    db.rollback()
+
+
+def _validar_resultado(result, features, version):
+    try:
+        result = ResultadoMotor.model_validate(result)
+    except ValidationError:
+        raise MotorIANoDisponible("Respuesta incompatible del motor IA") from None
+    if result.version_modelo != version:
+        raise Conflicto("La versión del motor cambió", codigo="VERSION_MODELO_INCOMPATIBLE")
+    p = result.probabilidad_no_show
+    level = "ALTO" if p > Decimal("0.45") else "MEDIO" if p >= Decimal("0.3") else "BAJO"
+    snapshot = features.snapshot()
+    if (result.features_snapshot != snapshot
+            or any(type(result.features_snapshot[k]) is not type(v) for k, v in snapshot.items())
+            or result.nivel_riesgo != level
+            or result.umbral_aplicado != Decimal("0.450")
+            or p != p.quantize(Decimal("0.001"))):
+        raise MotorIANoDisponible("Respuesta incompatible del motor IA")
+    return result.model_dump()
+
+
+def _revalidar(db, snapshots):
+    current = bloquear_para_inferencia(db, [c.id_cita for c in snapshots])
+    if any(current.get(c.id_cita) != c for c in snapshots):
+        raise Conflicto("La cita cambió durante la inferencia; vuelva a solicitarla")
 
 
 def listar_predicciones_cita(db: Session, id_cita: int) -> list[PrediccionIAOut]:
@@ -38,12 +84,14 @@ def _cita_a_dict_features(cita: CitaInferencia) -> dict:
     }
 
 
+@_rollback_en_error
 def predecir_cita(
     db: Session,
     id_cita: int,
     *,
     usuario: Usuario,
     ip: str,
+    motor: MotorPredictivo | None = None,
 ) -> PrediccionIAOut:
     cita = cita_para_inferencia(db, id_cita)
     if cita is None:
@@ -53,7 +101,12 @@ def predecir_cita(
             f"La cita {id_cita} se encuentra en estado final '{cita.estado_actual}' y no admite inferencia operativa"
         )
 
-    resultado_ia = predecir_cita_dict(_cita_a_dict_features(cita))
+    features = FeaturesMotor(**_cita_a_dict_features(cita))
+    _cerrar_lectura(db)
+    motor = motor or MotorIntegrado()
+    version = motor.version()
+    resultado_ia = _validar_resultado(motor.predecir(features, version=version), features, version)
+    _revalidar(db, [cita])
     prediccion, antes = repository.guardar_o_actualizar_prediccion(
         db,
         id_cita=cita.id_cita,
@@ -88,22 +141,32 @@ def predecir_cita(
     return PrediccionIAOut.model_validate(prediccion)
 
 
+@_rollback_en_error
 def predecir_lote(
     db: Session,
     *,
     forzar: bool = False,
     usuario: Usuario,
     ip: str,
+    motor: MotorPredictivo | None = None,
 ) -> ResultadoPrediccionLoteOut:
-    artefacto = obtener_artefacto_modelo()
-    version_modelo = artefacto["version_modelo"]
+    _cerrar_lectura(db)
+    motor = motor or MotorIntegrado()
+    version_modelo = motor.version()
     citas = repository.citas_operativas_sin_prediccion(db, version_modelo, forzar=forzar)
+    features = [FeaturesMotor(**_cita_a_dict_features(cita)) for cita in citas]
+    _cerrar_lectura(db)
+    results = motor.predecir_lote(features, version=version_modelo)
+    if len(results) != len(citas):
+        raise MotorIANoDisponible("Lote incompleto del motor IA")
+    # Validar TODO antes del primer flush. Nunca publicar un lote parcial.
+    resultados = [_validar_resultado(result, f, version_modelo) for result, f in zip(results, features)]
+    _revalidar(db, citas)
 
     predicciones_out: list[PrediccionIAOut] = []
     conteo = {"ALTO": 0, "MEDIO": 0, "BAJO": 0}
 
-    for cita in citas:
-        resultado_ia = predecir_cita_dict(_cita_a_dict_features(cita))
+    for cita, resultado_ia in zip(citas, resultados):
         pred, _ = repository.guardar_o_actualizar_prediccion(
             db,
             id_cita=cita.id_cita,
@@ -144,31 +207,16 @@ def predecir_lote(
     )
 
 
-def obtener_metricas_modelo() -> MetricasModeloOut:
-    artefacto = obtener_artefacto_modelo()
-    m_test = artefacto["metricas_test"]
-    return MetricasModeloOut(
-        version_modelo=artefacto["version_modelo"],
-        algoritmo=artefacto["algoritmo"],
-        semilla=artefacto["semilla"],
-        fecha_entrenamiento=artefacto["fecha_entrenamiento"],
-        es_simulacion=artefacto["es_simulacion"],
-        rotulo_etico=artefacto["rotulo_etico"],
-        umbral_alto=artefacto["umbral_alto"],
-        umbral_medio=artefacto["umbral_medio"],
-        cumple_meta_f1_82=bool(m_test["f1_score"] >= 0.82),
-        metricas_test=m_test,
-        metricas_val=artefacto["metricas_val"],
-        metricas_baseline_test=artefacto["metricas_baseline_test"],
-        auditoria_equidad=artefacto["auditoria_equidad"],
-        importancia_global_variables=artefacto["importancia_global_variables"],
-    )
+def obtener_metricas_modelo(*, motor: MotorPredictivo | None = None, db: Session | None = None) -> MetricasModeloOut:
+    if db is not None:
+        _cerrar_lectura(db)
+    return (motor or MotorIntegrado()).metricas()
 
 
-def obtener_dataset_resumen(db: Session) -> DatasetResumenOut:
-    artefacto = obtener_artefacto_modelo()
-    ds = artefacto["dataset_info"]
+def obtener_dataset_resumen(db: Session, *, motor: MotorPredictivo | None = None) -> DatasetResumenOut:
     conteos_bd = repository.conteos_dataset_bd(db)
+    _cerrar_lectura(db)
+    ds = (motor or MotorIntegrado()).dataset().model_dump()
 
     total_hist = ds["total_historicas"]
     no_show_est = round(total_hist * ds["tasa_no_show_global"])
@@ -188,8 +236,8 @@ def obtener_dataset_resumen(db: Session) -> DatasetResumenOut:
         tasa_no_show_train=ds["tasa_no_show_train"],
         tasa_no_show_val=ds["tasa_no_show_val"],
         tasa_no_show_test=ds["tasa_no_show_test"],
-        features_autorizadas=list(FEATURES_ENTRADA_MODELO),
+        features_autorizadas=list(FEATURES_MODELO),
         control_leakage=ds["control_leakage"],
-        rotulo_etico=artefacto["rotulo_etico"],
+        rotulo_etico=ds["rotulo_etico"],
     )
 

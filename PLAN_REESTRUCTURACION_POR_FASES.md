@@ -441,7 +441,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA (07/11/2026) |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | COMPLETADA (07/11/2026) |
-| 7 | Backend conectado a IA por contrato | 4, 5, 6 | PENDIENTE |
+| 7 | Backend conectado a IA por contrato | 4, 5, 6 | EN CURSO (7A/7B) |
 | 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
 | 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
@@ -871,6 +871,23 @@ entrega. La excepción temporal aprobada en D no permite omitir los gates de 7 n
 conservar el generador integrado después de la sustitución validada.
 
 - [ ] Crear puerto/contrato de motor predictivo en módulo IA backend y adaptador HTTP con `httpx`, lifecycle y timeouts explícitos.
+- **7A implementado y validado (07/11/2026):** retorno `3700c5f`, puerto de
+  inferencia, adaptador integrado diferido y HTTP opt-in con lifecycle propio,
+  timeouts, respuesta validada y versión fija en todos los fragmentos. 19/19
+  pruebas unitarias y HTTP TCP real: 1 individual + 105 en lote iguales al
+  integrado; caída, timeout, clave inválida, modelo ausente y respuesta inválida.
+  Cambio de versión entre fragmentos probado con transporte controlado. Sin BD,
+  Compose ni cambios de ruta operativa. El ítem permanece abierto hasta cablear
+  lifespan FastAPI/selección y completar metadata. **Fase 7 EN CURSO**, sin
+  retiro del predictor, sin commit automático ni suite completa certificada.
+  [Alcance, resultados y límites 7A](docs/migracion/fase-07/README.md).
+- **7B autorizado e implementado (07/11/2026), en validación:** servicios y
+  alias Citas inyectan el puerto, metadata remota normalizada, lifecycle FastAPI
+  sin contacto IA en startup y selección explícita `IA_MOTOR`. El integrado
+  sigue por defecto. Lectura cerrada antes de inferir, revalidación bajo locks
+  por PK y persistencia/auditoría atómicas. Sin cambios de tablas/API, Compose,
+  `.env` ni modelo activo; sin retiro ni commit automático. Laboratorios nuevos
+  PostgreSQL/IA, no entorno operativo. [Alcance y evidencia 7B](docs/migracion/fase-07/BLOQUE_7B.md).
 - [ ] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.
 - [ ] Mantener comprobación de rol/estado, snapshot, versión, explicación, persistencia y auditoría en backend.
 - [ ] Implementar reglas de validación de respuesta, concurrencia, lote y fallos de sección 6.3.
