@@ -9,7 +9,6 @@ from app.modules.auth.public import Principal as Usuario
 from app.modules.ia.consultas import CitaInferencia, cita_para_inferencia, bloquear_para_inferencia
 from app.modules.ia import repository
 from app.modules.ia.metadata_motor import FEATURES_MODELO
-from app.modules.ia.motor_integrado import MotorIntegrado
 from app.modules.ia.puerto import FeaturesMotor, MotorPredictivo, ResultadoMotor
 from app.modules.ia.schemas import (
     DatasetResumenOut,
@@ -92,7 +91,7 @@ def predecir_cita(
     *,
     usuario: Usuario,
     ip: str,
-    motor: MotorPredictivo | None = None,
+    motor: MotorPredictivo,
 ) -> PrediccionIAOut:
     cita = cita_para_inferencia(db, id_cita)
     if cita is None:
@@ -104,7 +103,6 @@ def predecir_cita(
 
     features = FeaturesMotor(**_cita_a_dict_features(cita))
     _cerrar_lectura(db)
-    motor = motor or MotorIntegrado()
     version = motor.version()
     resultado_ia = _validar_resultado(motor.predecir(features, version=version), features, version)
     _revalidar(db, [cita])
@@ -149,10 +147,9 @@ def predecir_lote(
     forzar: bool = False,
     usuario: Usuario,
     ip: str,
-    motor: MotorPredictivo | None = None,
+    motor: MotorPredictivo,
 ) -> ResultadoPrediccionLoteOut:
     _cerrar_lectura(db)
-    motor = motor or MotorIntegrado()
     version_modelo = motor.version()
     citas = repository.citas_operativas_sin_prediccion(
         db, version_modelo, forzar=forzar, limite=LIMITE_LOTE_PUBLICO + 1)
@@ -214,16 +211,16 @@ def predecir_lote(
     )
 
 
-def obtener_metricas_modelo(*, motor: MotorPredictivo | None = None, db: Session | None = None) -> MetricasModeloOut:
+def obtener_metricas_modelo(*, motor: MotorPredictivo, db: Session | None = None) -> MetricasModeloOut:
     if db is not None:
         _cerrar_lectura(db)
-    return (motor or MotorIntegrado()).metricas()
+    return motor.metricas()
 
 
-def obtener_dataset_resumen(db: Session, *, motor: MotorPredictivo | None = None) -> DatasetResumenOut:
+def obtener_dataset_resumen(db: Session, *, motor: MotorPredictivo) -> DatasetResumenOut:
     conteos_bd = repository.conteos_dataset_bd(db)
     _cerrar_lectura(db)
-    ds = (motor or MotorIntegrado()).dataset().model_dump()
+    ds = motor.dataset().model_dump()
 
     total_hist = ds["total_historicas"]
     no_show_est = round(total_hist * ds["tasa_no_show_global"])

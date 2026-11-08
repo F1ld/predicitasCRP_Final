@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "retirement_review_approved": true,
+  "approval_basis": "Integración del retiro solicitada tras validar paridad y retorno del candidato",
+  "retired_producers": ["apps/backend/app/modules/citas/synthetic.py"],
+  "producer_sha256_lf": {
+    "apps/ia/datasets/synthetic.py": "edf4720d83aed3c0fa6e75755d84a1cb3b66a18ada2f9f872b48705e1ecc7761"
+  },
+  "allowed_references": []
+}

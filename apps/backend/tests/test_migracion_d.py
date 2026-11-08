@@ -46,7 +46,7 @@ def test_bad_source_rejected_without_writing(tmp_path, kind):
 
 def test_no_consumer_imports_legacy_generator():
     import ast
-    for name in ("scripts/exportar_csv.py", "tests/citas/test_citas.py", "tests/citas/test_m02_contrato.py", "tests/test_ia_predictor.py"):
+    for name in ("scripts/exportar_csv.py", "tests/citas/test_citas.py", "tests/citas/test_m02_contrato.py"):
         path = Path(__file__).resolve().parents[1] / name
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8-sig"))):
             if isinstance(node, ast.ImportFrom):

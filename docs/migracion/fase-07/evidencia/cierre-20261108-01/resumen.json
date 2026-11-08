@@ -1,0 +1,24 @@
+{
+  "api_http_status": 200,
+  "approved_volume": "predicitas-crp_pgdata",
+  "backup_verified_by": [
+    "complete archive read with pg_restore",
+    "SHA-256 equality after copy"
+  ],
+  "compose_project": "predicitas-crp",
+  "database_role_verified": true,
+  "explicit_local_networks": true,
+  "frontend_http_status": 200,
+  "ia_healthy": true,
+  "ia_port_published": false,
+  "metadata_verified": true,
+  "model_version": "LightGBM_v1.0.0",
+  "network_automatic_pool_exhausted": true,
+  "return_commit": "b7180a2",
+  "return_image": "predicitas-retorno-fase7:b7180a2",
+  "run_id": "cierre-20261108-01",
+  "schema_revision_after": "m01_001_indices_auditoria",
+  "schema_revision_before": "m01_001_indices_auditoria",
+  "seed_executed": false,
+  "synthetic_prediction_without_persistence": true
+}

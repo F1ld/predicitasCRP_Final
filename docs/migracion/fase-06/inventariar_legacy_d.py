@@ -74,7 +74,7 @@ def fingerprint(path):
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
-def inventory(root):
+def inventory(root, retired_producers=()):
     root = Path(root)
     result, errors, namespaces = [], [], []
     for scope in SCOPES:
@@ -96,6 +96,10 @@ def inventory(root):
     producers = {}
     for name in PRODUCERS:
         path = root / name
+        if name in retired_producers:
+            if path.exists() or path.is_symlink():
+                errors.append({"path": name, "error": "RETIRED_PRODUCER_PRESENT"})
+            continue
         if path.is_file() and not path.is_symlink():
             producers[name] = fingerprint(path)
         else:
@@ -137,7 +141,11 @@ def main(argv=None):
     mode.add_argument("--exigir-retiro", action="store_true")
     mode.add_argument("--exigir-cierre-programado", action="store_true")
     args = parser.parse_args(argv)
-    result = evaluate(inventory(args.root), json.loads(args.policy.read_text(encoding="utf-8")))
+    policy = json.loads(args.policy.read_text(encoding="utf-8"))
+    retired_producers = policy.get("retired_producers", ())
+    if any(name != PRODUCERS[0] for name in retired_producers):
+        parser.error("Solo puede retirarse el productor legacy del backend")
+    result = evaluate(inventory(args.root, retired_producers), policy)
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
     if not result["inventory_valid"]:
         return 3

@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     ia_timeout_segundos: float = 5
     ia_corte_medio: float = 0.30
     # Opt-in 7B: no activa HTTP en entornos existentes.
-    ia_motor: Literal["integrado", "http"] = "integrado"
+    ia_motor: Literal["http"] = "http"
     ia_connect_segundos: float = Field(default=2, gt=0, allow_inf_nan=False)
     ia_read_segundos: float = Field(default=15, gt=0, allow_inf_nan=False)
     ia_write_segundos: float = Field(default=5, gt=0, allow_inf_nan=False)

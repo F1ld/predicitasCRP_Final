@@ -1,4 +1,4 @@
-# Entrada local oficial desde fase 2. IA sigue integrada; sin seed por defecto.
+# Entrada local oficial. IA separada; seed manual.
 name: predicitas-crp
 
 x-backend-env: &backend-env
@@ -78,7 +78,11 @@ services:
       context: ./apps/backend
       dockerfile: Dockerfile
     container_name: predicitas-backend
-    environment: *backend-env
+    environment:
+      <<: *backend-env
+      IA_URL: http://ia:8100
+      IA_API_KEY: ${IA_API_KEY:?Definir IA_API_KEY en el entorno local}
+    networks: [default, inferencia]
     depends_on:
       db:
         condition: service_healthy
@@ -87,10 +91,31 @@ services:
     ports:
       - "8000:8000"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/docs || exit 1"]
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ia:
+    build:
+      context: ./apps/ia
+      additional_contexts:
+        contracts: ./contracts
+    environment:
+      IA_API_KEY: ${IA_API_KEY:?Definir IA_API_KEY en el entorno local}
+    networks: [inferencia]
+    volumes:
+      - type: bind
+        source: ${IA_MODEL_DIR:-./artifacts/models/legacy-import}
+        target: /models
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8100/health/ready"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
 
   frontend:
     build:
@@ -103,6 +128,10 @@ services:
       - backend
     ports:
       - "5173:5173"
+
+networks:
+  inferencia:
+    internal: true
 
 volumes:
   pgdata:

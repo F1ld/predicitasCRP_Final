@@ -1,0 +1,25 @@
+{
+  "fresh_external_volume": true,
+  "frontend_http": 200,
+  "internal_networks": true,
+  "lab_containers_stopped": true,
+  "legacy_modules_and_ml_absent": true,
+  "migrations_succeeded": true,
+  "official_compose_with_isolation_overlay": true,
+  "probes": [
+    {
+      "fase": "sin-ia",
+      "health": 200,
+      "lote": 503
+    },
+    {
+      "fase": "recuperado",
+      "health": 200,
+      "lote": 200
+    }
+  ],
+  "project": "predicitas-f7-oficial-20261108-01",
+  "published_ports": false,
+  "running_containers_unchanged": true,
+  "same_backend_on_recovery": true
+}

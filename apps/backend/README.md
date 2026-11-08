@@ -132,9 +132,9 @@ docker compose down                                      # detiene los servicios
 docker compose down -v                                   # además borra la base (empezar de cero)
 ```
 
-> El script de `db/init/` solo corre cuando el volumen de PostgreSQL está vacío. Si cambias `APP_DB_PASSWORD`, ejecuta `docker compose down -v`.
+> El script de `db/init/` solo corre cuando el volumen de PostgreSQL está vacío. En un volumen existente, las credenciales de Compose deben coincidir con las del rol de PostgreSQL.
 
-**Predicciones de riesgo:** la API llama al servicio de inferencia configurado en `IA_URL` (por defecto, `http://host.docker.internal:8100`, es decir, el puerto 8100 de tu equipo). Si el servicio no está disponible, la predicción responde `503 MOTOR_IA_NO_DISPONIBLE` y no se modifica ninguna cita; el resto de la API funciona con normalidad.
+**Predicciones de riesgo:** la API llama al servicio de inferencia configurado en `IA_URL` (en el Compose oficial, `http://ia:8100` por la red interna). Si el servicio no está disponible, la predicción responde `503 MOTOR_IA_NO_DISPONIBLE` y no se modifica ninguna cita; el resto de la API funciona con normalidad.
 
 ## 6. Desarrollo sin Docker
 

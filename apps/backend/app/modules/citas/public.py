@@ -16,7 +16,6 @@ from app.modules.citas.models import Cita
 from app.modules.citas.reglas import ESTADOS_ACTIVOS, TRANSICIONES, puede_transicionar_a_liberada
 from app.modules.citas.transiciones import aplicar, foto
 from app.modules.citas.importer import importar_citas_interno
-from app.modules.citas.synthetic import generar_citas  # contrato temporal hasta extraer datasets IA
 
 
 @dataclass(frozen=True)

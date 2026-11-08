@@ -1,3 +1,6 @@
+import os
+from contextlib import nullcontext
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -6,6 +9,8 @@ from app.core.database import engine, get_db
 from app.core.security import hash_password
 from app.main import app
 from app.modules.usuarios.models import Usuario
+from app.modules.ia.dependencias import obtener_motor
+from app.modules.ia.motor_http import MotorHTTP
 
 CLAVE = "ClaveDePrueba123"
 
@@ -28,8 +33,15 @@ def db():
 @pytest.fixture
 def client(db):
     app.dependency_overrides[get_db] = lambda: db
-    yield TestClient(app)
-    app.dependency_overrides.clear()
+    url = os.getenv("IA_HTTP_TEST_URL")
+    motor_context = MotorHTTP(url, os.environ["IA_API_KEY"]) if url else nullcontext()
+    with motor_context as motor:
+        if motor is not None:
+            app.dependency_overrides[obtener_motor] = lambda: motor
+        try:
+            yield TestClient(app)
+        finally:
+            app.dependency_overrides.clear()
 
 
 @pytest.fixture

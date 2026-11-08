@@ -1,29 +1,14 @@
 # PrediCitas CRP
 
-## Reestructuración — fase 7 en curso (7A/7B)
+## Reestructuración — IA separada
 
-Aplicaciones en `apps/backend/`, `apps/frontend/` y `apps/ia/`. La aplicación IA
-autónoma fue validada y el camino limpio de fase 6 está cerrado en aislamiento,
-pero el backend **todavía usa el predictor integrado**; su conexión HTTP y
-retirada corresponden a fase 7, ahora en curso por las subentregas 7A/7B.
+El backend usa el servicio de inferencia de `apps/ia/` por HTTP. Compose
+conecta ambos mediante una red interna. IA carga un modelo aprobado desde
+un directorio de solo lectura. El backend arranca aunque IA esté apagada y
+las operaciones de inferencia devuelven 503 hasta que el servicio se recupera.
 
-**7A/7B:** puerto/adaptador y cableado conservador en servicios/metadata. El
-integrado sigue por defecto; HTTP requiere activación explícita y no se ha
-desplegado. [Alcance y límites](docs/migracion/fase-07/README.md).
-
-**Estado y limitaciones:** fases 0–6 completadas según el
-[plan vigente](PLAN_REESTRUCTURACION_POR_FASES.md); [fase 6 COMPLETADA](docs/migracion/fase-06/README.md).
-Pipeline, promoción/rollback, seed explícito y camino limpio E tienen validación
-aislada. La [retirada programada D fue aprobada](docs/migracion/fase-06/DECISION_D_RETIRADA_PROGRAMADA.md)
-y sus [cinco migraciones están validadas](docs/migracion/fase-06/MIGRACIONES_D.md).
-El [bloque E](docs/migracion/fase-06/BLOQUE_E.md) generó, entrenó, promovió, sirvió,
-sembró y verificó el backend en un laboratorio nuevo sin tocar la BD ni el modelo
-activos. El predictor y su reexport conservan temporalmente el generador legacy
-hasta fase 7. No se certifica suite completa verde; permanecen los límites
-documentados en cada evidencia. Los informes previos son históricos y no se
-reescriben para aparentar una ejecución nueva.
-
-**Archivos canónicos:** muestras en [`data/samples/importacion/`](data/samples/importacion/), [inventario y exportación segura](data/README.md), [modelo legacy y resultados QA](docs/operacion/ARCHIVOS_Y_RESULTADOS.md). Los CSV antiguos quedan solo como compatibilidad; el modelo activo mantiene su ruta integrada. Entrenamiento y promoción nuevos son procesos offline explícitos: no se activan al arrancar el entorno existente. No se habilitó retención de uploads/descargas.
+[Plan por fases](PLAN_REESTRUCTURACION_POR_FASES.md) ·
+[Validaciones previas al retiro](docs/migracion/fase-07/BLOQUE_7F.md).
 
 ## Arranque local con los datos existentes
 
@@ -31,16 +16,23 @@ Requisitos: Docker Desktop con contenedores Linux y Docker Compose. Ejecutar des
 
 1. Comprobar que existe un respaldo privado verificable y que ningún stack anterior está escribiendo sobre la misma base.
 2. Conservar el `.env` privado existente. Si se prepara otro equipo, usar `.env.example` como referencia y completar las **credenciales reales de su volumen**; no sobrescribir un `.env` existente. Cambiar el archivo no rota contraseñas PostgreSQL.
-3. Confirmar el volumen aprobado (por defecto `predicitas-crp_pgdata`). `compose.yaml` lo declara externo: si no existe, el arranque debe fallar, no crear una base vacía.
+3. Definir una clave interna propia en `IA_API_KEY` en el `.env` privado y comprobar que `IA_MODEL_DIR` contiene el modelo aprobado. El valor predeterminado es `./artifacts/models/legacy-import`.
+4. Confirmar el volumen aprobado (por defecto `predicitas-crp_pgdata`). `compose.yaml` lo declara externo: si no existe, el arranque debe fallar, no crear una base vacía.
 
 ```powershell
 docker volume inspect predicitas-crp_pgdata
 docker compose -f compose.yaml --env-file .env config --quiet
-docker compose -f compose.yaml --env-file .env up -d --build db migraciones backend frontend
+docker compose -f compose.yaml --env-file .env up -d --build db migraciones backend frontend ia
 docker compose -f compose.yaml --env-file .env ps -a
 ```
 
-`migraciones` ejecuta el historial existente; no hay revisiones nuevas en fase 2. No ejecutar sobre datos sin respaldo o con revisiones pendientes no aprobadas. La tarea `seed` queda fuera del arranque normal, tras un perfil explícito; **no ejecutarla sobre la base existente durante esta fase**. No se entrena ni se regenera el modelo al mover aplicaciones; conservar el `.joblib` confiable respaldado en `apps/backend/app/modules/ia/artifacts/`.
+`migraciones` ejecuta el historial existente; el retiro del predictor no introduce revisiones. No ejecutar sobre datos sin respaldo o con revisiones pendientes no aprobadas. La tarea `seed` queda fuera del arranque normal, tras un perfil explícito; **no ejecutarla sobre la base existente durante esta fase**. El arranque carga el modelo aprobado en IA y no ejecuta entrenamiento.
+
+`IA_API_KEY` es un secreto local compartido. Usa un valor aleatorio de 32 bytes
+codificado en hexadecimal en el `.env` de la raíz. Compose lo entrega a
+backend e IA, y el backend lo envía en `X-IA-API-Key` por la red interna.
+Para comprobar la configuración sin mostrar el secreto, usa `config --quiet`
+como en el ejemplo.
 
 **Seed manual actualizado en fase 6 C:** requiere CSV sintético explícito, SHA-256
 y nombre real de una BD nueva autorizada. No genera datos internamente ni admite
@@ -68,9 +60,5 @@ No usar `down -v`, reinicializar volúmenes, sembrar o reentrenar para resolver 
 - `pytest` solo con `DATABASE_URL` y URL de migraciones explícitas hacia **PostgreSQL de pruebas aislado**, configuradas antes de importar la aplicación. No ejecutar las fixtures sobre demo/principal.
 - Se conservan `Skills/` vacías dentro de ambas aplicaciones. Git no guarda carpetas vacías: recrearlas si se clona el repositorio.
 
-El bootstrap local único y smoke final corresponden a fases posteriores; no se
-presentan como implementados. La IA autónoma y el camino limpio de fase 6 tienen
-comandos y límites en su bitácora: no implican que el backend ya consuma IA por
-HTTP. La fase 6 se cerró con E validado en aislamiento; fase 7 empieza por el
-puerto/adaptador 7A y cableado 7B opt-in. La activación HTTP del entorno
-existente y la retirada del predictor siguen pendientes.
+Las pruebas de inferencia necesitan una instancia IA de laboratorio,
+`IA_HTTP_TEST_URL` y la clave correspondiente en `IA_API_KEY`.

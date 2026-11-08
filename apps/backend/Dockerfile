@@ -11,9 +11,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Dependencias nativas del sistema para LightGBM (libgomp1 para OpenMP) y healthcheck (curl)
+# Cliente para el healthcheck HTTP.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgomp1 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

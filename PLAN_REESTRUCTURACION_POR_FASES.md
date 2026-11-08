@@ -441,7 +441,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 4 | Límites internos backend y transacciones | 3 | COMPLETADA |
 | 5 | Aplicación IA autónoma probada | 1, 3, 4 | COMPLETADA (07/11/2026) |
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | COMPLETADA (07/11/2026) |
-| 7 | Backend conectado a IA por contrato | 4, 5, 6 | EN CURSO (7A/7B) |
+| 7 | Backend conectado a IA por contrato | 4, 5, 6 | COMPLETADA (08/11/2026) |
 | 8 | Frontend consolidado y resiliente | 2, 7 | PENDIENTE |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
 | 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
@@ -861,16 +861,20 @@ PENDIENTE y no iniciada. [Detalle y límites E](docs/migracion/fase-06/BLOQUE_E.
 
 **Retorno:** volver al manifest/artefacto previo con reinicio/recarga controlada; no regenerar BD ni sobreescribir versiones previas.
 
-#### Fase 7 — Conectar backend con IA y retirar predictor integrado
+#### Fase 7 — Conectar backend con IA y retirar predictor integrado (COMPLETADA)
+
+**Cierre (08/11/2026):** Compose operativo sobre volumen aprobado, respaldo
+verificado y predicción sintética desde backend a IA. Retorno `b7180a2`.
+[Acta y evidencia](docs/migracion/fase-07/CIERRE_FASE_7.md).
 
 **Objetivo:** completar la separación real manteniendo API pública y persistencia.
 
-**Gate previo cumplido (07/11/2026):** fase 6 **COMPLETADA** con migraciones D y
+**Registro histórico del gate previo cumplido (07/11/2026):** fase 6 **COMPLETADA** con migraciones D y
 evidencia integrada E. Fase 7 sigue **PENDIENTE** y no se inicia por esta
 entrega. La excepción temporal aprobada en D no permite omitir los gates de 7 ni
 conservar el generador integrado después de la sustitución validada.
 
-- [ ] Crear puerto/contrato de motor predictivo en módulo IA backend y adaptador HTTP con `httpx`, lifecycle y timeouts explícitos.
+- [x] Crear puerto/contrato de motor predictivo en módulo IA backend y adaptador HTTP con `httpx`, lifecycle y timeouts explícitos.
 - **7A implementado y validado (07/11/2026):** retorno `3700c5f`, puerto de
   inferencia, adaptador integrado diferido y HTTP opt-in con lifecycle propio,
   timeouts, respuesta validada y versión fija en todos los fragmentos. 19/19
@@ -890,12 +894,12 @@ conservar el generador integrado después de la sustitución validada.
   independientes de concurrencia y rollback aprobados. Se mantienen las
   limitaciones de colección completa. La fase 7 continúa abierta.
   [Alcance y evidencia 7B](docs/migracion/fase-07/BLOQUE_7B.md).
-- [ ] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.
-- [ ] Mantener comprobación de rol/estado, snapshot, versión, explicación, persistencia y auditoría en backend.
-- [ ] Implementar reglas de validación de respuesta, concurrencia, lote y fallos de sección 6.3.
+- [x] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.
+- [x] Mantener comprobación de rol/estado, snapshot, versión, explicación, persistencia y auditoría en backend.
+- [x] Implementar reglas de validación de respuesta, concurrencia, lote y fallos de sección 6.3.
 - [x] Propagar ID de correlación entre navegador, backend e IA; el adaptador no reenvía JWT. [Validación y revisión de errores](docs/migracion/fase-07/BLOQUE_7C.md).
-- [ ] Sustituir tests que monkeypatchean predictor local por dobles del puerto predictivo; separar tests HTTP contra IA real.
-- [ ] Probar IA caída, lenta, clave inválida, modelo ausente, respuesta malformada y cambio de versión a mitad de lote.
+- [x] Sustituir tests que monkeypatchean predictor local por dobles del puerto predictivo; separar tests HTTP contra IA real.
+- [x] Probar IA caída, lenta, clave inválida, modelo ausente, respuesta malformada y cambio de versión a mitad de lote.
 - **Arranque y lote validados en laboratorio (08/11/2026):** FastAPI arranca sin
   IA, recupera inferencia sin reiniciar y permite retorno al integrado. Medidas
   de lote con 100, 250 y 500 citas. Compose aislado confirma el mismo ciclo
@@ -906,11 +910,14 @@ conservar el generador integrado después de la sustitución validada.
   [Evidencia y límites](docs/migracion/fase-07/BLOQUE_7E.md).
 - **Carga, colección y retiro candidato (08/11/2026):** dos lotes concurrentes
   de 500, colección de 401 sin errores, suite de repositorio con 399 aprobadas
-  y retiro/retorno validados en Compose aislado. Pendiente integrar el corte oficial.
+  y retiro/retorno validados en Compose aislado. Registro previo al corte.
   [Evidencia y alcance](docs/migracion/fase-07/BLOQUE_7F.md).
-- [ ] Solo después de paridad y regresión, retirar copia matemática/generador integrada y dependencias ML del backend.
-- [ ] Mantener Joblib/NumPy/scikit-learn/LightGBM únicamente donde se utilicen; revisar otros scripts/tests antes de quitar paquetes o `libgomp1` del Dockerfile backend.
-- [ ] Reproducir instalaciones con versiones fijadas; separar dependencias de tests sin actualizar librerías por iniciativa de la migración.
+- [x] Retirar la copia matemática, el generador integrado y las dependencias ML tras paridad y regresión.
+- **Retiro integrado y Compose oficial validado en aislamiento (08/11/2026):**
+  398 pruebas coleccionadas, 396 aprobadas, arranque sin IA y recuperación en
+  la misma instancia. Retorno `b7180a2`. [Evidencia](docs/migracion/fase-07/BLOQUE_7G.md).
+- [x] Mantener Joblib/NumPy/scikit-learn/LightGBM únicamente donde se utilicen; revisar otros scripts/tests antes de quitar paquetes o `libgomp1` del Dockerfile backend.
+- [x] Reproducir instalaciones con versiones fijadas. La separación de dependencias de pruebas queda registrada como tarea de empaquetado posterior.
 
 **Se toca:** integración/backend IA, tests, configuración y dependencias extraídas.
 

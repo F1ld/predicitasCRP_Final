@@ -123,7 +123,7 @@ def main():
         if args.arranque:
             (raw / "ia-lista.ok").touch()
             if run(["docker", "wait", startup]).stdout.strip() != "0":
-                raise RuntimeError("Fallo en recuperacion o retorno; revisar arranque.log")
+                raise RuntimeError("Fallo en recuperacion; revisar arranque.log")
         runtime = [*base, "--env-file", str(private / "app.env"), image]
         if args.medir_lote:
             run([*base, "--env-file", str(private / "app.env"), "-e", "IA_LOTE_LAB=1", image,
@@ -159,12 +159,12 @@ def main():
             suites = ET.parse(raw / f"{name}.xml").getroot()
             counts[name] = {k: sum(int(s.get(k, "0")) for s in suites.iter("testsuite")) for k in ("tests", "failures", "errors", "skipped")}
         concurrency = json.loads((raw / "concurrencia.json").read_text())
-        summary = dict(run_id=args.nombre, baseline="3700c5f + 7A sin commit", backend_image=image, ia_image=ia_image,
+        summary = dict(run_id=args.nombre, backend_image=image, ia_image=ia_image,
             tests=counts, startup_validated=args.arranque, ia_trace_ids=len(trace_ids), concurrency=concurrency, database=database, db=db, ia=ia, network=network, volume=volume,
             sources=sha(list((ROOT / "apps/backend/app/modules/ia").glob("*.py")) + [ROOT / p for p in
                 ("apps/backend/app/main.py", "apps/backend/app/core/config.py", "apps/backend/app/modules/citas/router.py", "apps/backend/tests/test_motor_7b.py")]),
             protected_unchanged=before == sha(protected), full_suite_green=args.suite_repo,
-            default_motor="integrado", schema_changed=False)
+            default_motor="http", schema_changed=False)
     finally:
         for container in reversed(created):
             run(["docker", "stop", container], log=raw / f"stop-{container}.log")
