@@ -1,0 +1,30 @@
+{
+  "project": "predicitas-f9-perfiles-20261108-01",
+  "normal_services": [
+    "backend",
+    "db",
+    "frontend",
+    "ia",
+    "migraciones"
+  ],
+  "seed_profile_services": [
+    "backend",
+    "db",
+    "frontend",
+    "ia",
+    "migraciones",
+    "seed"
+  ],
+  "users": 0,
+  "appointments": 0,
+  "predictions": 0,
+  "seed_container_created": false,
+  "repeated_normal_start_passed": true,
+  "active_services_unchanged": true,
+  "offline_tasks": {
+    "dataset_validated": true,
+    "candidate_created": true,
+    "tests_passed": 241,
+    "approved_model_unchanged": true
+  }
+}

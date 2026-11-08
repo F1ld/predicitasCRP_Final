@@ -1,0 +1,12 @@
+{
+  "project": "predicitas-crp",
+  "volume": "predicitas-crp_pgdata",
+  "revision": "m01_001_indices_auditoria",
+  "backup_verified": true,
+  "ready_http": 200,
+  "frontend_http": 200,
+  "user_appointment_prediction_fingerprints_unchanged": true,
+  "db_ia_not_restarted": true,
+  "frontend_image_unchanged": true,
+  "return_image": "predicitas-backend-retorno:d5d1dbd"
+}

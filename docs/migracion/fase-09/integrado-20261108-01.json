@@ -1,0 +1,18 @@
+{
+  "project": "predicitas-f9-integrado-20261108-01",
+  "frontend_http": 200,
+  "ready_without_ia": 200,
+  "prediction_without_ia": 503,
+  "prediction_after_ia_start": 200,
+  "live_without_db": 200,
+  "ready_without_db": 503,
+  "ready_after_db_restart": 200,
+  "same_backend": true,
+  "revision": "m01_001_indices_auditoria",
+  "appointments_after_restart": 2,
+  "predictions_after_restart": 2,
+  "isolated_external_volume": true,
+  "published_ports": false,
+  "active_containers_unchanged": true,
+  "lab_containers_stopped": true
+}

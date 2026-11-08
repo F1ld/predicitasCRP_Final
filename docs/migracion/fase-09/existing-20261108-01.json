@@ -1,0 +1,15 @@
+{
+  "project": "predicitas-f9-existing-20261108-01",
+  "source": "predicitas-f9-integrado-20261108-01_pgdata",
+  "copy": "predicitas-f9-existing-20261108-01_pgdata",
+  "same_containers_on_repeat": true,
+  "data_checksums_preserved": true,
+  "model_preserved": true,
+  "wrong_confirmation_rejected": true,
+  "simulated_pending_revision_rejected": true,
+  "migration_or_seed_executed": false,
+  "appointments": 2,
+  "predictions": 2,
+  "lab_containers_stopped": true,
+  "active_containers_unchanged": true
+}

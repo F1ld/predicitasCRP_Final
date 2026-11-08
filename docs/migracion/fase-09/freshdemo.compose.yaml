@@ -1,0 +1,27 @@
+# Capa para un proyecto FreshDemo nuevo. Usar con compose.yaml.
+services:
+  db:
+    container_name: !reset null
+    ports: !reset []
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${POSTGRES_USER:-predicitas_owner} -d predicitas"]
+  migraciones:
+    container_name: !reset null
+  seed:
+    container_name: !reset null
+  backend:
+    container_name: !reset null
+    ports: !reset []
+  frontend:
+    container_name: !reset null
+    ports: !reset []
+networks:
+  default:
+    internal: true
+    ipam:
+      config:
+        - subnet: "${DEMO_DB_SUBNET:?Definir una subred libre para la demo}"
+  inferencia:
+    ipam:
+      config:
+        - subnet: "${DEMO_IA_SUBNET:?Definir otra subred libre para la demo}"

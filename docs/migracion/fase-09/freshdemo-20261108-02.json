@@ -1,0 +1,18 @@
+{
+  "project": "predicitas-f9-demo-20261108-02",
+  "volume": "predicitas-f9-demo-20261108-02_pgdata",
+  "synthetic_appointments": 10,
+  "demo_roles": [
+    "ADMINISTRADOR",
+    "RECEPCION",
+    "TECNICO_IA"
+  ],
+  "frontend_http": 200,
+  "backend_and_ia_healthy": true,
+  "synthetic_prediction": true,
+  "bad_hash_rejected_before_volume": true,
+  "used_volume_rejected": true,
+  "training_executed": false,
+  "active_containers_unchanged": true,
+  "lab_containers_stopped": true
+}

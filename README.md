@@ -12,6 +12,11 @@ las operaciones de inferencia devuelven 503 hasta que el servicio se recupera.
 
 ## Arranque local con los datos existentes
 
+La [guía de arranque de fase 9](docs/migracion/fase-09/README.md) describe
+los modos `Verify`, `Existing` y `FreshDemo`, las tareas de IA y la
+configuración nativa. Ejecuta `./scripts/bootstrap.ps1 -Mode Verify`
+para comprobar el entorno antes de iniciar servicios.
+
 Requisitos: Docker Desktop con contenedores Linux y Docker Compose. Ejecutar desde esta raíz en PowerShell.
 
 1. Comprobar que existe un respaldo privado verificable y que ningún stack anterior está escribiendo sobre la misma base.

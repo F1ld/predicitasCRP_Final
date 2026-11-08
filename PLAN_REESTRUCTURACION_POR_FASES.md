@@ -443,7 +443,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 6 | Preparación, entrenamiento y promoción explícitos | 5 | COMPLETADA (07/11/2026) |
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | COMPLETADA (08/11/2026) |
 | 8 | Frontend consolidado y resiliente | 2, 7 | COMPLETADA CON SALVEDADES (08/11/2026) |
-| 9 | Arranque local único y bootstrap reproducible | 3–8 | PENDIENTE |
+| 9 | Arranque local único y bootstrap reproducible | 3–8 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
 | 11 | Corte final, documentación y cierre | 10 | PENDIENTE |
 
@@ -966,22 +966,32 @@ visible), los 56 fallos históricos de Citas y la incidencia de asignación de c
 
 #### Fase 9 — Compose oficial, configuración y bootstrap local
 
+**Primer bloque:** modo `Verify` de solo lectura validado y readiness de
+PostgreSQL validado con pruebas focales y arranque integrado en aislamiento.
+**Existing validado en aislamiento:** dos arranques sobre una copia de volumen,
+conservación de filas y modelo y rechazo de una revisión diferente sin migrar.
+[Comando y alcance](docs/migracion/fase-09/README.md).
+
+**Cierre (08/11/2026):** respaldo verificado, readiness operativo y huellas de
+usuarios, citas y predicciones conservadas. Retorno `d5d1dbd`.
+[Guía y evidencia](docs/migracion/fase-09/README.md).
+
 **Objetivo:** iniciar el proyecto completo desde la raíz sin conocimiento implícito.
 
-- [ ] Consolidar `compose.yaml` con `db`, `migraciones`, `backend`, `ia`, `frontend` y tareas por perfil para preparación/entrenamiento/seed/pruebas.
-- [ ] Crear `scripts/bootstrap.ps1` idempotente y documentado; validar herramientas, `.env`, paths, puertos, volumen elegido y permisos antes de escribir datos.
-- [ ] Ofrecer modos explícitos: **Existing** preserva y valida datos/modelo; **FreshDemo** exige BD nueva vacía autorizada y prepara sintéticos/modelo/usuarios; **Verify** no siembra ni entrena.
-- [ ] El bootstrap no sobrescribe `.env`, no rota contraseñas ni promueve modelos existentes sin confirmación. Si falta configuración, explica cómo completarla.
-- [ ] Definir perfiles Compose `setup`, `training`, `test` o equivalentes; que no arranquen procesos destructivos al ejecutar `up` normal.
-- [ ] Implementar dependencias: DB saludable → migrador puntual exitoso → backend; IA con artefacto listo en paralelo; frontend inicia con backend disponible. No condicionar arranque backend a IA saludable.
-- [ ] Para FreshDemo, el bootstrap espera readiness IA antes de declarar stack completo; no confundir degradación aceptada del backend con instalación completa exitosa.
-- [ ] Mover init BD a infraestructura, asegurar creación de rol antes de migración y manejar volúmenes ya inicializados donde los init scripts no se reejecutan.
-- [ ] Diferenciar proceso vivo y listo: `/health` existente se mantiene compatible; agregar comprobación real de BD para readiness backend sin exigir IA. Healthcheck no debe usar solo `/docs` como prueba de dependencias.
-- [ ] Inyectar owner solo en tareas de administración. Backend permanente e IA sin credenciales administrativas.
-- [ ] Revisar `restart`, tiempos de gracia, límites razonables y logs por servicio; los procesos puntuales terminan con código útil y no reinician en bucle.
+- [x] Consolidar `compose.yaml` con `db`, `migraciones`, `backend`, `ia`, `frontend` y tareas por perfil para preparación/entrenamiento/seed/pruebas.
+- [x] Crear `scripts/bootstrap.ps1` idempotente y documentado; validar herramientas, `.env`, paths, puertos, volumen elegido y permisos antes de escribir datos.
+- [x] Ofrecer modos explícitos: **Existing** preserva y valida datos/modelo; **FreshDemo** exige BD nueva vacía autorizada y prepara sintéticos/modelo/usuarios; **Verify** no siembra ni entrena.
+- [x] El bootstrap no sobrescribe `.env`, no rota contraseñas ni promueve modelos existentes sin confirmación. Si falta configuración, explica cómo completarla.
+- [x] Definir perfiles Compose `setup`, `training`, `test` o equivalentes; que no arranquen procesos destructivos al ejecutar `up` normal.
+- [x] Implementar dependencias: DB saludable → migrador puntual exitoso → backend; IA con artefacto listo en paralelo; frontend inicia con backend disponible. No condicionar arranque backend a IA saludable.
+- [x] Para FreshDemo, el bootstrap espera readiness IA antes de declarar stack completo; no confundir degradación aceptada del backend con instalación completa exitosa.
+- [ ] Diferido: mover init BD a infraestructura, asegurar creación de rol antes de migración y manejar volúmenes ya inicializados donde los init scripts no se reejecutan.
+- [x] Diferenciar proceso vivo y listo: `/health` existente se mantiene compatible; agregar comprobación real de BD para readiness backend sin exigir IA. Healthcheck no debe usar solo `/docs` como prueba de dependencias.
+- [x] Inyectar owner solo en tareas de administración. Backend permanente e IA sin credenciales administrativas.
+- [x] Revisar `restart`, tiempos de gracia, límites razonables y logs por servicio; los procesos puntuales terminan con código útil y no reinician en bucle.
 - [ ] Mantener un único nombre/volumen, sin colisiones con Compose históricos. Archivar instrucciones anteriores y retirar entradas ambiguas solo tras verificación.
-- [ ] Implementar preparación de directorios, incluidas `Skills` vacías; no agregar `.gitkeep` dentro de ellas.
-- [ ] Documentar ejecución nativa: Python/venv separados, Node, BD/roles, migraciones, dataset/artefacto explícito, IA, backend y frontend en terminales separadas.
+- [x] Implementar preparación de directorios, incluidas `Skills` vacías; no agregar `.gitkeep` dentro de ellas.
+- [x] Documentar ejecución nativa: Python/venv separados, Node, BD/roles, migraciones, dataset/artefacto explícito, IA, backend y frontend en terminales separadas.
 
 **Se toca:** infraestructura, Dockerfiles si procede, ejemplos de entorno, scripts de operación y documentación de arranque.
 

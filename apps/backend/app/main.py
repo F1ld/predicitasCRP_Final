@@ -11,10 +11,14 @@ from uuid import uuid4
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 import app.bootstrap.models  # noqa: F401  (registra todos los modelos)
 from app.core import manejadores
 from app.core.config import get_settings
+from app.core.database import engine
 from app.core.trazabilidad import CABECERA_SOLICITUD, id_solicitud
 from app.modules.auth.router import router as auth_router
 from app.modules.citas.router import router as citas_router
@@ -77,4 +81,14 @@ app.include_router(reportes_router)
 
 @app.get("/health", tags=["sistema"])
 def health():
+    return {"estado": "ok"}
+
+
+@app.get("/health/ready", tags=["sistema"], responses={503: {"description": "PostgreSQL no disponible"}})
+def readiness():
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        return JSONResponse(status_code=503, content={"estado": "no_disponible"})
     return {"estado": "ok"}
