@@ -1,0 +1,27 @@
+{
+  "project": "predicitas-f7-compose-20261108-02",
+  "internal_network": true,
+  "published_ports": false,
+  "fresh_postgres_volume": true,
+  "same_backend_on_recovery": true,
+  "operational_compose_hash_unchanged": true,
+  "running_containers_unchanged": true,
+  "lab_containers_stopped": true,
+  "probes": [
+    {
+      "fase": "sin-ia",
+      "health": 200,
+      "lote": 503
+    },
+    {
+      "fase": "recuperado",
+      "health": 200,
+      "lote": 200
+    },
+    {
+      "fase": "retorno",
+      "health": 200,
+      "lote": 200
+    }
+  ]
+}

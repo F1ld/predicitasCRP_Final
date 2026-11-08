@@ -10,6 +10,8 @@ import time
 from typing import Literal
 from uuid import UUID, uuid4
 
+from app.core.trazabilidad import CABECERA_SOLICITUD, id_solicitud
+
 import httpx
 from pydantic import Field, ValidationError, field_validator
 
@@ -117,9 +119,11 @@ class MotorHTTP:
         if remaining <= 0:
             raise MotorIANoDisponible("Plazo del motor IA agotado")
         timeout = httpx.Timeout(**{k: min(v, remaining) for k, v in self._plazos.items()})
+        identificador = id_solicitud.get()
+        headers = {CABECERA_SOLICITUD: identificador} if identificador else None
         try:
             with self._client.stream("GET" if payload is None else "POST", path,
-                                     json=payload, timeout=timeout) as response:
+                                     json=payload, headers=headers, timeout=timeout) as response:
                 if response.status_code == 409:
                     raise Conflicto("La versión del motor cambió", codigo="VERSION_MODELO_INCOMPATIBLE")
                 if response.status_code != 200:

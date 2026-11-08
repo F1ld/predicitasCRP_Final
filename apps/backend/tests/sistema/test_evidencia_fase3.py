@@ -5,16 +5,16 @@ import sys
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[4]
-TOOLS = ROOT / "docs/migracion/fase-03"
-
-
 @pytest.fixture
 def herramientas(monkeypatch):
-    monkeypatch.syspath_prepend(str(TOOLS))
+    tools = next((parent / "docs/migracion/fase-03" for parent in Path(__file__).resolve().parents
+                  if (parent / "docs/migracion/fase-03/evidencia.py").is_file()), None)
+    if tools is None:
+        pytest.skip("El verificador de evidencia requiere el árbol del repositorio")
+    monkeypatch.syspath_prepend(str(tools))
     modules = []
     for name in ("evidencia", "verificar_cierre"):
-        spec = importlib.util.spec_from_file_location(name, TOOLS / f"{name}.py")
+        spec = importlib.util.spec_from_file_location(name, tools / f"{name}.py")
         module = importlib.util.module_from_spec(spec)
         monkeypatch.setitem(sys.modules, name, module)
         spec.loader.exec_module(module)

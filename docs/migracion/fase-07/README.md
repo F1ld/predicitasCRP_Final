@@ -1,6 +1,6 @@
 # Fase 7 — conexión backend/IA (EN CURSO)
 
-**Actualización 7B:** cableado conservador de servicios/alias/metadata al puerto,
+**7B validado el 08/11/2026 (15 pruebas focales y 354 de regresión empaquetada).** cableado conservador de servicios/alias/metadata al puerto,
 lifespan y protección transaccional. El integrado permanece por defecto; HTTP
 solo opt-in, sin despliegue. [Alcance y validación 7B](BLOQUE_7B.md).
 La sección 7A siguiente describe su entrega histórica anterior al cableado.

@@ -1,0 +1,70 @@
+name: predicitas-f7-compose-lab
+x-backend-env: &backend-env
+  DATABASE_URL: postgresql+psycopg://predicitas_app:solo_lab_app@db:5432/predicitas_f7_compose
+  SECRET_KEY: solo-laboratorio-compose-fase-7-sin-acceso-externo
+  ENVIRONMENT: test
+  IA_URL: http://ia:8100
+  IA_API_KEY: solo-laboratorio-fase-7
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: predicitas_owner
+      POSTGRES_PASSWORD: solo_lab_owner
+      POSTGRES_DB: predicitas_f7_compose
+      APP_DB_USER: predicitas_app
+      APP_DB_PASSWORD: solo_lab_app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./apps/backend/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "predicitas_owner", "-d", "predicitas_f7_compose"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  migraciones:
+    build: ./apps/backend
+    environment:
+      <<: *backend-env
+      DATABASE_URL_MIGRACIONES: postgresql+psycopg://predicitas_owner:solo_lab_owner@db:5432/predicitas_f7_compose
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+  backend:
+    build: ./apps/backend
+    environment:
+      <<: *backend-env
+      IA_MOTOR: "${F7_LAB_MOTOR:-http}"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    depends_on:
+      migraciones:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  ia:
+    build:
+      context: ./apps/ia
+      additional_contexts:
+        contracts: ./contracts
+    environment:
+      IA_API_KEY: solo-laboratorio-fase-7
+    volumes:
+      - ./artifacts/models/legacy-import:/models:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8100/health/ready"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+networks:
+  default:
+    internal: true
+    ipam:
+      config:
+        - subnet: "${F7_LAB_SUBNET:?Definir una subred de laboratorio libre}"
+volumes:
+  pgdata:

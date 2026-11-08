@@ -1,0 +1,22 @@
+{
+  "isolated_postgresql": true,
+  "measurements": [
+    {
+      "citas": 100,
+      "segundos": 1.223
+    },
+    {
+      "citas": 250,
+      "segundos": 2.636
+    },
+    {
+      "citas": 500,
+      "segundos": 5.416
+    }
+  ],
+  "protected_unchanged": true,
+  "real_ia": true,
+  "request": "POST /ia/predecir-lote?forzar=true",
+  "run_id": "7d-20261108-03",
+  "running_containers_unchanged": true
+}

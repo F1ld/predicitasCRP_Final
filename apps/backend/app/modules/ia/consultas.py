@@ -38,11 +38,13 @@ def bloquear_para_inferencia(db: Session, ids: list[int]):
     return {c.id_cita: _snapshot(c) for c in db.scalars(stmt.execution_options(populate_existing=True))}
 
 
-def citas_operativas_sin_prediccion(db: Session, version_modelo: str, forzar: bool = False):
+def citas_operativas_sin_prediccion(db: Session, version_modelo: str, forzar: bool = False, *, limite: int | None = None):
     stmt = select(Cita).where(Cita.estado_actual == "RECIBIDA", Cita.target_no_show.is_(None)).order_by(
         Cita.fecha_hora_cita.asc(), Cita.id_cita.asc())
     if not forzar:
         stmt = stmt.where(Cita.id_cita.not_in(select(PrediccionIA.id_cita).where(PrediccionIA.version_modelo == version_modelo)))
+    if limite is not None:
+        stmt = stmt.limit(limite)
     return [_snapshot(c) for c in db.scalars(stmt)]
 
 

@@ -31,6 +31,11 @@ def sha(paths):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--nombre", required=True)
+    parser.add_argument("--reconstruir-ia", action="store_true")
+    parser.add_argument("--arranque", action="store_true")
+    parser.add_argument("--medir-lote", action="store_true")
+    parser.add_argument("--subred")
+    parser.add_argument("--suite-repo", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,40}", args.nombre):
         parser.error("Nombre no válido")
@@ -55,6 +60,7 @@ def main():
     (private / "admin.env").write_text(common + f"DATABASE_URL_MIGRACIONES=postgresql+psycopg://predicitas_owner:{owner}@{db}/{database}\n")
     (private / "ia.env").write_text(f"IA_API_KEY={key}\n")
     created = []
+    startup = identity + "-arranque"
     try:
         for kind, name in (("container", db), ("container", ia), ("network", network), ("volume", volume)):
             if run(["docker", kind, "inspect", name], required=False).returncode == 0:
@@ -64,13 +70,22 @@ def main():
             raise RuntimeError("Imagen preexistente; no sobrescribir")
         run(["docker", "build", "-t", tag, str(ROOT / "apps/backend")], log=raw / "build.log")
         image = run(["docker", "image", "inspect", "--format", "{{.Id}}", tag]).stdout.strip()
-        run(["docker", "network", "create", "--internal", network])
+        ia_image = IA_IMAGE
+        if args.reconstruir_ia:
+            ia_tag = "predicitas-ia:" + args.nombre
+            if run(["docker", "image", "inspect", ia_tag], required=False).returncode == 0:
+                raise RuntimeError("Imagen IA preexistente; no sobrescribir")
+            run(["docker", "build", "--build-context", f"contracts={ROOT / 'contracts'}",
+                 "-t", ia_tag, str(ROOT / "apps/ia")], log=raw / "build-ia.log")
+            ia_image = run(["docker", "image", "inspect", "--format", "{{.Id}}", ia_tag]).stdout.strip()
+        subnet = ["--subnet", args.subred] if args.subred else []
+        run(["docker", "network", "create", "--internal", *subnet, network], log=raw / "red.log")
         run(["docker", "volume", "create", volume])
         run(["docker", "run", "-d", "--name", db, "--network", network, "--env-file", str(private / "postgres.env"),
             "--mount", f"type=volume,source={volume},target=/var/lib/postgresql/data", "postgres:16"])
         created.append(db)
         for _ in range(90):
-            if run(["docker", "exec", db, "pg_isready", "-U", "predicitas_owner", "-d", database], required=False).returncode == 0:
+            if run(["docker", "exec", db, "pg_isready", "-h", "127.0.0.1", "-U", "predicitas_owner", "-d", database], required=False).returncode == 0:
                 break
             time.sleep(1)
         else:
@@ -81,9 +96,23 @@ def main():
             "--cpus", "2", "--memory", "1g", "-e", "OMP_NUM_THREADS=1", "-e", "OPENBLAS_NUM_THREADS=1", "-e", "MKL_NUM_THREADS=1",
             "--mount", f"type=bind,source={raw},target=/results", "--mount", f"type=bind,source={HERE},target=/checks,readonly"]
         run([*base, "--env-file", str(private / "admin.env"), image, "alembic", "upgrade", "head"], log=raw / "migraciones.log")
+        if args.arranque:
+            detached = ["docker", "run", "-d", "--name", startup, *base[3:]]
+            run([*detached, "--env-file", str(private / "app.env"), "-e", "IA_ARRANQUE_LAB=1", image,
+                 "python", "-B", "-m", "pytest", "tests/test_motor_7b.py", "-k", "arranque_recuperacion",
+                 "--no-cov", "-q"])
+            created.append(startup)
+            for _ in range(120):
+                if (raw / "backend-sin-ia.ok").exists():
+                    break
+                if run(["docker", "inspect", "-f", "{{.State.Running}}", startup]).stdout.strip() != "true":
+                    raise RuntimeError("Backend no confirmo arranque sin IA; revisar arranque.log")
+                time.sleep(0.5)
+            else:
+                raise RuntimeError("Tiempo agotado esperando arranque sin IA")
         run(["docker", "run", "-d", "--name", ia, "--network", network, "--read-only", "--tmpfs", "/tmp:rw,size=256m",
             "--cpus", "2", "--memory", "1g", "--env-file", str(private / "ia.env"),
-            "--mount", f"type=bind,source={ROOT / 'artifacts/models/legacy-import'},target=/models,readonly", IA_IMAGE])
+            "--mount", f"type=bind,source={ROOT / 'artifacts/models/legacy-import'},target=/models,readonly", ia_image])
         created.append(ia)
         for _ in range(120):
             if run(["docker", "exec", ia, "curl", "-fsS", "http://127.0.0.1:8100/health/ready"], required=False).returncode == 0:
@@ -91,25 +120,56 @@ def main():
             time.sleep(0.5)
         else:
             raise RuntimeError("IA no lista")
+        if args.arranque:
+            (raw / "ia-lista.ok").touch()
+            if run(["docker", "wait", startup]).stdout.strip() != "0":
+                raise RuntimeError("Fallo en recuperacion o retorno; revisar arranque.log")
         runtime = [*base, "--env-file", str(private / "app.env"), image]
+        if args.medir_lote:
+            run([*base, "--env-file", str(private / "app.env"), "-e", "IA_LOTE_LAB=1", image,
+                 "python", "-B", "-m", "pytest", "tests/test_motor_7b.py", "-k", "medir_lote_publico",
+                 "--no-cov", "-q"], log=raw / "lote.log")
+            print((raw / "lote.json").read_text())
+            return
         run([*runtime, "python", "-B", "-m", "pytest", "tests/test_motor_7b.py", "--no-cov", "-q", "--junitxml=/results/focal.xml"], log=raw / "focal.log")
-        run([*runtime, "python", "-B", "-m", "pytest", "--collect-only", "--no-cov", "-q"], log=raw / "coleccion.log", required=False)
-        run([*runtime, "python", "-B", "-m", "pytest", "--ignore=tests/ia", "--ignore=tests/sistema/test_evidencia_fase3.py",
-            "--ignore=tests/sistema/test_archivos_fase3.py", "--no-cov", "-q", "--junitxml=/results/regresion.xml"], log=raw / "regresion.log")
+        trace_ids = set()
+        if args.reconstruir_ia:
+            logs = run(["docker", "logs", ia], log=raw / "ia.log")
+            trace_ids = set(re.findall(r"solicitud=([0-9a-f]{32}) duracion_ms=", logs.stdout + logs.stderr))
+            if len(trace_ids) < 2:
+                raise RuntimeError("IA no registro las trazas de las dos rutas de prediccion")
+        run([*runtime, "python", "-B", "-m", "pytest", "--collect-only", "--no-cov", "-q"], log=raw / "coleccion.log")
+        regression = runtime
+        exclusions = ["--ignore=tests/sistema/test_archivos_fase3.py"]
+        if args.suite_repo:
+            mounts = []
+            for relative in ("apps/backend/app", "apps/backend/scripts", "apps/backend/tests",
+                             "apps/backend/data", "apps/backend/pytest.ini", "apps/frontend/tests",
+                             "docs/migracion/fase-03", "data/samples", "data/manifests",
+                             "artifacts/models/legacy-import", "citas_para_importar_variado.csv"):
+                mounts.extend(("--mount", f"type=bind,source={ROOT / relative},target=/checkout/{relative},readonly"))
+            regression = [*base, *mounts, "--workdir", "/checkout/apps/backend",
+                          "--env-file", str(private / "app.env"), image]
+            exclusions = []
+        run([*regression, "python", "-B", "-m", "pytest", *exclusions,
+             "--no-cov", "-q", "--junitxml=/results/regresion.xml"], log=raw / "regresion.log")
         run([*runtime, "python", "-B", "/checks/probar_concurrencia_7b.py"], log=raw / "concurrencia.log")
         counts = {}
         for name in ("focal", "regresion"):
             suites = ET.parse(raw / f"{name}.xml").getroot()
             counts[name] = {k: sum(int(s.get(k, "0")) for s in suites.iter("testsuite")) for k in ("tests", "failures", "errors", "skipped")}
         concurrency = json.loads((raw / "concurrencia.json").read_text())
-        summary = dict(run_id=args.nombre, baseline="3700c5f + 7A sin commit", backend_image=image, ia_image=IA_IMAGE,
-            tests=counts, concurrency=concurrency, database=database, db=db, ia=ia, network=network, volume=volume,
+        summary = dict(run_id=args.nombre, baseline="3700c5f + 7A sin commit", backend_image=image, ia_image=ia_image,
+            tests=counts, startup_validated=args.arranque, ia_trace_ids=len(trace_ids), concurrency=concurrency, database=database, db=db, ia=ia, network=network, volume=volume,
             sources=sha(list((ROOT / "apps/backend/app/modules/ia").glob("*.py")) + [ROOT / p for p in
                 ("apps/backend/app/main.py", "apps/backend/app/core/config.py", "apps/backend/app/modules/citas/router.py", "apps/backend/tests/test_motor_7b.py")]),
-            protected_unchanged=before == sha(protected), full_suite_green=False, default_motor="integrado", schema_changed=False)
+            protected_unchanged=before == sha(protected), full_suite_green=args.suite_repo,
+            default_motor="integrado", schema_changed=False)
     finally:
         for container in reversed(created):
             run(["docker", "stop", container], log=raw / f"stop-{container}.log")
+            if container == startup:
+                run(["docker", "logs", container], log=raw / "arranque.log")
         assert before == sha(protected), "Archivo protegido cambió"
         assert sorted(running) == sorted(run(["docker", "ps", "-q"]).stdout.splitlines()), "Cambió el conjunto activo"
     summary.update(resources_preserved=True, containers_stopped=True, running_containers_unchanged=True)

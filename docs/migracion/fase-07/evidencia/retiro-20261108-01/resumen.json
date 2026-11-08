@@ -1,0 +1,35 @@
+{
+  "candidate_image": "sha256:30cabd99a06e5f30fc774f3d2942c699b0f6e41dc5c981c4a85f3c96794aa827",
+  "database_state": [
+    "m01_001_indices_auditoria",
+    "2",
+    "2"
+  ],
+  "lab_containers_stopped": true,
+  "migrations_image": "previous_backend_sources",
+  "ml_absent": true,
+  "openapi_sha256": "7c345f188d1769e7fc2faf830ce0feea6351f1e85c7d31ff16836a602a02601a",
+  "operational_compose_unchanged": true,
+  "previous_image": "sha256:4e5f2aa8da02e02cb6ae4dccfba3a22d24500fb503437249e7fcf5ef6f80760e",
+  "probes": [
+    {
+      "fase": "sin-ia",
+      "health": 200,
+      "lote": 503
+    },
+    {
+      "fase": "recuperado",
+      "health": 200,
+      "lote": 200
+    },
+    {
+      "fase": "retorno",
+      "health": 200,
+      "lote": 200
+    }
+  ],
+  "run_id": "retiro-20261108-01",
+  "running_containers_unchanged": true,
+  "same_backend_on_recovery": true,
+  "same_database": true
+}

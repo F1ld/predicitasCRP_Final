@@ -45,3 +45,9 @@ El OpenAPI actual declara JSON en rutas que retornan `Response` para descargas; 
 Cambios de ruta/verbo, quitar campos, volver obligatorio un opcional, cambiar roles, defaults, tipos string↔number, side effects o validaciones legacy son incompatibilidades salvo corrección explícitamente registrada. Para una corrección acotada conservar ruta cuando sea seguro, añadir prueba nueva y no atribuirla al movimiento. Retirada/endurecimiento de legacy necesita política de transición aprobada antes de aplicarse.
 
 La API interna IA sí nace con v1, pero **no** convierte la API pública a `/api/v1`. Los errores IA nuevos se incorporan en fase 7 con pruebas del adaptador/UI; no están activos ahora.
+
+En fase 7, `POST /ia/predecir-lote` admite hasta 500 citas elegibles para la
+versión consultada. Si hay más, devuelve 422 `LOTE_IA_DEMASIADO_GRANDE` antes
+de enviar fragmentos de inferencia o guardar predicciones. Con `forzar=true`
+también cuentan las citas elegibles con predicción previa. Se mantiene 503
+`MOTOR_IA_NO_DISPONIBLE` cuando falla el motor.

@@ -881,19 +881,33 @@ conservar el generador integrado después de la sustitución validada.
   lifespan FastAPI/selección y completar metadata. **Fase 7 EN CURSO**, sin
   retiro del predictor, sin commit automático ni suite completa certificada.
   [Alcance, resultados y límites 7A](docs/migracion/fase-07/README.md).
-- **7B autorizado e implementado (07/11/2026), en validación:** servicios y
+- **7B implementado (07/11/2026) y validado (08/11/2026):** servicios y
   alias Citas inyectan el puerto, metadata remota normalizada, lifecycle FastAPI
   sin contacto IA en startup y selección explícita `IA_MOTOR`. El integrado
   sigue por defecto. Lectura cerrada antes de inferir, revalidación bajo locks
-  por PK y persistencia/auditoría atómicas. Sin cambios de tablas/API, Compose,
-  `.env` ni modelo activo; sin retiro ni commit automático. Laboratorios nuevos
-  PostgreSQL/IA, no entorno operativo. [Alcance y evidencia 7B](docs/migracion/fase-07/BLOQUE_7B.md).
+  por PK y persistencia/auditoría atómicas. Ejecución `7b-20261108-01` sobre
+  `4832f36`: 15 pruebas focales, 354 de regresión empaquetada y controles
+  independientes de concurrencia y rollback aprobados. Se mantienen las
+  limitaciones de colección completa. La fase 7 continúa abierta.
+  [Alcance y evidencia 7B](docs/migracion/fase-07/BLOQUE_7B.md).
 - [ ] Sustituir imports de `predictor.py` en `ia/service.py`; actualizar también ruta alias de Citas, métricas, dataset-resumen y predicción por lote.
 - [ ] Mantener comprobación de rol/estado, snapshot, versión, explicación, persistencia y auditoría en backend.
 - [ ] Implementar reglas de validación de respuesta, concurrencia, lote y fallos de sección 6.3.
-- [ ] Propagar ID de correlación; no reenviar JWT a IA.
+- [x] Propagar ID de correlación entre navegador, backend e IA; el adaptador no reenvía JWT. [Validación y revisión de errores](docs/migracion/fase-07/BLOQUE_7C.md).
 - [ ] Sustituir tests que monkeypatchean predictor local por dobles del puerto predictivo; separar tests HTTP contra IA real.
 - [ ] Probar IA caída, lenta, clave inválida, modelo ausente, respuesta malformada y cambio de versión a mitad de lote.
+- **Arranque y lote validados en laboratorio (08/11/2026):** FastAPI arranca sin
+  IA, recupera inferencia sin reiniciar y permite retorno al integrado. Medidas
+  de lote con 100, 250 y 500 citas. Compose aislado confirma el mismo ciclo
+  por HTTP real.
+  [Resultados](docs/migracion/fase-07/BLOQUE_7D.md).
+- **Lote y paridad de rutas (08/11/2026):** límite de 500 validado; 501 devuelve
+  422 antes de inferir. Paridad numérica de las rutas y atomicidad comprobadas.
+  [Evidencia y límites](docs/migracion/fase-07/BLOQUE_7E.md).
+- **Carga, colección y retiro candidato (08/11/2026):** dos lotes concurrentes
+  de 500, colección de 401 sin errores, suite de repositorio con 399 aprobadas
+  y retiro/retorno validados en Compose aislado. Pendiente integrar el corte oficial.
+  [Evidencia y alcance](docs/migracion/fase-07/BLOQUE_7F.md).
 - [ ] Solo después de paridad y regresión, retirar copia matemática/generador integrada y dependencias ML del backend.
 - [ ] Mantener Joblib/NumPy/scikit-learn/LightGBM únicamente donde se utilicen; revisar otros scripts/tests antes de quitar paquetes o `libgomp1` del Dockerfile backend.
 - [ ] Reproducir instalaciones con versiones fijadas; separar dependencias de tests sin actualizar librerías por iniciativa de la migración.

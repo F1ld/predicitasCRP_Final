@@ -13,6 +13,7 @@ sys.path.insert(0, backend or str(Path(__file__).resolve().parents[3] / "apps/ba
 import httpx
 from pydantic import ValidationError
 
+from app.core.trazabilidad import id_solicitud
 from app.core.errores import Conflicto, MotorIANoDisponible
 from app.modules.ia.motor_http import MotorHTTP, ROTULO
 from app.modules.ia.puerto import FeaturesMotor, MotorPredictivo, ResultadoMotor
@@ -50,6 +51,7 @@ class MotorTests(unittest.TestCase):
     def test_individual_y_sin_jwt(self):
         def handler(request):
             self.assertEqual(request.headers["X-IA-API-Key"], "clave-solo-test")
+            self.assertEqual(request.headers["X-Request-ID"], "a" * 32)
             self.assertNotIn("authorization", request.headers)
             self.assertNotIn("cookie", request.headers)
             self.assertEqual(request.url.path, "/v1/predict")
@@ -57,7 +59,11 @@ class MotorTests(unittest.TestCase):
             self.assertEqual(payload["features"], FEATURES)
             self.assertEqual(set(payload), {"version_contrato", "version_features", "version_modelo", "id_solicitud", "features"})
             return httpx.Response(200, json=prediction(payload))
-        result = self.motor(handler).predecir(F, version="v1")
+        token = id_solicitud.set("a" * 32)
+        try:
+            result = self.motor(handler).predecir(F, version="v1")
+        finally:
+            id_solicitud.reset(token)
         self.assertEqual(str(result.probabilidad_no_show), "0.285")
         self.assertEqual(result.features_snapshot, F.snapshot())
 

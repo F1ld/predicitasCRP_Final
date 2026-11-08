@@ -1,0 +1,67 @@
+{
+  "backend_image": "sha256:6af3da394a067f5c69a49e6d9cf85fa9c63cc9f8cd5966fadd3ac796882ae070",
+  "baseline_reported_by_runner": "3700c5f + 7A sin commit",
+  "collection_errors": 0,
+  "concurrency": {
+    "cambio_features_otra_sesion_rechazado": true,
+    "cierre_cita_otra_sesion_rechazado": true,
+    "doble_peticion_misma_fila": true,
+    "predicciones": 1,
+    "requests": 2,
+    "rollback_tras_flush_observado_independientemente": true
+  },
+  "containers_stopped": true,
+  "database": "predicitas_f7b_test",
+  "db": "predicitas-f7b-7f-20261108-01-db",
+  "default_motor": "integrado",
+  "full_suite_flag_reported_by_runner": false,
+  "ia": "predicitas-f7b-7f-20261108-01-ia",
+  "ia_image": "sha256:6d1ee8581301819845e0d324fe3864fc2f48cb1fe35b68529fddd8e2e29a2853",
+  "ia_trace_ids": 0,
+  "network": "predicitas-f7b-7f-20261108-01-net",
+  "packaged_tests_collected": 401,
+  "protected_unchanged": true,
+  "repository_suite_without_exclusions": true,
+  "resources_preserved": true,
+  "run_id": "7f-20261108-01",
+  "running_containers_unchanged": true,
+  "schema_changed": false,
+  "sources": {
+    "apps/backend/app/core/config.py": "f037c573fcd65e51ac46c57246183e5ed199a3cace8d630b4d459a815ffc604a",
+    "apps/backend/app/main.py": "d4d89d0f82664cf03f6981cb578720486fac9fe1c163e1daa45f8690d91ca8a4",
+    "apps/backend/app/modules/citas/router.py": "7b33661bed26b7f26338900b9b1da6ad86739238b07d49b73f36fb352de15e1c",
+    "apps/backend/app/modules/ia/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "apps/backend/app/modules/ia/consultas.py": "73136e057285f0bfacadf6a9b1640d8e7ae5e15c814a8d01e613971649eb3d07",
+    "apps/backend/app/modules/ia/dependencias.py": "c286e4b1c0974f9338e4b58ed9d102424678308428cd9f9e3619a667878f1ecc",
+    "apps/backend/app/modules/ia/dto_motor.py": "29fa727737d1e62dbb827f7f01feb924af8a6f7e7a2f5aa8aaf1ee6e95c403c5",
+    "apps/backend/app/modules/ia/metadata_http.py": "8f0d5c7feb2c737e39f3ec051663ac8c2483cba00bd833a0e29e115a013e55ca",
+    "apps/backend/app/modules/ia/metadata_motor.py": "3e5d210b0755fba66ef5f966c0bed55b55549d4a49162e579ba2c0571dfad7b4",
+    "apps/backend/app/modules/ia/models.py": "e29de76ddc257bea46848d53efff02491bd9460f36a935232b66127313739f66",
+    "apps/backend/app/modules/ia/motor_http.py": "5c2e4fafa924561349e996ddd362225fa76548619dfb691e23a05ba81edce123",
+    "apps/backend/app/modules/ia/motor_integrado.py": "0a3b353ccf3d6ecd8e51ba9443b6e62d356f5ffe0f7d702585d46f4ea32153f7",
+    "apps/backend/app/modules/ia/predictor.py": "822a66424c4d0b383126cccc28abab52ba955317e90f7458fcd11483f5279f5f",
+    "apps/backend/app/modules/ia/public.py": "e3d54cde6f54fe0fba05c57f5e96d541f6abca40fba17f9926d9d9bef9a17729",
+    "apps/backend/app/modules/ia/puerto.py": "ec0e9a25f03edfde972c94a7c970d4f073cd3f0e90bd28d10e1bd71c3172d5d2",
+    "apps/backend/app/modules/ia/repository.py": "e25d05d5f7c702d0efe35611220c37bae146fe8dffaa2bcac6310a2e061851bb",
+    "apps/backend/app/modules/ia/router.py": "f69288629591a9fe43b4a2e495f974c9d778513c611f5f639dde8a8c1c66e422",
+    "apps/backend/app/modules/ia/schemas.py": "a7c98294fd90941081c659716ae2c1a3cc20de4dabf750feea160c1c127192dd",
+    "apps/backend/app/modules/ia/service.py": "1293c6548fbc32cf76307d4c93aac77136b4b5063854bec9e3699759d97a4545",
+    "apps/backend/tests/test_motor_7b.py": "9382ebc98fe0adf92cc5365d0ebbc048abcb027f2ffe6162e741bebb052790e0"
+  },
+  "startup_validated": false,
+  "tests": {
+    "focal": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 2,
+      "tests": 19
+    },
+    "regresion": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 2,
+      "tests": 401
+    }
+  },
+  "volume": "predicitas-f7b-7f-20261108-01-pgdata"
+}

@@ -1,0 +1,30 @@
+{
+  "run_id": "7e-20261108-02",
+  "limit": 500,
+  "rejected": 501,
+  "status": 422,
+  "inference_calls_on_rejection": 0,
+  "persisted_on_rejection": 500,
+  "measurements": [
+    {
+      "citas": 100,
+      "segundos": 1.238
+    },
+    {
+      "citas": 250,
+      "segundos": 2.857
+    },
+    {
+      "citas": 500,
+      "segundos": 5.707
+    },
+    {
+      "citas": 500,
+      "segundos": 5.105
+    },
+    {
+      "citas": 500,
+      "segundos": 5.516
+    }
+  ]
+}

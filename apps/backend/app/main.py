@@ -5,12 +5,17 @@
 - Cabeceras de seguridad en cada respuesta (app/core/manejadores.py).
 """
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+import logging
+from time import monotonic
+from uuid import uuid4
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 import app.bootstrap.models  # noqa: F401  (registra todos los modelos)
 from app.core import manejadores
 from app.core.config import get_settings
+from app.core.trazabilidad import CABECERA_SOLICITUD, id_solicitud
 from app.modules.auth.router import router as auth_router
 from app.modules.citas.router import router as citas_router
 from app.modules.ia.router import router as ia_router
@@ -33,12 +38,30 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="PrediCitas CRP API", version="0.5.0", lifespan=lifespan)
 
+logger = logging.getLogger("uvicorn.error.predicitas.backend")
+
+
+@app.middleware("http")
+async def trazar_solicitud(request: Request, call_next):
+    identificador = uuid4().hex
+    token = id_solicitud.set(identificador)
+    inicio = monotonic()
+    try:
+        response = await call_next(request)
+        response.headers[CABECERA_SOLICITUD] = identificador
+        return response
+    finally:
+        id_solicitud.reset(token)
+        logger.info("solicitud=%s duracion_ms=%.1f", identificador, (monotonic() - inicio) * 1000)
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().lista_cors_origenes,
     allow_credentials=False,  # el token viaja en el header Authorization, no en cookies
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=[CABECERA_SOLICITUD],
 )
 manejadores.instalar(app)
 

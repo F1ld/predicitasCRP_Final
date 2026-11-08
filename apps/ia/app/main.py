@@ -7,6 +7,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 import logging
 import threading
+import time
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
@@ -33,6 +34,7 @@ from app.schemas import (
 )
 
 logger = logging.getLogger("predicitas.ia.app")
+trace_logger = logging.getLogger("uvicorn.error.predicitas.ia")
 _executor: IsolatedExecutor | None = None
 _executor_lock = threading.Lock()
 
@@ -107,6 +109,18 @@ app = FastAPI(
 # ==============================================================================
 # Middleware de límite de tamaño de payload (256 KiB)
 # ==============================================================================
+
+
+@app.middleware("http")
+async def trazar_solicitud(request: Request, call_next):
+    identificador = request.headers.get("X-Request-ID", "")
+    if len(identificador) != 32 or any(c not in "0123456789abcdef" for c in identificador):
+        return await call_next(request)
+    inicio = time.monotonic()
+    try:
+        return await call_next(request)
+    finally:
+        trace_logger.info("solicitud=%s duracion_ms=%.1f", identificador, (time.monotonic() - inicio) * 1000)
 
 
 app.add_middleware(MaxBodySizeMiddleware)

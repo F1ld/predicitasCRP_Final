@@ -1,0 +1,17 @@
+{
+  "citas_por_lote": 500,
+  "concurrentes": [
+    {
+      "seconds": 0.067,
+      "status": 503
+    },
+    {
+      "seconds": 8.056,
+      "status": 200
+    }
+  ],
+  "protected_unchanged": true,
+  "recuperacion_segundos": 7.48,
+  "run_id": "compose-20261108-03",
+  "running_containers_unchanged": true
+}

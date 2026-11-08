@@ -79,3 +79,25 @@ Pendientes de fase 7: retirada tras paridad/regresión ampliadas, medición del
 límite de lote público, trazabilidad frontend-backend-IA y revisión explícita
 de errores 502/504 sugeridos por el plan. No se cambian códigos públicos en este
 bloque conservador sin una revisión de sus consumidores UI.
+
+## Cierre de validación (08/11/2026)
+
+Ejecución aceptada `7b-20261108-01` sobre `4832f36`, con imagen backend nueva,
+PostgreSQL nuevo en red interna e IA real. Pasaron 5 pruebas unitarias de
+metadata, 19 del puerto, 15 focales y 354 de regresión empaquetada. Los
+controles independientes observaron una sola predicción ante dos solicitudes
+para la misma fila, el rechazo ante cambios de datos o cierre de cita desde
+otra sesión y el rollback tras flush.
+
+La colección completa registró dos errores históricos: falta
+`app.modules.ia.cliente` en `tests/ia` y el verificador de evidencia de fase 3
+falla en la imagen empaquetada. El resumen identifica las exclusiones de la
+regresión. El runner emitió una etiqueta histórica de baseline que se conserva
+por separado del commit efectivamente probado.
+
+El runner verificó los hashes de los archivos protegidos y el conjunto de
+contenedores activos. Se detuvieron los contenedores del laboratorio y se
+preservaron sus recursos. El motor integrado sigue por defecto. La fase 7
+continúa abierta para la paridad y regresión ampliadas previas al retiro.
+
+[Resumen de evidencia](evidencia/7b-20261108-01/resumen.json).

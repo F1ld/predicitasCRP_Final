@@ -3,7 +3,7 @@ from decimal import Decimal
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from app.core.errores import Conflicto, NoEncontrado, MotorIANoDisponible
+from app.core.errores import Conflicto, NoEncontrado, MotorIANoDisponible, Validacion
 from app.modules.auditoria.public import registrar_evento
 from app.modules.auth.public import Principal as Usuario
 from app.modules.ia.consultas import CitaInferencia, cita_para_inferencia, bloquear_para_inferencia
@@ -19,6 +19,7 @@ from app.modules.ia.schemas import (
 )
 
 ESTADOS_ELEGIBLES_PREDICCION = {"RECIBIDA", "CONFIRMADA", "REPROGRAMADA"}
+LIMITE_LOTE_PUBLICO = 500
 
 
 def _rollback_en_error(func):
@@ -153,7 +154,13 @@ def predecir_lote(
     _cerrar_lectura(db)
     motor = motor or MotorIntegrado()
     version_modelo = motor.version()
-    citas = repository.citas_operativas_sin_prediccion(db, version_modelo, forzar=forzar)
+    citas = repository.citas_operativas_sin_prediccion(
+        db, version_modelo, forzar=forzar, limite=LIMITE_LOTE_PUBLICO + 1)
+    if len(citas) > LIMITE_LOTE_PUBLICO:
+        raise Validacion(
+            f"El lote supera el máximo de {LIMITE_LOTE_PUBLICO} citas elegibles",
+            codigo="LOTE_IA_DEMASIADO_GRANDE",
+        )
     features = [FeaturesMotor(**_cita_a_dict_features(cita)) for cita in citas]
     _cerrar_lectura(db)
     results = motor.predecir_lote(features, version=version_modelo)

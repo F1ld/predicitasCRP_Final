@@ -93,6 +93,39 @@ def test_lote_forzar_y_sin_duplicados(client, db, escenario):
     assert db.scalar(select(func.count(PrediccionIA.id_prediccion))) == 2
 
 
+@pytest.mark.skipif(not os.getenv("IA_ARRANQUE_LAB"), reason="Requiere laboratorio de arranque")
+def test_arranque_recuperacion_y_retorno(escenario, monkeypatch):
+    from pathlib import Path
+    from time import monotonic, sleep
+
+    from app.core.config import get_settings
+
+    ids, headers, _ = escenario
+    app.dependency_overrides.pop(obtener_motor)
+    settings = get_settings()
+    monkeypatch.setattr(settings, "ia_motor", "http")
+    monkeypatch.setattr(settings, "ia_url", os.environ["IA_HTTP_TEST_URL"])
+    route = f"/ia/predecir/{ids[0]}"
+    with TestClient(app) as active:
+        assert active.get("/health").status_code == 200
+        unavailable = active.post(route, headers=headers)
+        assert unavailable.status_code == 503, unavailable.text
+        assert unavailable.json()["error"]["codigo"] == "MOTOR_IA_NO_DISPONIBLE"
+        Path("/results/backend-sin-ia.ok").touch()
+        deadline = monotonic() + 90
+        while not Path("/results/ia-lista.ok").exists():
+            assert monotonic() < deadline, "IA no se inicio dentro del plazo"
+            sleep(0.25)
+        recovered = active.post(route, headers=headers)
+        assert recovered.status_code == 200, recovered.text
+
+    monkeypatch.setattr(settings, "ia_motor", "integrado")
+    with TestClient(app) as rollback:
+        assert isinstance(app.state.motor_ia, MotorIntegrado)
+        response = rollback.post(f"/citas/{ids[1]}/prediccion", headers=headers)
+        assert response.status_code == 200, response.text
+
+
 @pytest.mark.parametrize("path", ["/ia/predecir/{id}", "/citas/{id}/prediccion", "/ia/predecir-lote?forzar=true"])
 def test_fallo_no_borra_predicciones_previas(client, db, escenario, path):
     ids, h, motor = escenario
@@ -193,12 +226,150 @@ def test_http_real_con_persistencia_y_metadata(client, db, escenario):
         app.dependency_overrides[obtener_motor] = lambda: motor
         assert motor.metricas() == MotorIntegrado().metricas()
         assert motor.dataset() == MotorIntegrado().dataset()
+        solicitudes = []
+        motor._client.event_hooks["request"].append(solicitudes.append)
         for route in (f"/ia/predecir/{ids[0]}", f"/citas/{ids[1]}/prediccion"):
+            solicitudes.clear()
             r = client.post(route, headers=h)
             assert r.status_code == 200, r.text
+            assert solicitudes
+            assert len(r.headers["X-Request-ID"]) == 32
+            assert all(p.headers["X-Request-ID"] == r.headers["X-Request-ID"] for p in solicitudes)
+            assert all("authorization" not in p.headers for p in solicitudes)
         r = client.post("/ia/predecir-lote?forzar=true", headers=h)
         assert r.status_code == 200, r.text
         assert r.json()["evaluadas"] == 2
         assert client.get("/ia/metricas", headers=h).status_code == 200
         assert client.get("/ia/dataset-resumen", headers=h).status_code == 200
     assert db.scalar(select(func.count(PrediccionIA.id_prediccion))) == 2
+
+
+@pytest.mark.skipif(not os.getenv("IA_LOTE_LAB"), reason="Requiere laboratorio de carga")
+def test_medir_lote_publico(client, db, usuarios):
+    import json
+    from pathlib import Path
+    from time import monotonic
+
+    headers = cabecera(client, usuarios["RECEPCION"])
+    previous = 0
+    measurements = []
+    with MotorHTTP(os.environ["IA_HTTP_TEST_URL"], os.environ["IA_API_KEY"]) as motor:
+        app.dependency_overrides[obtener_motor] = lambda: motor
+        for size in (100, 250, 500, 500, 500):
+            rows = []
+            for index in range(previous, size):
+                sample = CITAS_PRUEBA_IA[index % len(CITAS_PRUEBA_IA)]
+                rows.append(sample | {"id_cita_externa": f"LOTE-7-{index}", "paciente_anon_id": f"PAC-L7-{index}"})
+            importar_citas(db, rows, id_usuario=usuarios["ADMINISTRADOR"].id_usuario,
+                           ip="127.0.0.1", origen="7-lote")
+            start = monotonic()
+            response = client.post("/ia/predecir-lote?forzar=true", headers=headers)
+            elapsed = monotonic() - start
+            assert response.status_code == 200, response.text
+            assert response.json()["evaluadas"] == size
+            assert db.scalar(select(func.count(PrediccionIA.id_prediccion))) == size
+            measurements.append({"citas": size, "segundos": round(elapsed, 3)})
+            previous = size
+        importar_citas(db, [CITAS_PRUEBA_IA[0] | {"id_cita_externa": "LOTE-7-500", "paciente_anon_id": "PAC-L7-500"}],
+                       id_usuario=usuarios["ADMINISTRADOR"].id_usuario, ip="127.0.0.1", origen="7-lote")
+        paths = []
+        motor._client.event_hooks["request"].append(lambda request: paths.append(request.url.path))
+        response = client.post("/ia/predecir-lote?forzar=true", headers=headers)
+        assert response.status_code == 422, response.text
+        assert response.json()["error"]["codigo"] == "LOTE_IA_DEMASIADO_GRANDE"
+        assert paths == ["/v1/model"]
+        assert db.scalar(select(func.count(PrediccionIA.id_prediccion))) == 500
+    Path("/results/lote.json").write_text(json.dumps(measurements), encoding="utf-8")
+
+
+def test_paridad_rutas_y_auditoria_entre_motores():
+    from sqlalchemy.orm import Session
+
+    from app.core.database import engine, get_db
+    from app.core.security import hash_password
+    from app.modules.ia.schemas import PrediccionIAOut
+    from app.modules.usuarios.models import Usuario
+
+    def normalizar(prediccion):
+        normalized = {key: value for key, value in prediccion.items()
+                      if key not in {"id_cita", "id_prediccion", "fecha_hora_inferencia"}}
+        for key in ("probabilidad_no_show", "umbral_aplicado"):
+            normalized[key] = Decimal(normalized[key])
+        return normalized
+
+    def ejecutar(motor):
+        with engine.connect() as connection, connection.begin() as outer:
+            with Session(bind=connection, join_transaction_mode="create_savepoint",
+                         autoflush=False, expire_on_commit=False) as db:
+                user = Usuario(nombre_completo="Paridad", correo_institucional="paridad@predicitas.crp",
+                               password_hash=hash_password("ClaveDePrueba123"), rol="ADMINISTRADOR", activo=True)
+                db.add(user)
+                db.flush()
+                rows = CITAS_PRUEBA_IA + [CITAS_PRUEBA_IA[0] | {"id_cita_externa": "PARIDAD-LOTE-003"}]
+                importar_citas(db, rows, id_usuario=user.id_usuario, ip="127.0.0.1", origen="paridad")
+                ids = list(db.scalars(select(Cita.id_cita).order_by(Cita.id_cita)))
+                app.dependency_overrides.update({get_db: lambda: db, obtener_motor: lambda: motor})
+                try:
+                    client = TestClient(app)
+                    headers = cabecera(client, user)
+
+                    def call(method, path):
+                        response = client.request(method, path, headers=headers)
+                        assert response.status_code == 200, response.text
+                        return response.json()
+
+                    single = normalizar(call("POST", f"/ia/predecir/{ids[0]}"))
+                    alias = normalizar(call("POST", f"/citas/{ids[1]}/prediccion"))
+                    batches = []
+                    for suffix, count in (("", 1), ("", 0), ("?forzar=true", 3)):
+                        result = call("POST", "/ia/predecir-lote" + suffix)
+                        assert result["evaluadas"] == count
+                        result["predicciones"] = [normalizar(row) for row in result["predicciones"]]
+                        batches.append(result)
+                    persisted = [normalizar(PrediccionIAOut.model_validate(row).model_dump(mode="json"))
+                                 for row in db.scalars(select(PrediccionIA).order_by(PrediccionIA.id_cita))]
+                    assert len(persisted) == 3
+                    audits = []
+                    for event in db.scalars(select(AuditoriaEvento).where(
+                            AuditoriaEvento.modulo == "IA").order_by(AuditoriaEvento.id_log)):
+                        after = dict(event.datos_after)
+                        after.pop("id_cita", None)
+                        audits.append((event.accion, event.entidad_afectada, event.datos_before, after))
+                    assert len(audits) == 5
+                    return (single, alias, batches, persisted, audits,
+                            call("GET", "/ia/metricas"), call("GET", "/ia/dataset-resumen"))
+                finally:
+                    app.dependency_overrides.pop(get_db, None)
+                    app.dependency_overrides.pop(obtener_motor, None)
+                    db.close()
+                    outer.rollback()
+
+    with MotorHTTP(os.environ["IA_HTTP_TEST_URL"], os.environ["IA_API_KEY"]) as remote:
+        assert ejecutar(MotorIntegrado()) == ejecutar(remote)
+
+
+def test_fallo_segundo_fragmento_no_persiste(client, db, usuarios):
+    import httpx
+
+    rows = [CITAS_PRUEBA_IA[0] | {"id_cita_externa": f"FALLO-L7-{i}", "paciente_anon_id": f"PAC-F7-{i}"}
+            for i in range(101)]
+    importar_citas(db, rows, id_usuario=usuarios["ADMINISTRADOR"].id_usuario,
+                   ip="127.0.0.1", origen="lote-fallo")
+    headers = cabecera(client, usuarios["RECEPCION"])
+    audit_before = db.scalar(select(func.count(AuditoriaEvento.id_log)))
+    fragments = []
+
+    def fail_second(request):
+        if request.url.path == "/v1/predict-batch":
+            fragments.append(request)
+            if len(fragments) == 2:
+                raise httpx.ReadTimeout("Fallo simulado")
+
+    with MotorHTTP(os.environ["IA_HTTP_TEST_URL"], os.environ["IA_API_KEY"]) as motor:
+        motor._client.event_hooks["request"].append(fail_second)
+        app.dependency_overrides[obtener_motor] = lambda: motor
+        response = client.post("/ia/predecir-lote", headers=headers)
+    assert len(fragments) == 2
+    assert response.status_code == 503, response.text
+    assert db.scalar(select(func.count(PrediccionIA.id_prediccion))) == 0
+    assert db.scalar(select(func.count(AuditoriaEvento.id_log))) == audit_before
