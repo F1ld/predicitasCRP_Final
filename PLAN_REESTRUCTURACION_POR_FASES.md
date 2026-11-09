@@ -444,7 +444,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 7 | Backend conectado a IA por contrato | 4, 5, 6 | COMPLETADA (08/11/2026) |
 | 8 | Frontend consolidado y resiliente | 2, 7 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | COMPLETADA CON SALVEDADES (08/11/2026) |
-| 10 | Regresión, contratos, seguridad y resiliencia | 9 | PENDIENTE |
+| 10 | Regresión, contratos, seguridad y resiliencia | 9 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 11 | Corte final, documentación y cierre | 10 | PENDIENTE |
 
 #### Fase 0 — Inventario, respaldo y línea base
@@ -1005,20 +1005,28 @@ usuarios, citas y predicciones conservadas. Retorno `d5d1dbd`.
 
 #### Fase 10 — Validación integral y controles de regresión
 
+**Línea base `9d19cdf`:** smoke de solo lectura y revisión inicial de OpenAPI.
+[Bitácora y comandos](docs/migracion/fase-10/README.md).
+
+**Cierre (08/11/2026):** regresión, restauración, concurrencia, smoke autenticado,
+navegación e importación CSV validados en aislamiento. Pasó el presupuesto local
+acordado con tres muestras por operación. Se conservan las salvedades de fase 8.
+[Acta y evidencias](docs/migracion/fase-10/README.md).
+
 **Objetivo:** demostrar que la organización nueva funciona y mantiene límites.
 
 - [ ] Ejecutar matriz de sección 9 en PostgreSQL real de pruebas y entorno E2E aislado.
-- [ ] Mantener mínimo 75% de cobertura backend/frontend y medir cobertura IA definida en fase 1; no reducir umbrales para terminar.
+- [x] Mantener mínimo 75% de cobertura backend/frontend y medir cobertura IA definida en fase 1; no reducir umbrales para terminar.
 - [ ] Tests de arquitectura: backend sin imports ML/IA app, IA sin imports backend/SQL operativo, frontend sin credenciales internas, módulos sin dependencias prohibidas/ciclos.
 - [ ] Tests de contratos backend-frontend e IA; snapshot OpenAPI con diferencias revisadas, no regenerado ciegamente para ocultarlas.
-- [ ] Comparar BD antes/después, restricciones, permisos, historial y auditoría. Probar migraciones tanto desde baseline existente como instalación nueva.
-- [ ] Probar dos reasignaciones simultáneas, dos predicciones de misma versión, cambio de cita durante inferencia y fallos después de flush antes de commit.
-- [ ] Parar solo IA y demostrar degradación controlada; reiniciarla y repetir inferencia sin reiniciar ni borrar BD.
+- [x] Comparar BD antes/después, restricciones, permisos, historial y auditoría. Probar migraciones tanto desde baseline existente como instalación nueva.
+- [x] Probar dos reasignaciones simultáneas, dos predicciones de misma versión, cambio de cita durante inferencia y fallos después de flush antes de commit.
+- [x] Parar solo IA y demostrar degradación controlada; reiniciarla y repetir inferencia sin reiniciar ni borrar BD.
 - [ ] Probar modelo corrupto/ausente/incompatible en copia aislada, no dañando el activo real.
 - [ ] Verificar límites CSV/lote, fechas, BOM, duplicados, opt-out y ausencia de cancelación/liberación por silencio.
-- [ ] Medir arranque frío/caliente, latencias de inferencia/lote y RAM. Registrar valores medidos y presupuesto acordado, no afirmar mejoras sin datos.
+- [x] Medir arranque frío/caliente, latencias de inferencia/lote y RAM. Registrar valores medidos y presupuesto acordado, no afirmar mejoras sin datos.
 - [ ] Buscar secretos y rutas antiguas/absolutas en archivos activos, imágenes y logs; referencias históricas se permiten si están identificadas.
-- [ ] Crear `scripts/smoke.ps1` que verifique servicios, login/demo, lectura e inferencia opcional con resultados claros; escrituras de prueba solo en entorno aislado o con autorización explícita.
+- [x] Crear `scripts/smoke.ps1` que verifique servicios, login/demo, lectura e inferencia opcional con resultados claros; escrituras de prueba solo en entorno aislado o con autorización explícita.
 - [ ] Integrar validaciones reproducibles por script y pipeline CI cuando exista remoto/proveedor acordado. No asumir GitHub ni publicar repositorio por esta tarea.
 
 **Se toca:** pruebas, scripts de validación, correcciones concretas de regresión y evidencia.

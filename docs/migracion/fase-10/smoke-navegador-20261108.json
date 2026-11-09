@@ -1,0 +1,45 @@
+{
+  "project": "predicitas-f10-e2e-20261108-01",
+  "smoke": [
+    {
+      "rol": "administrador",
+      "result": {
+        "Salud": "OK",
+        "PostgreSQL": "OK",
+        "Frontend": "OK",
+        "Login": "OK",
+        "Lectura": "OK",
+        "Inferencia": "OK"
+      }
+    },
+    {
+      "rol": "recepcion",
+      "result": {
+        "Salud": "OK",
+        "PostgreSQL": "OK",
+        "Frontend": "OK",
+        "Login": "OK",
+        "Lectura": "OK",
+        "Inferencia": "OK"
+      }
+    },
+    {
+      "rol": "tecnico_ia",
+      "result": {
+        "Salud": "OK",
+        "PostgreSQL": "OK",
+        "Frontend": "OK",
+        "Login": "OK",
+        "Lectura": "OK",
+        "Inferencia": "OK"
+      }
+    }
+  ],
+  "browser": [
+    "Administrador: Usuarios",
+    "Recepción: Importar CSV; Usuarios ausente",
+    "Técnico IA: Modelo IA; Importar CSV ausente"
+  ],
+  "lab_stopped": true,
+  "operational_services_unchanged": true
+}

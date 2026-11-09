@@ -1,0 +1,32 @@
+{
+  "backend": {
+    "concurrency": {
+      "cambio_features_otra_sesion_rechazado": true,
+      "cierre_cita_otra_sesion_rechazado": true,
+      "doble_peticion_misma_fila": true,
+      "predicciones": 1,
+      "requests": 2,
+      "rollback_tras_flush_observado_independientemente": true
+    },
+    "coverage_pct": 93.97,
+    "passed": 399,
+    "skipped": 2,
+    "startup": true
+  },
+  "baseline": "9d19cdf",
+  "frontend": {
+    "failed": 56,
+    "lines_pct": 92.15,
+    "new_failures": 0,
+    "passed": 455
+  },
+  "ia": {
+    "corrupt_model_ready": 503,
+    "coverage_pct": 89.95,
+    "missing_model_ready": 503,
+    "passed": 241
+  },
+  "operational_stack_unchanged": true,
+  "readonly_smoke_passed": true,
+  "write_guard_passed": true
+}

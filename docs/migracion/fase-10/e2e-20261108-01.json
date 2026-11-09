@@ -1,0 +1,31 @@
+{
+  "cold_start_seconds": 23.936,
+  "concurrent_scenarios": 9,
+  "configured_secret_matches_in_sample": 0,
+  "data_preserved_after_restart": true,
+  "e2e": {
+    "batch_seconds": 0.056,
+    "batch_size": 2,
+    "individual_seconds": 0.071,
+    "roles": [
+      "ADMINISTRADOR",
+      "RECEPCION",
+      "TECNICO_IA"
+    ],
+    "unauthenticated": 401
+  },
+  "frontend_http": 200,
+  "image_env_boundaries_verified": true,
+  "log_tail_per_service": 1000,
+  "memory_snapshot": [
+    "predicitas-f10-e2e-20261108-01-backend-1 83.16MiB / 7.468GiB",
+    "predicitas-f10-e2e-20261108-01-db-1 54.6MiB / 7.468GiB",
+    "predicitas-f10-e2e-20261108-01-frontend-1 425MiB / 7.468GiB",
+    "predicitas-f10-e2e-20261108-01-ia-1 188.1MiB / 7.468GiB"
+  ],
+  "migration_previous_revision_rows_preserved": true,
+  "operational_services_unchanged": true,
+  "project": "predicitas-f10-e2e-20261108-01",
+  "restored_fingerprints_match": true,
+  "warm_restart_seconds": 21.627
+}

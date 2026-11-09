@@ -1,0 +1,41 @@
+{
+  "project": "predicitas-f10-perf-20261108-01",
+  "cold_seconds": [
+    24.078,
+    25.822,
+    24.04
+  ],
+  "warm_seconds": [
+    20.918,
+    21.037,
+    21.576
+  ],
+  "individual_seconds": [
+    0.067,
+    0.045,
+    0.043
+  ],
+  "batch_500_seconds": [
+    5.767,
+    6.844,
+    6.717
+  ],
+  "sum_container_memory_peaks_mib": [
+    860.883,
+    538.559,
+    534.141,
+    529.941
+  ],
+  "browser_csv_accepted": 500,
+  "browser_csv_rejected": 0,
+  "predictions_after_restart": 500,
+  "budget": {
+    "cold_seconds": 45,
+    "warm_seconds": 40,
+    "individual_seconds": 1,
+    "batch_500_seconds": 15,
+    "memory_mib": 1536
+  },
+  "operating_containers_unchanged": true,
+  "laboratory_stopped": true
+}

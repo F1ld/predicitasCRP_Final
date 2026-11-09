@@ -36,6 +36,7 @@ def main():
     parser.add_argument("--medir-lote", action="store_true")
     parser.add_argument("--subred")
     parser.add_argument("--suite-repo", action="store_true")
+    parser.add_argument("--cobertura", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,40}", args.nombre):
         parser.error("Nombre no válido")
@@ -151,8 +152,9 @@ def main():
             regression = [*base, *mounts, "--workdir", "/checkout/apps/backend",
                           "--env-file", str(private / "app.env"), image]
             exclusions = []
-        run([*regression, "python", "-B", "-m", "pytest", *exclusions,
-             "--no-cov", "-q", "--junitxml=/results/regresion.xml"], log=raw / "regresion.log")
+        coverage = ["--cov-report=json:/results/cobertura.json"] if args.cobertura else ["--no-cov"]
+        run([*regression, "python", "-B", "-m", "pytest", *exclusions, *coverage,
+             "-q", "--junitxml=/results/regresion.xml"], log=raw / "regresion.log")
         run([*runtime, "python", "-B", "/checks/probar_concurrencia_7b.py"], log=raw / "concurrencia.log")
         counts = {}
         for name in ("focal", "regresion"):
