@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { resolverRetorno } from "../../nucleo/navegacion/retorno";
 import { api, ApiError } from "../../nucleo/api/cliente";
 import { useConsulta } from "../../nucleo/api/useConsulta";
 import { useAuth } from "../../nucleo/auth/useAuth";
@@ -20,6 +21,8 @@ export default function Seguimiento() {
 
 // RF-059, RF-061 a RF-068, RN02: solo las acciones explícitas cambian datos.
 function DetalleIntervencion({ id }: { id: string }) {
+  const { state } = useLocation();
+  const rutaVolver = resolverRetorno(state, "/intervenciones", ["/intervenciones", "/panel"]);
   const { tieneRol } = useAuth();
   const { datos: intervencion, cargando, error, actualizar, reintentar } = useConsulta<IntervencionOut>(`/intervenciones/${id}`);
   const [ocupada, setOcupada] = useState(false);
@@ -73,7 +76,7 @@ function DetalleIntervencion({ id }: { id: string }) {
     } finally { accionEnCurso.current = false; setOcupada(false); }
   }
 
-  const volver = <Link className="enlace-volver" to="/intervenciones">← Volver a intervenciones</Link>;
+  const volver = <Link className="enlace-volver" to={rutaVolver}>← {rutaVolver === "/panel" || rutaVolver.startsWith("/panel?") ? "Volver al panel operativo" : "Volver a intervenciones"}</Link>;
   if (cargando) return <>{volver}<Cargando texto="Cargando seguimiento…" /></>;
   if (error) return <>{volver}<Mensaje>{error}</Mensaje><button className="boton-secundario" onClick={reintentar}>Reintentar</button></>;
   if (!intervencion) return <>{volver}<Mensaje>No se encontró la intervención.</Mensaje></>;
@@ -82,7 +85,7 @@ function DetalleIntervencion({ id }: { id: string }) {
     {volver}
     <div className="pagina-titulo"><div><p className="sobretitulo">INTERVENCIÓN INTELIGENTE</p><h1>Seguimiento de intervención #{intervencion.id_intervencion}</h1><p>Cita {intervencion.id_cita_externa}</p></div><span className="m05-estado">{rotulo(intervencion.estado_intervencion)}</span></div>
     {errorAccion && <Mensaje>{errorAccion}</Mensaje>}
-    {exito && <Mensaje tipo="exito">{exito}</Mensaje>}
+    {exito && <Mensaje tipo="exito">{exito}{cupo && <>{" "}<Link className="m05-enlace" to={`/cupos/${cupo.id_cupo_liberado}`}>Ver cupo liberado</Link></>}</Mensaje>}
     <div className="m05-seguimiento">
       <section className="tarjeta" aria-labelledby="m05-datos-titulo">
         <div className="seccion-cabecera"><h2 id="m05-datos-titulo">Datos de la intervención</h2><p>Registro de contacto y respuesta del paciente.</p></div>

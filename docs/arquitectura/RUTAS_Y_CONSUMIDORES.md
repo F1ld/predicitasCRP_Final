@@ -59,7 +59,8 @@ Cada fila cubre las rutas indicadas del inventario, sin asumir que clientes exte
 | GET `/intervenciones/{id}` | Seguimiento | Clientes API | Lectura A/R/T |
 | POST `/intervenciones/{id}/estado`, `/respuesta`, `/optout`, `/liberar-cupo` | Seguimiento | Clientes API | Acciones explícitas; respuesta POST no confirma cita automáticamente |
 | GET `/citas/{id}/intervenciones` | Detalle usa respuesta compuesta de cita | Clientes legacy | Lista, no paginación nueva |
-| POST `/citas/{id}/intervenciones`, PATCH `/intervenciones/{id}` | No flujo modular normal | pages/Intervenciones, tests legacy | Bypass/efectos distintos; no convertirlos en alias equivalentes |
+| POST `/citas/{id}/intervenciones` | Alias de alta | Pruebas de compatibilidad | Mismas reglas de alta que `POST /intervenciones`, con ID en la URL y HTTP 200. |
+| PATCH `/intervenciones/{id}` | Fuera del flujo modular habitual | Pruebas legacy | Ruta de respuesta histórica con efectos propios. |
 | GET/POST `/lista-espera`, PATCH `/lista-espera/{id}` | ListaEspera | pages/Reasignacion para creación | API GET A/R/T, UI solo A/R; no revocar T en API por mover carpetas |
 | GET `/cupos`, `/cupos/{id}` | Cupos, DetalleCupo | Clientes API | PaginaCupoOut y CupoDetalleOut |
 | GET `/cupos-liberados`, `/cupos-liberados/{id}` | No consumidor modular principal | pages/Reasignacion, pruebas/cliente API | Rutas vigentes, GET paginado |

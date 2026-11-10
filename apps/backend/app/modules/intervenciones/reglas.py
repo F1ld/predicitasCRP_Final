@@ -17,32 +17,44 @@ TRANSICIONES_ENVIO = {
 # y un único reintento tras FALLIDA. Mientras haya una no fallida, no se crea otra.
 MAX_FALLIDAS = 2
 
-# Catálogo fijo (diccionario → catalogos.plantilla_mensaje). Una plantilla por canal admitido.
+# Catálogo fijo (diccionario → catalogos.plantilla_mensaje). Textos de previsualización por canal.
 PLANTILLAS = (
-    ("RECORDATORIO_CONFIRMACION_V1", ("WHATSAPP", "SMS"), "Recordatorio de la cita con pedido de confirmación"),
-    ("RECORDATORIO_LIBERACION_V1", ("WHATSAPP", "SMS"), "Recordatorio con la opción de ceder el cupo"),
-    ("LLAMADA_GUION_V1", ("LLAMADA_TELEFONICA",), "Guion de llamada de recordatorio y confirmación"),
+    ("RECORDATORIO_CONFIRMACION_V1", "Recordatorio de la cita con pedido de confirmación", {
+        "WHATSAPP": "Hola, te contactamos desde Clínica Ricardo Palma para recordarte tu próxima cita. "
+                    "Por favor, responde a este mensaje para confirmar si podrás asistir. Gracias.",
+        "SMS": "Clínica Ricardo Palma: confirma si podrás asistir a tu próxima cita.",
+    }),
+    ("RECORDATORIO_LIBERACION_V1", "Recordatorio con la opción de ceder el cupo", {
+        "WHATSAPP": "Hola, te contactamos desde Clínica Ricardo Palma por tu próxima cita. Si sabes que no podrás "
+                    "asistir y deseas liberar el cupo, responde a este mensaje para solicitarlo. Gracias.",
+        "SMS": "Clínica Ricardo Palma: si no asistirás, solicita liberar tu cupo.",
+    }),
+    ("LLAMADA_GUION_V1", "Guion de llamada de recordatorio y confirmación", {
+        "LLAMADA_TELEFONICA": "Saluda e identifícate como personal de Clínica Ricardo Palma. Verifica que estás hablando "
+                              "con la persona correcta antes de mencionar la cita. Recuérdale su próxima cita y pregunta "
+                              "si podrá asistir. Si no puede, consulta si desea solicitar una reprogramación o liberar "
+                              "el cupo. Agradece su tiempo y registra la respuesta.",
+    }),
 )
-CONTENIDO_PENDIENTE = "[PENDIENTE: contenido aprobado]"
 
 
 def canales_de(plantilla: str) -> tuple[str, ...]:
-    for nombre, canales, _ in PLANTILLAS:
+    for nombre, _, contenidos in PLANTILLAS:
         if nombre == plantilla:
-            return canales
+            return tuple(contenidos)
     return ()
 
 
 def obtener_catalogo_plantillas() -> list[dict]:
     """Genera el catálogo de plantillas disponible para el frontend (M05-E09, M05-V02)."""
     items = []
-    for id_plantilla, canales, descripcion in PLANTILLAS:
-        for canal in canales:
+    for id_plantilla, descripcion, contenidos in PLANTILLAS:
+        for canal, contenido in contenidos.items():
             items.append({
                 "id": id_plantilla,
                 "canal_contacto": canal,
                 "descripcion": f"{descripcion} ({canal})",
-                "contenido": CONTENIDO_PENDIENTE,
+                "contenido": contenido,
             })
     return items
 

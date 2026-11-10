@@ -4,6 +4,7 @@ import { api, ApiError, esCancelacion } from "../../nucleo/api/cliente";
 import { useAuth } from "../../nucleo/auth/useAuth";
 import Cargando from "../../nucleo/componentes/Cargando";
 import Icono from "../../nucleo/componentes/Icono";
+import RelojLocal from "../../nucleo/componentes/RelojLocal";
 import Mensaje from "../../nucleo/componentes/Mensaje";
 import { mensajeErrorCitas } from "./errores";
 import type { CatalogosOut, CitaDetalleOut, CitaRegistroIn } from "./tipos";
@@ -28,8 +29,9 @@ const ETIQUETAS: Record<string, string> = {
   NUEVO: "Nuevo", CONTINUADOR: "Continuador", WEB: "Web", CALL_CENTER: "Call center", PRESENCIAL: "Presencial",
 };
 
-function fechaLima(valor: string) {
-  return `${valor.length === 16 ? `${valor}:00` : valor}-05:00`;
+function fechaLocal(valor: string) {
+  const fecha = new Date(valor);
+  return Number.isFinite(fecha.getTime()) ? fecha.toISOString() : "";
 }
 
 function validar(datos: Formulario, catalogos: CatalogosOut | null): Errores {
@@ -46,14 +48,14 @@ function validar(datos: Formulario, catalogos: CatalogosOut | null): Errores {
   else if (!catalogos?.canales_origen.includes(datos.canal_origen)) errores.canal_origen = "Selecciona un canal del catálogo.";
   for (const campo of ["fecha_hora_cita", "fecha_registro_cita"] as const) {
     if (!datos[campo]) errores[campo] = "Indica la fecha y hora.";
-    else if (!Number.isFinite(new Date(fechaLima(datos[campo])).getTime())) errores[campo] = "Indica una fecha y hora válida.";
+    else if (!Number.isFinite(new Date(fechaLocal(datos[campo])).getTime())) errores[campo] = "Indica una fecha y hora válida.";
   }
   if (!errores.fecha_hora_cita && datos.fecha_hora_cita) {
     const dia = new Date(`${datos.fecha_hora_cita.slice(0, 10)}T12:00:00Z`).getUTCDay();
     if (dia === 0) errores.fecha_hora_cita = "Los domingos están fuera del piloto. Revisa la fecha de la cita existente.";
   }
   if (!errores.fecha_registro_cita && datos.fecha_registro_cita && datos.fecha_hora_cita &&
-    new Date(fechaLima(datos.fecha_registro_cita)).getTime() > new Date(fechaLima(datos.fecha_hora_cita)).getTime()) {
+    new Date(fechaLocal(datos.fecha_registro_cita)).getTime() > new Date(fechaLocal(datos.fecha_hora_cita)).getTime()) {
     errores.fecha_registro_cita = "El registro debe ser anterior o igual a la fecha y hora de la cita.";
   }
   for (const campo of ["inasistencias_previas", "asistencias_previas", "reprogramaciones_prev"] as const) {
@@ -173,7 +175,7 @@ export default function Registrar() {
     const peticion: CitaRegistroIn = {
       id_cita_externa: datos.id_cita_externa.trim(), paciente_anon_id: datos.paciente_anon_id.trim(), sede: "SAN_ISIDRO",
       especialidad: datos.especialidad as CitaRegistroIn["especialidad"], medico: datos.medico.trim(),
-      fecha_hora_cita: fechaLima(datos.fecha_hora_cita), fecha_registro_cita: fechaLima(datos.fecha_registro_cita),
+      fecha_hora_cita: fechaLocal(datos.fecha_hora_cita), fecha_registro_cita: fechaLocal(datos.fecha_registro_cita),
       tipo_paciente: datos.tipo_paciente as CitaRegistroIn["tipo_paciente"], canal_origen: datos.canal_origen as CitaRegistroIn["canal_origen"],
       ...(datos.inasistencias_previas !== "" ? { inasistencias_previas: Number(datos.inasistencias_previas) } : {}),
       ...(datos.asistencias_previas !== "" ? { asistencias_previas: Number(datos.asistencias_previas) } : {}),
@@ -196,7 +198,7 @@ export default function Registrar() {
 
   return <>
     <Link className="volver-enlace" to="/citas">← Volver a la bandeja</Link>
-    <div className="pagina-titulo"><div><p className="sobretitulo">INCORPORACIÓN AL PILOTO</p><h1>Registrar cita existente</h1><p>Transcribe los datos de una cita ya agendada para incorporarla al seguimiento.</p></div><span className="contexto-horario"><Icono nombre="reloj" />Hora de Lima (UTC−05:00)</span></div>
+    <div className="pagina-titulo"><div><p className="sobretitulo">INCORPORACIÓN AL PILOTO</p><h1>Registrar cita existente</h1><p>Transcribe los datos de una cita ya agendada para incorporarla al seguimiento.</p></div><span className="contexto-horario"><RelojLocal /></span></div>
     <div className="registro-aviso"><Icono nombre="archivo" /><p>Solo incorpora al piloto una cita que ya existe; no agenda</p></div>
     {!puedeEscribir ? <Mensaje tipo="info">Tu rol permite consultar las citas. El registro está disponible para Recepción y Administración.</Mensaje> : <>
       {cargando && <Cargando texto="Cargando catálogos…" />}
@@ -240,7 +242,7 @@ export default function Registrar() {
               <div><label htmlFor="registro-especialidad">Especialidad *</label><select {...propiedades("especialidad")} required><option value="">Selecciona una especialidad</option>{catalogos.especialidades.map((opcion) => <option value={opcion} key={opcion}>{ETIQUETAS[opcion] || opcion}</option>)}</select>{errorCampo("especialidad")}</div>
               <div className="registro-campo-completo"><label htmlFor="registro-medico">Médico *</label><input {...propiedades("medico")} list="registro-medicos" required maxLength={100} autoComplete="off" /><datalist id="registro-medicos">{catalogos.medicos.map((medico) => <option value={medico} key={medico} />)}</datalist>{errorCampo("medico")}</div>
             </div></section>
-            <section className="tarjeta registro-seccion" aria-labelledby="registro-fechas"><div className="seccion-cabecera"><div><h2 id="registro-fechas">2. Fechas y origen</h2><p>Ingresa ambas fechas según la cita original, en hora de Lima.</p></div></div><div className="registro-campos">
+            <section className="tarjeta registro-seccion" aria-labelledby="registro-fechas"><div className="seccion-cabecera"><div><h2 id="registro-fechas">2. Fechas y origen</h2><p>Ingresa ambas fechas según la cita original, en hora local.</p></div></div><div className="registro-campos">
               <div><label htmlFor="registro-fecha_hora_cita">Fecha y hora de la cita *</label><input {...propiedades("fecha_hora_cita")} type="datetime-local" required />{errorCampo("fecha_hora_cita")}</div>
               <div><label htmlFor="registro-fecha_registro_cita">Fecha y hora de registro original *</label><input {...propiedades("fecha_registro_cita")} type="datetime-local" required />{errorCampo("fecha_registro_cita")}</div>
               <div><label htmlFor="registro-tipo_paciente">Tipo de paciente *</label><select {...propiedades("tipo_paciente")} required><option value="">Selecciona un tipo</option>{catalogos.tipos_paciente.map((opcion) => <option value={opcion} key={opcion}>{ETIQUETAS[opcion] || opcion}</option>)}</select>{errorCampo("tipo_paciente")}</div>

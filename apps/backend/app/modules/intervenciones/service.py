@@ -192,12 +192,7 @@ def listar_citas_elegibles(
         if optout:
             continue
 
-        # Validar si tiene una predicción más reciente que contradiga el riesgo
-        reciente = repository.obtener_prediccion_reciente(db, cita.id_cita)
-        if reciente and reciente.id_prediccion != pred.id_prediccion:
-            if reciente.nivel_riesgo not in ("ALTO", "MEDIO"):
-                continue
-            pred = reciente
+        # La consulta ya entrega una predicción por cita y filtra su riesgo vigente.
 
         items.append(
             ElegibleOut(
@@ -310,9 +305,6 @@ def crear_intervencion(
     ip: str,
     ahora: datetime | None = None,
     modo_sombra_activo: bool = False,
-    validar_consentimiento: bool = True,
-    validar_catalogo: bool = True,
-    validar_elegibilidad: bool = True,
 ) -> IntervencionOut:
     if modo_sombra_activo:
         raise Conflicto(
@@ -320,37 +312,35 @@ def crear_intervencion(
             codigo="MODO_SOMBRA",
         )
 
-    # Validar canal y plantilla contra reglas oficiales si se exige catálogo
-    if validar_catalogo:
-        canales_validos = reglas.canales_de(datos.plantilla_mensaje)
-        if not canales_validos:
-            raise Validacion(
-                f"La plantilla '{datos.plantilla_mensaje}' no existe en el catálogo",
-                codigo="VALIDACION",
-                campos={"plantilla_mensaje": "Plantilla no disponible"},
-            )
-        if datos.canal_contacto not in canales_validos:
-            raise Validacion(
-                f"La plantilla '{datos.plantilla_mensaje}' no está permitida para el canal '{datos.canal_contacto}'",
-                codigo="VALIDACION",
-                campos={"plantilla_mensaje": "Canal no admitido por la plantilla"},
-            )
+    # Validar canal y plantilla contra el catálogo oficial
+    canales_validos = reglas.canales_de(datos.plantilla_mensaje)
+    if not canales_validos:
+        raise Validacion(
+            f"La plantilla '{datos.plantilla_mensaje}' no existe en el catálogo",
+            codigo="VALIDACION",
+            campos={"plantilla_mensaje": "Plantilla no disponible"},
+        )
+    if datos.canal_contacto not in canales_validos:
+        raise Validacion(
+            f"La plantilla '{datos.plantilla_mensaje}' no está permitida para el canal '{datos.canal_contacto}'",
+            codigo="VALIDACION",
+            campos={"plantilla_mensaje": "Canal no admitido por la plantilla"},
+        )
 
     # Validación estricta de consentimiento (RF-063, RN13, D-024)
-    if validar_consentimiento:
-        val = datos.consentimiento_confirmado
-        if val is None or val is False:
-            raise Validacion(
-                "Debe confirmar el consentimiento del paciente",
-                codigo="CONSENTIMIENTO_REQUERIDO",
-                campos={"consentimiento_confirmado": "Consentimiento obligatorio"},
-            )
-        if val is not True:
-            raise Validacion(
-                "El consentimiento debe ser verdadero (booleano True)",
-                codigo="VALIDACION",
-                campos={"consentimiento_confirmado": "Debe ser verdadero"},
-            )
+    val = datos.consentimiento_confirmado
+    if val is None or val is False:
+        raise Validacion(
+            "Debe confirmar el consentimiento del paciente",
+            codigo="CONSENTIMIENTO_REQUERIDO",
+            campos={"consentimiento_confirmado": "Consentimiento obligatorio"},
+        )
+    if val is not True:
+        raise Validacion(
+            "El consentimiento debe ser verdadero (booleano True)",
+            codigo="VALIDACION",
+            campos={"consentimiento_confirmado": "Debe ser verdadero"},
+        )
 
     cita = citas_public.obtener_cita_consulta(db, id_cita, bloquear=True)
     if cita is None:
@@ -368,17 +358,16 @@ def crear_intervencion(
     ahora_ref = ahora or datetime.now(timezone.utc)
     es_pasada = cita.fecha_hora_cita <= ahora_ref
 
-    if validar_elegibilidad:
-        if (
-            cita.estado_actual not in ESTADOS_CITA_INTERVENIBLES
-            or es_pasada
-            or prediccion is None
-            or prediccion.nivel_riesgo not in ("ALTO", "MEDIO")
-        ):
-            raise Conflicto(
-                f"La cita {id_cita} no es elegible para intervención preventiva (RF-057)",
-                codigo="NO_ELEGIBLE",
-            )
+    if (
+        cita.estado_actual not in ESTADOS_CITA_INTERVENIBLES
+        or es_pasada
+        or prediccion is None
+        or prediccion.nivel_riesgo not in ("ALTO", "MEDIO")
+    ):
+        raise Conflicto(
+            f"La cita {id_cita} no es elegible para intervención preventiva (RF-057)",
+            codigo="NO_ELEGIBLE",
+        )
 
     # Regla dura 3: Límite normativo de intervenciones (RF-066, RN07)
     estados_previos = repository.listar_estados_previos_por_cita(db, cita.id_cita)
@@ -394,8 +383,7 @@ def crear_intervencion(
         canal_contacto=datos.canal_contacto,
         plantilla_mensaje=datos.plantilla_mensaje,
         consentimiento_optout=False,
-        estado_intervencion=datos.estado_intervencion,
-        fecha_hora_envio=ahora_ref if datos.estado_intervencion != "PENDIENTE" else None,
+        estado_intervencion="PENDIENTE",
     )
     db.add(intervencion)
     db.flush()

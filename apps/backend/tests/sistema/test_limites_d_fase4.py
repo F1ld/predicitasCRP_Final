@@ -28,7 +28,8 @@ def test_limites_entre_todos_los_modulos_solo_public_o_lecturas_explicitas():
             continue  # __init__.py del paquete, no un módulo de negocio
         area = path.relative_to(root).parts[0]
         relative = path.relative_to(root).as_posix()
-        assert (root / area / "public.py").is_file()
+        # Panel es un lector HTTP sin consumidor interno: no crear public.py vacío.
+        assert (root / area / "public.py").is_file() or area == "panel"
         for name in imports(path):
             parts = name.split(".")
             if len(parts) > 3 and parts[:2] == ["app", "modules"] and parts[2] != area:

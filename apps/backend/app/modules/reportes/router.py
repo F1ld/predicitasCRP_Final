@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, Query, Request, Response
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -6,11 +8,21 @@ from app.core.exportacion import responder
 from app.core.http import ip_cliente
 from app.modules.auth.public import Principal as Usuario, requiere_roles
 from app.modules.reportes import service
-from app.modules.reportes.schemas import Rep02Out, Rep03Out
+from app.modules.reportes.schemas import EspecialidadRep01, NivelRiesgoRep01, Rep01Out, Rep02Out, Rep03Out
 
 router = APIRouter(prefix="/reportes", tags=["reportes"])
 
 ROLES_REPORTE = ("ADMINISTRADOR", "RECEPCION")
+
+
+@router.get("/rep-01", response_model=Rep01Out, dependencies=[Depends(requiere_roles("RECEPCION"))])
+def obtener_rep01(
+    fecha: Annotated[str, Query(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")],
+    especialidad: EspecialidadRep01 | None = None,
+    nivel_riesgo: NivelRiesgoRep01 | None = None,
+    db: Session = Depends(get_db),
+):
+    return service.obtener_rep01(db, fecha=fecha, especialidad=especialidad, nivel_riesgo=nivel_riesgo)
 
 
 @router.get("/rep-02", response_model=Rep02Out)
@@ -55,29 +67,25 @@ def obtener_rep02(
 
 @router.get("/rep-03", response_model=Rep03Out)
 def obtener_rep03(
+    request: Request,
     desde: str | None = None,
     hasta: str | None = None,
     especialidad: str | None = None,
     id_operador: int | None = None,
     formato: str = Query(default="json", regex="^(json|csv|xlsx)$"),
-    _: Usuario = Depends(requiere_roles(*ROLES_REPORTE)),
+    usuario: Usuario = Depends(requiere_roles(*ROLES_REPORTE)),
     db: Session = Depends(get_db),
 ):
-    reporte = service.generar_rep03(
+    return service.preparar_rep03(
         db,
+        usuario=usuario,
+        ip=ip_cliente(request),
+        formato=formato,
         desde=desde,
         hasta=hasta,
         especialidad=especialidad,
         id_operador=id_operador,
     )
-    if formato in ("csv", "xlsx"):
-        contenido_csv = service.generar_rep03_csv(reporte)
-        return Response(
-            content=contenido_csv.encode("utf-8-sig"),
-            media_type="text/csv" if formato == "csv" else "application/vnd.ms-excel",
-            headers={"Content-Disposition": f'attachment; filename="rep-03.{formato}"'},
-        )
-    return reporte
 
 
 # Alias directos para las rutas intuitivas
@@ -108,6 +116,7 @@ def alias_reporte_intervenciones(
 
 @router.get("/reasignaciones", response_model=Rep03Out)
 def alias_reporte_reasignaciones(
+    request: Request,
     desde: str | None = None,
     hasta: str | None = None,
     especialidad: str | None = None,
@@ -117,11 +126,12 @@ def alias_reporte_reasignaciones(
     db: Session = Depends(get_db),
 ):
     return obtener_rep03(
+        request=request,
         desde=desde,
         hasta=hasta,
         especialidad=especialidad,
         id_operador=id_operador,
         formato=formato,
-        _=usuario,
+        usuario=usuario,
         db=db,
     )

@@ -23,7 +23,7 @@ OpenAPI no codifica por sí solo el RBAC por rol ni todos los casos de error/des
 | `POST /ia/predecir/{id_cita}` y `POST /citas/{id_cita}/prediccion` | Mismo servicio, pero primera A/R/T y segunda A/R; alias Citas sin response_model declarado |
 | `GET /cupos` y `/cupos-liberados` | Ambas paginadas; límites por defecto 20 y 50. Con `estado_cupo=None` llega sin filtro real aunque una descripción diga DISPONIBLE por defecto |
 | `GET /cupos/{id}/candidatos` y `/cupos-liberados/{id}/candidatos` | Primera lista de candidatos, segunda `{cupo,total_compatibles,candidatos}` |
-| `POST /intervenciones` y `/citas/{id}/intervenciones` | Nueva: consentimiento/catálogo/elegibilidad y 201. Legacy: omite esas validaciones, cambia PENDIENTE a ENVIADA y responde 200 |
+| `POST /intervenciones` y `POST /citas/{id}/intervenciones` | Ambas rutas validan consentimiento, catálogo y elegibilidad, y crean en PENDIENTE. La ruta principal recibe `id_cita` en el cuerpo y conserva 201. El alias toma la cita de la URL y conserva 200. El envío se registra aparte. |
 | `POST /intervenciones/{id}/respuesta` y `PATCH /intervenciones/{id}` | POST registra respuesta sin cambiar cita; PATCH legado sí cambia cita y desactiva validación de transición de respuesta |
 | `GET /reportes/rep-02` y `/reportes/intervenciones` | Alias actual pasa `_` a una función que espera `usuario` y omite `request`: incompatibilidad estática a corregir separadamente, no alias operativo certificado |
 | `GET /reportes/rep-03` y `/reportes/reasignaciones` | Alias invoca misma función; preservar formato/filtros. `xlsx` actual NO es archivo OOXML real, ver descargas |

@@ -42,6 +42,7 @@ La usan tres roles, y cada uno ve solo lo que su permiso le permite:
 | Vista | Ruta | Roles | Para qué |
 |---|---|---|---|
 | Inicio de sesión | `/login` | Público | Acceso con correo institucional y contraseña |
+| Panel operativo | `/panel` | Administrador, Recepción | Resumen de la jornada, pendientes paginados y acceso a detalles |
 | Citas | `/citas` | Todos | Bandeja con filtros, paginación, nivel de riesgo y acceso al detalle |
 | Detalle de cita | `/citas/:id` | Todos | Datos, historial de estados, cambio de estado, check-in y cálculo de riesgo |
 | Importar CSV | `/citas/importar` | Administrador, Recepción | Carga de citas con validación fila por fila |
@@ -62,7 +63,8 @@ El riesgo siempre se presenta como **orientación, nunca como decisión clínica
 | M02 · Bandeja, detalle, registro, importación y check-in | ✅ Certificado por QA |
 | M05 · Intervención inteligente y reporte REP-02 | ✅ Certificado por QA |
 | M06 · Lista de espera y reasignación | 🔨 Interfaz lista; falta su API en el backend |
-| M07 · Panel operativo · M08 · Auditoría · M09 · Vistas de IA | 📐 Planificado |
+| M07 · Panel operativo | Implementado y validado con backend aislado; ver salvedades de la suite global en `spec/validacion-panel-operativo.md` |
+| M08 · Auditoría · M09 · Vistas de IA | 📐 Planificado |
 
 ## 3. Tecnologías
 
@@ -215,6 +217,43 @@ try {
   - nunca se almacenan contraseñas.
 
 ## 10. Calidad: pruebas, accesibilidad y responsive
+
+### Panel Operativo
+
+Recepción y Administración inician en `/panel`; Técnico IA conserva `/citas`.
+Login pasa por `/` para que el router resuelva ese destino según el rol. Las rutas
+y menús se descubren por las ranuras existentes, sin registro manual en Layout.
+
+```text
+/panel?fecha=2026-11-09&especialidad=CARDIOLOGIA&tipo=OFERTAS_EN_CURSO&desplazamiento=0
+```
+
+- Fecha aplicada y todas las horas del panel usan `America/Lima`. El formulario
+  mantiene un borrador hasta Aplicar; Hoy aplica inmediatamente la jornada de Lima.
+- Consume `GET /panel/resumen` y `GET /panel/pendientes`; filtros, categoría y
+  página quedan en URL. El resumen no se vuelve a solicitar solo por paginar.
+- Cuatro tarjetas, tres categorías de pendientes (20 registros por página) y
+  desgloses de citas, riesgo e intervenciones. El backend calcula los indicadores.
+- Actualizar consulta ambos recursos con el universo ya aplicado; no hay polling.
+  Los bloques muestran carga/error/reintento por separado y cancelan respuestas obsoletas.
+- Recuperación `null` se presenta como «Sin cupos liberados», distinta de `0 %`.
+  Conteos de estados son actuales, no envíos acumulados ni cierres históricos.
+- Cada fila abre su detalle existente. Cita, Seguimiento y Cupo admiten retorno al
+  panel con `state.volver`, sin cambiar sus formularios o acciones de negocio.
+- No realiza mutaciones, inferencias o exportaciones desde el panel. REP-01 sigue
+  fuera de esta entrega. El backend del ambiente debe incluir las dos rutas.
+
+Definición: [panel-operativo.md](spec/panel-operativo.md).
+Resultados y límites: [validacion-panel-operativo.md](spec/validacion-panel-operativo.md).
+Cambios: [changelog.md](spec/changelog.md).
+
+Pruebas focalizadas (no sustituyen la suite completa con cobertura):
+
+```bash
+npx vitest run src/modulos/panel src/nucleo/navegacion/retorno.test.ts src/pruebas/retornoPanel.test.tsx
+```
+
+### Validación general
 
 ```bash
 npm run typecheck && npm run lint && npm run build && npm run test

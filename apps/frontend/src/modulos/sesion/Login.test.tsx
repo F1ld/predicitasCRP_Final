@@ -19,13 +19,13 @@ function sesion(cambios: Partial<ContextoAuth> = {}): ContextoAuth {
 
 function mostrar(contexto: ContextoAuth = sesion()) {
   return render(<ContextoSesion.Provider value={contexto}><MemoryRouter initialEntries={["/login"]}>
-    <Routes><Route path="/login" element={<Login />} /><Route path="/citas" element={<p>Bandeja de citas</p>} /></Routes>
+    <Routes><Route path="/login" element={<Login />} /><Route path="/" element={<p>Inicio según el rol</p>} /></Routes>
   </MemoryRouter></ContextoSesion.Provider>);
 }
 
 async function completarFormulario() {
   const persona = userEvent.setup();
-  await persona.type(screen.getByLabelText("Correo institucional"), "recepcion@predicitas.crp");
+  await persona.type(screen.getByLabelText("Correo"), "recepcion@predicitas.crp");
   await persona.type(screen.getByLabelText("Contraseña"), "Clave123");
   await persona.click(screen.getByRole("button", { name: "Ingresar" }));
 }
@@ -43,7 +43,7 @@ describe("Login", () => {
   it("conserva los campos accesibles, la marca y la ranura pública de acceso", () => {
     mostrar();
     expect(screen.getByRole("heading", { name: "Iniciar sesión" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Correo institucional")).toHaveAttribute("autocomplete", "username");
+    expect(screen.getByLabelText("Correo")).toHaveAttribute("autocomplete", "username");
     expect(screen.getByLabelText("Contraseña")).toHaveAttribute("type", "password");
     expect(screen.getByRole("img", { name: "PrediCitas CRP" })).toBeInTheDocument();
     expect(rutas[0]?.ruta).toBe("/login");
@@ -53,16 +53,16 @@ describe("Login", () => {
   it("muestra la espera de restauración y no pide credenciales antes de terminar", () => {
     mostrar(sesion({ cargando: true }));
     expect(screen.getByRole("status")).toHaveTextContent("Verificando sesión…");
-    expect(screen.queryByLabelText("Correo institucional")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Correo")).not.toBeInTheDocument();
   });
 
-  it("redirige a citas si ya hay un usuario autenticado", () => {
+  it("redirige al inicio para resolver la pantalla del rol autenticado", () => {
     const usuario: Usuario = {
       id_usuario: 1, nombre_completo: "Usuario sintético", correo_institucional: "recepcion@predicitas.crp",
       rol: "RECEPCION", activo: true, creado_en: "2026-10-18T10:00:00-05:00", actualizado_en: null,
     };
     mostrar(sesion({ usuario }));
-    expect(screen.getByText("Bandeja de citas")).toBeInTheDocument();
+    expect(screen.getByText("Inicio según el rol")).toBeInTheDocument();
   });
 
   it("presenta el aviso de sesión expirada con un estado accesible", () => {
@@ -77,8 +77,8 @@ describe("Login", () => {
     await completarFormulario();
     expect(iniciarSesion).toHaveBeenCalledWith("recepcion@predicitas.crp", "Clave123");
     expect(screen.getByRole("button", { name: "Ingresando…" })).toBeDisabled();
-    expect(screen.getByLabelText("Correo institucional")).toBeDisabled();
-    const formulario = screen.getByLabelText("Correo institucional").closest("form");
+    expect(screen.getByLabelText("Correo")).toBeDisabled();
+    const formulario = screen.getByLabelText("Correo").closest("form");
     if (!formulario) throw new Error("Falta el formulario de acceso");
     fireEvent.submit(formulario);
     expect(iniciarSesion).toHaveBeenCalledTimes(1);

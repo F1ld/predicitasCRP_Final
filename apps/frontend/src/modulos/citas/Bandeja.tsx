@@ -1,3 +1,4 @@
+import RelojLocal from "../../nucleo/componentes/RelojLocal";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import type { Pagina } from "../../nucleo/api/tipos";
@@ -15,7 +16,7 @@ import { ROLES_ESCRITURA } from "./transiciones";
 import "./citas.css";
 
 const FILTROS = ["desde", "hasta", "especialidad", "medico", "estado", "nivel_riesgo", "con_intervencion", "q"] as const;
-const LIMITE = 20;
+const LIMITE = 5;
 const INTERVENCIONES = { PENDIENTE: "Pendiente", ENVIADA: "Enviada", ENTREGADA: "Entregada", RESPONDIDA: "Respondida", FALLIDA: "Fallida" };
 const RESPUESTAS = { CONFIRMA: "Confirma", SOLICITA_LIBERACION: "Solicita liberación", SOLICITA_REPROG: "Solicita reprogramación", SIN_RESPUESTA: "Sin respuesta" };
 
@@ -29,8 +30,7 @@ export default function Bandeja() {
   const [errorFiltro, setErrorFiltro] = useState("");
   const offset = Number(busqueda.get("desplazamiento") || 0);
   const desplazamiento = Number.isSafeInteger(offset) && offset >= 0 ? offset : 0;
-  const limiteSolicitado = Number(busqueda.get("limite") || LIMITE);
-  const limite = Number.isSafeInteger(limiteSolicitado) && limiteSolicitado >= 1 && limiteSolicitado <= 200 ? limiteSolicitado : LIMITE;
+  const limite = LIMITE;
   const consulta = new URLSearchParams({ limite: String(limite), desplazamiento: String(desplazamiento) });
   FILTROS.forEach((nombre) => {
     const valor = busqueda.get(nombre);
@@ -60,38 +60,42 @@ export default function Bandeja() {
     setBusqueda(siguientes);
   }
 
+  const totalPaginas = Math.max(1, Math.ceil((datos?.total ?? 0) / limite));
+
   return <>
-    <div className="pagina-titulo"><div><p className="sobretitulo">SEGUIMIENTO DEL PACIENTE</p><h1>Bandeja de citas</h1><p>Encuentra una cita y continúa su seguimiento.</p></div><div className="flex flex-wrap items-center gap-2"><span className="contexto-horario"><Icono nombre="reloj" />Hora de Lima</span>{puedeEscribir && <><Link className="boton" to="/citas/nueva">Registrar cita</Link><Link className="boton-secundario" to="/citas/importar"><Icono nombre="importar" />Importar</Link></>}</div></div>
+    <div className="pagina-titulo"><div><p className="sobretitulo">SEGUIMIENTO DEL PACIENTE</p><h1>Bandeja de citas</h1><p>Encuentra una cita y continúa su seguimiento.</p></div><div className="flex flex-wrap items-center gap-2"><span className="contexto-horario"><Icono nombre="reloj" /><RelojLocal /></span>{puedeEscribir && <><Link className="boton" to="/citas/nueva">Registrar cita</Link><Link className="boton-secundario" to="/citas/importar"><Icono nombre="importar" />Importar</Link></>}</div></div>
     {catalogos.error && <div className="space-y-3"><Mensaje>No se pudieron cargar los filtros: {catalogos.error}</Mensaje><button className="boton-secundario" onClick={catalogos.reintentar}>Reintentar catálogos</button></div>}
-    <form key={`${busqueda}:${catalogos.cargando}`} onSubmit={aplicar} className="tarjeta filtros-citas">
-      <div className="seccion-cabecera"><h2><Icono nombre="filtro" />Buscar una cita</h2><p>Combina los filtros que necesites.</p></div>
-      {catalogos.cargando && <Cargando texto="Cargando filtros…" />}
-      <fieldset disabled={cargando || catalogos.cargando || !!catalogos.error} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <legend className="sr-only">Filtros de citas</legend>
-        <div><label htmlFor="q">Identificador de cita</label><div className="campo-icono"><Icono nombre="buscar" /><input id="q" name="q" aria-describedby="ayuda-busqueda" defaultValue={busqueda.get("q") || ""} placeholder="Por ejemplo, CIT-SIM-000324" /></div><p id="ayuda-busqueda" className="ayuda-seccion">ID de cita, paciente o médico</p></div>
-        <div><label htmlFor="desde">Desde</label><input id="desde" name="desde" type="date" defaultValue={busqueda.get("desde") || ""} /></div>
-        <div><label htmlFor="hasta">Hasta</label><input id="hasta" name="hasta" type="date" defaultValue={busqueda.get("hasta") || ""} /></div>
-        <div><label htmlFor="especialidad">Especialidad</label><select id="especialidad" name="especialidad" defaultValue={busqueda.get("especialidad") || ""}>
-          <option value="">Todas</option>{catalogos.datos?.especialidades.map((valor) => <option key={valor} value={valor}>{etiqueta(valor)}</option>)}
-        </select></div>
-        <div><label htmlFor="medico">Médico</label><select id="medico" name="medico" defaultValue={busqueda.get("medico") || ""}>
-          <option value="">Todos</option>{catalogos.datos?.medicos.map((valor) => <option key={valor} value={valor}>{valor}</option>)}
-        </select></div>
-        <div><label htmlFor="estado">Estado</label><select id="estado" name="estado" defaultValue={busqueda.get("estado") || ""}>
-          <option value="">Todos</option>{catalogos.datos?.estados.map((valor) => <option key={valor} value={valor}>{etiqueta(valor)}</option>)}
-        </select></div>
-        <div><label htmlFor="nivel_riesgo">Nivel de riesgo</label><select id="nivel_riesgo" name="nivel_riesgo" defaultValue={busqueda.get("nivel_riesgo") || ""}>
-          <option value="">Todos</option>{catalogos.datos?.niveles_riesgo.map((valor) => <option key={valor} value={valor}>{valor === "BAJO" ? "Bajo" : valor === "MEDIO" ? "Medio" : "Alto"}</option>)}<option value="SIN_PREDICCION">Sin predicción</option>
-        </select></div>
-        <div><label htmlFor="con_intervencion">Intervención</label><select id="con_intervencion" name="con_intervencion" defaultValue={busqueda.get("con_intervencion") || ""}>
-          <option value="">Todas</option><option value="true">Con intervención</option><option value="false">Sin intervención</option>
-        </select></div>
-        <div className="flex flex-wrap items-end gap-2">
-          <button type="submit" className="boton"><Icono nombre="buscar" />Aplicar filtros</button>
-          <button type="button" className="boton-secundario" onClick={(evento) => { evento.currentTarget.form?.reset(); setErrorFiltro(""); setBusqueda({}); }}>Limpiar</button>
-        </div>
-      </fieldset>
-    </form>
+    <details className="tarjeta filtros-citas">
+      <summary className="filtros-citas-resumen"><span><Icono nombre="filtro" />Buscar una cita</span></summary>
+      <form key={`${busqueda}:${catalogos.cargando}`} onSubmit={aplicar}>
+        {catalogos.cargando && <Cargando texto="Cargando filtros…" />}
+        <fieldset disabled={cargando || catalogos.cargando || !!catalogos.error} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <legend className="sr-only">Filtros de citas</legend>
+          <div><label htmlFor="q">Identificador de cita</label><div className="campo-icono"><Icono nombre="buscar" /><input id="q" name="q" aria-describedby="ayuda-busqueda" defaultValue={busqueda.get("q") || ""} placeholder="Por ejemplo, CIT-SIM-000324" /></div><p id="ayuda-busqueda" className="ayuda-seccion">ID de cita, paciente o médico</p></div>
+          <div><label htmlFor="desde">Desde</label><input id="desde" name="desde" type="date" defaultValue={busqueda.get("desde") || ""} /></div>
+          <div><label htmlFor="hasta">Hasta</label><input id="hasta" name="hasta" type="date" defaultValue={busqueda.get("hasta") || ""} /></div>
+          <div><label htmlFor="especialidad">Especialidad</label><select id="especialidad" name="especialidad" defaultValue={busqueda.get("especialidad") || ""}>
+            <option value="">Todas</option>{catalogos.datos?.especialidades.map((valor) => <option key={valor} value={valor}>{etiqueta(valor)}</option>)}
+          </select></div>
+          <div><label htmlFor="medico">Médico</label><select id="medico" name="medico" defaultValue={busqueda.get("medico") || ""}>
+            <option value="">Todos</option>{catalogos.datos?.medicos.map((valor) => <option key={valor} value={valor}>{valor}</option>)}
+          </select></div>
+          <div><label htmlFor="estado">Estado</label><select id="estado" name="estado" defaultValue={busqueda.get("estado") || ""}>
+            <option value="">Todos</option>{catalogos.datos?.estados.map((valor) => <option key={valor} value={valor}>{etiqueta(valor)}</option>)}
+          </select></div>
+          <div><label htmlFor="nivel_riesgo">Nivel de riesgo</label><select id="nivel_riesgo" name="nivel_riesgo" defaultValue={busqueda.get("nivel_riesgo") || ""}>
+            <option value="">Todos</option>{catalogos.datos?.niveles_riesgo.map((valor) => <option key={valor} value={valor}>{valor === "BAJO" ? "Bajo" : valor === "MEDIO" ? "Medio" : "Alto"}</option>)}<option value="SIN_PREDICCION">Sin predicción</option>
+          </select></div>
+          <div><label htmlFor="con_intervencion">Intervención</label><select id="con_intervencion" name="con_intervencion" defaultValue={busqueda.get("con_intervencion") || ""}>
+            <option value="">Todas</option><option value="true">Con intervención</option><option value="false">Sin intervención</option>
+          </select></div>
+          <div className="flex flex-wrap items-end gap-2">
+            <button type="submit" className="boton"><Icono nombre="buscar" />Aplicar filtros</button>
+            <button type="button" className="boton-secundario" onClick={(evento) => { evento.currentTarget.form?.reset(); setErrorFiltro(""); setBusqueda({}); }}>Limpiar</button>
+          </div>
+        </fieldset>
+      </form>
+    </details>
     {errorFiltro && <Mensaje>{errorFiltro}</Mensaje>}
     {cargando ? <Cargando texto="Cargando citas…" /> : error ? <div className="space-y-3"><Mensaje>{error}</Mensaje><button className="boton-secundario" onClick={reintentar}>Reintentar</button></div> : datos && <>
       <div className="resultados-cabecera"><h2>Citas encontradas <span className="contador-citas">{datos.total}</span></h2><p>Abre el detalle para ver el historial y las acciones disponibles.</p></div>
@@ -107,8 +111,10 @@ export default function Bandeja() {
               <td className="whitespace-nowrap">{formatearFechaHora(cita.fecha_hora_cita)}</td>
               <td className="id-cita">{cita.id_cita_externa}<span className="mt-1 block text-xs font-normal">{cita.paciente_anon_id}</span></td><td>{etiqueta(cita.especialidad)}</td><td>{cita.medico}</td>
               <td><EstadoBadge estado={cita.estado_actual} /></td>
-              {/* RF-056, RN16 y RNF-017: el riesgo se identifica y el simulado se rotula junto al dato. */}
-              <td>{cita.riesgo ? <div className="space-y-1"><NivelRiesgoBadge nivel={cita.riesgo.nivel_riesgo} />{cita.riesgo.resultado_simulado && <RotuloSimulado />}</div> : "Sin predicción"}</td>
+              <td>{cita.riesgo ? <div className="flex flex-wrap items-center gap-1">
+                <NivelRiesgoBadge nivel={cita.riesgo.nivel_riesgo} />
+                {cita.riesgo.resultado_simulado && <RotuloSimulado />}
+              </div> : "Sin predicción"}</td>
               <td>{cita.estado_intervencion ? <div>{INTERVENCIONES[cita.estado_intervencion]}{cita.respuesta_paciente && <span className="mt-1 block text-xs">{RESPUESTAS[cita.respuesta_paciente]}</span>}</div> : "Sin intervención"}</td>
               {/* RF-104: informa la llegada sin confundirla con el desenlace de la cita. */}
               <td>{cita.tiene_check_in ? <span className="inline-flex items-center gap-1 text-emerald-800"><Icono nombre="check" />Check-in registrado</span> : "Sin check-in"}</td>
@@ -118,7 +124,18 @@ export default function Bandeja() {
         </table>
       </div>
       <div className="paginacion">
-        <p>Página {Math.floor(desplazamiento / limite) + 1} de {Math.max(1, Math.ceil(datos.total / limite))}</p>
+        <p>Página {Math.floor(desplazamiento / limite) + 1} de {totalPaginas}</p>
+        <form className="paginacion-salto flex flex-wrap items-center gap-2" onSubmit={(evento) => {
+          evento.preventDefault();
+          const pagina = Number(new FormData(evento.currentTarget).get("pagina"));
+          if (Number.isInteger(pagina) && pagina >= 1 && pagina <= totalPaginas) {
+            cambiarPagina((pagina - 1) * limite);
+          }
+        }}>
+          <label htmlFor="pagina-citas">Ir a la página</label>
+          <input id="pagina-citas" name="pagina" type="number" min={1} max={totalPaginas} step={1} required />
+          <button type="submit" className="boton-secundario">Ir</button>
+        </form>
         <div className="flex gap-2">
           <button className="boton-secundario" disabled={desplazamiento === 0} onClick={() => cambiarPagina(Math.max(0, desplazamiento - limite))}>Anterior</button>
           <button className="boton-secundario" disabled={desplazamiento + limite >= datos.total} onClick={() => cambiarPagina(desplazamiento + limite)}>Siguiente</button>

@@ -1,0 +1,39 @@
+.reporte-diario-vista {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reporte-diario-filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.reporte-diario-resultados {
+  min-width: 0;
+}
+
+.reporte-diario-tabla {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: 1rem;
+}
+
+.reporte-diario-tabla table {
+  width: 100%;
+  min-width: 58rem;
+  border-collapse: collapse;
+}
+
+.reporte-diario-tabla caption,
+.reporte-diario-tabla th,
+.reporte-diario-tabla td {
+  padding: .65rem;
+  text-align: left;
+}
+
+.reporte-diario-tabla caption {
+  font-weight: 700;
+}
+
+.reporte-diario-tabla thead {
+  background: #f1f5f9;
+}

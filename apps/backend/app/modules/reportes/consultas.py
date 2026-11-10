@@ -21,6 +21,46 @@ from app.modules.reportes.schemas import (
 )
 
 
+def consultar_rep01(
+    db: Session, *, inicio: datetime, fin: datetime,
+    especialidad: str | None, nivel_riesgo: str | None,
+):
+    prediccion_id = (
+        select(PrediccionIA.id_prediccion)
+        .where(PrediccionIA.id_cita == Cita.id_cita)
+        .order_by(PrediccionIA.fecha_hora_inferencia.desc(), PrediccionIA.id_prediccion.desc())
+        .limit(1)
+        .correlate(Cita)
+        .scalar_subquery()
+    )
+    intervencion_id = (
+        select(Intervencion.id_intervencion)
+        .where(Intervencion.id_cita == Cita.id_cita)
+        .order_by(Intervencion.fecha_hora_envio.desc(), Intervencion.id_intervencion.desc())
+        .limit(1)
+        .correlate(Cita)
+        .scalar_subquery()
+    )
+    stmt = (
+        select(
+            Cita.fecha_hora_cita, Cita.id_cita_externa, Cita.especialidad,
+            Cita.medico, Cita.antelacion_dias, PrediccionIA.probabilidad_no_show,
+            PrediccionIA.nivel_riesgo, Intervencion.estado_intervencion,
+            Intervencion.respuesta_paciente,
+        )
+        .select_from(Cita)
+        .outerjoin(PrediccionIA, PrediccionIA.id_prediccion == prediccion_id)
+        .outerjoin(Intervencion, Intervencion.id_intervencion == intervencion_id)
+        .where(Cita.fecha_hora_cita >= inicio, Cita.fecha_hora_cita < fin)
+        .order_by(Cita.especialidad, Cita.fecha_hora_cita, Cita.id_cita)
+    )
+    if especialidad is not None:
+        stmt = stmt.where(Cita.especialidad == especialidad)
+    if nivel_riesgo is not None:
+        stmt = stmt.where(PrediccionIA.nivel_riesgo == nivel_riesgo)
+    return db.execute(stmt).mappings().all()
+
+
 def generar_rep02(
     db: Session,
     *,
@@ -259,10 +299,8 @@ def generar_rep03(
     )
 
 
-def generar_rep03_csv(reporte: Rep03Out) -> str:
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow([
+def proyectar_exportacion_rep03(reporte: Rep03Out) -> tuple[list[str], list[dict]]:
+    columnas = [
         "ID Cupo Liberado",
         "Fecha Hora Cupo",
         "Especialidad",
@@ -271,9 +309,10 @@ def generar_rep03_csv(reporte: Rep03Out) -> str:
         "Paciente Asignado",
         "Operador Confirma",
         "Estado Cupo",
-    ])
+    ]
+    filas = []
     for f in reporte.filas:
-        writer.writerow([
+        filas.append(dict(zip(columnas, [
             f.id_cupo_liberado,
             f.fecha_hora_cupo,
             f.especialidad,
@@ -282,5 +321,14 @@ def generar_rep03_csv(reporte: Rep03Out) -> str:
             f.paciente_anon_id_asignado or "Sin asignar",
             f.id_operador_confirma if f.id_operador_confirma is not None else "Sin confirmación",
             f.estado_cupo,
-        ])
+        ], strict=True)))
+    return columnas, filas
+
+
+def generar_rep03_csv(reporte: Rep03Out) -> str:
+    columnas, filas = proyectar_exportacion_rep03(reporte)
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=columnas)
+    writer.writeheader()
+    writer.writerows(filas)
     return output.getvalue()

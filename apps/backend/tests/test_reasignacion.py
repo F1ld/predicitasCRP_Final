@@ -11,6 +11,7 @@ from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita
 from app.modules.lista_espera.models import CupoLiberado, ListaEspera, Reasignacion
 from tests.conftest import cabecera
+from tests.intervenciones.conftest import NUEVA, crear_prediccion
 
 
 @pytest.fixture
@@ -43,11 +44,18 @@ def _liberar_cita_y_obtener_cupo(client, db, id_usuario: int, headers: dict) -> 
         origen="test_reasignacion",
     )
     cita = db.scalar(select(Cita).where(Cita.id_cita_externa == "CIT-REA-001"))
-    interv = client.post(
+    crear_prediccion(db, cita, "ALTO")
+    alta = client.post(
         f"/citas/{cita.id_cita}/intervenciones",
         headers=headers,
-        json={"canal_contacto": "WHATSAPP"},
-    ).json()
+        json=NUEVA,
+    )
+    assert alta.status_code == 200, alta.text
+    interv = alta.json()
+    assert interv["estado_intervencion"] == "PENDIENTE"
+    envio = client.post(f"/intervenciones/{interv['id_intervencion']}/estado", headers=headers,
+                        json={"estado_intervencion": "ENVIADA"})
+    assert envio.status_code == 200, envio.text
     resp = client.patch(
         f"/intervenciones/{interv['id_intervencion']}",
         headers=headers,
@@ -145,6 +153,10 @@ def test_flujo_completo_lista_espera_matching_y_reasignacion_con_confirmacion_hu
     assert datos_reasig["confirmacion_humana"] is True
     assert datos_reasig["estado_cupo_final"] == "REASIGNADO"
     assert datos_reasig["estado_candidato_final"] == "ASIGNADO"
+    assert datos_reasig["paciente_anon_id"] == "PAC-ESP-PRIO1-TARDE"
+    detalle = client.get(f"/cupos/{id_cupo}", headers=h)
+    assert detalle.status_code == 200, detalle.text
+    assert detalle.json()["reasignacion"]["paciente_anon_id"] == datos_reasig["paciente_anon_id"]
 
     # 6. Impedir doble reasignación del mismo cupo (HTTP 409 — RF-081)
     r_doble = client.post(

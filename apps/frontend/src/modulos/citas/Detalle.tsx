@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { api, ApiError } from "../../nucleo/api/cliente";
 import { useConsulta } from "../../nucleo/api/useConsulta";
+import { resolverRetorno } from "../../nucleo/navegacion/retorno";
 import { useAuth } from "../../nucleo/auth/useAuth";
 import Cargando from "../../nucleo/componentes/Cargando";
 import EstadoBadge from "../../nucleo/componentes/EstadoBadge";
@@ -15,6 +16,12 @@ import { mensajeErrorCitas } from "./errores";
 import type { CheckInOut, CitaDetalleOut, EstadoDestino, PrediccionOut } from "./tipos";
 import { ROLES_ESCRITURA, TRANSICIONES } from "./transiciones";
 import "./citas.css";
+
+type RespuestaInferencia = Omit<PrediccionOut, "probabilidad_no_show" | "umbral_aplicado" | "resultado_simulado" | "ya_existia"> & {
+  probabilidad_no_show: string;
+  umbral_aplicado: string;
+  es_simulacion: boolean;
+};
 
 export default function CitaDetalle() {
   const { id = "" } = useParams();
@@ -29,9 +36,8 @@ function diaLima(instante: number): string {
 // RN01, RF-018 a RF-024, RF-104: el servidor confirma cada cambio y su historial.
 function Detalle({ id }: { id: string }) {
   const { state } = useLocation();
-  const estadoNavegacion: unknown = state;
-  const rutaAnterior = typeof estadoNavegacion === "object" && estadoNavegacion !== null && "volver" in estadoNavegacion ? estadoNavegacion.volver : null;
-  const volver = typeof rutaAnterior === "string" && rutaAnterior.startsWith("/citas?") ? rutaAnterior : "/citas";
+  const volver = resolverRetorno(state, "/citas", ["/citas", "/panel"]);
+  const textoVolver = volver.startsWith("/panel?") || volver === "/panel" ? "Volver al panel operativo" : "Volver a la bandeja";
   const { tieneRol } = useAuth();
   const [parametrosConsulta] = useSearchParams();
   const idIntervencionParam = parametrosConsulta.get("id_intervencion");
@@ -52,7 +58,7 @@ function Detalle({ id }: { id: string }) {
   // RF-019 y RF-104: el bloqueo inmediato evita dos eventos antes del render.
   const accionEnCurso = useRef(false);
 
-  // RF-104: actualiza la elegibilidad al pasar la hora o el día en Lima.
+  // RF-104: actualiza la elegibilidad al pasar la hora o el día en la zona horaria local.
   useEffect(() => {
     const reloj = window.setInterval(() => setAhora(Date.now()), 60_000);
     return () => window.clearInterval(reloj);
@@ -73,7 +79,10 @@ function Detalle({ id }: { id: string }) {
     const motivo = String(campos.get("motivo") || "").trim();
     const peticion: { estado_nuevo: EstadoDestino; motivo: string | null; nueva_fecha_hora_cita?: string; liberar_cupo?: boolean; id_intervencion?: number } = { estado_nuevo: destino, motivo: motivo || null };
     // RF-021 a RF-024: los campos de un destino nunca se envían para otro.
-    if (destino === "REPROGRAMADA") peticion.nueva_fecha_hora_cita = `${String(campos.get("nueva_fecha_hora_cita"))}:00-05:00`;
+    if (destino === "REPROGRAMADA") {
+      const fecha = String(campos.get("nueva_fecha_hora_cita"));
+      peticion.nueva_fecha_hora_cita = `${fecha}${fecha.length === 16 ? ":00" : ""}-05:00`;
+    }
     if (destino === "CANCELADA" && campos.get("liberar_cupo") === "on") peticion.liberar_cupo = true;
     if (destino === "CONFIRMADA" && campos.get("id_intervencion")) peticion.id_intervencion = Number(campos.get("id_intervencion"));
     accionEnCurso.current = true;
@@ -118,14 +127,15 @@ function Detalle({ id }: { id: string }) {
     accionEnCurso.current = true;
     setCalculando(true); setErrorPrediccion(""); setResultadoRiesgo(null);
     try {
-      // Inferencia vía endpoint estándar o alias de citas
-      let resultado: PrediccionOut | null = null;
-      try {
-        resultado = await api<PrediccionOut>(`/ia/predecir/${id}`, { metodo: "POST" });
-      } catch {
-        resultado = await api<PrediccionOut>(`/citas/${id}/prediccion`, { metodo: "POST" });
-      }
-      if (!resultado) throw new Error("El servidor no devolvió la predicción.");
+      const respuesta = await api<RespuestaInferencia>(`/citas/${id}/prediccion`, { metodo: "POST" });
+      if (!respuesta) throw new Error("El servidor no devolvió la predicción.");
+      const resultado: PrediccionOut = {
+        ...respuesta,
+        probabilidad_no_show: Number(respuesta.probabilidad_no_show),
+        umbral_aplicado: Number(respuesta.umbral_aplicado),
+        resultado_simulado: respuesta.es_simulacion,
+        ya_existia: cita.predicciones.some(prediccion => prediccion.id_prediccion === respuesta.id_prediccion),
+      };
       setResultadoRiesgo(resultado);
       // RF-018, RF-057, RF-099: la predicción más reciente encabeza el historial
       const predicciones = [resultado, ...cita.predicciones.filter((previa) => previa.id_prediccion !== resultado.id_prediccion)]
@@ -136,8 +146,8 @@ function Detalle({ id }: { id: string }) {
   }
 
   if (cargando) return <Cargando texto="Cargando detalle de la cita…" />;
-  if (error) return <div className="space-y-4"><Link className="text-teal-800 underline" to={volver}>Volver a la bandeja</Link><Mensaje>{error}</Mensaje><button className="boton-secundario" onClick={reintentar}>Reintentar</button></div>;
-  if (!cita) return <div className="space-y-4"><Link className="enlace-volver" to={volver}>← Volver a la bandeja</Link><Mensaje>No se encontró la cita.</Mensaje></div>;
+  if (error) return <div className="space-y-4"><Link className="text-teal-800 underline" to={volver}>{textoVolver}</Link><Mensaje>{error}</Mensaje><button className="boton-secundario" onClick={reintentar}>Reintentar</button></div>;
+  if (!cita) return <div className="space-y-4"><Link className="enlace-volver" to={volver}>← {textoVolver}</Link><Mensaje>No se encontró la cita.</Mensaje></div>;
 
   const opciones = TRANSICIONES[cita.estado_actual];
   const puedeEscribir = tieneRol(...ROLES_ESCRITURA);
@@ -182,7 +192,7 @@ function Detalle({ id }: { id: string }) {
     <div className="cita-detalle-contenedor space-y-6">
       {/* Navegación y Encabezado principal */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link className="enlace-volver" to={volver}>← Volver a la bandeja</Link>
+        <Link className="enlace-volver" to={volver}>← {textoVolver}</Link>
         <div className="flex items-center gap-3">
           <a href="#historial-estados" className="text-xs font-semibold text-slate-600 hover:text-teal-800 underline">
             Ir a historial de estados
@@ -211,7 +221,9 @@ function Detalle({ id }: { id: string }) {
 
       {intervencionOrigen !== null && (
         <Mensaje tipo="info">
-          Vienes de la intervención #{intervencionOrigen}. Para registrar la confirmación del paciente, presiona &quot;Confirmar Asistencia&quot;.
+          Vienes de la intervención #{intervencionOrigen}.
+          {puedeEscribir && opciones.includes("CONFIRMADA") &&
+            ` Para registrar la confirmación del paciente, selecciona “Marcar como ${etiqueta("CONFIRMADA")}”.`}
         </Mensaje>
       )}
       {errorCambio && <Mensaje>{errorCambio}</Mensaje>}
@@ -279,7 +291,7 @@ function Detalle({ id }: { id: string }) {
                 <Mensaje tipo="exito">
                   {resultadoRiesgo.ya_existia
                     ? "Inferencia ya disponible para esta cita; no se duplicaron registros."
-                    : "Inferencia calculada exitosamente por LightGBM."}
+                    : "Inferencia disponible para esta cita."}
                 </Mensaje>
               </div>
             )}
@@ -382,7 +394,7 @@ function Detalle({ id }: { id: string }) {
               <form onSubmit={registrarLlegada} className="mt-4 space-y-3">
                 {!citaHoy && (
                   <p id="ayuda-check-in" className="text-xs text-amber-700 bg-amber-50 p-2 rounded border border-amber-200">
-                    Nota: El check-in asistencial se registra exclusivamente el día de la cita (Horario de Lima).
+                    Nota: El check-in asistencial se registra exclusivamente el día de la cita (día de atención de la clínica).
                   </p>
                 )}
                 <div>
@@ -433,7 +445,7 @@ function Detalle({ id }: { id: string }) {
       )}
 
       {/* MÓDULOS ASOCIADOS (INTERVENCIONES, CUPOS Y REASIGNACIONES) */}
-      <DetalleSecciones cita={cita} />
+      <DetalleSecciones cita={cita} puedeOperarCupo={puedeEscribir} />
 
       {/* BITÁCORA LOCAL DE ESTADOS (TIMELINE ANCLABLE) */}
       <section id="historial-estados" className="tarjeta" aria-labelledby="titulo-historial">

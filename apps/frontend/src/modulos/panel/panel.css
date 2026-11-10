@@ -1,0 +1,58 @@
+.panel-vista { display: grid; gap: 24px; min-width: 0; }
+.panel-vista .pagina-titulo { margin-bottom: 0; }
+.panel-filtros { display: flex; gap: 18px; align-items: end; flex-wrap: wrap; }
+.panel-filtros > div:first-child { flex: 1 1 175px; }
+.panel-filtros > div:nth-child(2) { flex: 1.25 1 220px; }
+.panel-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+.panel-contexto, .panel-resultados, .panel-paginacion { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .875rem; }
+.panel-contexto { color: var(--texto-suave); }
+.panel-contexto strong { color: var(--crp-oscuro); }
+.panel-tarjetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.panel-indicador { padding: 22px; border-top: 3px solid var(--crp-turquesa); }
+.panel-indicador h2 { font-size: .875rem; color: var(--crp-oscuro); }
+.panel-cifra { font-size: clamp(1.8rem, 2.8vw, 2.5rem); font-weight: 650; line-height: 1.2; margin-block: 14px 8px; letter-spacing: -.04em; }
+.panel-indicador > p:last-child, .panel-ayuda { color: var(--texto-suave); font-size: .8rem; line-height: 1.6; }
+.panel-sin-base { font-weight: 600; margin-block: 20px; }
+.panel-riesgos { display: flex; gap: 24px; margin-block: 14px; }
+.panel-riesgos p { display: grid; gap: 6px; }
+.panel-riesgos strong { font-size: 1.65rem; font-weight: 650; }
+.panel-riesgo { display: inline-block; border-radius: 5px; padding: 2px 7px; font-size: .75rem; font-weight: 600; }
+.panel-riesgo-alto { background: #fff0ed; color: #9a3828; }
+.panel-riesgo-medio { background: #fff5d9; color: #79570d; }
+.panel-probabilidad { display: block; font-size: .75rem; margin-top: 5px; color: var(--texto-suave); }
+.panel-pendientes { min-width: 0; }
+.panel-seccion { margin-bottom: 14px; }
+.panel-categorias { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.panel-categorias button { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; padding: 10px 15px; border: 1px solid var(--borde); border-radius: 8px; background: white; font-size: .875rem; }
+.panel-categorias button[aria-pressed="true"] { border-color: var(--crp-accion); color: var(--crp-oscuro); box-shadow: inset 0 -2px var(--crp-accion); background: #edf7f5; font-weight: 600; }
+.panel-categorias button span { min-width: 25px; padding: 1px 6px; border-radius: 5px; text-align: center; background: #e8efed; font-size: .8rem; }
+.panel-listado { min-width: 0; }
+.panel-listado h3 { font-weight: 650; }
+.panel-resultados { margin-block: 18px 10px; }
+.panel-tabla { max-width: 100%; overflow-x: auto; border: 1px solid var(--borde); border-radius: 8px; }
+.panel-tabla table { min-width: 680px; width: 100%; border-collapse: collapse; }
+.panel-tabla thead { background: #f4f8f7; }
+.panel-tabla th, .panel-tabla td { padding: 14px 16px; }
+.panel-tabla tbody th { font-weight: 600; color: var(--texto); }
+.panel-tabla tbody tr + tr { border-top: 1px solid var(--borde); }
+.panel-tabla tbody tr:hover { background: #f8fbfa; }
+.panel-tabla a { color: var(--crp-accion); font-weight: 600; white-space: nowrap; }
+.panel-tabla a:hover { text-decoration: underline; }
+.panel-paginacion { margin-top: 18px; }
+.panel-vacio { padding: 30px 12px; text-align: center; color: var(--texto-suave); }
+.panel-vacio button { margin-top: 14px; }
+.panel-desgloses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.panel-desgloses h2 { margin-bottom: 12px; }
+.panel-desgloses dl { margin-block: 12px; }
+.panel-desgloses dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--borde); font-size: .875rem; }
+.panel-desgloses dd { font-weight: 650; }
+.panel-error-bloque { display: grid; justify-items: start; gap: 12px; }
+.panel-error { width: 100%; color: #9a3828; font-size: .875rem; }
+@media (max-width: 1200px) { .panel-tarjetas { grid-template-columns: repeat(2, minmax(0, 1fr)); } .panel-desgloses { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .panel-tarjetas { grid-template-columns: 1fr; }
+  .panel-filtros { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .panel-filtros > .panel-acciones > button { flex: 1 1 auto; }
+  .panel-categorias { flex-direction: column; }
+  .panel-listado { padding: 18px 14px; }
+}

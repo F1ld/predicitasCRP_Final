@@ -8,8 +8,3 @@
 .cuenta-error { margin-top: 7px; font-size: 12px; line-height: 1.6; color: #9f1239; }
 .cuenta-formulario [aria-invalid="true"] { border-color: #be123c; }
 @media (min-width: 1024px) { .cuenta-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); } }
-@media (max-width: 760px) {
-  /* El menú M01 añade Usuarios/Mi cuenta: admite otra fila sin tocar el layout. */
-  .navegacion-fila:has(a[href="/mi-cuenta"]) nav { flex-wrap: wrap; column-gap: 16px; row-gap: 0; }
-  .navegacion-fila:has(a[href="/mi-cuenta"]) .nav-enlace { font-size: 13px; }
-}

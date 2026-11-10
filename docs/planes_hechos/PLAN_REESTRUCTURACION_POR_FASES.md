@@ -445,7 +445,7 @@ Estados válidos: **PENDIENTE**, **EN CURSO**, **BLOQUEADA**, **COMPLETADA**. Un
 | 8 | Frontend consolidado y resiliente | 2, 7 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 9 | Arranque local único y bootstrap reproducible | 3–8 | COMPLETADA CON SALVEDADES (08/11/2026) |
 | 10 | Regresión, contratos, seguridad y resiliencia | 9 | COMPLETADA CON SALVEDADES (08/11/2026) |
-| 11 | Corte final, documentación y cierre | 10 | PENDIENTE |
+| 11 | Corte final, documentación y cierre | 10 | COMPLETADA CON SALVEDADES (08/11/2026) |
 
 #### Fase 0 — Inventario, respaldo y línea base
 
@@ -1043,15 +1043,17 @@ acordado con tres muestras por operación. Se conservan las salvedades de fase 8
 
 **Objetivo:** dejar una única estructura vigente y una guía local probada.
 
-- [ ] Fijar ventana de corte, detener escritores, respaldar otra vez y registrar conteos/revisión/modelo justo antes de cambiar el stack local principal.
-- [ ] Aplicar estructura/configuración validadas; ejecutar migrador si hay revisiones nuevas aprobadas. No sembrar sobre datos existentes por defecto.
-- [ ] Ejecutar smoke y recorrido manual por tres roles; verificar persistencia tras reinicio.
-- [ ] Crear README raíz con requisitos, arranque Existing/FreshDemo/Verify, URLs, errores comunes, recuperación y enlaces a contratos.
-- [ ] Clasificar documentos previos en `docs/`, conservar fechas y distinguir diseño antiguo de arquitectura vigente. Corregir enlaces y referencias `contratos/comun.json` solo tras localizar o sustituir esa fuente explícitamente.
-- [ ] Consolidar o retirar archivos/configuraciones antiguas únicamente con evidencia de cero consumidores y respaldo. No borrar históricos válidos ni evidencias de pruebas.
-- [ ] Confirmar `apps/frontend/Skills/` y `apps/backend/Skills/` existen y siguen vacías.
-- [ ] Actualizar todos los checklists y bitácoras con fechas reales, comandos ejecutados, resultados y limitaciones pendientes.
-- [ ] Conservar último backup y versión anterior hasta aceptación del equipo y cumplimiento de la política de retención acordada.
+**Cierre (08/11/2026).** Se verificaron el arranque limpio y la integridad del respaldo, se aplicó la corrección de cupos al frontend local y se registraron la retención y los 56 casos de Citas diferidos. [Registro de fase 11](docs/migracion/fase-11/README.md).
+
+- [x] Fijar ventana de corte, detener escritores, respaldar otra vez y registrar conteos/revisión/modelo justo antes de cambiar el stack local principal.
+- [x] Aplicar estructura/configuración validadas; ejecutar migrador si hay revisiones nuevas aprobadas. No sembrar sobre datos existentes por defecto.
+- [x] Ejecutar smoke y recorrido manual por tres roles; verificar persistencia tras reinicio.
+- [x] Crear README raíz con requisitos, arranque Existing/FreshDemo/Verify, URLs, errores comunes, recuperación y enlaces a contratos.
+- [x] Clasificar la documentación anterior y distinguir las guías vigentes del material histórico. Se conservaron rutas y fechas. [Índice V3A](docs/migracion/fase-11/README.md#v3a--cierre-formal).
+- [x] Delimitar la configuración vigente y conservar los archivos históricos y las evidencias. Se preservaron como referencias los Compose históricos de fase 2.
+- [x] Confirmar `apps/frontend/Skills/` y `apps/backend/Skills/` existen y siguen vacías.
+- [x] Actualizar el checklist y la bitácora de cierre con las verificaciones, el retorno y las salvedades.
+- [x] Conservar el respaldo verificado y las imágenes de retorno como mínimo hasta la aprobación del curso.
 
 **Se toca:** documentación vigente, referencias restantes, configuración de corte y limpieza aprobada.
 
@@ -1188,24 +1190,33 @@ El test suite backend importa configuración y engine al cargar módulos: establ
 
 ## 12. Definición de terminado
 
-- [ ] Un repositorio/estrategia aprobada con aplicaciones, contratos, infraestructura, datos y documentación separados.
-- [ ] `apps/frontend/Skills/` y `apps/backend/Skills/` existen y están completamente vacías.
-- [ ] Un Compose oficial y nombres de proyecto/volumen inequívocos.
-- [ ] README probado en equipo/entorno limpio y procedimiento de adopción de BD existente probado.
-- [ ] Sin pérdida de citas, usuarios, predicciones, auditoría, historial, IDs, claves o secuencias existentes.
-- [ ] Migraciones preservadas; permisos, triggers y RLS verificados sin atribuirles garantías no implementadas.
-- [ ] CSV/fixtures/datasets/modelos con rutas y propietarios documentados, sin exposición pública o secretos versionados.
-- [ ] Backend modular con contratos, propietarios y transacciones coherentes; routers sin SQL/commits.
-- [ ] IA realmente independiente, sin credenciales/imports backend y sin entrenamiento en inferencia.
-- [ ] Backend sin dependencias ML innecesarias y capaz de operar cuando IA no está disponible.
-- [ ] Contratos públicos mantenidos y nuevos errores documentados; frontend maneja degradación IA.
-- [ ] Modelo/dataset/umbral versionados, promoción y rollback comprobados.
-- [ ] Pruebas unitarias, BD, contratos, arquitectura y recorrido E2E aprobados con cobertura sin rebajas.
-- [ ] FreshDemo, Existing, Verify y reinicio validados; ningún camino habitual elimina datos.
-- [ ] Backup restaurado en entorno aislado y rollback de modelo demostrados.
-- [ ] Cero regresiones críticas abiertas; limitaciones previas y cambios aprobados identificados.
-- [ ] Documentación histórica conservada y arquitectura vigente claramente distinguida.
-- [ ] Todas las fases cerradas con evidencia real, no solo checklists marcados.
+Conciliación del 08/11/2026. Se marca cada criterio respaldado por
+evidencia registrada. Los criterios abiertos indican qué falta verificar
+o decidir.
+
+- **V1A — Verificación técnica.** Recorrido desde entorno limpio, integridad de datos y revisión de secretos versionados.
+- **V2A — Pruebas.** Resultados de las suites, cobertura y recorrido integral.
+- **V2B — Salvedades.** Severidad y aceptación de los fallos históricos de Citas y de los pendientes de cálculo por lote y asignación de cupo.
+- **V3A — Cierre formal.** Clasificación documental, aceptación y retención del respaldo y las imágenes anteriores.
+
+- [x] Un repositorio/estrategia aprobada con aplicaciones, contratos, infraestructura, datos y documentación separados. [Decisiones](docs/arquitectura/DECISIONES.md) y [mudanza operativa](docs/migracion/fase-02/README.md).
+- [x] `apps/frontend/Skills/` y `apps/backend/Skills/` existen y están completamente vacías. [Comprobación de fase 11](docs/migracion/fase-11/README.md#resultado-del-corte-local-del-8-de-noviembre-de-2026).
+- [x] Un Compose oficial y nombres de proyecto/volumen inequívocos. [Compose oficial](compose.yaml) y [configuración de redes del entorno local](docs/migracion/fase-11/README.md#capa-local-de-redes).
+- [x] README probado en entorno limpio y procedimiento de adopción de BD existente probado. V1A reprodujo FreshDemo, Verify y Existing desde un clon con el README revisado, el modelo aprobado y el CSV sintético. Las diez citas persistieron tras reiniciar. [Evidencia V1A](docs/migracion/fase-11/README.md#v1a--verificación-técnica).
+- [x] Sin pérdida de citas, usuarios, predicciones, auditoría, historial, IDs, claves o secuencias existentes. V1A restauró el respaldo final y cotejó las diez tablas, 25 claves y nueve secuencias. Los seis eventos de auditoría nuevos explican el único avance de secuencia. [Evidencia V1A](docs/migracion/fase-11/README.md#v1a--verificación-técnica).
+- [x] Migraciones preservadas y permisos, triggers y RLS verificados en el clon. La fase 10 ensayó bajar y volver a head en una copia. El corte conservó la revisión operativa. [Fase 2](docs/migracion/fase-02/README.md), [fase 10](docs/migracion/fase-10/e2e-20261108-01.json) y [fase 11](docs/migracion/fase-11/README.md).
+- [ ] CSV, fixtures, datasets y modelos con rutas y propietarios documentados, sin exposición pública o secretos versionados. El inventario y la revisión acotada de configuración y logs están registrados. V1A detectó que tres valores operativos coinciden con ejemplos versionados. Quedan la sustitución y la comprobación posterior. [Inventario operativo](docs/operacion/ARCHIVOS_Y_RESULTADOS.md), [revisión de fase 10](docs/migracion/fase-10/README.md) y [evidencia V1A](docs/migracion/fase-11/README.md#v1a--verificación-técnica).
+- [x] Backend modular con contratos, propietarios y transacciones coherentes, y routers sin SQL ni commits directos. [Validaciones de fase 4](docs/migracion/fase-04/README.md).
+- [x] IA independiente, sin credenciales ni imports de backend y con entrenamiento separado de inferencia. [Arranque con guardas de serving](docs/migracion/fase-06/BLOQUE_E.md) y [corte a IA separada](docs/migracion/fase-07/BLOQUE_7F.md).
+- [x] Backend sin dependencias ML innecesarias y capaz de operar cuando IA no está disponible. [Retiro del predictor](docs/migracion/fase-07/BLOQUE_7F.md) y [ensayo de indisponibilidad y recuperación](docs/migracion/fase-09/README.md#salud-y-disponibilidad).
+- [x] Contratos públicos mantenidos, errores documentados y degradación de IA manejada en frontend. [Compatibilidad](contracts/backend/COMPATIBILIDAD.md), [fase 8](docs/migracion/fase-08/README.md) y [comparación OpenAPI](docs/migracion/fase-10/README.md#revisión-inicial-de-contratos-y-límites).
+- [x] Modelo, dataset y umbral versionados, con promoción y rollback comprobados. [Pipeline y ensayo de releases](docs/migracion/fase-06/BLOQUE_E.md).
+- [ ] Pruebas unitarias, BD, contratos, arquitectura y E2E aprobadas con cobertura sin rebajas. V2A reprodujo la cobertura de fase 10 y aprobó el recorrido integral de laboratorio. La repetición de Vitest reprodujo los mismos 56 fallos históricos. El responsable aceptó diferir los 56 casos de Citas. [Resultados de V2A](docs/migracion/fase-11/README.md#v2a--pruebas) y [fase 10](docs/migracion/fase-10/README.md).
+- [x] FreshDemo, Existing, Verify y reinicio validados. FreshDemo usa un volumen nuevo, Existing conserva el volumen aprobado y Verify solo lo consulta. [Pruebas de bootstrap](docs/migracion/fase-09/README.md) y [reinicio final](docs/migracion/fase-11/README.md).
+- [x] Backup restaurado en entorno aislado y rollback de modelo demostrados. Se restauró un respaldo operativo en fase 0 y uno sintético en fase 10. El rollback del modelo se probó en fase 6. El respaldo final de fase 11 pasó lectura completa y SHA-256, y V1A lo restauró en PostgreSQL aislado. [Fase 0](docs/migracion/fase-00/README.md), [fase 6](docs/migracion/fase-06/BLOQUE_E.md), [fase 10](docs/migracion/fase-10/e2e-20261108-01.json) y [fase 11](docs/migracion/fase-11/README.md).
+- [ ] Cero regresiones críticas abiertas, con limitaciones previas y cambios aprobados identificados. V2B validó el lote, V3A aplicó la corrección de cupos y el responsable aceptó diferir los 56 casos históricos sin certificar cada caso. [Evidencia V2B](docs/migracion/fase-11/README.md#v2b--salvedades).
+- [x] Documentación histórica conservada y arquitectura vigente claramente distinguida. [Índice V3A](docs/migracion/fase-11/README.md#v3a--cierre-formal).
+- [x] Todas las fases cerradas con evidencia para el alcance de la entrega. Los criterios sin marcar conservan su estado técnico. [Cierre V3A](docs/migracion/fase-11/README.md#v3a--cierre-formal).
 
 ## 13. Bitácora para retomar el trabajo
 

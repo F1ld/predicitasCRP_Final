@@ -11,7 +11,7 @@ import type { IntervencionOut, PlantillaOut } from "./tipos";
 const usuario = { id_usuario: 1, nombre_completo: "Recepción sintética", correo_institucional: "recepcion@predicitas.crp", rol: "RECEPCION" as const, activo: true, creado_en: "2026-10-18T09:00:00-05:00", actualizado_en: null };
 const sesion: ContextoAuth = { usuario, cargando: false, mensajeSesion: "", iniciarSesion: vi.fn(), cerrarSesion: vi.fn(), tieneRol: (...roles) => roles.includes(usuario.rol) };
 const plantillas: PlantillaOut[] = [
-  { id: "RECORDATORIO_WHATSAPP", canal_contacto: "WHATSAPP", descripcion: "Recordatorio sintético WhatsApp", contenido: "[PENDIENTE: contenido aprobado]" },
+  { id: "RECORDATORIO_WHATSAPP", canal_contacto: "WHATSAPP", descripcion: "Recordatorio sintético WhatsApp", contenido: "Hola. Por favor, confirma si podrás asistir a tu próxima cita." },
   { id: "RECORDATORIO_SMS", canal_contacto: "SMS", descripcion: "Recordatorio sintético SMS", contenido: "Contenido sintético de SMS recibido de la API." },
 ];
 const intervencion: IntervencionOut = { id_intervencion: 5, id_cita: 10, id_cita_externa: "CITA-SINT-10", id_operador: 1, canal_contacto: "WHATSAPP", plantilla_mensaje: plantillas[0].id, consentimiento_optout: false, estado_intervencion: "PENDIENTE", respuesta_paciente: null, fecha_hora_envio: "2026-10-18T09:00:00-05:00", fecha_hora_respuesta: null, acciones_disponibles: ["REGISTRAR_ENVIO", "REGISTRAR_FALLO"] };
@@ -42,13 +42,13 @@ async function formularioListo() {
 // RF-058, RF-063, RF-065, RF-066, RN07, RN13; CP-M05-01, 05, 06, 08.
 // Solo seudónimos y contenido devuelto por la API: nunca se inventa una plantilla clínica.
 describe("M05-V02: nueva intervención y consentimiento", () => {
-  it("muestra carga y el catálogo recibido, incluido su contenido pendiente literal", async () => {
+  it("muestra carga y previsualiza el texto literal recibido del catálogo", async () => {
     let resolver: ((valor: Response) => void) | undefined;
     mostrar(() => new Promise<Response>((cumplir) => { resolver = cumplir; }));
     expect(screen.getByRole("status")).toHaveTextContent(/Cargando/i);
     await act(async () => resolver?.(respuesta(plantillas)));
     await formularioListo();
-    expect(screen.getByText("[PENDIENTE: contenido aprobado]")).toBeInTheDocument();
+    expect(screen.getByText(plantillas[0].contenido)).toBeInTheDocument();
     expect(screen.getByLabelText(consentimiento)).not.toBeChecked();
     expect(screen.getByLabelText("Plantilla")).toHaveValue(plantillas[0].id);
   });

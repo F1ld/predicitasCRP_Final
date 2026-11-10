@@ -4,6 +4,7 @@ const trazos: Record<string, ReactNode> = {
   importar: <><path d="M12 16V3m-4 4 4-4 4 4M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" /></>,
   buscar: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4 4" /></>,
   flecha: <path d="M5 12h14m-5-5 5 5-5 5" />,
+  menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   salir: <><path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M10 12h11m-4-4 4 4-4 4" /></>,
   reloj: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
   archivo: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6M8 13h8M8 17h5" /></>,

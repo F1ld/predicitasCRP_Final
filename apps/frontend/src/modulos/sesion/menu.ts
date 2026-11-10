@@ -1,4 +1,4 @@
 import type { EntradaMenu } from "../../nucleo/layout/ranuras";
-// RF-008, RNF-004: los tres roles pueden gestionar su propio acceso.
-const menu: EntradaMenu[] = [{ etiqueta: "Mi cuenta", ruta: "/mi-cuenta", icono: "escudo", roles: ["ADMINISTRADOR", "RECEPCION", "TECNICO_IA"], orden: 40 }];
+// Mi cuenta sigue disponible por URL para los tres roles, fuera del menú lateral.
+const menu: EntradaMenu[] = [];
 export default menu;

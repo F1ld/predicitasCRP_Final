@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { resolverRetorno } from "../../nucleo/navegacion/retorno";
 import { api, ApiError, esCancelacion } from "../../nucleo/api/cliente";
 import { useAuth } from "../../nucleo/auth/useAuth";
 import Cargando from "../../nucleo/componentes/Cargando";
+import Icono from "../../nucleo/componentes/Icono";
 import Mensaje from "../../nucleo/componentes/Mensaje";
 import { etiqueta, formatearFechaHora } from "../../nucleo/formato/formato";
 import { mensajeErrorM06 } from "./errores";
 import { MEDIOS_CONFIRMACION, ROLES_ESCRITURA } from "./tipos";
-import type { CandidatoOut, CierreOfertaIn, CupoDetalleOut, CupoOut, OfertaIn, ReasignacionIn, ReasignacionOut } from "./tipos";
+import type { CandidatoOut, CierreOfertaIn, CupoDetalleOut, OfertaIn, ReasignacionIn, ReasignacionOut } from "./tipos";
 import "./lista-espera.css";
 
 interface ConsultaCupo { cupo: CupoDetalleOut | null; candidatos: CandidatoOut[]; errorCandidatos: string }
@@ -40,6 +42,9 @@ async function consultarCupo(id: string, signal: AbortSignal): Promise<ConsultaC
 
 // RF-077 a RF-082, RN11, RNF-029: oferta y confirmación son acciones separadas.
 function DetalleAutorizado({ id }: { id: string }) {
+  const { state } = useLocation();
+  const volver = resolverRetorno(state, "/cupos", ["/cupos", "/panel"]);
+  const textoVolver = volver === "/panel" || volver.startsWith("/panel?") ? "Volver al panel operativo" : "Volver a cupos liberados";
   const [consulta, setConsulta] = useState<ConsultaCupo | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -93,7 +98,7 @@ function DetalleAutorizado({ id }: { id: string }) {
     } finally { accionEnCurso.current = false; setOcupado(false); }
   }
 
-  async function mutar<T>(ruta: string, peticion: OfertaIn | CierreOfertaIn | ReasignacionIn, aplicar: (resultado: T) => CupoDetalleOut, mensaje: string) {
+  async function mutar<T>(ruta: string, peticion: OfertaIn | ReasignacionIn | undefined, aplicar: (resultado: T) => CupoDetalleOut, mensaje: string) {
     if (accionEnCurso.current) return;
     const signal = controlador.current?.signal;
     if (!signal || signal.aborted) return;
@@ -110,7 +115,12 @@ function DetalleAutorizado({ id }: { id: string }) {
       }
     } catch (fallo) {
       if (!signal.aborted && !esCancelacion(fallo)) {
-        const mensajeFallo = mensajeErrorM06(fallo); setErrorAccion(mensajeFallo);
+        const mensajeFallo = mensajeErrorM06(fallo);
+        if (ruta === "reasignar" && dialogo.current?.open && !(fallo instanceof ApiError && fallo.status === 409)) {
+          setErrorConfirmacion(mensajeFallo);
+        } else {
+          setErrorAccion(mensajeFallo);
+        }
         if (fallo instanceof ApiError && fallo.status === 409) {
           cerrarDialogo(); setRequiereRefresco(true);
           try { await refrescar(); }
@@ -127,11 +137,12 @@ function DetalleAutorizado({ id }: { id: string }) {
 
   function ofrecer(candidato: CandidatoOut) {
     if (bloqueado || !puedeOfrecer || !cupo || !consulta?.candidatos.some((propuesto) => propuesto.id_candidato === candidato.id_candidato)) return;
-    void mutar<CupoOut>("oferta", { id_candidato: candidato.id_candidato }, (resultado) => ({ ...cupo, ...resultado }), "Oferta registrada. Espera la respuesta del paciente antes de confirmar la reasignación.");
+    void mutar<CupoDetalleOut>("ofertas", { id_candidato: candidato.id_candidato }, (resultado) => ({ ...cupo, ...resultado }), "Oferta registrada. Espera la respuesta del paciente antes de confirmar la reasignación.");
   }
   function cerrarOferta(respuesta: CierreOfertaIn["respuesta"]) {
     if (bloqueado || !puedeResolver || !cupo) return;
-    void mutar<CupoOut>("oferta/cerrar", { respuesta }, (resultado) => ({ ...cupo, ...resultado }), respuesta === "RECHAZA" ? "Oferta cerrada: el paciente rechazó el cupo." : "Oferta cerrada: no hubo respuesta del paciente.");
+    const ruta = respuesta === "RECHAZA" ? "ofertas/rechazo" : "ofertas/desistimiento";
+    void mutar<CupoDetalleOut>(ruta, undefined, (resultado) => ({ ...cupo, ...resultado }), respuesta === "RECHAZA" ? "Oferta cerrada: el paciente rechazó el cupo." : "Oferta cerrada: no hubo respuesta del paciente.");
   }
   function abrirConfirmacion() {
     if (bloqueado || !puedeResolver) return;
@@ -153,14 +164,15 @@ function DetalleAutorizado({ id }: { id: string }) {
     const texto = String(datos.get("observaciones") || "").trim();
     if (texto.length > 255 || !formulario.reportValidity()) { setErrorConfirmacion("Revisa las observaciones: el máximo es 255 caracteres."); return; }
     const peticion: ReasignacionIn = { id_candidato: cupo.oferta_vigente.id_candidato, confirmacion_humana: true, medio_confirmacion: medioEnviado as ReasignacionIn["medio_confirmacion"], ...(texto ? { observaciones: texto } : {}) };
-    void mutar<ReasignacionOut>("reasignacion", peticion, (resultado) => ({ ...cupo, estado_cupo: "REASIGNADO", oferta_vigente: null, reasignacion: resultado }), AVISO_AGENDAMIENTO);
+    setErrorConfirmacion("");
+    void mutar<ReasignacionOut>("reasignar", peticion, (resultado) => ({ ...cupo, estado_cupo: "REASIGNADO", oferta_vigente: null, reasignacion: resultado }), AVISO_AGENDAMIENTO);
   }
 
   if (cargando) return <Cargando texto="Cargando cupo y propuestas…" />;
-  if (error) return <div className="space-y-4"><Link className="enlace-volver" to="/cupos">← Volver a cupos liberados</Link><Mensaje>{error}</Mensaje><button className="boton-secundario" disabled={ocupado} onClick={() => void reintentar()}>Reintentar</button></div>;
-  if (!cupo) return <div className="space-y-4"><Link className="enlace-volver" to="/cupos">← Volver a cupos liberados</Link><Mensaje>No se encontró el cupo liberado.</Mensaje></div>;
+  if (error) return <div className="space-y-4"><Link className="enlace-volver" to={volver}>← {textoVolver}</Link><Mensaje>{error}</Mensaje><button className="boton-secundario" disabled={ocupado} onClick={() => void reintentar()}>Reintentar</button></div>;
+  if (!cupo) return <div className="space-y-4"><Link className="enlace-volver" to={volver}>← {textoVolver}</Link><Mensaje>No se encontró el cupo liberado.</Mensaje></div>;
   return <>
-    <Link className="enlace-volver" to="/cupos">← Volver a cupos liberados</Link>
+    <Link className="enlace-volver" to={volver}>← {textoVolver}</Link>
     <div className="pagina-titulo"><div><p className="sobretitulo">REASIGNACIÓN ASISTIDA</p><h1>Cupo #{cupo.id_cupo_liberado}</h1><p>{etiqueta(cupo.especialidad)} · {formatearFechaHora(cupo.fecha_hora_cupo)}</p></div><span className="m06-estado">{cupo.estado_cupo}</span></div>
     {errorAccion && <Mensaje>{errorAccion}</Mensaje>}{exito && <Mensaje tipo="exito">{exito}</Mensaje>}
     {(requiereRefresco || consulta?.errorCandidatos) && <button className="boton-secundario" disabled={ocupado} onClick={() => void reintentar()}>Refrescar cupo y propuestas</button>}
@@ -190,12 +202,35 @@ function DetalleAutorizado({ id }: { id: string }) {
       {cupo.historial_ofertas.length === 0 ? <p className="m06-aviso">No hay ofertas registradas.</p> : <ol className="m06-historial">{cupo.historial_ofertas.map((oferta, indice) => <li key={`${oferta.id_candidato}-${oferta.fecha_hora_oferta}-${indice}`}><p className="font-semibold">Candidato #{oferta.id_candidato} · {oferta.cierre || "Oferta abierta"}</p><p>{formatearFechaHora(oferta.fecha_hora_oferta)}</p></li>)}</ol>}
     </section>
     <dialog ref={dialogo} className="dialogo-cambio m06-dialogo" aria-labelledby="titulo-confirmar-reasignacion" aria-describedby="ayuda-confirmar-reasignacion" onClose={limpiarConfirmacion} onCancel={(evento) => { if (ocupado) evento.preventDefault(); else limpiarConfirmacion(); }}>
-      <form className="m06-formulario space-y-4" onSubmit={confirmarReasignacion}><h2 id="titulo-confirmar-reasignacion">Confirmar reasignación</h2><p id="ayuda-confirmar-reasignacion">Cupo #{cupo.id_cupo_liberado} para {cupo.oferta_vigente?.paciente_anon_id}. Confirma solo después de obtener la aceptación del paciente.</p>
-        {errorConfirmacion && <Mensaje>{errorConfirmacion}</Mensaje>}
-        <label className="m06-casilla"><input name="confirmacion_humana" type="checkbox" value="true" checked={confirmada} onChange={(evento) => setConfirmada(evento.currentTarget.checked)} disabled={ocupado} />Confirmé la reasignación con el paciente</label>
-        <div><label htmlFor="medio-confirmacion">Medio de confirmación</label><select id="medio-confirmacion" name="medio_confirmacion" value={medio} onChange={(evento) => setMedio(evento.currentTarget.value)} required disabled={ocupado}><option value="">Selecciona un medio</option>{MEDIOS_CONFIRMACION.map((valor) => <option key={valor} value={valor}>{etiquetasMedio[valor]}</option>)}</select></div>
-        <div><label htmlFor="observaciones-reasignacion">Observaciones (opcional)</label><textarea id="observaciones-reasignacion" name="observaciones" rows={3} maxLength={255} value={observaciones} onChange={(evento) => setObservaciones(evento.currentTarget.value)} disabled={ocupado} /></div>
-        <div className="m06-acciones"><button className="boton-secundario" type="button" disabled={ocupado} onClick={cerrarDialogo}>Cancelar</button><button className="boton" type="submit" disabled={bloqueado || !confirmada || !medio}>{ocupado ? "Guardando reasignación…" : "Registrar reasignación"}</button></div>
+      <form className="m06-confirmacion" onSubmit={confirmarReasignacion}>
+        <header className="m06-dialogo-cabecera">
+          <span className="m06-dialogo-icono"><Icono nombre="calendario" /></span>
+          <div>
+            <p className="sobretitulo">Reasignación asistida · Cupo #{cupo.id_cupo_liberado}</p>
+            <h2 id="titulo-confirmar-reasignacion">Confirmar reasignación</h2>
+            <p id="ayuda-confirmar-reasignacion">Registra la reasignación después de que el paciente acepte la oferta.</p>
+          </div>
+        </header>
+        <div className="m06-dialogo-contenido">
+          <section className="m06-dialogo-resumen" aria-labelledby="m06-titulo-oferta-confirmacion">
+            <h3 id="m06-titulo-oferta-confirmacion">Resumen de la oferta</h3>
+            <dl>
+              <div><dt>Paciente (seudónimo)</dt><dd>{cupo.oferta_vigente?.paciente_anon_id}</dd></div>
+              <div><dt>Cita de origen</dt><dd>{cupo.id_cita_externa_origen}</dd></div>
+              <div><dt>Especialidad y médico</dt><dd>{etiqueta(cupo.especialidad)} · {cupo.medico}</dd></div>
+              <div><dt>Fecha y hora del cupo</dt><dd>{formatearFechaHora(cupo.fecha_hora_cupo)} · {etiqueta(cupo.franja_horaria)}</dd></div>
+            </dl>
+          </section>
+          {errorConfirmacion && <Mensaje>{errorConfirmacion}</Mensaje>}
+          <label className="m06-casilla m06-confirmacion-casilla"><input name="confirmacion_humana" type="checkbox" value="true" checked={confirmada} onChange={(evento) => setConfirmada(evento.currentTarget.checked)} disabled={ocupado} />Confirmé la reasignación con el paciente</label>
+          <div><label htmlFor="medio-confirmacion">Medio de confirmación</label><select id="medio-confirmacion" name="medio_confirmacion" value={medio} onChange={(evento) => setMedio(evento.currentTarget.value)} required disabled={ocupado}><option value="">Selecciona un medio</option>{MEDIOS_CONFIRMACION.map((valor) => <option key={valor} value={valor}>{etiquetasMedio[valor]}</option>)}</select></div>
+          <div><label htmlFor="observaciones-reasignacion">Observaciones (opcional)</label><textarea id="observaciones-reasignacion" name="observaciones" rows={3} maxLength={255} value={observaciones} onChange={(evento) => setObservaciones(evento.currentTarget.value)} disabled={ocupado} /></div>
+          <p className="m06-aviso">Después de registrar la reasignación, agenda la cita en el sistema de la clínica.</p>
+        </div>
+        <footer className="m06-acciones m06-dialogo-acciones">
+          <button className="boton-secundario" type="button" disabled={ocupado} onClick={cerrarDialogo}>Cancelar</button>
+          <button className="boton" type="submit" disabled={bloqueado || !confirmada || !medio}>{ocupado ? "Guardando reasignación…" : "Registrar reasignación"}</button>
+        </footer>
       </form>
     </dialog>
   </>;

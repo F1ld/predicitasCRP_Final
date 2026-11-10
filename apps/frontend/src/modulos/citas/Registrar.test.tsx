@@ -18,7 +18,7 @@ const catalogos: CatalogosOut = {
 };
 const cita: CitaDetalleOut = {
   id_cita: 324, id_cita_externa: "CIT-SIM-000324", paciente_anon_id: "PAC-SIM-0007", sede: "SAN_ISIDRO", especialidad: "CARDIOLOGIA",
-  medico: "Profesional sintético 1", fecha_hora_cita: "2026-10-20T09:00:00-05:00", fecha_registro_cita: "2026-10-01T10:00:00-05:00",
+  medico: "Profesional sintético 1", fecha_hora_cita: new Date("2026-10-20T09:00").toISOString(), fecha_registro_cita: new Date("2026-10-01T10:00").toISOString(),
   antelacion_dias: 19, tipo_paciente: "CONTINUADOR", canal_origen: "WEB", franja_horaria: "MANANA", dia_semana: "MARTES",
   inasistencias_previas: 0, reprogramaciones_prev: 0, asistencias_previas: 1, estado_actual: "RECIBIDA", target_no_show: null,
   historial: [{ id_historial: 1, estado_anterior: null, estado_nuevo: "RECIBIDA", id_usuario_actor: 2, motivo_cambio: null, fecha_hora_evento: "2026-10-18T10:00:00-05:00" }],
@@ -144,7 +144,7 @@ describe("Registro manual M02-V03 (RF-010, RN03, RN17, RNF-016)", () => {
     expect(JSON.parse(String(fetchSimulado.mock.calls[1][1]?.body))).toHaveProperty("inasistencias_previas", 0);
   });
 
-  it("envía nombres exactos, horas de Lima, omite contadores RN17 y abre el detalle", async () => {
+  it("envía nombres exactos, horas locales, omite contadores RN17 y abre el detalle", async () => {
     await cargar(); completar();
     fetchSimulado.mockResolvedValueOnce(respuesta(cita, 201));
     await userEvent.click(screen.getByRole("button", { name: "Registrar cita" }));
@@ -154,7 +154,7 @@ describe("Registro manual M02-V03 (RF-010, RN03, RN17, RNF-016)", () => {
     expect(opciones?.method).toBe("POST");
     expect(JSON.parse(String(opciones?.body))).toEqual({
       id_cita_externa: "CIT-SIM-000324", paciente_anon_id: "PAC-SIM-0007", sede: "SAN_ISIDRO", especialidad: "CARDIOLOGIA",
-      medico: "Profesional sintético 1", fecha_hora_cita: "2026-10-20T09:00:00-05:00", fecha_registro_cita: "2026-10-01T10:00:00-05:00",
+      medico: "Profesional sintético 1", fecha_hora_cita: new Date("2026-10-20T09:00").toISOString(), fecha_registro_cita: new Date("2026-10-01T10:00").toISOString(),
       tipo_paciente: "CONTINUADOR", canal_origen: "WEB", reprogramaciones_prev: 0,
     });
   });

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import App from "./App";
+import { resumenPrueba, paginaPrueba } from "./pruebas/panel";
 import { ContextoSesion, type ContextoAuth } from "./nucleo/auth/contexto";
 import type { Pagina, Rol, Usuario } from "./nucleo/api/tipos";
 import { inicioPorRol, menuPorRol, type ModuloMenu } from "./nucleo/layout/ranuras";
@@ -32,7 +33,10 @@ function mostrar(ruta: string, rol: Rol = "ADMINISTRADOR", autenticado = true, d
   const contexto: ContextoAuth = { usuario: autenticado ? usuario : null, cargando: false, mensajeSesion: "", iniciarSesion: vi.fn(), cerrarSesion: vi.fn(), tieneRol: (...roles) => autenticado && roles.includes(rol) };
   vi.stubGlobal("fetch", vi.fn().mockImplementation(async (entrada: RequestInfo | URL) => {
     const url = new URL(entrada instanceof Request ? entrada.url : String(entrada));
-    const respuesta = url.pathname === "/citas/catalogos" ? catalogosCitas
+    const respuesta = url.pathname === "/panel/resumen" ? { ...resumenPrueba(), fecha: url.searchParams.get("fecha") }
+      : url.pathname === "/reportes/rep-01" ? { fecha: url.searchParams.get("fecha"), filtros: { especialidad: url.searchParams.get("especialidad"), nivel_riesgo: null }, total: 0, grupos: [] }
+      : url.pathname === "/panel/pendientes" ? { ...paginaPrueba(), fecha: url.searchParams.get("fecha") }
+      : url.pathname === "/citas/catalogos" ? catalogosCitas
       : url.pathname === "/citas" ? { ...paginaCitas, limite: Number(url.searchParams.get("limite") ?? 50), desplazamiento: Number(url.searchParams.get("desplazamiento") ?? 0) }
         : /^\/citas\/\d+$/.test(url.pathname) ? datos : undefined;
     if (respuesta === undefined) throw new Error(`No hay respuesta simulada para ${url.pathname}.`);
@@ -57,9 +61,29 @@ describe("router y menú por ranuras", () => {
     expect(screen.queryByRole("link", { name: "Importar CSV" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Citas" })).toBeInTheDocument();
   });
-  it.each<Rol>(["ADMINISTRADOR", "RECEPCION", "TECNICO_IA"])("inicia %s en citas mientras no existe /panel", async (rol) => {
+  it.each<Rol>(["ADMINISTRADOR", "RECEPCION", "TECNICO_IA"])("inicia %s según su rol", async (rol) => {
     mostrar("/", rol);
-    expect(await screen.findByRole("heading", { name: "Bandeja de citas" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: rol === "TECNICO_IA" ? "Bandeja de citas" : "Panel operativo" })).toBeInTheDocument();
+  });
+  it("registra Panel antes de Citas y protege su acceso directo", () => {
+    mostrar("/panel", "TECNICO_IA");
+    expect(screen.getByRole("heading", { name: "No tienes permiso para esta sección" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Panel operativo" })).not.toBeInTheDocument();
+  });
+  it.each<Rol>(["ADMINISTRADOR", "TECNICO_IA"])("bloquea el reporte diario para %s", (rol) => {
+    mostrar("/panel/reporte-diario", rol);
+    expect(screen.getByRole("heading", { name: "No tienes permiso para esta sección" })).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+  it("abre el reporte desde Panel y conserva el contexto al volver", async () => {
+    const origen = "/panel?fecha=2026-11-09&especialidad=PEDIATRIA&tipo=OFERTAS_EN_CURSO&desplazamiento=20";
+    mostrar(origen, "RECEPCION");
+    await userEvent.click(screen.getByRole("link", { name: "Reporte diario" }));
+    expect(await screen.findByText(/No hay citas/)).toBeInTheDocument();
+    const volver = screen.getByRole("link", { name: "Volver al panel operativo" });
+    expect(volver).toHaveAttribute("href", origen);
+    await userEvent.click(volver);
+    expect(screen.getByRole("heading", { name: "Panel operativo" })).toBeInTheDocument();
   });
   it("redirige /importar y permite la vista al escritor", () => {
     mostrar("/importar", "RECEPCION");

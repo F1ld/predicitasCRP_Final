@@ -1,3 +1,4 @@
+import RelojLocal from "../../nucleo/componentes/RelojLocal";
 import { useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import type { Pagina } from "../../nucleo/api/tipos";
@@ -52,10 +53,10 @@ function ListadoCupos() {
   }
 
   return <div className="m06-vista space-y-6">
-    <div className="pagina-titulo"><div><p className="sobretitulo">REASIGNACIÓN ASISTIDA</p><h1>Cupos liberados</h1><p>Consulta los cupos disponibles y continúa su reasignación.</p></div><span className="contexto-horario"><Icono nombre="reloj" />Hora de Lima</span></div>
+    <div className="pagina-titulo"><div><p className="sobretitulo">REASIGNACIÓN ASISTIDA</p><h1>Cupos liberados</h1><p>Consulta los cupos disponibles y continúa su reasignación.</p></div><span className="contexto-horario"><Icono nombre="reloj" /><RelojLocal /></span></div>
     <p className="m06-aviso">Solo se muestran cupos liberados formalmente. La confirmación de una reasignación requiere intervención humana.</p>
     <form className="tarjeta" onSubmit={aplicar} key={busqueda.toString()} aria-label="Filtrar cupos">
-      <div className="seccion-cabecera"><h2><Icono nombre="filtro" />Buscar un cupo</h2><p>Las fechas corresponden al horario del cupo en Lima.</p></div>
+      <div className="seccion-cabecera"><h2><Icono nombre="filtro" />Buscar un cupo</h2><p>Las fechas corresponden al horario del cupo en la zona horaria local.</p></div>
       <fieldset className="m06-formulario" disabled={cargando}>
         <legend className="sr-only">Filtros de cupos</legend>
         <div><label htmlFor="cupo-estado">Estado del cupo</label><select id="cupo-estado" name="estado_cupo" defaultValue={busqueda.get("estado_cupo") || ""}><option value="">Todos</option>{ESTADOS_CUPO.map(estado => <option key={estado} value={estado}>{ETIQUETAS_ESTADO[estado]}</option>)}</select></div>

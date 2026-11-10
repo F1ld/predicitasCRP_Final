@@ -177,6 +177,7 @@ describe("Liberación voluntaria con confirmación (RF-068, RN04, CP-M05-07)", (
     if (motivo) await userEvent.type(campo, motivo);
     await confirmarLiberacion();
     expect(await screen.findByText(/Cupo #31 liberado/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Ver cupo liberado" })).toHaveAttribute("href", "/cupos/31");
     expect(cuerpo()).toEqual(motivo ? { motivo: motivo.trim() } : {}); expect(String(fetchSimulado.mock.calls[1][0])).toContain("/intervenciones/17/liberar-cupo");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); expect(screen.queryByRole("button", { name: "Liberar cupo" })).not.toBeInTheDocument();
   });
@@ -202,6 +203,7 @@ describe("Liberación voluntaria con confirmación (RF-068, RN04, CP-M05-07)", (
   ] as const)("explica %s sin declarar una liberación exitosa", async (codigo, mensaje) => {
     fetchSimulado.mockResolvedValueOnce(respuesta(solicitada)).mockResolvedValueOnce(errorApi(codigo)).mockResolvedValueOnce(respuesta(solicitada)); montar(); await abrirLiberacion(); await confirmarLiberacion();
     expect(await screen.findByText(mensaje)).toBeInTheDocument(); expect(screen.queryByText(/Cupo #31 liberado/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Ver cupo liberado" })).not.toBeInTheDocument();
     await waitFor(() => expect(fetchSimulado).toHaveBeenCalledTimes(3));
   });
 

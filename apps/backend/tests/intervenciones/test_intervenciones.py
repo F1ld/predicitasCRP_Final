@@ -10,6 +10,7 @@ from sqlalchemy import select
 from app.main import app
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas.models import Cita, HistorialEstadoCita
+from app.modules.ia.models import PrediccionIA
 from app.modules.intervenciones import reglas
 from app.modules.intervenciones.models import Intervencion
 from app.modules.intervenciones.router import modo_sombra
@@ -70,6 +71,10 @@ def test_elegibles_filtra_y_ordena(client, h, db):
     crear_cita(db, "ALTO", id_cita_externa="CIT-TST-OPT2", paciente_anon_id="PAC-TST-OPT")
     # la predicción más reciente manda: ALTO antiguo, BAJO reciente → no elegible
     vieja = crear_cita(db, "ALTO", id_cita_externa="CIT-TST-BAJO2", paciente_anon_id="PAC-TST-B2")
+    # La selección vigente usa timestamp e ID, no el orden de inserción.
+    # Fijar el timestamp de la primera inferencia antes de la segunda (HOY).
+    db.query(PrediccionIA).filter_by(id_cita=vieja.id_cita).one().fecha_hora_inferencia = HOY - timedelta(minutes=1)
+    db.flush()
     crear_prediccion(db, vieja, "BAJO", "0.100", cuando=HOY)
 
     r = client.get("/intervenciones/elegibles", headers=h)
@@ -125,6 +130,42 @@ def test_crear_validaciones(client, h, db, cuerpo, campo):
 
 def _contar(db):
     return (db.query(Intervencion).count(), len(_eventos(db, "CREATE")))
+
+
+@pytest.mark.parametrize("alias", [False, True], ids=["principal", "por-cita"])
+def test_ambas_rutas_aplican_las_reglas_de_alta(client, h, db, alias):
+    cita = crear_cita(db)
+    sin_riesgo = crear_cita(db, None, id_cita_externa="CIT-SIN-RIESGO")
+
+    def alta(cita, **cambios):
+        ruta = f"/citas/{cita.id_cita}/intervenciones" if alias else "/intervenciones"
+        datos = NUEVA if alias else {**NUEVA, "id_cita": cita.id_cita}
+        return client.post(ruta, headers=h, json={**datos, **cambios})
+
+    antes = _contar(db)
+    for objetivo, cambios, estado, codigo in (
+        (cita, {"consentimiento_confirmado": False}, 422, "CONSENTIMIENTO_REQUERIDO"),
+        (cita, {"plantilla_mensaje": "LLAMADA_GUION_V1"}, 422, "VALIDACION"),
+        (cita, {"estado_intervencion": "ENVIADA"}, 422, "VALIDACION"),
+        (cita, {"consentimiento_optout": True}, 409, "OPTOUT_VIGENTE"),
+        (sin_riesgo, {}, 409, "NO_ELEGIBLE"),
+    ):
+        r = alta(objetivo, **cambios)
+        assert r.status_code == estado, r.text
+        assert _codigo(r) == codigo
+        assert _contar(db) == antes
+    if alias:
+        r = alta(cita, id_cita=sin_riesgo.id_cita)
+        assert r.status_code == 422 and "id_cita" in r.json()["error"]["campos"]
+        assert _contar(db) == antes
+
+    r = alta(cita)
+    assert r.status_code == (200 if alias else 201), r.text
+    assert r.json()["estado_intervencion"] == "PENDIENTE"
+    assert r.json()["acciones_disponibles"] == ["REGISTRAR_ENVIO", "REGISTRAR_FALLO"]
+    r = alta(cita)
+    assert r.status_code == 409 and _codigo(r) == "LIMITE_INTERVENCION"
+    assert _contar(db) == (antes[0] + 1, antes[1] + 1)
 
 
 _SIN = object()  # marca «campo ausente»
@@ -394,9 +435,22 @@ def test_liberar_cupo_si_falla_el_cupo_la_cita_no_queda_liberada(client, h, db, 
 def test_plantillas(client, usuarios, h):
     r = client.get("/intervenciones/plantillas", headers=h)
     assert r.status_code == 200
-    ids = {p["id"] for p in r.json()}
-    assert ids == {"RECORDATORIO_CONFIRMACION_V1", "RECORDATORIO_LIBERACION_V1", "LLAMADA_GUION_V1"}
-    assert all(p["contenido"] == "[PENDIENTE: contenido aprobado]" for p in r.json())
+    plantillas = r.json()
+    contenidos = {(p["id"], p["canal_contacto"]): p["contenido"] for p in plantillas}
+    assert len(plantillas) == len(contenidos) == 5
+    assert contenidos.keys() == {
+        ("RECORDATORIO_CONFIRMACION_V1", "WHATSAPP"),
+        ("RECORDATORIO_CONFIRMACION_V1", "SMS"),
+        ("RECORDATORIO_LIBERACION_V1", "WHATSAPP"),
+        ("RECORDATORIO_LIBERACION_V1", "SMS"),
+        ("LLAMADA_GUION_V1", "LLAMADA_TELEFONICA"),
+    }
+    assert len(set(contenidos.values())) == 5
+    for (plantilla, canal), contenido in contenidos.items():
+        assert contenido.strip() and "[PENDIENTE" not in contenido
+        assert canal in reglas.canales_de(plantilla)
+        if canal == "SMS":
+            assert len(contenido) <= 70
     assert client.get("/intervenciones/plantillas", headers=cabecera(client, usuarios["TECNICO_IA"])).status_code == 403
 
 

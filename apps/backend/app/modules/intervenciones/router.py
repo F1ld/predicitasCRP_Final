@@ -115,7 +115,6 @@ def crear_intervencion_directa(
         ip=ip_cliente(request),
         ahora=ahora,
         modo_sombra_activo=sombra,
-        validar_consentimiento=True,
     )
 
 
@@ -244,10 +243,12 @@ def crear_intervencion_para_cita(
     usuario: Usuario = Depends(requiere_roles(*ROLES_OPERACION)),
     db: Session = Depends(get_db),
 ):
-    """Endpoint legado: creación vinculada directamente a la ruta /citas/{id_cita}."""
-    # Para el endpoint legado, el estado por defecto histórico es ENVIADA
-    if datos.estado_intervencion == "PENDIENTE":
-        datos.estado_intervencion = "ENVIADA"
+    """Alias de creación que obtiene el identificador de la cita de la URL."""
+    if datos.id_cita is not None and datos.id_cita != id_cita:
+        raise Validacion(
+            "El identificador de la cita no coincide con la URL",
+            campos={"id_cita": "Debe coincidir con la cita de la URL"},
+        )
     return service.crear_intervencion(
         db,
         id_cita,
@@ -256,7 +257,4 @@ def crear_intervencion_para_cita(
         ip=ip_cliente(request),
         ahora=ahora,
         modo_sombra_activo=sombra,
-        validar_consentimiento=False,
-        validar_catalogo=False,
-        validar_elegibilidad=False,
     )

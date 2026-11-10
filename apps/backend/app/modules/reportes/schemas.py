@@ -1,5 +1,43 @@
-from typing import Any
+from datetime import date, time
+from typing import Any, Literal
 from pydantic import BaseModel
+
+from app.core.dominio import ESPECIALIDADES, FRANJAS_CITA, NIVELES_RIESGO
+
+EspecialidadRep01 = Literal[ESPECIALIDADES]
+NivelRiesgoRep01 = Literal[NIVELES_RIESGO]
+FranjaRep01 = Literal[FRANJAS_CITA]
+
+
+class Rep01Fila(BaseModel):
+    hora: time
+    id_cita_externa: str
+    especialidad: EspecialidadRep01
+    medico: str
+    antelacion_dias: int
+    probabilidad_no_show: float | None
+    nivel_riesgo: NivelRiesgoRep01 | None
+    estado_intervencion: str | None
+    respuesta_paciente: str | None
+
+
+class Rep01Grupo(BaseModel):
+    especialidad: EspecialidadRep01
+    franja_horaria: FranjaRep01
+    subtotal: int
+    filas: list[Rep01Fila]
+
+
+class Rep01Filtros(BaseModel):
+    especialidad: EspecialidadRep01 | None
+    nivel_riesgo: NivelRiesgoRep01 | None
+
+
+class Rep01Out(BaseModel):
+    fecha: date
+    filtros: Rep01Filtros
+    total: int
+    grupos: list[Rep01Grupo]
 
 
 class ResumenRep02(BaseModel):

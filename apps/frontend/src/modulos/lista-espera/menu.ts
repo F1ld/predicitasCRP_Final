@@ -5,5 +5,5 @@ import { ROLES_ESCRITURA } from "./tipos";
 export default [
   { etiqueta: "Lista de espera", ruta: "/lista-espera", icono: "reloj", roles: ROLES_ESCRITURA, orden: 40 },
   { etiqueta: "Cupos liberados", ruta: "/cupos", icono: "calendario", roles: ROLES_ESCRITURA, orden: 41 },
-  { etiqueta: "Reporte de reasignaciones", ruta: "/reportes/reasignaciones", icono: "archivo", roles: ROLES_ESCRITURA, orden: 42 },
+  { etiqueta: "Reporte de reasignaciones", ruta: "/reportes/reasignaciones", icono: "archivo", roles: ROLES_ESCRITURA, orden: 43 },
 ] satisfies EntradaMenu[];

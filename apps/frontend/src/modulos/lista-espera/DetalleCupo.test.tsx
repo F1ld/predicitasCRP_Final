@@ -159,8 +159,8 @@ describe("M06-V03 Consulta de cupo, propuestas y permisos (RF-074, RF-075, RN05,
 
     montar("ADMINISTRADOR");
     expect(await screen.findByRole("heading", { name: "Cupo #42" })).toBeInTheDocument();
-    expect(screen.getByText("CIT-EXT-0042")).toBeInTheDocument();
-    expect(screen.getByText("Dra. Cardióloga Sintética")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "CIT-EXT-0042" })).toHaveAttribute("href", "/citas/301");
+    expect(screen.getByRole("region", { name: "Datos del cupo" })).toHaveTextContent("Dra. Cardióloga Sintética");
     expect(screen.getByText("Propuesta 1 · PAC-SIM-0801")).toBeInTheDocument();
     expect(screen.getByText("Propuesta 2 · PAC-SIM-0802")).toBeInTheDocument();
 
@@ -203,7 +203,7 @@ describe("M06-E07 Registro de oferta de cupo (RF-077)", () => {
     await waitFor(() => {
       const llamadaOferta = fetchSimulado.mock.calls.find(([, opt]) => opt?.method === "POST");
       expect(llamadaOferta).toBeDefined();
-      expect(String(llamadaOferta?.[0])).toContain("/cupos/42/oferta");
+      expect(new URL(String(llamadaOferta?.[0])).pathname).toBe("/cupos/42/ofertas");
       expect(JSON.parse(String(llamadaOferta?.[1]?.body))).toEqual({ id_candidato: candidatoUno.id_candidato });
     });
 
@@ -260,10 +260,9 @@ describe("M06-E08 Cierre de oferta (RF-078)", () => {
     await userEvent.click(screen.getByRole("button", { name: "Cerrar oferta: rechazó" }));
 
     await waitFor(() => {
-      const llamada = fetchSimulado.mock.calls.find(([, opt]) => String(opt?.body).includes("RECHAZA"));
+      const llamada = fetchSimulado.mock.calls.find(([url, opt]) => new URL(String(url)).pathname === "/cupos/42/ofertas/rechazo" && opt?.method === "POST");
       expect(llamada).toBeDefined();
-      expect(String(llamada?.[0])).toContain("/cupos/42/oferta/cerrar");
-      expect(JSON.parse(String(llamada?.[1]?.body))).toEqual({ respuesta: "RECHAZA" });
+      expect(llamada?.[1]?.body).toBeUndefined();
     });
 
     expect(await screen.findByText("Oferta cerrada: el paciente rechazó el cupo.")).toBeInTheDocument();
@@ -283,9 +282,9 @@ describe("M06-E08 Cierre de oferta (RF-078)", () => {
     await userEvent.click(screen.getByRole("button", { name: "Cerrar oferta: sin respuesta" }));
 
     await waitFor(() => {
-      const llamada = fetchSimulado.mock.calls.find(([, opt]) => String(opt?.body).includes("SIN_RESPUESTA"));
+      const llamada = fetchSimulado.mock.calls.find(([url, opt]) => new URL(String(url)).pathname === "/cupos/42/ofertas/desistimiento" && opt?.method === "POST");
       expect(llamada).toBeDefined();
-      expect(JSON.parse(String(llamada?.[1]?.body))).toEqual({ respuesta: "SIN_RESPUESTA" });
+      expect(llamada?.[1]?.body).toBeUndefined();
     });
 
     expect(await screen.findByText("Oferta cerrada: no hubo respuesta del paciente.")).toBeInTheDocument();
@@ -331,6 +330,11 @@ describe("M06-E09 Reasignación Asistida con Confirmación Humana Explícita (RF
 
     await userEvent.click(screen.getByRole("button", { name: "Confirmar reasignación" }));
     expect(screen.getByRole("heading", { name: "Confirmar reasignación" })).toBeInTheDocument();
+    const resumen = screen.getByRole("region", { name: "Resumen de la oferta" });
+    expect(resumen).toHaveTextContent(candidatoUno.paciente_anon_id);
+    expect(resumen).toHaveTextContent(cupoConOferta.id_cita_externa_origen);
+    expect(resumen).toHaveTextContent(cupoConOferta.medico);
+    expect(resumen).toHaveTextContent("Fecha y hora del cupo");
 
     await userEvent.click(screen.getByRole("button", { name: "Cancelar" }));
     const dialogo = document.querySelector("dialog");
@@ -386,7 +390,7 @@ describe("M06-E09 Reasignación Asistida con Confirmación Humana Explícita (RF
     fireEvent.submit(formulario);
 
     expect(screen.getByText("Marca la confirmación después de hablar con el paciente.")).toBeInTheDocument();
-    // No debe haber ninguna llamada a POST /reasignacion
+    // No debe haber ninguna llamada a POST /reasignar
     const llamadaReasigna = fetchSimulado.mock.calls.find(([, opt]) => String(opt?.body).includes("confirmacion_humana"));
     expect(llamadaReasigna).toBeUndefined();
   });
@@ -439,7 +443,7 @@ describe("M06-E09 Reasignación Asistida con Confirmación Humana Explícita (RF
     await waitFor(() => {
       const llamada = fetchSimulado.mock.calls.find(([, opt]) => String(opt?.body).includes("confirmacion_humana"));
       expect(llamada).toBeDefined();
-      expect(String(llamada?.[0])).toContain("/cupos/42/reasignacion");
+      expect(new URL(String(llamada?.[0])).pathname).toBe("/cupos/42/reasignar");
 
       const cuerpo = JSON.parse(String(llamada?.[1]?.body));
       expect(cuerpo).toEqual({
@@ -474,9 +478,8 @@ describe("M06-E09 Reasignación Asistida con Confirmación Humana Explícita (RF
     await userEvent.selectOptions(screen.getByLabelText("Medio de confirmación"), "PRESENCIAL");
     await userEvent.click(screen.getByRole("button", { name: "Registrar reasignación" }));
 
-    expect(
-      await screen.findByText("Debes confirmar explícitamente la reasignación con el paciente antes de registrarla.")
-    ).toBeInTheDocument();
+    const alerta = await screen.findByText("Debes confirmar explícitamente la reasignación con el paciente antes de registrarla.");
+    expect(screen.getByRole("dialog")).toContainElement(alerta);
   });
 
   it("gestiona error 409 CUPO_REASIGNADO devuelto por la API", async () => {
@@ -968,7 +971,7 @@ describe("DetalleCupo · caminos de error y guardas (T-063)", () => {
 
     resolverReasigna!(respuesta({ id_reasignacion: 999 }, 201));
     await waitFor(() => {
-      const llamada = fetchSimulado.mock.calls.find(([url]) => String(url).includes("/reasignacion"));
+      const llamada = fetchSimulado.mock.calls.find(([url]) => new URL(String(url)).pathname === "/cupos/42/reasignar");
       expect(llamada).toBeDefined();
       const cuerpo = JSON.parse(String(llamada?.[1]?.body));
       expect(cuerpo).toEqual({

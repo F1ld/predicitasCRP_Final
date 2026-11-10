@@ -7,7 +7,7 @@ const rolesReporte: Rol[] = ["ADMINISTRADOR", "RECEPCION"];
 // RF-003, RF-057 a RF-068, REP-02: navegación del módulo según contratos/modulo-05.json.
 const menu: EntradaMenu[] = [
   { etiqueta: "Intervenciones", ruta: "/intervenciones", icono: "check", roles: rolesLectura, orden: 25 },
-  { etiqueta: "Reporte de intervenciones", ruta: "/reportes/intervenciones", icono: "archivo", roles: rolesReporte, orden: 26 },
+  { etiqueta: "Reporte de intervenciones", ruta: "/reportes/intervenciones", icono: "archivo", roles: rolesReporte, orden: 42 },
 ];
 
 export default menu;

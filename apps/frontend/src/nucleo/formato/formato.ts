@@ -1,8 +1,8 @@
-// RNF-016: todas las fechas visibles se presentan en America/Lima.
+// Las fechas visibles usan la zona horaria local del navegador.
 export function formatearFechaHora(valor: string | null | undefined): string {
   if (!valor) return "—";
   return new Intl.DateTimeFormat("es-PE", {
-    timeZone: "America/Lima", dateStyle: "short", timeStyle: "short",
+    dateStyle: "short", timeStyle: "short",
   }).format(new Date(valor));
 }
 export const ETIQUETAS: Record<string, string> = {

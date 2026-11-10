@@ -123,7 +123,7 @@ export default function DetallePrediccion({
           </div>
         ) : (
           <p className="text-xs text-slate-500 italic">
-            {prediccion.explicabilidad_resumen || "Variables de agenda en rango habitual para el perfil."}
+            Sin explicación registrada
           </p>
         )}
       </div>

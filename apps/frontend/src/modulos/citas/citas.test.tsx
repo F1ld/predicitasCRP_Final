@@ -39,14 +39,16 @@ function respuesta(datos: unknown, status = 200) {
 }
 
 function pagina(items: CitaResumenOut[] = [cita], total = items.length) {
-  return { total, limite: 20, desplazamiento: 0, items };
+  return { total, limite: 5, desplazamiento: 0, items };
 }
 
-function montarBandeja(ruta = "/citas?desde=") {
-  return render(<MemoryRouter initialEntries={[ruta]}><Routes>
+function montarBandeja(ruta = "/citas") {
+  const vista = render(<MemoryRouter initialEntries={[ruta]}><Routes>
     <Route path="/citas" element={<Bandeja />} />
     <Route path="/citas/:id" element={<p>Detalle abierto</p>} />
   </Routes></MemoryRouter>);
+  fireEvent.click(screen.getByText("Buscar una cita"));
+  return vista;
 }
 
 function montarDetalle(volver = "/citas?desde=2026-10-01") {
@@ -92,14 +94,15 @@ describe("Bandeja migrada (RF-009, RF-016, RF-056, RN16, RNF-016)", () => {
     expect(screen.getByRole("button", { name: "Siguiente" })).toBeDisabled();
   });
 
-  it("identifica el riesgo y rotula un resultado simulado junto al dato", async () => {
+  it.each([true, false])("identifica el riesgo y muestra el rótulo según resultado_simulado=%s", async (resultado_simulado) => {
     fetchSimulado.mockResolvedValue(respuesta(pagina([{ ...cita, riesgo: {
       id_prediccion: 7, probabilidad_no_show: 0.75, nivel_riesgo: "ALTO", version_modelo: "simulador_v1",
-      fecha_hora_inferencia: "2026-10-18T10:00:00-05:00", resultado_simulado: true,
+      fecha_hora_inferencia: "2026-10-18T10:00:00-05:00", resultado_simulado,
     } }])));
     montarBandeja();
-    expect(await screen.findByText("Resultado simulado: no es desempeño real")).toBeInTheDocument();
-    expect(screen.getByLabelText("Riesgo de inasistencia: ALTO")).toBeInTheDocument();
+    const riesgo = await screen.findByLabelText("Riesgo de inasistencia: ALTO");
+    const celda = within(riesgo.closest("td")!);
+    expect(Boolean(celda.queryByText("Resultado simulado: no es desempeño real"))).toBe(resultado_simulado);
     expect(screen.queryByRole("cell", { name: "Sin predicción" })).not.toBeInTheDocument();
   });
 
@@ -145,10 +148,10 @@ describe("Bandeja migrada (RF-009, RF-016, RF-056, RN16, RNF-016)", () => {
     montarBandeja("/citas?desde=2026-10-20&q=CIT-SIM");
     await screen.findByText(cita.id_cita_externa);
     await userEvent.click(screen.getByRole("button", { name: "Siguiente" }));
-    expect(await screen.findByText("Página 2 de 3")).toBeInTheDocument();
-    expect(String(fetchSimulado.mock.calls[1][0])).toContain("desplazamiento=20");
+    expect(await screen.findByText("Página 2 de 9")).toBeInTheDocument();
+    expect(String(fetchSimulado.mock.calls[1][0])).toContain("desplazamiento=5");
     await userEvent.click(screen.getByRole("button", { name: "Anterior" }));
-    expect(await screen.findByText("Página 1 de 3")).toBeInTheDocument();
+    expect(await screen.findByText("Página 1 de 9")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Limpiar" }));
     await waitFor(() => expect(fetchSimulado).toHaveBeenCalledTimes(4));
     expect(String(fetchSimulado.mock.calls[3][0])).not.toContain("desde=");
@@ -175,10 +178,10 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
   it("muestra carga e historial con datos seudonimizados", async () => {
     fetchSimulado.mockResolvedValue(respuesta(detalle));
     montarDetalle();
-    expect(screen.getByText("Cargando detalle…")).toBeInTheDocument();
+    expect(screen.getByText("Cargando detalle de la cita…")).toBeInTheDocument();
     expect(await screen.findByText(cita.paciente_anon_id)).toBeInTheDocument();
     expect(screen.getByText(/Actor no registrado/)).toBeInTheDocument();
-    expect(screen.getByText("Sin motivo registrado")).toBeInTheDocument();
+    expect(screen.getByText("Sin observaciones adicionales")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Volver a la bandeja/ })).toHaveAttribute("href", "/citas?desde=2026-10-01");
   });
 
@@ -203,8 +206,8 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
   it.each([0, 1] as const)("presenta el desenlace %s y el estado final", async (target) => {
     fetchSimulado.mockResolvedValue(respuesta({ ...detalle, estado_actual: target === 0 ? "ATENDIDA" : "NO_SHOW", target_no_show: target, historial: [] }));
     montarDetalle();
-    expect(await screen.findByText("Estado final: no admite más cambios.")).toBeInTheDocument();
-    expect(screen.getByText(target === 0 ? "0 · Asistió" : "1 · No asistió")).toBeInTheDocument();
+    expect(await screen.findByText("Estado final inmutable:")).toBeInTheDocument();
+    expect(screen.getByText(target === 0 ? /0 · Paciente Asistió/ : /1 · Paciente No Asistió/)).toBeInTheDocument();
     expect(screen.getByText("No hay transiciones registradas.")).toBeInTheDocument();
   });
 
@@ -217,13 +220,13 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
     await userEvent.click(within(dialogo).getByRole("button", { name: "Cancelar" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Marcar como Confirmada" }));
-    await userEvent.type(screen.getByLabelText("Motivo (opcional)"), " Confirmación sintética ");
-    await userEvent.click(screen.getByRole("button", { name: "Confirmar cambio" }));
+    await userEvent.type(screen.getByLabelText("Motivo o justificación clínica (opcional)"), " Confirmación sintética ");
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar transición" }));
     expect(await screen.findByText("Estado actualizado a Confirmada.")).toBeInTheDocument();
     expect(JSON.parse(String(fetchSimulado.mock.calls[1][1]?.body))).toEqual({ estado_nuevo: "CONFIRMADA", motivo: "Confirmación sintética" });
     expect(fetchSimulado.mock.calls[1][1]?.method).toBe("POST");
     await waitFor(() => expect(fetchSimulado).toHaveBeenCalledTimes(3));
-    expect(screen.getByText(/Usuario #8/)).toBeInTheDocument();
+    expect(screen.getByText(/Operador #8/)).toBeInTheDocument();
   });
 
   it("recarga tras un conflicto de transición", async () => {
@@ -232,9 +235,9 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
       .mockResolvedValueOnce(respuesta({ ...detalle, estado_actual: "ATENDIDA", target_no_show: 0 }));
     montarDetalle();
     await userEvent.click(await screen.findByRole("button", { name: "Marcar como Confirmada" }));
-    await userEvent.click(screen.getByRole("button", { name: "Confirmar cambio" }));
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar transición" }));
     expect(await screen.findByText(/La cita ya no admite ese cambio/)).toBeInTheDocument();
-    expect(screen.getByText("Estado final: no admite más cambios.")).toBeInTheDocument();
+    expect(screen.getByText("Estado final inmutable:")).toBeInTheDocument();
   });
 
   it("informa cuando se guardó pero falló refrescar el detalle", async () => {
@@ -242,7 +245,7 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
       .mockRejectedValueOnce(new Error("Conexión interrumpida."));
     montarDetalle();
     await userEvent.click(await screen.findByRole("button", { name: "Marcar como Confirmada" }));
-    await userEvent.click(screen.getByRole("button", { name: "Confirmar cambio" }));
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar transición" }));
     expect(await screen.findByText(/El cambio se guardó, pero no se pudo refrescar el detalle: No se pudo conectar con el servidor/)).toBeInTheDocument();
     expect(screen.getByText("Estado actualizado a Confirmada.")).toBeInTheDocument();
   });
@@ -251,7 +254,7 @@ describe("Detalle migrado (RF-018, RF-019, RF-020, RNF-007)", () => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockRejectedValueOnce(new Error("Conexión interrumpida."));
     montarDetalle();
     await userEvent.click(await screen.findByRole("button", { name: "Marcar como Confirmada" }));
-    await userEvent.click(screen.getByRole("button", { name: "Confirmar cambio" }));
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar transición" }));
     expect(await screen.findByText(/No se pudo conectar con el servidor/)).toBeInTheDocument();
     expect(screen.queryByText(/Estado actualizado a/)).not.toBeInTheDocument();
   });
@@ -261,18 +264,18 @@ describe("Importación migrada (RF-011, RF-012, RNF-007)", () => {
   it("deshabilita enviar hasta elegir un CSV válido y permite consultar columnas", async () => {
     montarImportar();
     expect(screen.getByRole("button", { name: "Importar archivo" })).toBeDisabled();
-    await userEvent.click(screen.getByText("Ver columnas obligatorias"));
+    await userEvent.click(screen.getByText("Ver columnas obligatorias del CSV"));
     expect(screen.getByText(/id_cita_externa, paciente_anon_id/)).toBeVisible();
   });
 
   it.each([
-    ["citas.txt", "datos", "Selecciona un archivo con extensión .csv."],
-    ["citas.csv", "", "El archivo está vacío."],
-    ["citas.csv", "x".repeat(2 * 1024 * 1024 + 1), "El archivo supera los 2 MB permitidos."],
+    ["citas.txt", "datos", /archivo con extensión .csv/i],
+    ["citas.csv", "", /archivo seleccionado está vacío/i],
+    ["citas.csv", "x".repeat(2 * 1024 * 1024 + 1), /límite de 2 MB/i],
   ])("rechaza el archivo inválido %s", async (nombre, contenido, mensaje) => {
     montarImportar();
     const usuario = userEvent.setup({ applyAccept: false });
-    await usuario.upload(screen.getByLabelText("Archivo CSV"), new File([contenido], nombre, { type: "text/csv" }));
+    await usuario.upload(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), new File([contenido], nombre, { type: "text/csv" }));
     expect(screen.getByText(mensaje)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Importar archivo" })).toBeDisabled();
     expect(fetchSimulado).not.toHaveBeenCalled();
@@ -282,26 +285,26 @@ describe("Importación migrada (RF-011, RF-012, RNF-007)", () => {
     fetchSimulado.mockResolvedValue(respuesta(resultadoImportacion));
     montarImportar();
     const archivo = new File(["id_cita_externa,paciente_anon_id\nCIT-SIM-1,PAC-SIM-1"], "citas.CSV", { type: "text/csv" });
-    await userEvent.upload(screen.getByLabelText("Archivo CSV"), archivo);
+    await userEvent.upload(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), archivo);
     expect(screen.getByText("citas.CSV")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Importar archivo" }));
-    expect(await screen.findByText("Resultado de la importación")).toBeInTheDocument();
+    expect(await screen.findByText("Resultado de la Importación")).toBeInTheDocument();
     const opciones = fetchSimulado.mock.calls[0][1];
     expect(opciones?.body).toBeInstanceOf(FormData);
     expect((opciones?.body as FormData | undefined)?.get("archivo")).toEqual(archivo);
     expect(screen.getByText("Identificador duplicado; Fuera del piloto")).toBeInTheDocument();
     expect(screen.getByText("CIT-SIM-000325")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Importar archivo" })).toBeDisabled();
-    expect(screen.getByRole("link", { name: "Ver citas importadas" })).toHaveAttribute("href", "/citas?desde=");
+    expect(screen.getByRole("link", { name: /Ver citas en la bandeja asistencial/ })).toHaveAttribute("href", "/citas");
   });
 
   it("bloquea un segundo envío mientras espera la importación", async () => {
     fetchSimulado.mockImplementation(() => new Promise<Response>(() => undefined));
     montarImportar();
-    await userEvent.upload(screen.getByLabelText("Archivo CSV"), new File(["datos"], "citas.csv", { type: "text/csv" }));
+    await userEvent.upload(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), new File(["datos"], "citas.csv", { type: "text/csv" }));
     await userEvent.click(screen.getByRole("button", { name: "Importar archivo" }));
-    expect(screen.getByRole("button", { name: "Importando…" })).toBeDisabled();
-    expect(screen.getByLabelText("Archivo CSV")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Procesando importación…" })).toBeDisabled();
+    expect(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/)).toBeDisabled();
     expect(fetchSimulado).toHaveBeenCalledTimes(1);
   });
 
@@ -309,30 +312,32 @@ describe("Importación migrada (RF-011, RF-012, RNF-007)", () => {
     fetchSimulado.mockRejectedValueOnce(new Error("La carga se interrumpió."))
       .mockResolvedValueOnce(respuesta({ recibidas: 1, aceptadas: 1, rechazadas: 0, detalle_rechazos: [] }));
     montarImportar();
-    await userEvent.upload(screen.getByLabelText("Archivo CSV"), new File(["datos"], "citas.csv", { type: "text/csv" }));
+    await userEvent.upload(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), new File(["datos"], "citas.csv", { type: "text/csv" }));
     await userEvent.click(screen.getByRole("button", { name: "Importar archivo" }));
     expect(await screen.findByText(/No se pudo conectar con el servidor/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Importar archivo" }));
-    expect(await screen.findByText("Resultado de la importación")).toBeInTheDocument();
+    expect(await screen.findByText("Resultado de la Importación")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("borra el resultado previo al cambiar o cancelar la selección", async () => {
     fetchSimulado.mockResolvedValue(respuesta(resultadoImportacion));
     montarImportar();
-    await userEvent.upload(screen.getByLabelText("Archivo CSV"), new File(["datos"], "citas.csv", { type: "text/csv" }));
+    await userEvent.upload(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), new File(["datos"], "citas.csv", { type: "text/csv" }));
     await userEvent.click(screen.getByRole("button", { name: "Importar archivo" }));
-    await screen.findByText("Resultado de la importación");
-    fireEvent.change(screen.getByLabelText("Archivo CSV"), { target: { files: [] } });
-    expect(screen.queryByText("Resultado de la importación")).not.toBeInTheDocument();
+    await screen.findByText("Resultado de la Importación");
+    fireEvent.change(screen.getByLabelText(/Arrastra y suelta tu archivo CSV/), { target: { files: [] } });
+    expect(screen.queryByText("Resultado de la Importación")).not.toBeInTheDocument();
   });
 });
 
 describe("Ranuras y transiciones existentes (RF-009, RF-011, RF-019)", () => {
   it("publica las rutas de lectura y restringe la importación a escritores", () => {
-    expect(rutas.map((ruta) => ruta.ruta)).toEqual(["/citas", "/citas/nueva", "/citas/importar", "/citas/:id"]);
+    expect(rutas.map((ruta) => ruta.ruta)).toEqual(["/citas", "/citas/nueva", "/citas/importar", "/citas/:id", "/citas/:id/trazabilidad"]);
     expect(rutas[0].roles).toContain("TECNICO_IA");
     expect(rutas[1].roles).toEqual(ROLES_ESCRITURA);
+    expect(rutas[2].roles).toEqual(ROLES_ESCRITURA);
+    expect(rutas[4].roles).toContain("TECNICO_IA");
     expect(menu.find((entrada) => entrada.ruta === "/citas")?.roles).toContain("TECNICO_IA");
     expect(menu.find((entrada) => entrada.ruta === "/citas/importar")?.roles).not.toContain("TECNICO_IA");
   });

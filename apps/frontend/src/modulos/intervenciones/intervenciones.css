@@ -30,5 +30,4 @@
 .m05-formulario [aria-invalid="true"] { border-color: #9f1239; }
 @media (min-width: 640px) { .m05-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .m05-datos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) { .m05-filtros .m05-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 760px) { .navegacion-fila:has(a[href="/intervenciones"]) nav { flex-wrap: wrap; column-gap: 14px; row-gap: 0; } .navegacion-fila:has(a[href="/intervenciones"]) .nav-enlace { font-size: 13px; } }
 @media (max-width: 480px) { .m05-dialogo { padding: 18px; } .m05-dialogo .m05-acciones > button { flex-grow: 1; } }

@@ -1,10 +1,34 @@
+from datetime import datetime
+
+import pytest
 from sqlalchemy import select
 
+from app.core.reloj import LIMA, reloj
+from app.main import app
 from app.modules.auditoria.models import AuditoriaEvento
 from app.modules.citas.importer import importar_citas
 from app.modules.citas.models import Cita, HistorialEstadoCita
 from app.modules.lista_espera.models import CupoLiberado
 from tests.conftest import cabecera
+from tests.intervenciones.conftest import NUEVA, crear_prediccion
+
+
+@pytest.fixture(autouse=True)
+def reloj_legacy():
+    app.dependency_overrides[reloj] = lambda: datetime(2026, 11, 4, 8, tzinfo=LIMA)
+    yield
+    app.dependency_overrides.pop(reloj, None)
+
+
+def _crear_y_enviar(client, cita, headers, **cambios):
+    r = client.post(f"/citas/{cita.id_cita}/intervenciones", headers=headers, json={**NUEVA, **cambios})
+    assert r.status_code == 200, r.text
+    creada = r.json()
+    assert creada["estado_intervencion"] == "PENDIENTE"
+    envio = client.post(f"/intervenciones/{creada['id_intervencion']}/estado", headers=headers,
+                        json={"estado_intervencion": "ENVIADA"})
+    assert envio.status_code == 200, envio.text
+    return creada
 
 
 def _crear_cita_prueba(db, id_usuario: int, codigo: str, paciente: str) -> Cita:
@@ -31,7 +55,9 @@ def _crear_cita_prueba(db, id_usuario: int, codigo: str, paciente: str) -> Cita:
         ip="127.0.0.1",
         origen="test_intervenciones",
     )
-    return db.scalar(select(Cita).where(Cita.id_cita_externa == codigo))
+    cita = db.scalar(select(Cita).where(Cita.id_cita_externa == codigo))
+    crear_prediccion(db, cita, "ALTO")
+    return cita
 
 
 def test_bloquea_envio_con_optout_y_maximo_un_recordatorio_adicional(client, usuarios, db):
@@ -42,7 +68,7 @@ def test_bloquea_envio_con_optout_y_maximo_un_recordatorio_adicional(client, usu
     r_optout = client.post(
         f"/citas/{cita.id_cita}/intervenciones",
         headers=h,
-        json={"canal_contacto": "WHATSAPP", "consentimiento_optout": True},
+        json={**NUEVA, "consentimiento_optout": True},
     )
     assert r_optout.status_code == 409
 
@@ -50,7 +76,7 @@ def test_bloquea_envio_con_optout_y_maximo_un_recordatorio_adicional(client, usu
     r_ok = client.post(
         f"/citas/{cita.id_cita}/intervenciones",
         headers=h,
-        json={"canal_contacto": "WHATSAPP", "plantilla_mensaje": "RECORDATORIO_PREVENTIVO"},
+        json=NUEVA,
     )
     assert r_ok.status_code == 200, r_ok.text
 
@@ -58,7 +84,7 @@ def test_bloquea_envio_con_optout_y_maximo_un_recordatorio_adicional(client, usu
     r_dup = client.post(
         f"/citas/{cita.id_cita}/intervenciones",
         headers=h,
-        json={"canal_contacto": "SMS", "plantilla_mensaje": "SEGUNDO_RECORDATORIO"},
+        json={**NUEVA, "canal_contacto": "SMS"},
     )
     assert r_dup.status_code == 409
 
@@ -69,7 +95,7 @@ def test_respuesta_confirma_cambia_cita_a_confirmada_y_sin_respuesta_no_cancela(
     h = cabecera(client, usuarios["RECEPCION"])
 
     # Cita 1: CONFIRMA -> estado_actual pasa a CONFIRMADA
-    int1 = client.post(f"/citas/{cita1.id_cita}/intervenciones", headers=h, json={"canal_contacto": "WHATSAPP"}).json()
+    int1 = _crear_y_enviar(client, cita1, h)
     r1 = client.patch(
         f"/intervenciones/{int1['id_intervencion']}",
         headers=h,
@@ -79,7 +105,7 @@ def test_respuesta_confirma_cambia_cita_a_confirmada_y_sin_respuesta_no_cancela(
     assert r1.json()["estado_cita_actual"] == "CONFIRMADA"
 
     # Cita 2: SIN_RESPUESTA -> cita se mantiene intacta en RECIBIDA (prohibición de cancelación unilateral RN02)
-    int2 = client.post(f"/citas/{cita2.id_cita}/intervenciones", headers=h, json={"canal_contacto": "SMS"}).json()
+    int2 = _crear_y_enviar(client, cita2, h, canal_contacto="SMS")
     r2 = client.patch(
         f"/intervenciones/{int2['id_intervencion']}",
         headers=h,
@@ -93,16 +119,12 @@ def test_solicita_liberacion_cambia_a_liberada_crea_cupo_y_audita_liberar(client
     cita = _crear_cita_prueba(db, usuarios["ADMINISTRADOR"].id_usuario, "CIT-INT-004", "PAC-INT-004")
     h = cabecera(client, usuarios["RECEPCION"])
 
-    # Evaluar primero con IA para verificar bandeja sugerida
-    client.post(f"/ia/predecir/{cita.id_cita}", headers=h)
-    bandeja = client.get("/intervenciones", headers=h).json()
-    assert any(c["id_cita"] == cita.id_cita for c in bandeja["citas_sugeridas"])
+    bandeja = client.get("/intervenciones/elegibles", headers=h)
+    assert bandeja.status_code == 200, bandeja.text
+    assert any(c["id_cita"] == cita.id_cita for c in bandeja.json()["items"])
 
-    interv = client.post(
-        f"/citas/{cita.id_cita}/intervenciones",
-        headers=h,
-        json={"canal_contacto": "LLAMADA_TELEFONICA"},
-    ).json()
+    interv = _crear_y_enviar(client, cita, h, canal_contacto="LLAMADA_TELEFONICA",
+                             plantilla_mensaje="LLAMADA_GUION_V1")
 
     r = client.patch(
         f"/intervenciones/{interv['id_intervencion']}",

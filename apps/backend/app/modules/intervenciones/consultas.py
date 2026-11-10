@@ -1,6 +1,6 @@
 """Adaptador de lectura compuesto de Intervenciones; no cierra transacciones."""
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 
 from app.modules.citas.models import Cita
 from app.modules.ia.models import PrediccionIA
@@ -78,18 +78,26 @@ def listar_citas_riesgo_medio_alto(
     nivel_riesgo: str | None = None,
     especialidad: str | None = None,
 ) -> list[tuple[Cita, PrediccionIA]]:
-    """Retorna citas operativas (RECIBIDA/CONFIRMADA) con predicción en riesgo ALTO o MEDIO."""
+    """Filtra el riesgo de la última predicción, nunca el de versiones históricas."""
     niveles = [nivel_riesgo.upper()] if nivel_riesgo else ["ALTO", "MEDIO"]
+    numeradas = select(PrediccionIA, func.row_number().over(
+        partition_by=PrediccionIA.id_cita,
+        order_by=(PrediccionIA.fecha_hora_inferencia.desc(), PrediccionIA.id_prediccion.desc()),
+    ).label("rn")).subquery()
+    reciente = aliased(PrediccionIA, numeradas)
     stmt = (
-        select(Cita, PrediccionIA)
-        .join(PrediccionIA, PrediccionIA.id_cita == Cita.id_cita)
+        select(Cita, reciente)
+        .join(reciente, reciente.id_cita == Cita.id_cita)
         .where(
+            numeradas.c.rn == 1,
             Cita.estado_actual.in_(("RECIBIDA", "CONFIRMADA", "REPROGRAMADA")),
-            PrediccionIA.nivel_riesgo.in_(niveles),
+            reciente.nivel_riesgo.in_(("ALTO", "MEDIO")),
+            reciente.nivel_riesgo.in_(niveles),
         )
         .order_by(
-            PrediccionIA.probabilidad_no_show.desc(),
+            reciente.probabilidad_no_show.desc(),
             Cita.fecha_hora_cita.asc(),
+            Cita.id_cita.asc(),
         )
     )
     if especialidad:
@@ -101,7 +109,7 @@ def obtener_prediccion_reciente(db: Session, id_cita: int) -> PrediccionIA | Non
     stmt = (
         select(PrediccionIA)
         .where(PrediccionIA.id_cita == id_cita)
-        .order_by(PrediccionIA.id_prediccion.desc())
+        .order_by(PrediccionIA.fecha_hora_inferencia.desc(), PrediccionIA.id_prediccion.desc())
         .limit(1)
     )
     return db.scalar(stmt)

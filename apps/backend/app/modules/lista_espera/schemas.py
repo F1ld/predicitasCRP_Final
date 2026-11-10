@@ -92,6 +92,7 @@ class ReasignacionOut(BaseModel):
     id_reasignacion: int
     id_cupo_liberado: int
     id_candidato: int
+    paciente_anon_id: str
     id_operador_confirma: int
     confirmacion_humana: bool
     medio_confirmacion: str

@@ -26,6 +26,7 @@ from app.modules.ia.router import router as ia_router
 from app.modules.intervenciones.router import router as intervenciones_router
 from app.modules.lista_espera.router import router as lista_espera_router
 from app.modules.reportes.router import router as reportes_router
+from app.modules.panel.router import router as panel_router
 from app.modules.usuarios.router import router as usuarios_router
 from app.modules.ia.dependencias import crear_motor
 
@@ -77,6 +78,7 @@ app.include_router(ia_router)
 app.include_router(intervenciones_router)
 app.include_router(lista_espera_router)
 app.include_router(reportes_router)
+app.include_router(panel_router)
 
 
 @app.get("/health", tags=["sistema"])

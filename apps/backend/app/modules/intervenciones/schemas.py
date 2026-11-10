@@ -26,7 +26,7 @@ class IntervencionCreateIn(BaseModel):
     )
     consentimiento_confirmado: Any = None
     consentimiento_optout: bool = False
-    estado_intervencion: Literal["PENDIENTE", "ENVIADA", "ENTREGADA", "FALLIDA"] = "PENDIENTE"
+    estado_intervencion: Literal["PENDIENTE"] = "PENDIENTE"
 
 
 class IntervencionEstadoIn(BaseModel):

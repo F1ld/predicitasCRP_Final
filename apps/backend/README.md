@@ -32,8 +32,9 @@ API REST del **MVP PrediCitas CRP**: gestión predictiva de citas médicas **pos
 11. [Convenciones](#11-convenciones)
 12. [Seguridad y privacidad](#12-seguridad-y-privacidad)
 13. [Flujo de trabajo y contribución](#13-flujo-de-trabajo-y-contribución)
-14. [Glosario](#14-glosario)
-15. [Equipo](#15-equipo)
+14. [Panel Operativo](#14-panel-operativo)
+15. [Glosario](#15-glosario)
+16. [Equipo](#16-equipo)
 
 ---
 
@@ -59,7 +60,8 @@ Lo usan tres roles: **Recepción**, **Administrador** y **Técnico IA**.
 | M05 · Intervención inteligente + REP-02 | Elegibles, intervención con consentimiento, opt-out, límite, liberación de cupo, modo sombra y reporte REP-02 | ✅ Certificado por QA |
 | M09 · Integración con IA | Cliente del servicio de inferencia, predicción individual y por lote, trazabilidad del modelo | 🔨 Implementado; QA pendiente |
 | M06 · Lista de espera y reasignación | Candidatos, ofertas de cupo y reasignación con confirmación humana | 🔨 En desarrollo |
-| M07 · Panel operativo · M08 · Auditoría | Panel de Recepción, reportes y consulta de auditoría | 📐 Planificado |
+| M07 · Panel operativo | Resumen diario y tres categorías de pendientes, solo lectura | Backend implementado; frontend y REP-01 separados |
+| M08 · Auditoría | Registro de eventos; consulta administrativa dedicada | Consulta administrativa pendiente |
 
 ## 3. Arquitectura y tecnologías
 
@@ -148,7 +150,7 @@ alembic upgrade head
 uvicorn app.main:app --reload        # http://localhost:8000/docs
 ```
 
-Los detalles de roles, permisos y respaldo de la base están en [`db/README.md`](db/README.md).
+Los detalles de roles, permisos y respaldo de la base están en [la guia de base de datos](../../docs/operacion/BASE_DE_DATOS.md).
 
 ## 7. Variables de entorno
 
@@ -234,6 +236,8 @@ La referencia completa y ejecutable está en **http://localhost:8000/docs**. Res
 | | `POST /intervenciones/{id}/estado` · `POST /intervenciones/{id}/respuesta` | Registra el envío y la respuesta del paciente |
 | | `POST /intervenciones/{id}/optout` · `POST /intervenciones/{id}/liberar-cupo` | Opt-out y liberación voluntaria del cupo |
 | Reportes | `GET /reportes/rep-02?formato=json\|csv\|xlsx` | Efectividad de las intervenciones |
+| Panel operativo | `GET /panel/resumen` | Estado actual de las citas y cupos programados para la jornada seleccionada |
+| | `GET /panel/pendientes` | Pendientes tipados y paginados con total completo |
 
 Los permisos se validan en el servidor según el rol:
 - **Recepción y Administrador** operan citas e intervenciones.
@@ -249,7 +253,7 @@ Una acción sin permiso responde `403`.
   { "error": { "codigo": "TRANSICION_INVALIDA", "mensaje": "…", "campos": {} } }
   ```
   En el código se lanzan las excepciones de `app/core/errores.py`.
-- **Módulos que se registran solos.** Cada `app/modules/<modulo>/router.py` que exporta `router` se incluye automáticamente (`app/core/ranuras.py`). Agregar un módulo no requiere tocar `main.py`.
+- **Registro explícito de módulos.** Los routers vigentes se importan y registran en `app/main.py`; el Panel Operativo sigue ese mecanismo.
 - **Nombres en español.** Los nombres de tablas, campos, rutas y enums siguen el diccionario de datos y el Diseño de Base de Datos oficial del proyecto.
 - **Fechas y zona horaria.** Formato ISO 8601; la zona de negocio es `America/Lima`.
 - **Transacciones.** Las operaciones críticas (por ejemplo, liberar un cupo: cita, cupo, historial y auditoría) se confirman juntas o no se confirman.
@@ -270,7 +274,44 @@ Una acción sin permiso responde `403`.
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/es/) en español, con el requisito que implementan. Por ejemplo: `feat(citas): registro manual de cita (RF-010)`.
 - **Antes de abrir un PR:** `pytest` en verde con cobertura ≥ 75 %, sin secretos ni datos reales, y con los requisitos citados en el código y en las pruebas.
 
-## 14. Glosario
+## 14. Panel Operativo
+
+Roles permitidos: `RECEPCION` y `ADMINISTRADOR`. No admite operaciones de escritura.
+
+```http
+GET /panel/resumen?fecha=2026-11-09&especialidad=CARDIOLOGIA
+GET /panel/pendientes?fecha=2026-11-09&tipo=CITAS_SIN_INTERVENCION&limite=20&desplazamiento=0
+```
+
+- `fecha` se omite para usar hoy en `America/Lima`; `especialidad` se omite para incluir todas.
+- Tipos de pendientes: `CITAS_SIN_INTERVENCION`, `INTERVENCIONES_SIN_RESPUESTA` y `OFERTAS_EN_CURSO`.
+- El panel agrupa por fecha programada de cita/cupo, no por fecha de envío o registro del evento. Consultar una fecha pasada muestra estados actuales, sin reconstruir cierres históricos.
+- Cada cita cuenta una vez; el riesgo usa la predicción de mayor timestamp y, en empate, mayor ID. Las intervenciones cuentan registros y también citas distintas. Los estados son distribuciones actuales, no envíos históricos acumulados.
+- La tasa de recuperación usa cupos con reasignación humana confirmada sobre cupos formalmente liberados; devuelve `null` sin denominador.
+- Los pendientes exigen horarios futuros y las condiciones específicas del contrato. La alerta inicial solo incluye citas `RECIBIDA` sin intervención; no representa toda la bandeja de elegibles de Intervenciones.
+- Cada respuesta usa una sentencia SQL con snapshot consistente. Dos peticiones independientes pueden diferir por cambios concurrentes o por paso del tiempo.
+- No hay tablas, índices, migraciones, inferencias, expiración automática de cupos ni auditoría de negocio nuevas por consultar el panel.
+
+Contrato y ejemplos: [panel v1](../../contracts/backend/panel.v1.md).
+Definición detallada: [especificación del panel](spec/panel-operativo.md).
+Implementación y evidencia de validación: [changelog backend](spec/changelog.md).
+
+Para las pruebas utilizar **una base aislada**, nunca el volumen operativo.
+`tests/panel` rechaza nombres de base sin `test`. Las pruebas focalizadas no
+sustituyen la suite completa con el umbral de cobertura de `pytest.ini`.
+
+```bash
+python -m pytest tests/panel --no-cov -q
+python -m pytest
+python -m scripts.validar_panel --salida /tmp/planes-panel.json
+```
+
+El último comando requiere una base desechable cuyo nombre contenga `panel_test`
+y un rol propietario para `ANALYZE`; inserta 5.000 citas sintéticas y relaciones,
+obtiene planes `EXPLAIN (ANALYZE, BUFFERS)` y revierte los registros. No apuntarlo
+al piloto. Su resultado mide SQL local, no garantiza latencia HTTP de producción.
+
+## 15. Glosario
 
 | Término | Significado |
 |---|---|
@@ -283,7 +324,7 @@ Una acción sin permiso responde `403`.
 | **Resultado simulado** | Rótulo obligatorio mientras el riesgo venga del simulador y no de un modelo validado. |
 | **`paciente_anon_id`** | Identificador seudonimizado del paciente; reemplaza cualquier dato personal. |
 
-## 15. Equipo
+## 16. Equipo
 
 Grupo 05 · UPN 2026-2
 

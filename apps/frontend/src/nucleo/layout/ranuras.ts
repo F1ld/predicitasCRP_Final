@@ -23,7 +23,7 @@ export function menuPorRol(modulos: Record<string, ModuloMenu>, rol: Rol): Entra
     .sort((a, b) => a.orden - b.orden || a.ruta.localeCompare(b.ruta));
 }
 
-// comun.json: /panel entrará en T-071; hasta entonces todos inician en /citas.
+// Panel es el inicio de los roles operativos cuando su ranura está registrada.
 export function inicioPorRol(rol: Rol, rutas: readonly RutaModulo[]): string {
   return rol !== "TECNICO_IA" && rutas.some((ruta) => ruta.ruta === "/panel" && ruta.roles.includes(rol)) ? "/panel" : "/citas";
 }

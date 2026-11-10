@@ -1,5 +1,27 @@
 # Acoplamiento y plan de límites internos
 
+## Ampliación del 09/11/2026: Panel Operativo
+
+`app/modules/panel/consultas.py` es un adaptador autorizado de **solo lectura**
+compuesta sobre `Cita`, `PrediccionIA`, `Intervencion`, `CupoLiberado` y
+`Reasignacion`. La dependencia ORM transversal se limita a ese archivo;
+`router.py` y `service.py` no importan modelos de negocio ajenos. No consulta
+auditoría ni candidatos porque el contrato inicial de ofertas solo requiere
+identificar el cupo. No hace DML, commits, locks de escritura ni llamadas IA.
+
+Cada resumen y cada listado con su total se obtiene mediante una sentencia
+SQL, con snapshot de PostgreSQL por sentencia. Los mismos predicados de
+pendientes sirven para conteos y páginas. No se cambia el aislamiento global.
+La selección de predicción es timestamp descendente e ID descendente, en
+paridad con Citas y con las consultas de Intervenciones alineadas en esta entrega.
+
+La excepción y la ausencia de escrituras se comprueban en
+`tests/panel/test_api.py::test_frontera_lectura_compuesta_del_panel` y en las
+pruebas de consultas/HTTP del panel. No es autorización para que otros archivos
+importen modelos ajenos ni para escribir en tablas de sus propietarios.
+Contrato incremental: [panel v1](../../contracts/backend/panel.v1.md).
+El inventario y el grafo siguientes describen el baseline histórico de fase 1.
+
 Inventario reproducible en `docs/migracion/fase-01/dependencias_y_persistencia.json`: **74 imports entre módulos/desde composición**, **90 sitios `db.*`** y **27 llamadas `db.commit()`** en el árbol actual. Las búsquedas incluyen imports dentro de funciones, en particular la ruta alias de Citas. `get/execute` pueden ser lectura: 90 no significa 90 escrituras. No es un análisis completo de SQL dinámico o alias de sesión.
 
 ## Grafo actual relevante

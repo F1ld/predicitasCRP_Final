@@ -1,4 +1,5 @@
 import logo from "../../assets/logo.svg";
-export default function Marca({ className = "" }: { className?: string }) {
-  return <img className={`marca ${className}`} src={logo} alt="PrediCitas CRP" width="850" height="200" />;
+import logoLateral from "../../assets/logo-lateral.svg";
+export default function Marca({ className = "", lateral = false }: { className?: string; lateral?: boolean }) {
+  return <img className={`marca ${className}`} src={lateral ? logoLateral : logo} alt="PrediCitas CRP" width="1690" height="435" />;
 }

@@ -46,7 +46,7 @@ function Contenido({ puedeEscribir }: { puedeEscribir: boolean }) {
     if (busqueda.has("id_cita")) { const nuevos = new URLSearchParams(busqueda); nuevos.delete("id_cita"); setBusqueda(nuevos, { replace: true }); }
   }
   return <>
-    <div className="pagina-titulo"><div><p className="sobretitulo">ACOMPAÑAMIENTO DE CITAS</p><h1>Intervenciones</h1><p>Registra las comunicaciones y da seguimiento a la respuesta del paciente.</p></div>{puedeEscribir && <Link className="boton-secundario" to="/reportes/intervenciones">Ver reporte REP-02</Link>}</div>
+    <div className="pagina-titulo"><div><p className="sobretitulo">ACOMPAÑAMIENTO DE CITAS</p><h1>Intervenciones</h1></div></div>
     <p className="m05-ayuda">El riesgo de inasistencia orienta el acompañamiento. No representa una decisión clínica ni cambia la prioridad de atención.</p>
     {busqueda.has("id_cita") && !puedeEscribir && <Mensaje tipo="info">Tu rol permite consultar intervenciones. La creación corresponde a Recepción o al Administrador.</Mensaje>}
     {puedeEscribir && busqueda.has("id_cita") && !directo && <Mensaje>El identificador de cita debe ser un entero positivo.</Mensaje>}

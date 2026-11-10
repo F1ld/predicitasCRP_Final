@@ -87,7 +87,7 @@ function ReportePermitido() {
   return <div className="m05-reporte">
     <div className="pagina-titulo"><div><p className="sobretitulo">REP-02 · SEGUIMIENTO DE INTERVENCIONES</p><h1>Efectividad de intervenciones</h1><p>Consulta las comunicaciones registradas y las respuestas de los pacientes.</p></div><Link className="boton-secundario m05-no-imprimir" to="/intervenciones">Ver intervenciones</Link></div>
     <form key={busqueda.toString()} className="tarjeta m05-formulario m05-no-imprimir" onSubmit={aplicar}>
-      <h2>Filtrar el reporte</h2><p className="m05-ayuda">Fechas inclusivas, en hora de Lima.</p>
+      <h2>Filtrar el reporte</h2><p className="m05-ayuda">Fechas inclusivas, en hora local.</p>
       <fieldset disabled={cargando || descargando !== null} className="m05-reporte-filtros"><legend className="sr-only">Filtros del reporte</legend>
         <div><label htmlFor="rep-desde">Desde</label><input type="date" id="rep-desde" name="desde" defaultValue={busqueda.get("desde") || ""} /></div>
         <div><label htmlFor="rep-hasta">Hasta</label><input type="date" id="rep-hasta" name="hasta" defaultValue={busqueda.get("hasta") || ""} /></div>

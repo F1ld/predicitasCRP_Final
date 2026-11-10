@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Detalle from "./Detalle";
+import DetallePrediccion from "./DetallePrediccion";
 import type { CitaDetalleOut, IntervencionOut, PrediccionOut } from "./tipos";
 import type { Rol } from "../../nucleo/api/tipos";
 
@@ -45,13 +46,20 @@ const reasignacion: NonNullable<CitaDetalleOut["reasignacion"]> = {
 function respuesta(datos: unknown, status = 200) {
   return new Response(JSON.stringify(datos), { status, headers: { "Content-Type": "application/json" } });
 }
+function respuestaInferencia({ probabilidad_no_show, umbral_aplicado, resultado_simulado, ...datos }:
+  Omit<PrediccionOut, "ya_existia">) {
+  return respuesta({
+    ...datos, probabilidad_no_show: String(probabilidad_no_show), umbral_aplicado: String(umbral_aplicado),
+    es_simulacion: resultado_simulado,
+  });
+}
 function montar(volver: unknown = "/citas?medico=MED-SIM-01") {
   return render(<MemoryRouter initialEntries={[{ pathname: "/citas/324", state: { volver } }]}><Routes><Route path="/citas/:id" element={<Detalle />} /></Routes></MemoryRouter>);
 }
 function errorApi(codigo: string, status = 409) { return respuesta({ error: { codigo, mensaje: `Detalle del servidor: ${codigo}.` } }, status); }
 function cuerpo(indice = 1): unknown { return JSON.parse(String(fetchSimulado.mock.calls[indice][1]?.body)); }
 async function abrirCambio(nombre = "Confirmada") { await userEvent.click(await screen.findByRole("button", { name: `Marcar como ${nombre}` })); }
-async function confirmar() { await userEvent.click(screen.getByRole("button", { name: "Confirmar cambio" })); }
+async function confirmar() { await userEvent.click(screen.getByRole("button", { name: "Confirmar transición" })); }
 
 beforeEach(() => {
   fetchSimulado.mockReset(); vi.stubGlobal("fetch", fetchSimulado); permisos.escritura = true; sessionStorage.clear();
@@ -62,30 +70,42 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
 describe("M02-V02 consulta completa (RF-018, RF-025, RNF-007, RNF-016)", () => {
+  it.each([null, "", "   "])("muestra la ausencia de explicación (%j) sin inferir factores", (explicabilidad_resumen) => {
+    render(<DetallePrediccion prediccion={{ ...prediccion, explicabilidad_resumen }} />);
+    expect(screen.getByText("Sin explicación registrada")).toBeInTheDocument();
+  });
+
+  it("conserva los factores de explicación recibidos", () => {
+    render(<DetallePrediccion prediccion={{ ...prediccion, explicabilidad_resumen: "Mayor antelación; Inasistencias previas" }} />);
+    expect(screen.getByText("Mayor antelación")).toBeInTheDocument();
+    expect(screen.getByText("Inasistencias previas")).toBeInTheDocument();
+  });
+
   it("anuncia la carga y luego cada sección vacía sin inventar información", async () => {
     fetchSimulado.mockResolvedValue(respuesta(detalle)); montar();
-    expect(screen.getByText("Cargando detalle…")).toBeInTheDocument();
+    expect(screen.getByText("Cargando detalle de la cita…")).toBeInTheDocument();
     expect(await screen.findByText(detalle.paciente_anon_id)).toBeInTheDocument();
-    for (const texto of ["No hay llegada registrada.", "No hay predicciones registradas.", "No hay intervenciones registradas.", "No hay cupo liberado para esta cita.", "No hay reasignación registrada.", "Sin motivo registrado"]) expect(screen.getByText(texto)).toBeInTheDocument();
+    for (const texto of ["No se ha registrado check-in para esta cita.", "No hay evaluación predictiva generada.", "No hay intervenciones registradas.", "No hay cupo liberado para esta cita.", "No hay reasignación registrada.", "Sin observaciones adicionales"]) expect(screen.getByText(texto)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Volver a la bandeja/ })).toHaveAttribute("href", "/citas?medico=MED-SIM-01");
-    expect(screen.getByRole("link", { name: "Ver trazabilidad" })).toHaveAttribute("href", "/citas/324/trazabilidad");
+    expect(screen.getByRole("link", { name: "Ver trazabilidad completa" })).toHaveAttribute("href", "/citas/324/trazabilidad");
   });
 
   it("muestra versión, probabilidad, umbral, explicación y snapshot, contactos, llegada, oferta y reasignación", async () => {
     fetchSimulado.mockResolvedValue(respuesta({ ...detalle, predicciones: [prediccion], intervenciones: [intervencion], cupo_liberado: cupo, reasignacion,
       check_in: { fecha_hora_check_in: "2026-10-20T08:50:00-05:00", id_usuario: 6 } })); montar();
-    expect(await screen.findByText("Versión SIMULADOR_v0.1.0")).toBeInTheDocument();
+    expect(await screen.findByText("Modelo IA SIMULADOR_v0.1.0")).toBeInTheDocument();
     expect(screen.getByText(/71[.,]2 %/)).toBeInTheDocument();
-    expect(screen.getByText("0.45")).toBeInTheDocument();
+    expect(screen.getByText("Umbral de decisión: 45%")).toBeInTheDocument();
     expect(screen.getByText(prediccion.explicabilidad_resumen!)).toBeInTheDocument();
     expect(screen.getByText("Resultado simulado: no es desempeño real")).toBeInTheDocument();
     expect(screen.getByLabelText("Riesgo de inasistencia: ALTO")).toBeInTheDocument();
-    await userEvent.click(screen.getByText("Variables conservadas al calcular el riesgo"));
+    await userEvent.click(screen.getByText("Ver vector de características conservadas (Snapshot de inferencia)"));
     expect(screen.getByText("antelacion_dias")).toBeVisible();
     expect(screen.getByText("false")).toBeVisible();
-    for (const texto of ["Intervención #17", "CONFIRMA", "Usuario #6", "Oferta vigente", "Confirmación sintética revisada", "LLAMADA_CONFIRMADA"]) expect(screen.getByText(texto)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Registrar llegada (check-in)" })).not.toBeInTheDocument();
-    expect(screen.getByText(/no es una decisión clínica/)).toBeInTheDocument();
+    for (const texto of ["Intervención #17", "CONFIRMA", "Operador #6", "Oferta vigente", "Confirmación sintética revisada", "LLAMADA_CONFIRMADA"]) expect(screen.getByText(texto)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Ver cupo liberado" })).toHaveAttribute("href", "/cupos/31");
+    expect(screen.queryByRole("button", { name: "Confirmar llegada del paciente (Check-in)" })).not.toBeInTheDocument();
+    expect(screen.getByText(/No constituye decisión diagnóstica/)).toBeInTheDocument();
     expect(screen.getByText(/La nueva cita se agenda en el sistema externo/)).toBeInTheDocument();
   });
 
@@ -96,7 +116,7 @@ describe("M02-V02 consulta completa (RF-018, RF-025, RNF-007, RNF-016)", () => {
     expect(await screen.findByText("Sin explicación registrada")).toBeInTheDocument();
     for (const texto of ["Sin respuesta registrada", "No hay oferta vigente.", "Sin observaciones", "No hay transiciones registradas.", "Sí · no admite nuevos contactos"]) expect(screen.getByText(texto)).toBeInTheDocument();
     expect(screen.queryByText("Resultado simulado: no es desempeño real")).not.toBeInTheDocument();
-    await userEvent.click(screen.getByText("Variables conservadas al calcular el riesgo"));
+    await userEvent.click(screen.getByText("Ver vector de características conservadas (Snapshot de inferencia)"));
     expect(screen.getByText('{"valor":1}')).toBeVisible();
   });
 
@@ -115,12 +135,13 @@ describe("M02-V02 consulta completa (RF-018, RF-025, RNF-007, RNF-016)", () => {
   });
 
   it("TECNICO_IA consulta todas las secciones sin ninguna acción de escritura", async () => {
-    permisos.escritura = false; fetchSimulado.mockResolvedValue(respuesta({ ...detalle, predicciones: [prediccion] })); montar();
+    permisos.escritura = false; fetchSimulado.mockResolvedValue(respuesta({ ...detalle, predicciones: [prediccion], cupo_liberado: cupo })); montar();
     expect(await screen.findByText(/Tu rol permite consultar/)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Marcar como|Calcular riesgo|Registrar llegada/ })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Crear intervención" })).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Observación de llegada (opcional)")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Ver trazabilidad" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Marcar como|Recalcular IA|Ejecutar Motor Predictivo|Confirmar llegada/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Crear intervención preventiva/ })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Observación de recepción (opcional)")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Ver trazabilidad completa" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Ver cupo liberado" })).not.toBeInTheDocument();
   });
 });
 
@@ -129,11 +150,11 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
     const nueva = { ...detalle, estado_actual: "REPROGRAMADA", reprogramaciones_prev: 1, fecha_hora_cita: "2026-10-22T09:30:00-05:00" };
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockResolvedValueOnce(respuesta(nueva)).mockResolvedValueOnce(respuesta(nueva)); montar();
     await abrirCambio("Reprogramada");
-    const fecha = screen.getByLabelText("Nueva fecha y hora de cita (Lima)");
+    const fecha = screen.getByLabelText("Nueva fecha y hora acordada (Lima)");
     expect(fecha).toBeRequired();
     await confirmar(); expect(fetchSimulado).toHaveBeenCalledTimes(1);
     fireEvent.change(fecha, { target: { value: "2026-10-22T09:30" } });
-    await userEvent.type(screen.getByLabelText("Motivo (opcional)"), " Cambio sintético acordado ");
+    await userEvent.type(screen.getByLabelText("Motivo o justificación clínica (opcional)"), " Cambio sintético acordado ");
     await confirmar();
     expect(await screen.findByText("Estado actualizado a Reprogramada.")).toBeInTheDocument();
     expect(cuerpo()).toEqual({ estado_nuevo: "REPROGRAMADA", motivo: "Cambio sintético acordado", nueva_fecha_hora_cita: "2026-10-22T09:30:00-05:00" });
@@ -146,9 +167,9 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
     const nueva = { ...conIntervencion, estado_actual: "CONFIRMADA" };
     fetchSimulado.mockResolvedValueOnce(respuesta(conIntervencion)).mockResolvedValueOnce(respuesta(nueva)).mockResolvedValueOnce(respuesta(nueva)); montar();
     await abrirCambio();
-    await userEvent.selectOptions(screen.getByLabelText("Intervención que obtuvo la confirmación (opcional)"), "17");
-    expect(screen.queryByLabelText("Nueva fecha y hora de cita (Lima)")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Liberar cupo para reasignación")).not.toBeInTheDocument();
+    await userEvent.selectOptions(screen.getByLabelText("Intervención asistencial asociada (opcional)"), "17");
+    expect(screen.queryByLabelText("Nueva fecha y hora acordada (Lima)")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/Liberar cupo para reasignación/)).not.toBeInTheDocument();
     await confirmar(); await screen.findByText("Estado actualizado a Confirmada.");
     expect(cuerpo()).toEqual({ estado_nuevo: "CONFIRMADA", motivo: null, id_intervencion: 17 });
   });
@@ -157,7 +178,7 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
     const nueva = { ...detalle, estado_actual: "CANCELADA", cupo_liberado: cupo };
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockResolvedValueOnce(respuesta(nueva)).mockResolvedValueOnce(respuesta(nueva)); montar();
     await abrirCambio("Cancelada");
-    await userEvent.click(screen.getByLabelText("Liberar cupo para reasignación")); await confirmar();
+    await userEvent.click(screen.getByLabelText(/Liberar cupo para reasignación/)); await confirmar();
     expect(await screen.findByText("Estado actualizado a Cancelada.")).toBeInTheDocument();
     expect(cuerpo()).toEqual({ estado_nuevo: "CANCELADA", motivo: null, liberar_cupo: true });
     expect(screen.getByText("CANCELACION_EXTERNA")).toBeInTheDocument();
@@ -166,10 +187,10 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
   it("no ofrece liberar una cita pasada y no filtra campos de otro destino", async () => {
     const pasada = { ...detalle, fecha_hora_cita: "2026-10-19T10:00:00-05:00" };
     fetchSimulado.mockResolvedValueOnce(respuesta(pasada)).mockResolvedValueOnce(respuesta({ ...pasada, estado_actual: "CANCELADA" })).mockResolvedValueOnce(respuesta({ ...pasada, estado_actual: "CANCELADA" })); montar();
-    await abrirCambio("Reprogramada"); fireEvent.change(screen.getByLabelText("Nueva fecha y hora de cita (Lima)"), { target: { value: "2026-10-22T09:30" } });
+    await abrirCambio("Reprogramada"); fireEvent.change(screen.getByLabelText("Nueva fecha y hora acordada (Lima)"), { target: { value: "2026-10-22T09:30" } });
     await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Cancelar" }));
     await abrirCambio("Cancelada");
-    expect(screen.queryByLabelText("Liberar cupo para reasignación")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/Liberar cupo para reasignación/)).not.toBeInTheDocument();
     await confirmar(); await screen.findByText("Estado actualizado a Cancelada.");
     expect(cuerpo()).toEqual({ estado_nuevo: "CANCELADA", motivo: null });
   });
@@ -194,8 +215,8 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockImplementation(() => new Promise<Response>(() => undefined)); montar();
     await abrirCambio(); const formulario = screen.getByRole("dialog").querySelector("form")!;
     fireEvent.submit(formulario); fireEvent.submit(formulario);
-    expect(screen.getByRole("button", { name: "Guardando…" })).toBeDisabled();
-    expect(screen.getByLabelText("Motivo (opcional)")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Guardando cambio…" })).toBeDisabled();
+    expect(screen.getByLabelText("Motivo o justificación clínica (opcional)")).toBeDisabled();
     expect(screen.getByRole("dialog")).toHaveAttribute("aria-labelledby", "titulo-cambio");
     const cancelar = new Event("cancel", { cancelable: true }); screen.getByRole("dialog").dispatchEvent(cancelar);
     expect(cancelar.defaultPrevented).toBe(true); expect(fetchSimulado).toHaveBeenCalledTimes(2);
@@ -203,35 +224,35 @@ describe("Cambio de estado con campos exactos (RF-019 a RF-024, RF-027, RN01, RN
 
   it.each(["ATENDIDA", "NO_SHOW"] as const)("presenta el desenlace final %s sin acciones", async (estado) => {
     fetchSimulado.mockResolvedValue(respuesta({ ...detalle, estado_actual: estado, target_no_show: estado === "ATENDIDA" ? 0 : 1 })); montar();
-    expect(await screen.findByText("Estado final: no admite más cambios.")).toBeInTheDocument();
-    expect(screen.getByText(estado === "ATENDIDA" ? "0 · Asistió" : "1 · No asistió")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Marcar como|Calcular riesgo|Registrar llegada/ })).not.toBeInTheDocument();
+    expect(await screen.findByText("Estado final inmutable:")).toBeInTheDocument();
+    expect(screen.getByText(estado === "ATENDIDA" ? /0 · Paciente Asistió/ : /1 · Paciente No Asistió/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Marcar como|Recalcular IA|Ejecutar Motor Predictivo|Confirmar llegada/ })).not.toBeInTheDocument();
   });
 });
 
 describe("Llegada y validaciones de Lima (RF-104, RN01)", () => {
   it("envía observación opcional, informa operador y conserva el estado", async () => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockResolvedValueOnce(respuesta({ fecha_hora_check_in: "2026-10-20T09:00:00-05:00", id_usuario: 12 }, 201)); montar();
-    await userEvent.type(await screen.findByLabelText("Observación de llegada (opcional)"), " Llegada sintética ");
-    await userEvent.click(screen.getByRole("button", { name: "Registrar llegada (check-in)" }));
+    await userEvent.type(await screen.findByLabelText("Observación de recepción (opcional)"), " Llegada sintética ");
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar llegada del paciente (Check-in)" }));
     expect(await screen.findByText(/Llegada registrada \(check-in\)/)).toBeInTheDocument();
-    expect(screen.getByText("Usuario #12")).toBeInTheDocument();
+    expect(screen.getByText("Operador #12")).toBeInTheDocument();
     expect(cuerpo()).toEqual({ observacion: "Llegada sintética" });
     expect(String(fetchSimulado.mock.calls[1][0])).toContain("/citas/324/check-in");
     expect(screen.getByRole("button", { name: "Marcar como Confirmada" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Registrar llegada (check-in)" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Confirmar llegada del paciente (Check-in)" })).not.toBeInTheDocument();
   });
 
   it("usa el día de Lima aunque el instante UTC ya sea el día siguiente", async () => {
     vi.spyOn(Date, "now").mockReturnValue(new Date("2026-10-21T03:00:00Z").getTime());
     fetchSimulado.mockResolvedValue(respuesta(detalle)); montar();
-    expect(await screen.findByRole("button", { name: "Registrar llegada (check-in)" })).toBeEnabled();
+    expect(await screen.findByRole("button", { name: "Confirmar llegada del paciente (Check-in)" })).toBeEnabled();
   });
 
   it("deshabilita check-in fuera del día de la cita con una explicación", async () => {
     fetchSimulado.mockResolvedValue(respuesta({ ...detalle, fecha_hora_cita: "2026-10-21T10:00:00-05:00" })); montar();
-    expect(await screen.findByRole("button", { name: "Registrar llegada (check-in)" })).toBeDisabled();
-    expect(screen.getByText(/El check-in solo se registra el día/)).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Confirmar llegada del paciente (Check-in)" })).toBeDisabled();
+    expect(screen.getByText(/El check-in asistencial se registra exclusivamente el día/)).toBeInTheDocument();
   });
 
   it.each([
@@ -242,30 +263,30 @@ describe("Llegada y validaciones de Lima (RF-104, RN01)", () => {
     ["NO_ENCONTRADO", 404, /No se encontró la cita/],
   ] as const)("explica %s sin declarar un check-in exitoso", async (codigo, status, texto) => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockResolvedValueOnce(errorApi(codigo, status)).mockResolvedValue(respuesta(detalle)); montar();
-    await userEvent.click(await screen.findByRole("button", { name: "Registrar llegada (check-in)" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Confirmar llegada del paciente (Check-in)" }));
     expect(await screen.findByText(texto)).toBeInTheDocument(); expect(cuerpo()).toEqual({ observacion: null });
     expect(fetchSimulado).toHaveBeenCalledTimes(status === 409 ? 3 : 2);
   });
 
   it("impide doble check-in y edición mientras espera", async () => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockImplementation(() => new Promise<Response>(() => undefined)); montar();
-    const observacion = await screen.findByLabelText("Observación de llegada (opcional)"); const formulario = observacion.closest("form")!;
+    const observacion = await screen.findByLabelText("Observación de recepción (opcional)"); const formulario = observacion.closest("form")!;
     fireEvent.submit(formulario); fireEvent.submit(formulario);
-    expect(screen.getByRole("button", { name: "Registrando llegada…" })).toBeDisabled(); expect(observacion).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Registrando en recepción…" })).toBeDisabled(); expect(observacion).toBeDisabled();
     expect(fetchSimulado).toHaveBeenCalledTimes(2);
   });
 });
 
 describe("Inferencia local al detalle (RF-052, RF-056, RF-098, RF-099, RF-103, RN16)", () => {
-  it.each([false, true])("muestra predicción nueva o existente (ya_existia=%s) sin duplicarla", async (yaExistia) => {
-    fetchSimulado.mockResolvedValueOnce(respuesta({ ...detalle, predicciones: yaExistia ? [prediccion] : [] })).mockResolvedValueOnce(respuesta({ ...prediccion, ya_existia: yaExistia }, yaExistia ? 200 : 201)); montar();
-    await userEvent.click(await screen.findByRole("button", { name: "Calcular riesgo" }));
-    expect(await screen.findByText(yaExistia ? /Se muestra la predicción existente/ : /Riesgo calculado/)).toBeInTheDocument();
-    expect(screen.getAllByRole("article", { name: "Predicción #27" })).toHaveLength(1);
+  it.each([false, true])("muestra el resultado sin duplicarlo (ya estaba en el detalle: %s)", async (yaExistia) => {
+    fetchSimulado.mockResolvedValueOnce(respuesta({ ...detalle, predicciones: yaExistia ? [prediccion] : [] })).mockResolvedValueOnce(respuestaInferencia(prediccion)); montar();
+    await userEvent.click(await screen.findByRole("button", { name: "Recalcular IA" }));
+    expect(await screen.findByText(yaExistia ? /Inferencia ya disponible/ : "Inferencia disponible para esta cita.")).toBeInTheDocument();
+    expect(screen.getAllByRole("article", { name: /Evaluación predictiva #27/ })).toHaveLength(1);
     expect(screen.getByText("Resultado simulado: no es desempeño real")).toBeInTheDocument();
     expect(fetchSimulado.mock.calls[1][1]?.method).toBe("POST");
     expect(String(fetchSimulado.mock.calls[1][0])).toContain("/citas/324/prediccion");
-    expect(screen.getByRole("link", { name: "Crear intervención" })).toHaveAttribute("href", "/intervenciones?id_cita=324");
+    expect(screen.getByRole("link", { name: /Crear intervención preventiva/ })).toHaveAttribute("href", "/intervenciones?id_cita=324");
   });
 
   it.each([
@@ -275,28 +296,29 @@ describe("Inferencia local al detalle (RF-052, RF-056, RF-098, RF-099, RF-103, R
     ["NO_ENCONTRADO", 404, /No se encontró la cita/],
   ] as const)("muestra %s sin modificar la cita", async (codigo, status, texto) => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockResolvedValueOnce(errorApi(codigo, status)); montar();
-    await userEvent.click(await screen.findByRole("button", { name: "Calcular riesgo" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Recalcular IA" }));
     expect(await screen.findByText(texto)).toBeInTheDocument();
-    expect(screen.getByText("No hay predicciones registradas.")).toBeInTheDocument();
-    expect(screen.queryByText(/Riesgo calculado/)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Calcular riesgo" })).toBeEnabled();
+    expect(screen.getByText("No hay evaluación predictiva generada.")).toBeInTheDocument();
+    expect(screen.queryByText("Inferencia disponible para esta cita.")).not.toBeInTheDocument();
+    expect(fetchSimulado).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("button", { name: "Recalcular IA" })).toBeEnabled();
   });
 
   it("conserva el último riesgo y la elegibilidad al recuperar una predicción existente anterior (RF-018, RF-057, RF-099)", async () => {
     const anterior = { ...prediccion, fecha_hora_inferencia: "2026-10-18T08:30:00-05:00" };
     const reciente = { ...prediccion, id_prediccion: 28, version_modelo: "SIMULADOR_v0.2.0", nivel_riesgo: "BAJO", probabilidad_no_show: 0.15 };
     fetchSimulado.mockResolvedValueOnce(respuesta({ ...detalle, predicciones: [reciente, anterior] }))
-      .mockResolvedValueOnce(respuesta({ ...anterior, ya_existia: true })); montar();
-    await userEvent.click(await screen.findByRole("button", { name: "Calcular riesgo" }));
-    expect(await screen.findByText(/Se muestra la predicción existente/)).toBeInTheDocument();
-    expect(screen.getAllByRole("article").map((articulo) => articulo.getAttribute("aria-label"))).toEqual(["Predicción #28", "Predicción #27"]);
-    expect(screen.queryByRole("link", { name: "Crear intervención" })).not.toBeInTheDocument();
-    expect(screen.getAllByText("Versión SIMULADOR_v0.1.0")).toHaveLength(1);
+      .mockResolvedValueOnce(respuestaInferencia(anterior)); montar();
+    await userEvent.click(await screen.findByRole("button", { name: "Recalcular IA" }));
+    expect(await screen.findByText(/Inferencia ya disponible/)).toBeInTheDocument();
+    expect(screen.getAllByRole("article").map((articulo) => articulo.getAttribute("aria-label"))).toEqual(["Evaluación predictiva #28 - Riesgo BAJO", "Evaluación predictiva #27 - Riesgo ALTO"]);
+    expect(screen.queryByRole("link", { name: /Crear intervención preventiva/ })).not.toBeInTheDocument();
+    expect(screen.getAllByText("Modelo IA SIMULADOR_v0.1.0")).toHaveLength(1);
   });
 
   it("bloquea un cálculo duplicado y las otras escrituras mientras espera", async () => {
     fetchSimulado.mockResolvedValueOnce(respuesta(detalle)).mockImplementation(() => new Promise<Response>(() => undefined)); montar();
-    await userEvent.dblClick(await screen.findByRole("button", { name: "Calcular riesgo" }));
+    await userEvent.dblClick(await screen.findByRole("button", { name: /Ejecutar Motor Predictivo/ }));
     expect(screen.getByRole("button", { name: "Calculando riesgo…" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Marcar como Confirmada" })).toBeDisabled(); expect(fetchSimulado).toHaveBeenCalledTimes(2);
   });
@@ -314,8 +336,8 @@ describe("Inferencia local al detalle (RF-052, RF-056, RF-098, RF-099, RF-103, R
   ])("ofrece Crear intervención según %s (RF-057, RN07)", async (_caso, cambios, visible) => {
     fetchSimulado.mockResolvedValue(respuesta({ ...detalle, ...cambios })); montar();
     await screen.findByText(detalle.paciente_anon_id);
-    if (visible) expect(screen.getByRole("link", { name: "Crear intervención" })).toBeInTheDocument();
-    else expect(screen.queryByRole("link", { name: "Crear intervención" })).not.toBeInTheDocument();
+    if (visible) expect(screen.getByRole("link", { name: /Crear intervención preventiva/ })).toBeInTheDocument();
+    else expect(screen.queryByRole("link", { name: /Crear intervención preventiva/ })).not.toBeInTheDocument();
   });
 
   describe("T-053 Observación 1: preselección de intervención desde ?id_intervencion=", () => {
@@ -329,13 +351,26 @@ describe("Inferencia local al detalle (RF-052, RF-056, RF-098, RF-099, RF-103, R
       );
     }
 
-    it("a) con ?id_intervencion= de una intervención de la cita: se ve el aviso y, al abrir «Cambiar estado» y elegir Confirmada, el selector tiene preseleccionado ese id", async () => {
+    it("a) muestra el aviso con la acción vigente y preselecciona la intervención", async () => {
       fetchSimulado.mockResolvedValueOnce(respuesta({ ...detalle, intervenciones: [intervencion] }));
       montarConQuery("?id_intervencion=17");
-      expect(await screen.findByText('Vienes de la intervención #17. Para registrar la confirmación, usa "Cambiar estado" → Confirmada.')).toBeInTheDocument();
+      expect(await screen.findByText("Vienes de la intervención #17. Para registrar la confirmación del paciente, selecciona “Marcar como Confirmada”.")).toBeInTheDocument();
       await userEvent.click(screen.getByRole("button", { name: "Marcar como Confirmada" }));
-      const selector = screen.getByLabelText("Intervención que obtuvo la confirmación (opcional)") as HTMLSelectElement;
+      const selector = screen.getByLabelText("Intervención asistencial asociada (opcional)") as HTMLSelectElement;
       expect(selector.value).toBe("17");
+    });
+
+    it.each([
+      ["rol de solo lectura", false, "RECIBIDA"],
+      ["cita ya confirmada", true, "CONFIRMADA"],
+      ["cita cerrada", true, "ATENDIDA"],
+    ] as const)("muestra solo el origen para %s", async (_caso, escritura, estado_actual) => {
+      permisos.escritura = escritura;
+      fetchSimulado.mockResolvedValueOnce(respuesta({ ...detalle, estado_actual, intervenciones: [intervencion] }));
+      montarConQuery("?id_intervencion=17");
+      expect(await screen.findByText("Vienes de la intervención #17.")).toBeInTheDocument();
+      expect(screen.queryByText(/Para registrar la confirmación del paciente/)).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Marcar como Confirmada" })).not.toBeInTheDocument();
     });
 
     it("b) con un id que no pertenece a la cita: no hay aviso y el selector queda en «Sin intervención asociada»", async () => {
@@ -344,8 +379,7 @@ describe("Inferencia local al detalle (RF-052, RF-056, RF-098, RF-099, RF-103, R
       await screen.findByText(detalle.paciente_anon_id);
       expect(screen.queryByText(/Vienes de la intervención/)).not.toBeInTheDocument();
       await userEvent.click(screen.getByRole("button", { name: "Marcar como Confirmada" }));
-      const selector = screen.getByLabelText("Intervención que obtuvo la confirmación (opcional)") as HTMLSelectElement;
-      expect(selector.value).toBe("");
+      expect(screen.getByLabelText("Intervención asistencial asociada (opcional)")).toHaveValue("");
     });
 
     it("c) con un valor no numérico (?id_intervencion=abc): no hay aviso", async () => {

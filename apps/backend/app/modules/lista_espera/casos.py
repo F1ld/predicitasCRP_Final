@@ -61,16 +61,20 @@ def obtener_detalle_cupo(db: Session, id_cupo: int) -> CupoDetalleOut:
             cupo_out.oferta_vigente = OfertaOut(id_candidato=candidato.id_candidato,
                 paciente_anon_id=candidato.paciente_anon_id, id_operador=event.id_usuario,
                 fecha_hora_oferta=event.creado_en)
-    reasig = db.execute(
-        select(Reasignacion).where(Reasignacion.id_cupo_liberado == id_cupo)
-    ).scalar_one_or_none()
+    registro = db.execute(
+        select(Reasignacion, ListaEspera.paciente_anon_id)
+        .join(ListaEspera, ListaEspera.id_candidato == Reasignacion.id_candidato)
+        .where(Reasignacion.id_cupo_liberado == id_cupo)
+    ).one_or_none()
 
     reasig_out = None
-    if reasig:
+    if registro is not None:
+        reasig, paciente_anon_id = registro
         reasig_out = ReasignacionOut(
             id_reasignacion=reasig.id_reasignacion,
             id_cupo_liberado=reasig.id_cupo_liberado,
             id_candidato=reasig.id_candidato,
+            paciente_anon_id=paciente_anon_id,
             id_operador_confirma=reasig.id_operador_confirma,
             confirmacion_humana=reasig.confirmacion_humana,
             medio_confirmacion=reasig.medio_confirmacion,
@@ -403,6 +407,7 @@ def reasignar_cupo(
         id_reasignacion=reasignacion.id_reasignacion,
         id_cupo_liberado=reasignacion.id_cupo_liberado,
         id_candidato=reasignacion.id_candidato,
+        paciente_anon_id=candidato.paciente_anon_id,
         id_operador_confirma=reasignacion.id_operador_confirma,
         confirmacion_humana=reasignacion.confirmacion_humana,
         medio_confirmacion=reasignacion.medio_confirmacion,

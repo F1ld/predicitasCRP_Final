@@ -150,7 +150,7 @@ describe("M05-V01: vista principal de intervenciones", () => {
     expect(tabla.getByText("Resultado simulado: no es desempeño real")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Intervenir en CIT-000101" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Ir a la cita" })).toHaveAttribute("href", "/citas/101");
-    expect(screen.getByRole("link", { name: "Ver reporte REP-02" })).toHaveAttribute("href", "/reportes/intervenciones");
+    expect(screen.queryByRole("link", { name: "Ver reporte REP-02" })).not.toBeInTheDocument();
   });
 
   it("presenta el estado vacío en elegibles", async () => {

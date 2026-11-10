@@ -33,7 +33,7 @@ function respuesta(datos: unknown, status = 200) {
   return new Response(JSON.stringify(datos), { status, headers: { "Content-Type": "application/json" } });
 }
 function pagina(items: CitaResumenOut[] = [cita], total = items.length) {
-  return { total, limite: 20, desplazamiento: 0, items };
+  return { total, limite: 5, desplazamiento: 0, items };
 }
 function consultaCitas() {
   return fetchSimulado.mock.calls.filter(([entrada]) => new URL(String(entrada)).pathname === "/citas");
@@ -46,12 +46,14 @@ function Ubicacion() {
   return <output aria-label="URL actual">{ubicacion.pathname}{ubicacion.search}</output>;
 }
 function montar(ruta = "/citas") {
-  return render(<MemoryRouter initialEntries={[ruta]}><Ubicacion /><Routes>
+  const vista = render(<MemoryRouter initialEntries={[ruta]}><Ubicacion /><Routes>
     <Route path="/citas" element={<Bandeja />} />
     <Route path="/citas/:id" element={<p>Detalle abierto</p>} />
     <Route path="/citas/nueva" element={<p>Registro abierto</p>} />
     <Route path="/citas/importar" element={<p>Importación abierta</p>} />
   </Routes></MemoryRouter>);
+  fireEvent.click(screen.getByText("Buscar una cita"));
+  return vista;
 }
 function datosSimulados(items = [cita], total = items.length) {
   fetchSimulado.mockImplementation((entrada) => Promise.resolve(respuesta(
@@ -93,11 +95,11 @@ describe("Bandeja completa M02-V01 (RF-015, RF-016, RF-017, RF-084)", () => {
     expect(fetchSimulado.mock.calls.some(([entrada]) => new URL(String(entrada)).pathname === "/citas/catalogos")).toBe(true);
   });
 
-  it("muestra el riesgo, el rótulo simulado junto al dato, la intervención y el check-in (RF-056, RN16)", async () => {
+  it("muestra el riesgo con rótulo simulado, la intervención y el check-in", async () => {
     datosSimulados([{ ...cita, riesgo: { id_prediccion: 4, probabilidad_no_show: 0.72, nivel_riesgo: "ALTO", version_modelo: "simulador_v1", fecha_hora_inferencia: "2026-10-18T10:00:00-05:00", resultado_simulado: true }, estado_intervencion: "RESPONDIDA", respuesta_paciente: "CONFIRMA", tiene_check_in: true }]);
     montar();
-    const rotulo = await screen.findByText("Resultado simulado: no es desempeño real");
-    expect(rotulo.closest("td")).toContainElement(screen.getByLabelText("Riesgo de inasistencia: ALTO"));
+    expect(await screen.findByLabelText("Riesgo de inasistencia: ALTO")).toBeInTheDocument();
+    expect(screen.getByText("Resultado simulado: no es desempeño real")).toBeInTheDocument();
     expect(screen.getByText("Respondida")).toBeInTheDocument();
     expect(screen.getByText("Confirma")).toBeInTheDocument();
     expect(screen.getByText("Check-in registrado")).toBeInTheDocument();
@@ -176,7 +178,7 @@ describe("Bandeja completa M02-V01 (RF-015, RF-016, RF-017, RF-084)", () => {
     await userEvent.selectOptions(screen.getByLabelText("Intervención"), "true");
     await userEvent.click(screen.getByRole("button", { name: "Aplicar filtros" }));
     await waitFor(() => expect(consultaCitas()).toHaveLength(2));
-    expect(Object.fromEntries(ultimaConsulta())).toEqual({ limite: "10", desplazamiento: "0", desde: "2026-10-01", hasta: "2026-10-30", especialidad: "PEDIATRIA", medico: catalogos.medicos[1], estado: "RECIBIDA", nivel_riesgo: "MEDIO", con_intervencion: "true", q: "PAC-SIM" });
+    expect(Object.fromEntries(ultimaConsulta())).toEqual({ limite: "5", desplazamiento: "0", desde: "2026-10-01", hasta: "2026-10-30", especialidad: "PEDIATRIA", medico: catalogos.medicos[1], estado: "RECIBIDA", nivel_riesgo: "MEDIO", con_intervencion: "true", q: "PAC-SIM" });
     expect(screen.getByLabelText("URL actual").textContent).toContain("con_intervencion=true");
     expect(screen.getByLabelText("URL actual").textContent).not.toContain("desplazamiento=20");
   });
@@ -197,15 +199,15 @@ describe("Bandeja completa M02-V01 (RF-015, RF-016, RF-017, RF-084)", () => {
     await screen.findByText(cita.id_cita_externa);
     await waitFor(() => expect(screen.getByRole("button", { name: "Aplicar filtros" })).toBeEnabled());
     await userEvent.click(screen.getByRole("button", { name: "Siguiente" }));
-    expect(await screen.findByText("Página 2 de 3")).toBeInTheDocument();
-    expect(ultimaConsulta().get("desplazamiento")).toBe("20");
+    expect(await screen.findByText("Página 2 de 9")).toBeInTheDocument();
+    expect(ultimaConsulta().get("desplazamiento")).toBe("5");
     expect(ultimaConsulta().get("medico")).toBe(catalogos.medicos[0]);
     expect(ultimaConsulta().get("con_intervencion")).toBe("false");
     await userEvent.click(screen.getByRole("button", { name: "Anterior" }));
-    expect(await screen.findByText("Página 1 de 3")).toBeInTheDocument();
+    expect(await screen.findByText("Página 1 de 9")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Limpiar" }));
     await waitFor(() => expect(consultaCitas()).toHaveLength(4));
-    expect(Object.fromEntries(ultimaConsulta())).toEqual({ limite: "20", desplazamiento: "0" });
+    expect(Object.fromEntries(ultimaConsulta())).toEqual({ limite: "5", desplazamiento: "0" });
     expect(screen.getByLabelText("URL actual")).toHaveTextContent(/^\/citas$/);
   });
 
@@ -213,7 +215,7 @@ describe("Bandeja completa M02-V01 (RF-015, RF-016, RF-017, RF-084)", () => {
     montar(`/citas?desplazamiento=${desplazamiento}&limite=201`);
     await screen.findByText(cita.id_cita_externa);
     expect(ultimaConsulta().get("desplazamiento")).toBe("0");
-    expect(ultimaConsulta().get("limite")).toBe("20");
+    expect(ultimaConsulta().get("limite")).toBe("5");
   });
 
   it("limpia un borrador sin aplicar cuando la URL ya está sin filtros (RF-015, RF-016)", async () => {
@@ -233,14 +235,20 @@ describe("Bandeja completa M02-V01 (RF-015, RF-016, RF-017, RF-084)", () => {
     expect(consultaCitas()).toHaveLength(1);
   });
 
-  it("respeta el límite de la URL al paginar", async () => {
+  it("salta a una página válida y mantiene el límite de cinco citas", async () => {
     datosSimulados([cita], 25);
-    montar("/citas?limite=10");
+    montar("/citas?limite=20");
     await screen.findByText(cita.id_cita_externa);
-    await userEvent.click(screen.getByRole("button", { name: "Siguiente" }));
-    expect(await screen.findByText("Página 2 de 3")).toBeInTheDocument();
+    const campo = screen.getByLabelText("Ir a la página");
+    fireEvent.change(campo, { target: { value: "0" } });
+    expect(campo).toBeInvalid();
+    await userEvent.click(screen.getByRole("button", { name: "Ir" }));
+    expect(ultimaConsulta().get("desplazamiento")).toBe("0");
+    fireEvent.change(campo, { target: { value: "3" } });
+    await userEvent.click(screen.getByRole("button", { name: "Ir" }));
+    expect(await screen.findByText("Página 3 de 5")).toBeInTheDocument();
     expect(ultimaConsulta().get("desplazamiento")).toBe("10");
-    expect(ultimaConsulta().get("limite")).toBe("10");
+    expect(ultimaConsulta().get("limite")).toBe("5");
   });
 
   it.each(["fila", "enlace"])("abre el detalle desde la %s", async (accion) => {

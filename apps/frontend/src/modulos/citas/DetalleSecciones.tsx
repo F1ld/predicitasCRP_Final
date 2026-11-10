@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { etiqueta, formatearFechaHora } from "../../nucleo/formato/formato";
 import type { CitaDetalleOut } from "./tipos";
 
 // RF-018, RNF-007: lectura de contactos, cupo, oferta y reasignación seudonimizados.
-export default function DetalleSecciones({ cita }: { cita: CitaDetalleOut }) {
+export default function DetalleSecciones({ cita, puedeOperarCupo }: { cita: CitaDetalleOut; puedeOperarCupo: boolean }) {
   const cupo = cita.cupo_liberado;
   const reasignacion = cita.reasignacion;
   return <>
@@ -19,6 +20,7 @@ export default function DetalleSecciones({ cita }: { cita: CitaDetalleOut }) {
     <div className="grid items-start gap-6 lg:grid-cols-2">
       <section className="tarjeta" aria-labelledby="titulo-cupo"><div className="seccion-cabecera"><h2 id="titulo-cupo">Cupo liberado</h2></div>
         {!cupo ? <p className="citas-seccion-vacia">No hay cupo liberado para esta cita.</p> : <>
+          {puedeOperarCupo && <Link className="enlace-detalle" to={`/cupos/${cupo.id_cupo_liberado}`}>Ver cupo liberado</Link>}
           <dl className="datos-cita"><div><dt>Identificador del cupo</dt><dd>#{cupo.id_cupo_liberado}</dd></div><div><dt>Estado del cupo</dt><dd>{cupo.estado_cupo}</dd></div>
             <div><dt>Origen de liberación</dt><dd>{cupo.origen_liberacion}</dd></div><div><dt>Liberado el</dt><dd>{formatearFechaHora(cupo.liberado_en)}</dd></div>
             <div><dt>Especialidad del cupo</dt><dd>{etiqueta(cupo.especialidad)}</dd></div><div><dt>Médico del cupo</dt><dd>{cupo.medico}</dd></div>
